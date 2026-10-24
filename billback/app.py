@@ -89,8 +89,22 @@ async def gmail_scan():
 
 
 @app.post("/api/cases")
-async def start_demo_case():
-    return {"case_id": _start()["id"]}
+async def start_case(files: list[UploadFile] = File(default=[])):
+    """Start a case from uploaded bill/EOB files, or the sample bill when none are sent."""
+    case = orchestrator.new_case()
+    uploads = [(f.filename, await f.read()) for f in files if f.filename]
+    case["documents"] = [n for n, _ in uploads] or ["sample-hospital-bill.pdf", "sample-insurance-eob.pdf"]
+    if uploads and llm.available():
+        parsed = await intake.parse(case["id"], uploads)
+        case.update({k: v for k, v in parsed.items() if v})
+    _launch(case)
+    return {"case_id": case["id"]}
+
+
+@app.get("/api/cases")
+async def list_cases():
+    return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
+             "status": c["status"]} for c in orchestrator.cases.values()]
 
 
 @app.get("/api/cases/{case_id}")
