@@ -17,6 +17,9 @@ Return JSON:
  "other_relief": [{"what": "one plain sentence", "applies_to": "all"|"insured"|"uninsured", "max_fpl_pct": number|null,
                    "min_oop_pct_income": number|null, "doc": number, "quote": "verbatim sentence"}],
  "collections": {"no_collections_while_pending": true|false|null, "doc": number, "quote": "verbatim sentence or empty"},
+ "payment_plan": {"interest_free": true|false|null, "max_pct_monthly_income": number|null, "doc": number,
+                  "quote": "verbatim sentence saying plans are interest-free, or empty",
+                  "cap_doc": number, "cap_quote": "verbatim sentence stating the monthly payment cap, or empty"},
  "apply": {"how": "one plain sentence", "doc": number, "quote": "verbatim sentence or empty"},
  "notes": "one sentence on anything that limits these rules (e.g. which services or patients are excluded)"}
 Rules:
@@ -37,6 +40,9 @@ Rules:
 - other_relief: income-based help for this hospital that is NOT a fixed percent write-off (e.g. "pay no more
   than Medicare would", a sliding scale without stated percents). These are shown to the patient but not
   used in the math.
+- payment_plan: the hospital's payment-plan terms for patients who still owe something (from the billing and
+  collections policy if it was fetched). max_pct_monthly_income = the cap on a monthly payment as a percent of
+  the patient's monthly income (e.g. 10), only if a document states it, else null.
 - If the documents state no FPL-based tiers, return "tiers": []."""
 
 MIN_QUOTE_CHARS = 25
@@ -121,6 +127,7 @@ def verify(found: dict, docs: list[Document]) -> tuple[dict, dict]:
     cdoc = locate(coll.get("quote", ""), docs)
     checks.append({"what": "collections", "quote": coll.get("quote", ""), "verified": cdoc is not None,
                    "source_url": cdoc.url if cdoc else None})
+    plan_terms = _payment_plan(found.get("payment_plan"), docs, checks)
     apply = found.get("apply") if isinstance(found.get("apply"), dict) else {}
     adoc = locate(apply.get("quote", ""), docs)
     checks.append({"what": "apply", "quote": apply.get("quote", ""), "verified": adoc is not None,
@@ -130,12 +137,34 @@ def verify(found: dict, docs: list[Document]) -> tuple[dict, dict]:
               "no_collections_while_pending": coll.get("no_collections_while_pending") if cdoc else None,
               "collections_quote": coll.get("quote", "") if cdoc else "",
               "collections_source": cdoc.url if cdoc else None,
+              "payment_plan": plan_terms,
               "apply_how": apply.get("how", ""), "apply_quote": apply.get("quote", "") if adoc else "",
               "notes": found.get("notes", "")}
     tier_checks = [c for c in checks if c["what"] == "tier"]
     verification = {"checks": checks, "tiers_verified": sum(c["verified"] for c in tier_checks),
                     "tiers_rejected": sum(not c["verified"] for c in tier_checks), "method": "squash-substring"}
     return policy, verification
+
+
+def _payment_plan(raw, docs: list[Document], checks: list[dict]) -> dict | None:
+    """Payment-plan terms, each claim backed by a quote found in the fetched text: interest-free needs its
+    quote, and the income cap's number must appear in its own verified quote."""
+    p = raw if isinstance(raw, dict) else {}
+    doc = locate(p.get("quote", ""), docs)
+    cap_doc = locate(p.get("cap_quote", ""), docs)
+    cap = finance._num(p.get("max_pct_monthly_income"))
+    cap_said = (p.get("cap_quote") or "").replace(",", "")
+    cap_ok = cap_doc is not None and cap is not None and f"{cap:g}" in re.findall(r"\d+(?:\.\d+)?", cap_said)
+    checks.append({"what": "payment_plan", "quote": p.get("quote", ""), "verified": doc is not None,
+                   "source_url": doc.url if doc else None})
+    checks.append({"what": "payment_plan_cap", "quote": p.get("cap_quote", ""), "verified": cap_ok,
+                   "source_url": cap_doc.url if cap_doc else None})
+    if not doc and not cap_ok:
+        return None
+    return {"interest_free": bool(p.get("interest_free")) if doc else None,
+            "quote": p["quote"] if doc else "", "source_url": doc.url if doc else None,
+            "max_pct_monthly_income": cap if cap_ok else None,
+            "cap_quote": p["cap_quote"] if cap_ok else "", "cap_source_url": cap_doc.url if cap_ok else None}
 
 
 def _dedupe(tiers: list[dict]) -> list[dict]:

@@ -73,11 +73,11 @@ const SCRIPT = [
   { bot: ["Thanks. Is there a deadline or a collections warning on it?"], quick: ['It says final notice, pay by Nov 3'] },
   { bot: ["Okay. We have time. Did insurance pay any of it? If you have the insurance statement (the EOB), you can drop it right here."],
     quick: [{ label: 'Attach my EOB', file: 'golden-state-eob.pdf' }, "I'm not sure"] },
-  { bot: ["Got it. Golden State Health Plan already covered most of this and says your share is <b>$2,600</b>, not $8,700. That gap is the first thing we'll fix.",
+  { bot: ["Got it. Golden State Health Plan already covered most of this and says your share is <b>$1,100</b>, not $8,700. That gap is the first thing we'll fix.",
           "One more thing: may I check your bank account for payments you've already made? It's read-only."],
     found: true, quick: ['Yes, check my bank'] },
-  { bot: ["Found it: a <b>$500</b> payment to CPMC on Sep 14. So right now you really owe <span class=\"g\">$2,100</span>.",
-          "And your paychecks ($900 every two weeks, $23,400 a year) put you at 150% of the poverty line. Your $2,600 share is 11% of your income, and Sutter's own policy writes it off when it's over 10%. So you owe <span class=\"g\">$0</span>, and the <b>$500</b> you paid comes back to you."],
+  { bot: ["Found it: a <b>$500</b> payment to CPMC on Sep 14. So you really owe <span class=\"g\">$600</span>, 93% less than the bill.",
+          "I also checked Sutter's own policies. Your paychecks ($1,400 every two weeks, $36,400 a year) put you at 233% of the poverty line. Sutter writes off an insured patient's share only when medical bills are over 10% of income; yours are 3%, so no write-off. But Sutter's billing policy says all payment plans are interest-free. So: <span class=\"g\">$100 a month for 6 months</span>, no interest."],
     plan: true, quick: [] },
 ];
 let stepI = 0, typing = false;
@@ -105,12 +105,12 @@ async function play() {
   typing = true; setQuick([]);
   for (const m of s.bot) await botSay(m);
   if (s.found) {
-    inner.insertAdjacentHTML('beforeend', '<div class="found"><div><span>Hospital billed</span><b>$8,700</b></div><div><span>Insurance covered</span><b>$6,100</b></div><div class="g"><span>Your share</span><b>$2,600</b></div></div>');
+    inner.insertAdjacentHTML('beforeend', '<div class="found"><div><span>Hospital billed</span><b>$8,700</b></div><div><span>Insurance covered</span><b>$7,600</b></div><div class="g"><span>Your share</span><b>$1,100</b></div></div>');
   }
   if (s.plan) {
     await wait(500);
     inner.insertAdjacentHTML('beforeend', `<div class="plan card"><h3>Here's what I'll do next</h3><ol>
-      <li>Dispute the $8,700 final notice</li><li>Apply for Sutter's financial assistance (100% off your share, so $0 left)</li><li>Call CPMC billing for you and get your $500 refunded</li></ol>
+      <li>Dispute the $8,700 final notice</li><li>Get the insurance and your $500 payment applied, so $600 left</li><li>Call CPMC billing for you: set up the interest-free plan (6 × $100) and pause collections</li></ol>
       <a class="btn" href="one-screen.html#auto">Open my case <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
       <p class="sub" style="font-size:13px;margin-top:10px">Nothing gets paid without your approval.</p></div>`);
   }

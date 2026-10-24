@@ -13,7 +13,7 @@ Drop in your hospital bill and insurance statement. BillBack:
 2. **Finds the discount the hospital owes you**: a Policy agent looks the hospital up in our policy
    database, built by crawling each hospital's own published financial-assistance policy with Bright Data
    (pages and policy PDFs, every quoted rule verified against the source, re-checked for changes), works
-   out your income from payroll deposits, and checks you against its tiers.
+   out your income from payroll deposits, and checks you against its tiers and its payment-plan terms.
 3. **Calls billing for you**: after you approve, BillBack phones the billing office through our own voice
    pipeline (Twilio audio, Cartesia speech-to-text and Sonic text-to-speech, Claude as the brain), with the
    patient's verbal authorization at the start, in the voice and accent you pick, pronouncing claim
@@ -23,8 +23,11 @@ Drop in your hospital bill and insurance statement. BillBack:
    follow-up date, tells you the status when you ask, and calls back when a promise is overdue. If anything
    is still owed, it sets up an interest-free plan in your bank, only after you approve.
 
-Demo: **$8,700 → $2,100 → $0, plus the $500 she already paid back**, case number, account on hold,
-follow-up scheduled. Same bill at four San Francisco hospitals → four different answers.
+Demo: **$8,700 → $1,100 (insurance the hospital never applied) → $600 (the $500 she already paid), on a
+6 × $100 interest-free plan** under Sutter's own billing policy, collections paused, case number,
+follow-up scheduled. She isn't eligible for Sutter's write-off, and BillBack says so. Same bill at four San
+Francisco hospitals → different answers (our second case, Marcus: $0 at CPMC and UCSF, $5,600 at the
+other two).
 
 ## How we built it
 - **Our own agent harness** (Python): tools carry permission tiers (read / act / consequential);

@@ -43,7 +43,7 @@ REP_LINES = [
     "Patient Financial Services, this is Diane. How can I help you?",
     "Okay, I have the account up. It shows eight thousand seven hundred dollars due.",
     "Alright, I can apply the insurance adjustment and the five hundred dollar payment.",
-    "Okay. I've opened a financial assistance review and put the account on hold.",
+    "Okay. I can set up six payments of one hundred dollars, no interest, and I've paused collections.",
     "Your case number is F A two zero nine three one.",
     "You're welcome. Have a good day.",
 ]
@@ -151,7 +151,7 @@ async def main() -> None:
     ap.add_argument("--voice", default="priya", help="agent voice: catalog key or Cartesia voice id")
     ap.add_argument("--rep-voice", default="tessa", help="voice playing the billing rep")
     ap.add_argument("--barge-in", action="store_true", help="rep talks over the agent's second reply")
-    ap.add_argument("--short", action="store_true", help="3-turn call: hello, hold + review, case number")
+    ap.add_argument("--short", action="store_true", help="3-turn call: hello, plan + collections paused, case number")
     ap.add_argument("--max-seconds", type=float, default=150, help="hard cap on the call (bounds STT usage)")
     args = ap.parse_args()
     if not config.CARTESIA_API_KEY:

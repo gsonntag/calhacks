@@ -74,7 +74,7 @@
     <span class="agent" data-a="reader"><span class="dot"></span>Reader</span>
     <span class="agent" data-a="auditor"><span class="dot"></span>Auditor</span>
     <span class="agent" data-a="bank"><span class="dot"></span>Bank · Capital One</span>
-    <span class="agent" data-a="policy"><span class="dot"></span>Charity care</span>
+    <span class="agent" data-a="policy"><span class="dot"></span>Hospital policy</span>
     <span class="agent" data-a="caller"><span class="dot"></span>Caller</span>
   </div>
 
@@ -83,14 +83,14 @@
   <section class="card approve" id="approve">
     <span class="eyebrow">Ready for your OK</span>
     <div class="rows">
-      <span>CPMC agreed to</span><b>$0 balance</b>
-      <span>Refund to you</span><b>$500 · your Sep 14 payment</b>
-      <span>Assistance case</span><b>FA 20931</b>
-      <span>CPMC account</span><b>On hold, no collections</b>
+      <span>CPMC agreed to</span><b>$600 balance</b>
+      <span>Payment plan</span><b>6 × $100/month, 0% interest</b>
+      <span>Case</span><b>FA 20931</b>
+      <span>CPMC account</span><b>Collections paused</b>
       <span>Follow-up</span><b>Check back by Fri Oct 30</b>
     </div>
     <div class="acts"><button class="btn green" type="button" id="ok">Approve</button><button class="btn ghost" type="button">Change something</button></div>
-    <span class="done-msg" id="doneMsg">Approved. You owe $0 and $500 comes back. I'll check back by Fri Oct 30 if the corrected statement hasn't arrived.</span>
+    <span class="done-msg" id="doneMsg">Approved. You owe $600, $100 a month for 6 months, no interest. The plan is saved to your Capital One account. I'll check back by Fri Oct 30 if the corrected statement hasn't arrived.</span>
   </section>
 </main>
 <script>
@@ -123,23 +123,23 @@ async function run(names) {
   $('caseId').textContent = 'Case FA 20931';
   agent('reader', 'work'); say('Your bill says', 'Reading your documents…');
   await wait(1300); agent('reader', 'done');
-  agent('auditor', 'work'); say('After insurance', 'Golden State allowed $4,760 and paid $2,160. <b>Your share is $2,600.</b>');
-  await count(2600, 1800);
+  agent('auditor', 'work'); say('After insurance', 'Golden State allowed $4,760 and paid $3,660. <b>Your share is $1,100.</b> The hospital never applied it.');
+  await count(1100, 1800);
   agent('auditor', 'done'); agent('bank', 'work');
   await wait(600); say('After what you already paid', 'Found a <b>$500</b> payment to CPMC on Sep 14 in your Capital One account.');
-  await count(2100, 1400);
+  await count(600, 1400); $('num').classList.add('green');
   await wait(1400); say('After what you already paid', 'Also spotted: Berkeley Urgent Care charged you <b>$75 twice</b>. That one is separate; we drafted a dispute for your bank.');
   agent('bank', 'done'); agent('policy', 'work');
-  await wait(700); say('With Sutter financial assistance', 'Paychecks: $900 every two weeks = $23,400/yr, 150% of the poverty line. Your $2,600 share is 11% of income, over Sutter\'s 10% line: <b>written off in full</b>, and the $500 you paid comes back.');
-  await count(0, 1400); $('num').classList.add('green');
+  await wait(700); say('Under Sutter\'s own policy', 'Paychecks: $1,400 every two weeks = $36,400/yr, 233% of the poverty line. Not eligible for a write-off: it needs medical bills over 10% of income; yours are 3%. But Sutter\'s billing policy says <b>"All payment plans shall be interest-free."</b> So: 6 × $100/month, 0% interest.');
+  await wait(2200);
   agent('policy', 'done'); agent('caller', 'work');
   $('call').classList.add('in');
   let s = 0; const clock = setInterval(() => { s += 7; $('callT').textContent = `Calling CPMC billing · ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }, 250);
-  await wait(1200); say('You owe', 'Our voice agent is on the phone with CPMC to confirm the write-off and your refund.');
+  await wait(1200); say('You owe', 'Our voice agent is on the phone with CPMC to set up the interest-free plan and pause collections.');
   await wait(2600); clearInterval(clock);
-  $('call').classList.add('done'); $('callT').textContent = 'Call done · CPMC agreed to $0 · case FA 20931';
+  $('call').classList.add('done'); $('callT').textContent = 'Call done · CPMC agreed to $600, 6 × $100 · case FA 20931';
   agent('caller', 'done');
-  say('You owe', 'Down from <b>$8,700</b>, and $500 back to you. Nothing is agreed until you approve.');
+  say('You owe', 'Down from <b>$8,700</b>, on an interest-free plan. Nothing is agreed until you approve.');
   await wait(500); $('approve').classList.add('in');
 }
 $('ok').onclick = () => { $('ok').parentElement.style.display = 'none'; $('doneMsg').style.display = 'block'; };

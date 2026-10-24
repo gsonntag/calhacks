@@ -85,6 +85,21 @@ class NessieClient:
     async def list_bills(self, account_id: str) -> list[dict]:
         return await self._req("GET", f"/accounts/{account_id}/bills") or []
 
+    async def find_account(self, first: str, last: str) -> dict | None:
+        """The patient's checking account, found by the name on their bill: the newest Nessie customer with
+        that name that has an account. Stands in for the patient linking their bank (Plaid/MX in production)."""
+        norm = lambda x: " ".join(str(x or "").lower().split())
+        custs = [c for c in await self._req("GET", "/customers") or []
+                 if norm(c.get("first_name")) == norm(first) and norm(c.get("last_name")) == norm(last)]
+        for c in reversed(custs):
+            accts = await self._req("GET", f"/customers/{c['_id']}/accounts") or []
+            if accts:
+                return {"customer_id": c["_id"], "account_id": accts[-1]["_id"]}
+        return None
+
+    async def delete_account(self, account_id: str) -> None:
+        await self._req("DELETE", f"/accounts/{account_id}")
+
     async def _merchant_name(self, merchant_id: str) -> str:
         if merchant_id not in self._merchant_names:
             try:
@@ -141,9 +156,15 @@ def load_ids(scenario: str = "default") -> dict:
     return json.loads(f.read_text()) if f.exists() else {}
 
 
-def get_bank(demo_case: dict) -> tuple[Any, str, str]:
-    """Returns (client, account_id, label). Each demo scenario has its own seeded Nessie account."""
-    ids = load_ids(demo_case.get("scenario", "default"))
-    if config.NESSIE_API_KEY and ids.get("account_id"):
-        return NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL), ids["account_id"], "Capital One Nessie (live)"
-    return LocalMirror(demo_case), "mirror", "Nessie sandbox mirror (offline)"
+async def get_bank(case: dict) -> tuple[Any, str, str]:
+    """Returns (client, account_id, label). Live: the Nessie account of the patient named on the bill.
+    Offline (no Nessie key): the scenario's sample transactions, labelled as a mirror."""
+    if config.NESSIE_API_KEY:
+        client = NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL)
+        p = case["patient"]
+        found = await client.find_account(p["first_name"], p["last_name"])
+        if not found:
+            raise NessieError(f"No Capital One (Nessie) account found for {p['first_name']} {p['last_name']}")
+        return client, found["account_id"], "Capital One Nessie (live)"
+    from ..orchestrator import demo_case  # offline only: sample transactions
+    return LocalMirror(demo_case(case.get("scenario", "default"))), "mirror", "Nessie sandbox mirror (offline)"

@@ -108,8 +108,8 @@
     <h2>Same bill, different hospitals</h2>
     <p class="lead">One patient, one bill, one income. Only the hospital's own policy changes.</p>
     <div class="seg" role="group" aria-label="Scenario">
-      <button data-s="default" aria-pressed="true">Rosa · $8,700 ER bill</button>
-      <button data-s="freecare" aria-pressed="false">Marcus · $5,600 HDHP</button>
+      <button data-s="freecare" aria-pressed="true">Marcus · $5,600 HDHP</button>
+      <button data-s="default" aria-pressed="false">Rosa · $8,700 ER bill</button>
     </div>
     <div class="facts" id="facts"></div>
     <div class="grid" id="compare"></div>
@@ -262,7 +262,7 @@ document.addEventListener('click', async (e) => {
   } catch (err) { st.className = 'status flag'; st.textContent = err.message; btn.disabled = false; }
 });
 
-loadCompare('default').catch(showErr);
+loadCompare('freecare').catch(showErr);
 loadHospitals().catch(showErr);
 </script>
 </body>

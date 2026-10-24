@@ -24,10 +24,10 @@ def demo():
 def test_demo_reconciliation(demo):
     rec = finance.reconcile(demo["bill"], demo["eob"], demo["transactions"])
     assert rec["billed_due"] == 8700
-    assert rec["patient_responsibility"] == 2600
+    assert rec["patient_responsibility"] == 1100
     assert rec["paid"] == 500
-    assert rec["owed"] == 2100
-    assert rec["overbilled_by"] == 6600
+    assert rec["owed"] == 600
+    assert rec["overbilled_by"] == 8100
     assert [p["amount"] for p in rec["payments"]] == [500]
 
 
@@ -44,16 +44,15 @@ def test_demo_income_fpl_and_discount(demo):
     elig = finance.charity_discount(inc["annual"], demo["patient"]["household_size"],
                                     finance.clean_tiers([{"max_fpl_pct": 200, "discount_pct": 100},
                                                          {"max_fpl_pct": 400, "discount_pct": 75}]))
-    assert inc["annual"] == 900 * 26  # biweekly pay annualized by frequency, not by the 90-day window
-    assert elig["fpl_pct"] == pytest.approx(149.5, abs=0.1)
-    assert elig["discount_pct"] == 100
-    # her whole $2,600 share is written off, so the $500 she already paid comes back
-    assert finance.settle(2600, 500, elig["discount_pct"]) == {"discounted_share": 0.0, "balance": 0.0, "refund": 500.0}
-    # her hospital's real policy (Sutter CPMC, from policydb/): insured, <= 400% FPL, out-of-pocket $2,600 is
-    # 11% of her income (> 10%) -> full write-off
+    assert inc["annual"] == 1400 * 26  # biweekly pay annualized by frequency, not by the 90-day window
+    assert elig["fpl_pct"] == pytest.approx(232.6, abs=0.1)
+    assert elig["discount_pct"] == 75
+    # her hospital's real policy (Sutter CPMC, from policydb/): insured, <= 400% FPL, but the write-off needs
+    # out-of-pocket over 10% of income and her $1,100 share is 3% -> no discount; $600 left, on a plan
     assert demo["hospital"]["name"] == demo["bill"]["provider"] == "California Pacific Medical Center"
-    sutter = finance.charity_discount(inc["annual"], 1, stored_tiers("sutter-cpmc"), insured=True, out_of_pocket=2600)
-    assert sutter["discount_pct"] == 100 and sutter["tier"]["min_oop_pct_income"] == 10
+    sutter = finance.charity_discount(inc["annual"], 1, stored_tiers("sutter-cpmc"), insured=True, out_of_pocket=1100)
+    assert sutter["discount_pct"] == 0 and sutter["oop_pct_income"] == pytest.approx(3.0, abs=0.1)
+    assert finance.settle(1100, 500, 0) == {"discounted_share": 1100.0, "balance": 600.0, "refund": 0.0}
 
 
 def test_settle_refund_when_overpaid():
@@ -127,4 +126,12 @@ def test_clean_tiers_coerces_and_drops():
 def test_reconcile_without_payments(demo):
     txns = [t for t in demo["transactions"] if "Pacific" not in t.get("merchant", "")]
     rec = finance.reconcile(demo["bill"], demo["eob"], txns)
-    assert rec["paid"] == 0 and rec["owed"] == 2600
+    assert rec["paid"] == 0 and rec["owed"] == 1100
+
+
+def test_payment_plan_respects_policy_cap():
+    # Sutter's billing policy (policydb/): monthly payment at most 10% of monthly income
+    plan = finance.payment_plan(600, 3033.33, policy_cap_pct=10)
+    assert (plan["months"], plan["monthly"]) == (6, 100.0)
+    tight = finance.payment_plan(600, 3033.33, max_share=0.2, policy_cap_pct=2)  # the policy's cap wins when lower
+    assert (tight["months"], tight["monthly"]) == (12, 50.0) and "caps it at 2%" in tight["reason"]

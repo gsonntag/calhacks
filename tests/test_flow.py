@@ -67,16 +67,18 @@ async def test_offline_end_to_end(client):
     assert r["ended"] is True
     assert r["outcome"]["case_number"] == "58213"
 
+    # $600 is still owed: the interest-free plan (Sutter's terms) waits for the patient's OK, then goes to the bank
+    await _approve(c, case_id, "planner")
     done = await _wait_for(case_id, lambda e: e["kind"] == "case_done")
     s = done["summary"]
-    assert s["started_at"] == 8700 and s["now"] == 0 and s["refund"] == 500
+    assert s["started_at"] == 8700 and s["now"] == 600 and s["refund"] == 0
     assert s["case_number"] == "58213"
-    assert s["plan"]["months"] == 0 and s["plan_created"] is False
+    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is True
 
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
     assert CASE_HTML_KINDS <= kinds, CASE_HTML_KINDS - kinds
-    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 2100, 0]
+    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600]
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)
@@ -135,7 +137,7 @@ async def _run_policy(case):
     loop = asyncio.get_running_loop()
     txns, owed = loop.create_future(), loop.create_future()
     txns.set_result([{"id": f"t{i}", "merchant": "", **t} for i, t in enumerate(case["transactions"])])
-    owed.set_result({"owed": 2100.0, "responsibility": 2600.0, "paid": 500.0})
+    owed.set_result({"owed": 600.0, "responsibility": 1100.0, "paid": 500.0})
     return await policy.run(case, txns, owed)
 
 
@@ -159,18 +161,22 @@ async def test_bad_policy_extraction_never_crashes(monkeypatch, reply):
     out = await _run_policy(case)
     assert out["origin"] == "offline_fixture" and out["live"] is False
     if isinstance(reply, Exception):  # fixture's known tiers, labelled as the fixture
-        assert out["target"] == 0 and out["refund"] == 500 and out["source"] == policy.FIXTURE_LABEL
+        assert out["target"] == 0 and out["refund"] == 225 and out["source"] == policy.FIXTURE_LABEL  # 75% tier
     else:  # nothing usable: honest "no discount", no crash
-        assert out["policy"]["tiers"] == [] and out["target"] == 2100
+        assert out["policy"]["tiers"] == [] and out["target"] == 600
 
 
 async def test_policy_comes_from_the_policy_db_offline():
-    """Rosa's hospital is in the committed policy DB: no network, real verified Sutter policy, $0 + $500 back."""
+    """Rosa's hospital is in the committed policy DB: no network, real verified Sutter policy. Her $1,100 share
+    is 3% of income, under the 10% the write-off needs, so $600 stays, on Sutter's interest-free plan terms."""
     case = orchestrator.new_case()
     out = await _run_policy(case)
     assert out["origin"] == "policy_db" and out["live"] is True and out["fetched_at"]
     assert "sutterhealth" in out["source"] or "sutterhealt" in out["source"]
-    assert out["target"] == 0 and out["refund"] == 500
+    assert out["target"] == 600 and out["refund"] == 0 and out["eligibility"]["discount_pct"] == 0
+    assert (out["plan"]["months"], out["plan"]["monthly"]) == (6, 100.0)
+    terms = out["plan_terms"]
+    assert terms["interest_free"] is True and terms["max_pct_monthly_income"] == 10 and "interest-free" in terms["quote"]
     assert all(t["verified"] and t["source_url"] for t in out["policy"]["tiers"])
     kinds = [e for e in bus.history(case["id"]) if e["kind"] == "policy_source"]
     assert kinds and kinds[0]["origin"] == "policy_db" and kinds[0]["hospital_id"] == "sutter-cpmc"

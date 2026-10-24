@@ -181,8 +181,7 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
                if elig["tier"].get("min_oop_pct_income") is not None else "")
         step(cid, "policy", "free", "Check free care", "win", f"You qualify for free care{why}")
     elif free:
-        step(cid, "policy", "free", "Check free care", "clear",
-             f"Nothing found, income is above the {free[0]['max_fpl_pct']:.0f}% limit")
+        step(cid, "policy", "free", "Check free care", "clear", _why_not_free(elig, free))
     else:
         step(cid, "policy", "free", "Check free care", "clear", "This policy has no free-care tier")
 
@@ -216,14 +215,48 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     elif d:
         text = f"${paid_info['responsibility']:,.0f} share − {d:.0f}% = ${st['discounted_share']:,.0f}{paid} = {end}"
     else:
-        text = f"${owed:,.0f} stays"
-    step(cid, "policy", "apply", label, "ok", text)
+        text = f"No write-off: ${owed:,.0f} stays"
+    step(cid, "policy", "apply", label, "ok" if d else "clear", text)
+
+    terms = found.get("payment_plan") or {}
+    plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"))
+    if plan["months"]:
+        step(cid, "policy", "plan", "Payment plan terms", "running")
+        await asyncio.sleep(0.3)
+        rules = [r for r in ("interest-free" if terms.get("interest_free") else "",
+                             f"max {terms['max_pct_monthly_income']:g}% of monthly income"
+                             if terms.get("max_pct_monthly_income") else "") if r]
+        step(cid, "policy", "plan", "Payment plan terms", "win" if rules else "ok",
+             (f"Their policy: {', '.join(rules)} → " if rules else "")
+             + f"${target:,.0f} as {plan['months']} × ${plan['monthly']:,.0f}/mo, no interest")
+        for q, src in ((terms.get("quote"), terms.get("source_url")), (terms.get("cap_quote"), terms.get("cap_source_url"))):
+            if q:
+                bus.emit(cid, "policy_quote", "policy", quote=q, source=src or source, live=live, verified=True,
+                         origin=got["origin"], matched=True, topic="payment_plan")
 
     result = ((f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}") if d else "No discount")
     if st["refund"]:
         result += f" + ${st['refund']:,.0f} refund"
-    note = "charity-care discount" if d else "income is above the policy's limits"
+    if not d and plan["months"]:
+        result = f"${target:,.0f}, interest-free plan"
+    note = "charity-care discount" if d else _why_not_free(elig, free) if free else "no discount tier matched"
     bus.emit(cid, "agent_finished", "policy", summary=result, note=note)
     return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live,
             "origin": got["origin"], "fetched_at": got["fetched_at"], "sources": got["sources"],
-            "target": target, "refund": st["refund"], "discounted_share": st["discounted_share"]}
+            "target": target, "refund": st["refund"], "discounted_share": st["discounted_share"],
+            "plan": plan, "plan_terms": terms}
+
+
+def _why_not_free(elig: dict, free: list[dict]) -> str:
+    """Why a free-care tier didn't apply, in the patient's terms."""
+    for t in free:
+        who = t.get("applies_to") or "all"
+        if (who == "insured") != elig["insured"] and who != "all":
+            continue
+        if elig["fpl_pct"] > t["max_fpl_pct"]:
+            return f"Income is above the {t['max_fpl_pct']:.0f}% limit"
+        need = t.get("min_oop_pct_income")
+        if need is not None and elig["oop_pct_income"] <= need:
+            return (f"Not eligible: the write-off needs medical bills over {need:g}% of income; "
+                    f"yours are {elig['oop_pct_income']:.0f}%")
+    return f"Income is above the {free[0]['max_fpl_pct']:.0f}% limit"

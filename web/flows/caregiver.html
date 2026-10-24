@@ -93,12 +93,11 @@
     <div class="twin">
       <article class="card pane">
         <span class="eyebrow"><span class="dot live"></span>What you see</span>
-        <div class="numrow"><s>$8,700</s><b>$0</b></div>
+        <div class="numrow"><s>$8,700</s><b>$600</b></div>
         <ul class="steps">
-          <li><span class="dot green"></span>Insurance applied<b>$2,600</b></li>
-          <li><span class="dot green"></span>Found her $500 payment<b>$2,100</b></li>
-          <li><span class="dot green"></span>Sutter assistance FA 20931 (100% of $2,600)<b>$0</b></li>
-          <li><span class="dot green"></span>Her $500 payment comes back<b>+$500</b></li>
+          <li><span class="dot green"></span>Insurance applied<b>$1,100</b></li>
+          <li><span class="dot green"></span>Found her $500 payment<b>$600</b></li>
+          <li><span class="dot green"></span>Interest-free plan, Sutter billing policy<b>6 × $100</b></li>
           <li><span class="dot live"></span>Calling CPMC billing<b>now</b></li>
         </ul>
         <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="one-screen.html#auto"><span>Open <span class="whoName">Mom</span>'s case</span></a><button class="btn ghost" type="button">Add a sibling</button></div>
@@ -117,8 +116,8 @@ const $ = (id) => document.getElementById(id);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 let who = 'Mom';
 const MSG = {
-  es: () => `Hola Rosa. Daniel nos pidió ayuda con su factura de CPMC. <b>Ya no debe $8,700. Debe $0</b>, y le devuelven los $500 que ya pagó. Daniel se está encargando. Usted no tiene que hacer nada.`,
-  en: () => `Hi Rosa. Daniel asked us to help with your CPMC bill. <b>You no longer owe $8,700. You owe $0</b>, and the $500 you already paid comes back to you. Daniel is taking care of it. You don't need to do anything.`,
+  es: () => `Hola Rosa. Daniel nos pidió ayuda con su factura de CPMC. <b>Ya no debe $8,700. Debe $600</b>, en 6 pagos de $100 sin intereses. Daniel se está encargando. Usted no tiene que hacer nada.`,
+  en: () => `Hi Rosa. Daniel asked us to help with your CPMC bill. <b>You no longer owe $8,700. You owe $600</b>, paid as $100 a month for 6 months, with no interest. Daniel is taking care of it. You don't need to do anything.`,
 };
 function go(n) {
   document.querySelectorAll('.view').forEach((v) => v.classList.toggle('on', v.id === 'v' + n));

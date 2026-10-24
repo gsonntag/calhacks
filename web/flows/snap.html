@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="base.css">
-<!-- MOCK, mobile-first: photo of bill -> photo of EOB -> the big number falls $8,700 -> $2,100 -> $0. -->
+<!-- MOCK, mobile-first: photo of bill -> photo of EOB -> the big number falls $8,700 -> $1,100 -> $600, then an interest-free plan. -->
 <style>
   .scr{position:absolute;inset:0;top:48px;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .4s}
   .scr.on{opacity:1;pointer-events:auto}
@@ -103,7 +103,7 @@
           <div><span class="ic"></span>Reading your bill</div>
           <div><span class="ic"></span>Matching your insurance</div>
           <div><span class="ic"></span>Checking your bank for payments</div>
-          <div><span class="ic"></span>Finding Sutter's assistance policy</div>
+          <div><span class="ic"></span>Checking Sutter's own policies</div>
         </div>
         <div class="big">
           <div class="was" id="was">They're asking for</div>
@@ -112,8 +112,8 @@
         </div>
         <div class="bar"><i id="barI"></i></div>
         <div class="plan" id="plan">
-          <div class="row"><span>Back to you</span><b>$500 refund</b></div>
-          <div class="row"><span>Assistance case</span><b>FA 20931</b></div>
+          <div class="row"><span>Payment plan</span><b>6 × $100/month, 0% interest</b></div>
+          <div class="row"><span>Collections</span><b>Ask to pause</b></div>
           <button class="btn lg" type="button" id="approve">Looks good, go</button>
         </div>
       </div>
@@ -126,9 +126,9 @@ const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const DOCS = [
   { title: 'Snap your <b>hospital bill</b>', sub: 'The page with the amount due',
-    paper: '<span class="ph">BAYVIEW COMMUNITY HOSPITAL</span><span class="stamp">FINAL NOTICE</span><span class="ln"></span><span class="ln m"></span><span class="ln s"></span><span class="ln"></span><span class="ln m"></span><span class="big">$8,700.00</span>' },
+    paper: '<span class="ph">CALIFORNIA PACIFIC MED CTR</span><span class="stamp">FINAL NOTICE</span><span class="ln"></span><span class="ln m"></span><span class="ln s"></span><span class="ln"></span><span class="ln m"></span><span class="big">$8,700.00</span>' },
   { title: 'Now your <b>insurance letter</b>', sub: 'Says "Explanation of Benefits" at the top',
-    paper: '<span class="ph" style="color:#2F5B34">GOLDEN STATE HEALTH PLAN</span><span class="ln s"></span><span class="ln"></span><span class="ln m"></span><span class="ln"></span><span class="ln s"></span><span class="big" style="font-size:12px">Your share: $2,600.00</span>' },
+    paper: '<span class="ph" style="color:#2F5B34">GOLDEN STATE HEALTH PLAN</span><span class="ln s"></span><span class="ln"></span><span class="ln m"></span><span class="ln"></span><span class="ln s"></span><span class="big" style="font-size:12px">Your share: $1,100.00</span>' },
 ];
 let shot = 0;
 function frame() {
@@ -163,15 +163,17 @@ async function result() {
   for (const r of rows) { await wait(520); r.classList.add('done'); r.querySelector('.ic').innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'; }
   await wait(300);
   $('was').textContent = 'What you actually owe';
-  $('why').textContent = 'Insurance leaves you $2,600, and you already paid $500 on Sep 14.';
-  $('barI').style.width = (2100 / 8700 * 100) + '%';
-  await count($('num'), 8700, 2100, 1600);
+  $('why').textContent = 'Insurance leaves you $1,100. The hospital never applied it.';
+  $('barI').style.width = (1100 / 8700 * 100) + '%';
+  await count($('num'), 8700, 1100, 1600);
   await wait(900);
-  $('was').textContent = 'With Sutter financial assistance';
-  $('why').textContent = 'Your $2,600 share is 11% of your income (150% of poverty line). Sutter writes it off, and your $500 comes back.';
-  $('barI').style.width = '0%'; $('barI').style.background = 'var(--green)';
-  await count($('num'), 2100, 0, 1200);
+  $('why').textContent = 'And you already paid $500 on Sep 14.';
+  $('barI').style.width = (600 / 8700 * 100) + '%'; $('barI').style.background = 'var(--green)';
+  await count($('num'), 1100, 600, 1200);
   $('num').classList.add('green');
+  await wait(900);
+  $('was').textContent = 'Under Sutter\'s own policy';
+  $('why').textContent = 'No write-off: it needs medical bills over 10% of income, yours are 3%. But Sutter payment plans are interest-free: $100 a month for 6 months.';
   await wait(300); $('plan').classList.add('in');
 }
 $('approve').onclick = () => { $('approve').textContent = 'Done. We\'ll call CPMC for you'; $('approve').classList.add('green'); };

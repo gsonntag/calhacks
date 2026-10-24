@@ -275,18 +275,20 @@ async def test_recheck_detects_change_only_when_content_changes(monkeypatch, tmp
 
 def test_same_bill_different_hospitals():
     rosa = {r["hospital_id"]: r for r in compare.compare(DB, "default")["results"]}
-    assert rosa["sutter-cpmc"]["balance"] == 0 and rosa["sutter-cpmc"]["refund"] == 500
-    assert rosa["sutter-cpmc"]["fpl_pct"] == pytest.approx(149.5, abs=0.1)
-    assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(11.1, abs=0.1)
-    assert "if out-of-pocket > 10% of income" in rosa["sutter-cpmc"]["rule"]
-    assert rosa["sutter-cpmc"]["quote"] and rosa["sutter-cpmc"]["quote_source"]
-    # Chinese Hospital's verified free-care tier is for self-pay patients only; Rosa is insured
-    assert rosa["chinese-hospital"]["balance"] == 2100 and rosa["chinese-hospital"]["discount_pct"] == 0
-    assert "uninsured" in rosa["chinese-hospital"]["why_not"]
-    assert rosa["zsfg"]["balance"] == 2100  # ZSFG publishes no fixed-percent tier on its own site
+    # Rosa: insured, 233% FPL, her $1,100 share is 3% of income. CPMC and UCSF write off insured patients'
+    # shares only above 10% of income, Chinese Hospital's free care is self-pay only, ZSFG has no tier: $600 everywhere
+    assert rosa["sutter-cpmc"]["balance"] == 600 and rosa["sutter-cpmc"]["refund"] == 0
+    assert rosa["sutter-cpmc"]["fpl_pct"] == pytest.approx(232.6, abs=0.1)
+    assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(3.0, abs=0.1)
+    assert "not above 10%" in rosa["sutter-cpmc"]["why_not"]
+    assert rosa["chinese-hospital"]["balance"] == 600 and rosa["chinese-hospital"]["discount_pct"] == 0
+    assert rosa["zsfg"]["balance"] == 600  # ZSFG publishes no fixed-percent tier on its own site
     marcus = {r["hospital_id"]: r for r in compare.compare(DB, "freecare")["results"]}
     assert marcus["ucsf-health"]["balance"] == 0 and marcus["ucsf-health"]["refund"] == 0
-    assert marcus["chinese-hospital"]["balance"] == 5600
+    assert marcus["sutter-cpmc"]["balance"] == 0 and marcus["sutter-cpmc"]["quote"] and marcus["sutter-cpmc"]["quote_source"]
+    assert "if out-of-pocket > 10% of income" in marcus["sutter-cpmc"]["rule"]
+    assert marcus["chinese-hospital"]["balance"] == 5600 and "uninsured" in marcus["chinese-hospital"]["why_not"]
+    assert marcus["zsfg"]["balance"] == 5600
 
 
 def test_evaluate_math_matches_finance():
