@@ -1,15 +1,23 @@
 # Judge Q&A prep
 
 **"Is it legal for an AI to call a hospital for someone?"**
-The patient authorizes it, and BillBack says it's an automated assistant at the start of every call
-(California's bot-disclosure law requires that). Hospitals already talk to authorized representatives:
-family members, patient advocates. In production we'd collect a signed HIPAA authorization naming
-BillBack as the patient's representative before any call.
+Yes, with the patient's OK. HIPAA lets a hospital discuss payment with someone the patient agrees to,
+and the agreement can be verbal (45 CFR 164.510(b)). So the call starts with a warm handoff: the patient
+says on the line that BillBack may discuss the account, then the agent continues and answers identity
+checks (date of birth, member ID). At scale, a signed authorization (164.508) on file replaces the handoff.
+BillBack says it's an automated assistant and that the call is transcribed at the start of every call:
+California requires all-party consent to recording, and it's the honest thing to do.
 
 **"What about HIPAA?"**
-This demo uses only synthetic data. In production, BillBack would be a business associate under a BAA,
-store documents encrypted, and keep the minimum necessary: the bill, the EOB, and the payment records it
-needs. Patients connect their bank read-only.
+This demo uses only synthetic data. BillBack acts for the patient (it's the patient's representative,
+not a vendor to the hospital), stores documents encrypted, and keeps the minimum necessary: the bill, the
+EOB, and the payment records it needs. Details and sources: `docs/feasibility.md`.
+
+**"Could a real bank actually give you this data?"**
+Yes. BillBack only needs transactions (payee, amount, date) and payroll deposits, which consumer-consent
+aggregators (Plaid, MX, Finicity) provide today with the user's permission, including income products.
+Nessie stands in for that in the demo. We don't depend on the CFPB's 1033 open-banking rule (its
+compliance dates are stayed while it's rewritten), and statement upload is the fallback.
 
 **"What if the AI is wrong?"**
 The money math is deterministic code, not the model: reconciliation, income vs. poverty line, discount
