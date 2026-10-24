@@ -54,18 +54,18 @@
   <section class="slide">
     <div class="kicker">The problem</div>
     <div class="big">$8,700</div>
-    <p style="font-size:32px;color:var(--ink);margin:24px 0 8px">Final notice. Collections in 10 days.</p>
+    <p style="font-size:32px;color:var(--ink);margin:24px 0 8px">Final notice from California Pacific Medical Center. Collections by Nov 3.</p>
     <p>Insurance was supposed to cover the ER visit. Most people either pay it or ignore it until collections.<br>
       The fixes exist — but they take hours on hold and knowing exactly what to ask for.</p>
   </section>
 
   <section class="slide">
     <div class="kicker">What actually went wrong</div>
-    <h2>She owes <span>$150</span>, not $8,700.</h2>
+    <h2>She owes <span>$0</span>, not $8,700. And gets $500 back.</h2>
     <div class="row">
       <div class="card"><b>Insurance never posted</b><p>The EOB says her share is $2,600. The hospital billed all $8,700.</p></div>
       <div class="card"><b>A payment they "can't see"</b><p>She already paid $500 on Sept 14 — it's right there in her bank.</p></div>
-      <div class="card"><b>A discount they owe her</b><p>At 216% of the poverty line, the hospital's own policy takes 75% off her share.</p></div>
+      <div class="card"><b>A write-off they owe her</b><p>Payroll says $23,400/yr: 150% of the poverty line. Her $2,600 is 11% of income, over Sutter's 10% line, so its own policy forgives all of it.</p></div>
     </div>
   </section>
 
@@ -76,7 +76,7 @@
       <div class="card"><b>🧾 Auditor</b><p>Reconciles bill + EOB against your bank records (Capital One Nessie).</p></div>
       <div class="card"><b>🔎 Policy</b><p>Pulls the hospital's own assistance policy live (Bright Data) and checks your income.</p></div>
       <div class="card"><b>📞 Caller</b><p>Phones billing, cites the evidence, gets a case number (Cartesia).</p></div>
-      <div class="card"><b>📅 Planner</b><p>Sets up an interest-free plan — only after you approve.</p></div>
+      <div class="card"><b>📅 Follow-up</b><p>Remembers every call and calls back when a promise is overdue.</p></div>
     </div>
     <p style="margin-top:28px;font-size:22px">Claude reads the documents and does the talking. The money math is deterministic code — every number cites its source.</p>
   </section>
@@ -84,8 +84,9 @@
   <section class="slide">
     <div class="kicker">Live demo</div>
     <h2>Watch it make the call.</h2>
-    <div class="flow"><span class="num"><s>$8,700</s></span><span class="arrow">→</span><span class="num">$2,100</span><span class="arrow">→</span><span class="num green">$150</span></div>
-    <p style="margin-top:36px">Case FA-20931 · account on hold · 3 × $50/month, interest-free.</p>
+    <div class="flow"><span class="num"><s>$8,700</s></span><span class="arrow">→</span><span class="num">$2,100</span><span class="arrow">→</span><span class="num green">$0</span><span class="num green" style="font-size:40px;margin-left:10px">+ $500 back</span></div>
+    <p style="margin-top:36px">Case FA 20931 · account on hold · <i>"I'll check back by Fri Oct 30 if the corrected statement hasn't arrived."</i></p>
+    <p style="font-size:22px">Second case: Marcus Lee, UCSF Medical Center — $5,600 → $0 free care (174% of the poverty line).</p>
   </section>
 
   <section class="slide">
@@ -96,6 +97,18 @@
       <li><b style="color:var(--ink)">Never agrees to pay</b> on a call; discloses it's an automated assistant.</li>
       <li><b style="color:var(--ink)">Audit log</b> of every tool call, with inputs and results.</li>
       <li><b style="color:var(--ink)">No invented numbers</b> — computed in code, traced to a bill line, EOB field or bank transaction.</li>
+      <li><b style="color:var(--ink)">Verified quotes</b> — every policy number is checked against the hospital's own document.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Feasibility</div>
+    <h2>Why this is <span>real</span>.</h2>
+    <ul>
+      <li><b style="color:var(--ink)">Bank data</b> — transactions + payroll deposits are available today, with consent, via Plaid / MX / Finicity. Nessie is our sandbox stand-in.</li>
+      <li><b style="color:var(--ink)">Public policies</b> — hospitals must publish them: IRS 501(r); California's Hospital Fair Pricing Act, up to 400% of the poverty line.</li>
+      <li><b style="color:var(--ink)">Warm handoff</b> — the patient verbally authorizes on the call (HIPAA, 45 CFR 164.510(b)).</li>
+      <li><b style="color:var(--ink)">Honest caller</b> — BillBack says it's automated and that the call is transcribed.</li>
     </ul>
   </section>
 
@@ -103,10 +116,21 @@
     <div class="kicker">Under the hood</div>
     <h2>Every sponsor does real work.</h2>
     <div class="sponsor">
-      <b>Cartesia</b><span>Managed voice agent places the outbound call; per-call case brief; live transcript.</span>
-      <b>Capital One Nessie</b><span>Income from payroll deposits, the missed $500, the double charge, the plan written back as a recurring bill.</span>
-      <b>Bright Data</b><span>SERP + Web Unlocker fetch the hospital's own financial-assistance policy, live.</span>
+      <b>Cartesia</b><span>Our own voice pipeline: Twilio audio ↔ Cartesia Ink speech-to-text + Sonic text-to-speech ↔ Claude. Voice/accent picker; medical pronunciation.</span>
+      <b>Bright Data</b><span>Policy database: SERP finds each hospital's policy, Web Unlocker fetches pages + policy PDFs; every tier verified against the source, re-checked for changes. Same bill at 4 SF hospitals → different answers.</span>
+      <b>Capital One Nessie</b><span>Income from payroll deposits, the missed $500, the double charge.</span>
       <b>Claude</b><span>Reads PDFs, extracts policy tiers with verbatim quotes, runs the agents and the call.</span>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Competition</div>
+    <h2>Others advise or haggle. BillBack <span>proves</span>.</h2>
+    <div class="row">
+      <div class="card"><b>Human advocates</b><p>Goodbill: people on hold for you, 20% of savings.</p></div>
+      <div class="card"><b>Charity-care nonprofits</b><p>Dollar For: guides you through the form. No bank proof, no call.</p></div>
+      <div class="card"><b>General negotiators</b><p>Rocket Money (35–60% of savings), Pine AI. No hospital policy.</p></div>
+      <div class="card" style="border-color:var(--accent);background:var(--tint)"><b>BillBack</b><p>Bank-proven + the hospital's own policy + makes the call + approval gate.</p></div>
     </div>
   </section>
 
@@ -122,7 +146,7 @@
     <ul>
       <li>Signed HIPAA authorization flow; inbox and patient-portal intake</li>
       <li>Pre-filled assistance applications and dispute letters</li>
-      <li>Spanish-language patient side; follow-up calls until the corrected statement arrives</li>
+      <li>Real bank feeds (Plaid / MX / Finicity); Spanish-language patient side</li>
       <li>B2B: employers, benefits platforms, and hospitals clearing charity-care backlogs</li>
     </ul>
     <div class="foot" style="margin-top:auto"><span style="font-size:28px;color:var(--ink);font-weight:700">Bill<span style="color:var(--accent)">Back</span> — we fight the bill so you don't have to.</span></div>

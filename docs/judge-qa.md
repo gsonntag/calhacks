@@ -28,7 +28,7 @@ and the call agent is instructed never to agree to pay or give card details.
 
 **"Does this only work on your example?"**
 Upload any bill + EOB: Claude extracts the fields; the auditor works from whatever bank history exists.
-(Second demo case: a clinic bill where the patient qualifies for free care → $0.)
+(Second demo case: Marcus at UCSF, where the bill is already correct but he qualifies for free care → $0.)
 
 **"Do hospitals really have to give discounts?"**
 Nonprofit hospitals must have and publish a financial-assistance policy to keep their tax exemption
@@ -46,14 +46,17 @@ and benefits platforms offering it as a perk, and hospitals' own patient-financi
 to clear charity-care backlogs.
 
 **Sponsor questions**
-- *Cartesia:* the caller is a Cartesia Managed Agent (Claude Haiku 5.5 on Cartesia), outbound call from a
-  Cartesia number, per-call case brief as dynamic variables, live transcript by polling the call. Voice is
-  the product's core moment, not decoration.
-- *Capital One Nessie:* the patient's account is the source of truth — payroll deposits for income,
-  the $500 payment the hospital missed, the double charge, the hospital bill, and the approved plan written
-  back as a recurring bill.
-- *Bright Data:* SERP API finds the hospital's financial-assistance policy, Web Unlocker fetches the live
-  page; without it there's no "the hospital's own rules say…".
+- *Cartesia:* our own voice pipeline (`billback/voice/`, `docs/voice.md`): Twilio Media Streams audio goes
+  to Cartesia Ink streaming STT, Claude decides what to say, Sonic TTS speaks it back in μ-law, with
+  barge-in. Voice/accent picker; a pronunciation normalizer reads money, claim numbers, CPT codes and drug
+  names correctly. Follow-up calls remember the last call.
+- *Capital One Nessie:* the patient's account is the source of truth: payroll deposits for income, the
+  $500 payment the hospital missed, the double charge, and a plan written back as a recurring bill when
+  something is still owed.
+- *Bright Data:* a real policy database (`billback/policies/`, `docs/brightdata.md`, evidence in
+  `policydb/`): SERP API discovers each hospital's policy, Web Unlocker fetches pages and policy PDFs,
+  extracted rules must quote text that the code finds in the source, versions are hashed and re-checked.
+  Same bill at 4 SF hospitals gives different answers.
 - *Microsoft "Built for the Real World":* human approval gate, tiered tool permissions, append-only audit
   log of every tool call, deterministic money math, honest real-vs-simulated labels.
 

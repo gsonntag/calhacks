@@ -12,14 +12,14 @@
   :root{--accent:#BE3337;--ink:#1A1A1E;--muted:#6B6B73}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;background:#F6F6F8;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column}
-  header{padding:14px 16px;background:#22314A;color:#fff;font-weight:700}
+  header{padding:14px 16px;background:#22314A;color:#fff;font-weight:700;overflow-wrap:anywhere}
   header small{display:block;font-weight:500;opacity:.75}
   #log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
   .l{max-width:85%;padding:10px 14px;border-radius:16px;font-size:16px;line-height:1.45}
   .l.bb{background:#fff;border:1px solid #E4E4EA;align-self:flex-start}
   .l.me{background:#22314A;color:#fff;align-self:flex-end}
-  footer{padding:12px;display:flex;gap:8px;background:#fff;border-top:1px solid #E4E4EA}
-  input{flex:1;font:inherit;font-size:16px;padding:12px 14px;border:1px solid #DDD;border-radius:999px}
+  footer{padding:12px;display:flex;flex-wrap:wrap;gap:8px;background:#fff;border-top:1px solid #E4E4EA}
+  input{flex:1 1 180px;min-width:0;font:inherit;font-size:16px;padding:12px 14px;border:1px solid #DDD;border-radius:999px}
   button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:0 18px;min-height:48px;cursor:pointer}
   #mic{background:#E9EEF7}#mic.on{background:var(--accent);color:#fff}
   #send{background:#22314A;color:#fff}
@@ -28,11 +28,13 @@
 </style>
 </head>
 <body>
-<header>Bayview Community Hospital · Patient Financial Services<small id="sub">Incoming call</small></header>
+<header><span id="hosp">Hospital billing</span> · Patient Financial Services<small id="sub">Incoming call</small></header>
 <div id="log"><button id="answer">📞 Answer</button></div>
 <footer><button id="mic" title="Hold to talk">🎤 Hold</button><input id="txt" placeholder="Say something as the billing rep… e.g. case number FA-2291"><button id="send">Send</button><button id="hang">Hang up</button></footer>
 <script>
 const callId = new URLSearchParams(location.search).get('call');
+const hospName = new URLSearchParams(location.search).get('hospital');
+if (hospName) document.getElementById('hosp').textContent = hospName;
 const $ = (x) => document.getElementById(x);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let busy = false, ended = false;

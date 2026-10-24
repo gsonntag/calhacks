@@ -75,7 +75,7 @@
   <section class="view" id="v2">
     <h1 class="title"><span class="whoName">Mom</span>'s bill</h1>
     <div class="drop">
-      <div class="files"><span class="chip">Bayview_FinalNotice.pdf</span><span class="chip">GoldenState_EOB.pdf</span></div>
+      <div class="files"><span class="chip">CPMC_FinalNotice.pdf</span><span class="chip">GoldenState_EOB.pdf</span></div>
       <span class="sub" style="font-size:14px">Added from the photos you sent. Drop more if you have them.</span>
     </div>
     <div class="card consent">
@@ -93,12 +93,13 @@
     <div class="twin">
       <article class="card pane">
         <span class="eyebrow"><span class="dot live"></span>What you see</span>
-        <div class="numrow"><s>$8,700</s><b>$150</b></div>
+        <div class="numrow"><s>$8,700</s><b>$0</b></div>
         <ul class="steps">
           <li><span class="dot green"></span>Insurance applied<b>$2,600</b></li>
           <li><span class="dot green"></span>Found her $500 payment<b>$2,100</b></li>
-          <li><span class="dot green"></span>Charity care FA-20931 (75% of $2,600)<b>$150</b></li>
-          <li><span class="dot live"></span>Calling Bayview billing<b>now</b></li>
+          <li><span class="dot green"></span>Sutter assistance FA 20931 (100% of $2,600)<b>$0</b></li>
+          <li><span class="dot green"></span>Her $500 payment comes back<b>+$500</b></li>
+          <li><span class="dot live"></span>Calling CPMC billing<b>now</b></li>
         </ul>
         <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="one-screen.html#auto"><span>Open <span class="whoName">Mom</span>'s case</span></a><button class="btn ghost" type="button">Add a sibling</button></div>
       </article>
@@ -116,8 +117,8 @@ const $ = (id) => document.getElementById(id);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 let who = 'Mom';
 const MSG = {
-  es: () => `Hola Rosa. Daniel nos pidió ayuda con su factura de Bayview. <b>Ya no debe $8,700. Debe $150</b>, en 3 pagos de $50. Daniel se está encargando. Usted no tiene que hacer nada.`,
-  en: () => `Hi Rosa. Daniel asked us to help with your Bayview bill. <b>You no longer owe $8,700. You owe $150</b>, in 3 payments of $50. Daniel is taking care of it. You don't need to do anything.`,
+  es: () => `Hola Rosa. Daniel nos pidió ayuda con su factura de CPMC. <b>Ya no debe $8,700. Debe $0</b>, y le devuelven los $500 que ya pagó. Daniel se está encargando. Usted no tiene que hacer nada.`,
+  en: () => `Hi Rosa. Daniel asked us to help with your CPMC bill. <b>You no longer owe $8,700. You owe $0</b>, and the $500 you already paid comes back to you. Daniel is taking care of it. You don't need to do anything.`,
 };
 function go(n) {
   document.querySelectorAll('.view').forEach((v) => v.classList.toggle('on', v.id === 'v' + n));
@@ -132,7 +133,7 @@ $('textBtn').onclick = async () => {
   const btn = $('textBtn'), mini = $('mini');
   if (btn.disabled) return; btn.disabled = true; btn.textContent = 'Sent';
   mini.innerHTML = '';
-  mini.insertAdjacentHTML('beforeend', `<div class="b">Daniel asked BillBack to help with your Bayview bill. Is that OK?<br><span class="tap">Sí, está bien</span></div>`);
+  mini.insertAdjacentHTML('beforeend', `<div class="b">Daniel asked BillBack to help with your CPMC bill. Is that OK?<br><span class="tap">Sí, está bien</span></div>`);
   await wait(1500);
   mini.insertAdjacentHTML('beforeend', `<div class="b me">Sí, está bien</div>`);
   await wait(700);
