@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Just talk · BillBack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="base.css">
+<!-- MOCK: hold-to-talk. The transcript is a timed animation (no real microphone). -->
+<style>
+  main{max-width:760px;margin:0 auto;padding:24px 16px 48px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px}
+  .transcript{width:100%;min-height:150px;font-size:26px;line-height:1.45;font-weight:400;letter-spacing:-.01em;color:var(--ink);text-align:left}
+  .transcript .w{opacity:0;animation:wIn .35s var(--ease) forwards;display:inline}
+  @keyframes wIn{from{opacity:0;filter:blur(4px)}to{opacity:1;filter:none}}
+  .transcript mark{background:var(--tint);color:var(--accent);border-radius:6px;padding:0 4px;font-weight:600}
+  .transcript .ph{color:#C9B8B8}
+  .caret{display:inline-block;width:2px;height:1.1em;background:var(--accent);vertical-align:-3px;margin-left:2px;animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .micwrap{position:relative;width:180px;height:180px;display:flex;align-items:center;justify-content:center}
+  .ring{position:absolute;inset:0;border-radius:999px;background:var(--accent);opacity:0;transform:scale(.6)}
+  .on .ring{animation:ripple 1.8s infinite ease-out} .on .ring:nth-child(2){animation-delay:.6s} .on .ring:nth-child(3){animation-delay:1.2s}
+  @keyframes ripple{0%{opacity:.25;transform:scale(.6)}100%{opacity:0;transform:scale(1.25)}}
+  .mic{position:relative;width:128px;height:128px;border-radius:999px;border:0;background:var(--accent);color:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 20px 40px -16px rgba(190,51,55,.8);transition:transform .2s var(--ease),background .2s;touch-action:none;user-select:none;-webkit-user-select:none}
+  .on .mic{transform:scale(1.08);background:var(--accent-dark)}
+  .wave{display:flex;gap:4px;align-items:center;height:36px}
+  .wave i{width:5px;height:6px;border-radius:5px;background:var(--accent);transition:height .1s}
+  .hint{font-size:15px;font-weight:600;color:var(--muted)}
+  .demo{background:none;border:0;color:var(--muted-2);font-size:14px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:8px}
+  .heard{width:100%;padding:20px;text-align:left;display:none}
+  .heard.in{display:block;animation:fadeUp .5s var(--ease) both}
+  .heard h3{margin:0 0 12px;font-size:15px}
+  .facts{display:flex;flex-wrap:wrap;gap:8px}
+  .facts .chip{opacity:0;animation:pop .4s var(--ease) forwards}
+  .go-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+  @media (max-width:600px){ .transcript{font-size:21px;min-height:130px} .micwrap{width:150px;height:150px} .mic{width:110px;height:110px} }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/" target="_top" aria-label="BillBack home">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <b>Bill<span>Back</span></b>
+  </a>
+  <span class="aside">English · Español</span>
+</header>
+<main>
+  <h1 class="title" id="title">Just tell us <span>what happened.</span></h1>
+  <div class="transcript" id="tx" aria-live="polite"><span class="ph">“My mom got a bill from the ER…”</span></div>
+  <div class="wave" id="wave" aria-hidden="true"></div>
+  <div class="micwrap" id="micwrap">
+    <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+    <button class="mic" id="mic" type="button" aria-label="Hold to talk">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>
+    </button>
+  </div>
+  <div class="hint" id="hint">Hold to talk</div>
+  <button class="demo" id="demo" type="button">Or play the demo</button>
+
+  <section class="card heard" id="heard">
+    <h3>Here's what we heard</h3>
+    <div class="facts" id="facts"></div>
+    <div class="go-row">
+      <a class="btn lg" href="one-screen.html#auto">Start the case</a>
+      <span class="sub" style="font-size:14px">Add the bill later, or we'll request it from Bayview.</span>
+    </div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const TEXT = "My mom got an [$8,700] bill from the ER at [Bayview]. She went in back in [August] for stomach pain. Now it says [final notice] and they'll send it to collections in November. She has [Golden State] insurance and she already paid them [$500]. She can't afford this.";
+const WORDS = TEXT.split(' ');
+const FACTS = ['For: Mom', 'Bayview Community Hospital', '$8,700 billed', 'ER visit · August', 'Final notice · Nov 3', 'Insurance: Golden State', 'Already paid $500'];
+let i = 0, holding = false, timer = null, done = false;
+
+const wave = $('wave');
+for (let k = 0; k < 24; k++) wave.appendChild(document.createElement('i'));
+setInterval(() => { [...wave.children].forEach((b, k) => { b.style.height = holding ? (6 + Math.abs(Math.sin(Date.now() / 140 + k * .7)) * 26 * Math.random() + 4) + 'px' : '6px'; }); }, 90);
+
+function render() {
+  const tx = $('tx');
+  if (i === 0) return;
+  const html = WORDS.slice(0, i).map((w, k) => {
+    const m = w.match(/^\[(.+?)\](.*)$/);
+    const inner = m ? `<mark>${m[1]}</mark>${m[2]}` : w;
+    return `<span class="w"${k < i - 1 ? ' style="animation:none;opacity:1"' : ''}>${inner} </span>`;
+  }).join('');
+  tx.innerHTML = html + (holding ? '<span class="caret"></span>' : '');
+}
+// Bracketed multi-word tokens: rejoin "[final" "notice]" etc.
+(function joinBrackets() {
+  for (let k = 0; k < WORDS.length; k++) {
+    if (WORDS[k].startsWith('[') && !WORDS[k].includes(']')) {
+      while (!WORDS[k].includes(']') && k + 1 < WORDS.length) WORDS.splice(k, 2, WORDS[k] + ' ' + WORDS[k + 1]);
+    }
+  }
+})();
+function next() {
+  if (!holding) return;
+  i++; render();
+  if (i >= WORDS.length) { done = true; stop(); return; }
+  timer = setTimeout(next, 150 + Math.random() * 120 + (/[.,]$/.test(WORDS[i - 1]) ? 260 : 0));
+}
+function start() {
+  if (done) return;
+  holding = true; $('micwrap').classList.add('on'); $('hint').textContent = 'Listening… let go when you\'re done';
+  $('title').style.display = 'none'; render(); timer = setTimeout(next, 250);
+}
+function stop() {
+  if (!holding) return;
+  holding = false; clearTimeout(timer); $('micwrap').classList.remove('on'); render();
+  if (done) finish(); else $('hint').textContent = 'Paused. Hold again to keep going';
+}
+function finish() {
+  $('hint').textContent = 'Got it. Thank you.';
+  $('demo').style.display = 'none';
+  $('heard').classList.add('in');
+  $('facts').innerHTML = FACTS.map((f, k) => `<span class="chip${k === FACTS.length - 1 ? ' green' : ''}" style="animation-delay:${k * 110}ms">${f}</span>`).join('');
+}
+const mic = $('mic');
+mic.addEventListener('pointerdown', (e) => { e.preventDefault(); mic.setPointerCapture?.(e.pointerId); start(); });
+mic.addEventListener('pointerup', stop);
+mic.addEventListener('pointercancel', stop);
+mic.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); start(); } });
+mic.addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') stop(); });
+$('demo').onclick = () => { if (!holding) start(); };  // plays the whole transcript hands-free
+</script>
+</body>
+</html>

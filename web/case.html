@@ -136,6 +136,7 @@
   @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   @keyframes bar{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+  .replay #deskLink, .replay #endCallBtn, .replay #newCase{display:none!important}
 </style>
 </head>
 <body>
@@ -535,9 +536,36 @@ $('endCallBtn').addEventListener('click', () => { if (state.active) fetch(`/api/
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
 
 setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.active]; if (m && m.call && !m.callEnded) render(); }, 500);
-setInterval(async () => { await loadTabs(); renderTabs(); }, 4000);
+setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);
+
+// ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5] ----------
+// Plays a recorded run with its original timing, entirely in the browser. Approvals are shown and then
+// resolved by the recording itself, so the demo works with no network beyond loading the page.
+async function startReplay(params) {
+  const scenario = params.get('scenario') || 'default', speed = +(params.get('speed') || 1);
+  let events;
+  try { events = await (await fetch(`/api/replay?scenario=${scenario}`)).json(); } catch (e) { events = null; }
+  if (!Array.isArray(events) || !events.length) { newDraft(); return; }
+  const id = 'replay';
+  state.tabs = [{ id, name: (events.find((e) => e.bill) || {}).bill?.provider || 'Replay', status: 'reviewing' }];
+  state.active = id; state.models[id] = blankModel();
+  window.decide = () => {}; // buttons do nothing; the recording drives the story
+  document.body.classList.add('replay');
+  const t0 = events[0].ts, start = Date.now() / 1000;
+  const shift = (e) => ({ ...e, ts: start + (e.ts - t0) / speed });
+  // compress long human pauses (waiting on approvals, the rep thinking) so the replay keeps moving
+  let clock = 0, prev = t0;
+  for (const e of events) {
+    clock += Math.min(e.ts - prev, 4) / speed; prev = e.ts;
+    const at = clock;
+    setTimeout(() => { apply(model(id), { ...shift(e), ts: start + at }); state.now = Date.now() / 1000; render(); }, at * 1000);
+  }
+  render();
+}
 
 (async () => {
+  const params = new URLSearchParams(location.search);
+  if (params.get('replay')) return startReplay(params);
   await loadTabs();
   const want = new URLSearchParams(location.search).get('id');
   if (want && state.tabs.some((t) => t.id === want)) openCase(want);

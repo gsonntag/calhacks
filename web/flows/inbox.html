@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect inbox · BillBack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="base.css">
+<!-- MOCK: one click connects the inbox, a scan animation finds the bill + EOB, then Start. -->
+<style>
+  main{max-width:760px;margin:0 auto;padding:32px 16px 56px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px}
+  .view{display:none;width:100%;flex-direction:column;align-items:center;gap:22px}
+  .view.on{display:flex;animation:fadeUp .5s var(--ease) both}
+  .gbtn{display:inline-flex;align-items:center;gap:14px;min-height:68px;padding:0 30px;border:1px solid var(--border);border-radius:999px;background:#FFFFFF;
+    font-size:18px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s var(--ease),box-shadow .2s}
+  .gbtn:hover{transform:translateY(-2px);box-shadow:0 24px 50px -22px rgba(150,40,45,.4)}
+  .gbtn img{width:28px;height:21px}
+  .alt{font-size:14px;color:var(--muted-2)}
+  .alt a{font-weight:600}
+  .consent{max-width:420px;width:100%;text-align:left;padding:24px}
+  .consent h2{margin:0 0 6px;font-size:19px}
+  .consent ul{margin:14px 0 20px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--muted)}
+  .consent li{display:flex;gap:10px;align-items:flex-start}
+  .consent li svg{flex:none;margin-top:2px}
+  .consent .row{display:flex;gap:10px;justify-content:flex-end}
+  .scanner{position:relative;width:100%;max-width:520px;height:300px;overflow:hidden;border-radius:22px;border:1px solid var(--border);background:#FFFFFF;box-shadow:var(--shadow)}
+  .feed{position:absolute;left:0;right:0;top:0;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+  .mail{display:flex;gap:10px;align-items:center;text-align:left;padding:9px 10px;border-radius:12px;font-size:13px;color:var(--muted);transition:background .3s,opacity .3s}
+  .mail .av{width:28px;height:28px;flex:none;border-radius:999px;background:#F3EEEE;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--muted-2)}
+  .mail .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mail .t b{color:var(--ink);font-weight:600}
+  .mail.hit{background:var(--tint)} .mail.hit .av{background:var(--accent);color:#FFFFFF}
+  .mail.dim{opacity:.35}
+  .beam{position:absolute;left:0;right:0;height:70px;top:40%;background:linear-gradient(180deg,rgba(190,51,55,0),rgba(190,51,55,.10),rgba(190,51,55,0));
+    border-top:1px solid rgba(190,51,55,.25);border-bottom:1px solid rgba(190,51,55,.25);pointer-events:none}
+  .fadeT,.fadeB{position:absolute;left:0;right:0;height:60px;pointer-events:none}
+  .fadeT{top:0;background:linear-gradient(#FFFFFF,rgba(255,255,255,0))} .fadeB{bottom:0;background:linear-gradient(rgba(255,255,255,0),#FFFFFF)}
+  .count{font-size:15px;color:var(--muted);font-weight:600}
+  .count b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .found{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+  .doc{text-align:left;padding:20px;display:flex;flex-direction:column;gap:8px;opacity:0}
+  .doc.in{animation:dealIn .6s var(--ease) both}
+  @keyframes dealIn{from{opacity:0;transform:translateY(24px) rotate(-3deg)}to{opacity:1;transform:none}}
+  .doc .k{display:flex;justify-content:space-between;align-items:center}
+  .doc h3{margin:0;font-size:17px}
+  .doc .from{font-size:13px;color:var(--muted-2)}
+  .doc .amt{font-size:34px;font-weight:800;letter-spacing:-.03em}
+  .doc .note{font-size:13px;color:var(--muted)}
+  .extra{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;opacity:0}
+  .extra.in{animation:fadeUp .5s var(--ease) both}
+  @media (max-width:600px){ .found{grid-template-columns:1fr} .scanner{height:260px} .gbtn{font-size:16px;padding:0 22px} }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/" target="_top" aria-label="BillBack home">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <b>Bill<span>Back</span></b>
+  </a>
+</header>
+<main>
+  <section class="view on" id="v-start">
+    <h1 class="title">Your bill is probably <span>already in your inbox.</span></h1>
+    <p class="sub">Connect once. We'll find the hospital bill and the insurance statement ourselves.</p>
+    <button class="gbtn" id="connect" type="button"><img src="../gmail-icon.svg" alt="">Connect Gmail</button>
+    <p class="alt">Outlook, Yahoo, iCloud also work · <a href="drop-go.html">or upload files</a></p>
+  </section>
+
+  <section class="view" id="v-consent">
+    <div class="card consent">
+      <span class="eyebrow">Google</span>
+      <h2>BillBack wants to read medical bills</h2>
+      <p class="sub" style="font-size:14px">Only messages from hospitals, clinics and insurers.</p>
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3F7A45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Read-only. We can't send or delete mail.</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3F7A45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Everything else is skipped, never stored.</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3F7A45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Disconnect any time.</li>
+      </ul>
+      <div class="row"><button class="btn ghost" type="button" id="cancel">Cancel</button><button class="btn" type="button" id="allow">Allow</button></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-scan">
+    <h1 class="title" style="font-size:32px">Looking for your bill…</h1>
+    <div class="scanner"><div class="feed" id="feed"></div><div class="beam"></div><div class="fadeT"></div><div class="fadeB"></div></div>
+    <div class="count">Scanned <b id="n">0</b> emails · found <b id="hits">0</b> of 2</div>
+  </section>
+
+  <section class="view" id="v-found">
+    <span class="chip green"><span class="dot green"></span>Found both. You didn't have to look.</span>
+    <h1 class="title" style="font-size:34px">Is this the one?</h1>
+    <div class="found">
+      <article class="card doc" id="d1">
+        <div class="k"><span class="chip">Hospital bill</span><span class="chip amber">Final notice</span></div>
+        <h3>Bayview Community Hospital</h3>
+        <span class="from">billing@bayviewcommunity.org · Oct 10</span>
+        <span class="amt money">$8,700</span>
+        <span class="note">ER visit Aug 2 · pay by Nov 3 or sent to collections</span>
+      </article>
+      <article class="card doc" id="d2">
+        <div class="k"><span class="chip">Insurance statement</span><span class="chip green">Processed</span></div>
+        <h3>Golden State Health Plan</h3>
+        <span class="from">Explanation of Benefits · claim C-2026-0815-44917</span>
+        <span class="amt money" style="color:var(--green-ink)">$2,600</span>
+        <span class="note">Your share after insurance, not $8,700</span>
+      </article>
+    </div>
+    <div class="extra" id="extra"><span class="chip">Also attached: itemized PDF (6 charges)</span></div>
+    <a class="btn lg" href="one-screen.html#auto" id="startBtn">Start my case</a>
+    <button class="btn ghost" type="button" id="again">Not it, scan again</button>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const show = (id) => document.querySelectorAll('.view').forEach((v) => v.classList.toggle('on', v.id === id));
+const NOISE = [['A', 'Amazon', 'Your package was delivered'], ['L', 'LinkedIn', '3 people viewed your profile'], ['S', 'Spotify', 'Your Wrapped is almost here'],
+  ['C', 'Chase', 'Your statement is ready'], ['M', 'Mom', 'Re: Sunday dinner?'], ['U', 'Uber', 'Your Thursday evening trip'], ['N', 'Netflix', 'New on Netflix'],
+  ['D', 'DoorDash', 'Your order from Sweetgreen'], ['P', 'PG&E', 'Your energy bill'], ['G', 'Google', 'Security alert'], ['V', 'Venmo', 'You paid Alex'],
+  ['T', 'Target', 'Circle deals for you'], ['Z', 'Zillow', 'New listings near you'], ['W', 'Walgreens', 'Your prescription is ready']];
+const HITS = [['B', 'Bayview Community Hospital', 'FINAL NOTICE: balance $8,700.00'], ['G', 'Golden State Health Plan', 'Your Explanation of Benefits is ready']];
+
+$('connect').onclick = () => show('v-consent');
+$('cancel').onclick = () => show('v-start');
+$('allow').onclick = scan;
+$('again').onclick = scan;
+
+function scan() {
+  show('v-scan');
+  const feed = $('feed'); feed.innerHTML = ''; feed.style.transform = '';
+  let n = 0, hits = 0, i = 0, y;
+  const seq = [];
+  for (let k = 0; k < 26; k++) seq.push(NOISE[k % NOISE.length]);
+  seq.splice(11, 0, HITS[0]); seq.splice(21, 0, HITS[1]);
+  const add = () => {
+    const [a, from, subj] = seq[i];
+    const hit = HITS.includes(seq[i]);
+    feed.insertAdjacentHTML('beforeend', `<div class="mail${hit ? ' hit' : ''}"><span class="av">${a}</span><span class="t"><b>${from}</b> · ${subj}</span></div>`);
+    if (hit) { hits++; $('hits').textContent = hits; }
+    const rows = feed.children.length;
+    const last = feed.lastElementChild, box = feed.parentElement.clientHeight;
+    y = Math.max(0, last.offsetTop + last.offsetHeight - box * 0.62);
+    feed.style.transition = 'transform .14s linear'; feed.style.transform = `translateY(${-y}px)`;
+    [...feed.children].forEach((el, j) => { if (!el.classList.contains('hit') && j < rows - 4) el.classList.add('dim'); });
+    n += 37 + Math.floor(Math.random() * 60); $('n').textContent = n.toLocaleString();
+    i++;
+    if (i < seq.length) setTimeout(add, hit ? 650 : 120);
+    else setTimeout(found, 600);
+  };
+  add();
+}
+function found() {
+  show('v-found');
+  ['d1', 'd2'].forEach((id) => $(id).classList.remove('in'));
+  $('extra').classList.remove('in');
+  setTimeout(() => $('d1').classList.add('in'), 150);
+  setTimeout(() => $('d2').classList.add('in'), 450);
+  setTimeout(() => $('extra').classList.add('in'), 800);
+}
+</script>
+</body>
+</html>

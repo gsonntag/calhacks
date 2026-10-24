@@ -18,7 +18,7 @@ Drop in your hospital bill and insurance statement. BillBack:
    and a hold on collections, and gets a case number. It never agrees to pay anything.
 4. **Sets up what's left** — an interest-free plan sized to your income, written to your bank only after you approve.
 
-Demo: **$8,700 → $600 → $150**, case number, account on hold, $50/month.
+Demo: **$8,700 → $2,100 → $150**, case number, account on hold, $50/month.
 
 ## How we built it
 - **Our own agent harness** (Python): tools carry permission tiers (read / act / consequential);

@@ -5,7 +5,7 @@ works out what you actually owe from your bank records, finds the discount the h
 requires it to give you, calls billing to get it fixed, and sets up an affordable plan — nothing is paid
 without your approval.
 
-Demo arc: **$8,700 final notice → $600 actually owed → $150 under the hospital's own charity-care policy
+Demo arc: **$8,700 final notice → $2,100 actually owed → $150 under the hospital's own charity-care policy
 → account on hold, case number, interest-free plan approved on your phone.**
 
 ## How it works

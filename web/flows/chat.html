@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat with Billie · BillBack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="base.css">
+<!-- MOCK: canned conversation. Quick replies or typed text both advance the script. -->
+<style>
+  body{display:flex;flex-direction:column;height:100vh}
+  .thread{flex:1;min-height:0;overflow-y:auto;padding:12px 16px 24px;scroll-behavior:smooth}
+  .inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  .intro{text-align:center;padding:28px 0 8px}
+  .intro .title{font-size:34px}
+  .bot{display:flex;align-items:flex-start;gap:12px;animation:fadeUp .45s var(--ease) both}
+  .avatar{width:32px;height:32px;flex:none;border-radius:999px;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+  .bot p{margin:4px 0 0;font-size:16px;line-height:1.65;max-width:600px}
+  .bot p b{font-weight:700} .bot p .g{color:var(--green-ink);font-weight:700}
+  .user{display:flex;justify-content:flex-end;animation:fadeUp .35s var(--ease) both}
+  .bubble{max-width:80%;background:var(--tint);padding:12px 18px;border-radius:22px 22px 6px 22px;font-size:16px;line-height:1.55}
+  .att{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #EBC3C4;border-radius:14px;font-size:14px;font-weight:600;background:#FFFFFF}
+  .found{margin:10px 0 0 44px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:520px;animation:fadeUp .5s var(--ease) both}
+  .found div{border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:#FFFFFF}
+  .found span{display:block;font-size:12px;color:var(--muted-2);font-weight:600}
+  .found b{font-size:18px;font-weight:800} .found .g b{color:var(--green-ink)}
+  .plan{margin-left:44px;padding:18px;border-radius:20px;max-width:520px;animation:pop .5s var(--ease) both}
+  .plan h3{margin:0 0 10px;font-size:16px}
+  .plan ol{margin:0 0 16px;padding-left:20px;color:var(--muted);line-height:1.8;font-size:15px}
+  .composer{flex:none;padding:8px 16px 18px}
+  .quick{max-width:720px;margin:0 auto 10px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;min-height:0}
+  .quick button{border:1px solid var(--border);background:#FFFFFF;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;
+    animation:fadeUp .35s var(--ease) both;transition:background .2s}
+  .quick button:hover{background:var(--tint)}
+  .pill{max-width:720px;margin:0 auto;border:1px solid var(--border);border-radius:30px;background:#FFFFFF;padding:8px;display:flex;align-items:center;gap:6px;
+    box-shadow:0 12px 32px -16px rgba(150,40,45,.22)}
+  .pill:focus-within{border-color:#E9A9AB;box-shadow:0 0 0 4px rgba(190,51,55,.10),0 12px 32px -14px rgba(150,40,45,.25)}
+  .pill input{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;padding:10px 12px;background:transparent}
+  .send{width:44px;height:44px;flex:none;border:0;border-radius:999px;background:var(--accent);color:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .send:disabled{background:#E8C4C5;cursor:default}
+  @media (max-width:600px){ .found{grid-template-columns:1fr 1fr 1fr;margin-left:0} .plan{margin-left:0} .found b{font-size:15px} }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/" target="_top" aria-label="BillBack home">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <b>Bill<span>Back</span></b>
+  </a>
+  <span class="aside"><span class="dot green"></span> Billie is online</span>
+</header>
+<div class="thread" id="thread"><div class="inner" id="inner">
+  <div class="intro fade-up"><h1 class="title">Talk to <span>Billie</span></h1><p class="sub">Like texting a friend who knows how hospital billing works.</p></div>
+</div></div>
+<div class="composer">
+  <div class="quick" id="quick"></div>
+  <form class="pill" id="form">
+    <input id="msg" type="text" autocomplete="off" placeholder="Tell Billie about your bill…" aria-label="Message Billie">
+    <button class="send" type="submit" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+  </form>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const inner = $('inner'), thread = $('thread'), quick = $('quick');
+const FILE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BE3337" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const SCRIPT = [
+  { bot: ["Hi, I'm Billie. I help people pay only what they actually owe on hospital bills. What's going on?"],
+    quick: ['I got a final notice from the ER', 'My hospital bill looks way too high'] },
+  { bot: ["That's stressful, and you're not alone. Who is the bill from, and how much are they asking for?"],
+    quick: ['Bayview Community Hospital, $8,700'] },
+  { bot: ["Thanks. Is there a deadline or a collections warning on it?"], quick: ['It says final notice, pay by Nov 3'] },
+  { bot: ["Okay. We have time. Did insurance pay any of it? If you have the insurance statement (the EOB), you can drop it right here."],
+    quick: [{ label: 'Attach my EOB', file: 'golden-state-eob.pdf' }, "I'm not sure"] },
+  { bot: ["Got it. Golden State Health Plan already covered most of this and says your share is <b>$2,600</b>, not $8,700. That gap is the first thing we'll fix.",
+          "One more thing: may I check your bank account for payments you've already made? It's read-only."],
+    found: true, quick: ['Yes, check my bank'] },
+  { bot: ["Found it: a <b>$500</b> payment to Bayview on Sep 14. So right now you really owe <span class=\"g\">$2,100</span>. And your income ($33,800 a year, 216% of the poverty line) qualifies for Bayview's charity care: <b>75% off</b> your share, which brings it to <span class=\"g\">$150</span>."],
+    plan: true, quick: [] },
+];
+let stepI = 0, typing = false;
+
+const scroll = () => requestAnimationFrame(() => { thread.scrollTop = thread.scrollHeight; });
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+function addUser(html) { inner.insertAdjacentHTML('beforeend', `<div class="user"><div class="bubble">${html}</div></div>`); scroll(); }
+async function botSay(html) {
+  const t = document.createElement('div'); t.className = 'bot';
+  t.innerHTML = '<span class="avatar" aria-hidden="true">B</span><div class="typing" aria-label="Billie is typing"><span></span><span></span><span></span></div>';
+  inner.appendChild(t); scroll();
+  await wait(700 + Math.min(html.length * 9, 1100));
+  t.innerHTML = `<span class="avatar" aria-hidden="true">B</span><p>${html}</p>`; scroll();
+}
+function setQuick(list) {
+  quick.innerHTML = '';
+  (list || []).forEach((q, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.style.animationDelay = (i * 80) + 'ms';
+    b.textContent = typeof q === 'string' ? q : q.label;
+    b.onclick = () => answer(q); quick.appendChild(b);
+  });
+}
+async function play() {
+  const s = SCRIPT[stepI]; if (!s) return;
+  typing = true; setQuick([]);
+  for (const m of s.bot) await botSay(m);
+  if (s.found) {
+    inner.insertAdjacentHTML('beforeend', '<div class="found"><div><span>Hospital billed</span><b>$8,700</b></div><div><span>Insurance paid</span><b>$2,160</b></div><div class="g"><span>Your share</span><b>$2,600</b></div></div>');
+  }
+  if (s.plan) {
+    await wait(500);
+    inner.insertAdjacentHTML('beforeend', `<div class="plan card"><h3>Here's what I'll do next</h3><ol>
+      <li>Dispute the $8,700 final notice</li><li>Apply for Bayview's charity care (75% off, so $150 left)</li><li>Call billing for you and set up a plan you can afford</li></ol>
+      <a class="btn" href="one-screen.html#auto">Open my case <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      <p class="sub" style="font-size:13px;margin-top:10px">Nothing gets paid without your approval.</p></div>`);
+  }
+  scroll(); typing = false; setQuick(s.quick);
+}
+function answer(q) {
+  if (typing || stepI >= SCRIPT.length - 1) return;
+  if (typeof q === 'string') addUser(esc(q));
+  else addUser(`<span class="att">${FILE}${esc(q.file)}</span>`);
+  stepI++; play();
+}
+$('form').addEventListener('submit', (e) => {
+  e.preventDefault(); const v = $('msg').value.trim(); if (!v) return;
+  $('msg').value = ''; answer(v);
+});
+setTimeout(play, 400);
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calm mode · BillBack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="base.css">
+<!-- MOCK: accessibility-first. Large type, one thing per screen, read-aloud (real speechSynthesis when available), adjustable text size. -->
+<style>
+  html{font-size:20px}
+  html.lg{font-size:24px} html.xl{font-size:28px}
+  body{background:#FFFCFB}
+  .tools{display:flex;gap:8px;align-items:center}
+  .tools button{min-height:44px;min-width:44px;border:2px solid var(--border);background:#FFFFFF;border-radius:999px;padding:0 14px;font-weight:700;cursor:pointer;font-size:15px}
+  .tools button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#FFFFFF}
+  main{max-width:720px;margin:0 auto;padding:2vh 20px 48px}
+  .stepline{font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:12px}
+  .stepline .track{flex:1;height:10px;border-radius:10px;background:#F1E4E4;overflow:hidden}
+  .stepline .track i{display:block;height:100%;background:var(--accent);border-radius:10px;transition:width .6s var(--ease)}
+  .q{display:none;flex-direction:column;gap:1.2rem}
+  .q.on{display:flex;animation:fadeUp .5s var(--ease) both}
+  .q h1{margin:0;font-size:2.1rem;line-height:1.2;font-weight:400;letter-spacing:-.02em}
+  .q h1 b{font-weight:800}
+  .q p{margin:0;font-size:1.05rem;line-height:1.6;color:var(--muted)}
+  .opts{display:flex;flex-direction:column;gap:.7rem;margin-top:.4rem}
+  .big{width:100%;min-height:4rem;border-radius:1.2rem;border:2px solid var(--border);background:#FFFFFF;font-size:1.05rem;font-weight:700;text-align:left;padding:.8rem 1.1rem;
+    cursor:pointer;display:flex;align-items:center;gap:.9rem;transition:border-color .2s,background .2s;color:var(--ink);text-decoration:none}
+  .big:hover{border-color:var(--accent);background:var(--tint-2)}
+  .big.primary{background:var(--accent);border-color:var(--accent);color:#FFFFFF;justify-content:center;text-align:center}
+  .big.primary:hover{background:var(--accent-dark)}
+  .big .ic{width:2.2rem;height:2.2rem;border-radius:999px;background:var(--tint);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:.6rem}
+  .back{background:none;border:0;font-size:.85rem;font-weight:700;color:var(--muted);cursor:pointer;padding:12px 0;text-decoration:underline;text-underline-offset:4px}
+  .speak{display:inline-flex;align-items:center;gap:8px;background:none;border:2px solid var(--border);border-radius:999px;padding:8px 16px;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--ink)}
+  .speak.on{border-color:var(--accent);color:var(--accent)}
+  .meter{height:1.2rem;border-radius:1rem;background:#F1E4E4;overflow:hidden}
+  .meter i{display:block;height:100%;width:0;background:var(--accent);border-radius:1rem;transition:width 3.6s linear}
+  .answer{border-radius:1.2rem;background:var(--green-bg);border:2px solid var(--green-border);padding:1.2rem}
+  .answer .n{font-size:3.4rem;font-weight:800;color:var(--green-ink);letter-spacing:-.03em;line-height:1}
+  .answer ul{margin:.8rem 0 0;padding-left:1.2rem;font-size:1rem;line-height:1.7;color:var(--muted)}
+  .safe{display:flex;gap:.6rem;align-items:center;font-size:.85rem;font-weight:700;color:var(--green-ink)}
+  @media (max-width:600px){ html{font-size:18px} html.lg{font-size:21px} html.xl{font-size:24px} .q h1{font-size:1.75rem} .tools .lbl{display:none} }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/" target="_top" aria-label="BillBack home">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <b>Bill<span>Back</span></b>
+  </a>
+  <div class="tools" role="group" aria-label="Text size"><span class="lbl aside">Text size</span>
+    <button type="button" data-size="" aria-pressed="true" style="font-size:14px">A</button>
+    <button type="button" data-size="lg" aria-pressed="false" style="font-size:17px">A</button>
+    <button type="button" data-size="xl" aria-pressed="false" style="font-size:20px">A</button>
+  </div>
+</header>
+<main>
+  <div class="stepline"><span id="stepT">Step 1 of 4</span><span class="track"><i id="track" style="width:25%"></i></span></div>
+
+  <section class="q on" data-step="1">
+    <h1>Hello. We help people with <b>hospital bills</b>.</h1>
+    <p>It's free. We never pay anything without asking you first. You can stop at any time.</p>
+    <div class="opts"><button class="big primary" type="button" data-next>Let's start</button></div>
+  </section>
+
+  <section class="q" data-step="2">
+    <h1>Do you have the <b>bill</b> from the hospital?</h1>
+    <p>A paper letter or an email is fine. A photo is fine too.</p>
+    <div class="opts">
+      <button class="big" type="button" data-next><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>Yes. Take a photo of it</button>
+      <button class="big" type="button" data-next><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>Yes. Choose a file</button>
+      <button class="big" type="button" data-next><span class="ic">?</span>No, I don't have it</button>
+    </div>
+  </section>
+
+  <section class="q" data-step="3">
+    <h1>Did your <b>insurance</b> send you a letter too?</h1>
+    <p>It may say "Explanation of Benefits". If you are not sure, that's okay.</p>
+    <div class="opts">
+      <button class="big" type="button" data-next><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Yes, add it</button>
+      <button class="big" type="button" data-next><span class="ic">?</span>I'm not sure</button>
+    </div>
+  </section>
+
+  <section class="q" data-step="4" id="working">
+    <h1>Thank you. <b>We're reading it now.</b></h1>
+    <p>This takes about one minute. You can close this page. We will send you a text message.</p>
+    <div class="meter"><i id="meter"></i></div>
+    <p id="workT" aria-live="polite">Reading the bill…</p>
+  </section>
+
+  <section class="q" data-step="4" id="done">
+    <h1>Good news. <b>You owe much less.</b></h1>
+    <div class="answer">
+      <div class="n">$150</div>
+      <p style="margin-top:.4rem">not $8,700</p>
+      <ul>
+        <li>Your insurance part is $2,600, not $8,700.</li>
+        <li>The hospital takes 75% off that, because of your income.</li><li>You already paid $500 in September.</li>
+                <li>You can pay $50 a month for 3 months.</li>
+      </ul>
+    </div>
+    <div class="safe"><span class="dot green"></span>Nothing will be paid until you say yes.</div>
+    <div class="opts"><a class="big primary" href="receipt.html">Yes, that sounds right</a><button class="big" type="button" id="call">Please call me to explain</button></div>
+  </section>
+
+  <div class="row">
+    <button class="back" type="button" id="back">Go back</button>
+    <button class="speak" type="button" id="speak" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>Read this to me</button>
+  </div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const secs = [...document.querySelectorAll('.q')];
+let idx = 0, speakOn = false;
+function show(i) {
+  idx = Math.max(0, Math.min(secs.length - 1, i));
+  secs.forEach((s, k) => s.classList.toggle('on', k === idx));
+  const step = +secs[idx].dataset.step;
+  $('stepT').textContent = `Step ${step} of 4`; $('track').style.width = (step * 25) + '%';
+  $('back').style.visibility = idx === 0 || secs[idx].id === 'working' ? 'hidden' : 'visible';
+  if (secs[idx].id === 'working') work();
+  if (speakOn) read();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function work() {
+  const m = $('meter'); m.style.transition = 'none'; m.style.width = '0'; void m.offsetWidth;
+  m.style.transition = ''; m.style.width = '100%';
+  const msgs = ['Reading the bill…', 'Checking what insurance paid…', 'Looking for payments you already made…', 'Checking for discounts…'];
+  msgs.forEach((t, k) => setTimeout(() => { $('workT').textContent = t; }, k * 900));
+  setTimeout(() => show(secs.indexOf($('done'))), 3900);
+}
+function read() {
+  try {
+    const s = secs[idx], text = [...s.querySelectorAll('h1,p,li')].map((e) => e.textContent).join('. ');
+    speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = .9; speechSynthesis.speak(u);
+  } catch (e) {}
+}
+document.querySelectorAll('[data-next]').forEach((b) => b.onclick = () => show(idx + 1));
+$('back').onclick = () => show(secs[idx - 1] && secs[idx - 1].id === 'working' ? idx - 2 : idx - 1);
+$('call').onclick = () => { $('call').textContent = 'We will call you today between 2 and 4 pm'; };
+$('speak').onclick = () => {
+  speakOn = !speakOn; $('speak').classList.toggle('on', speakOn); $('speak').setAttribute('aria-pressed', speakOn);
+  if (speakOn) read(); else try { speechSynthesis.cancel(); } catch (e) {}
+};
+document.querySelectorAll('[data-size]').forEach((b) => b.onclick = () => {
+  document.documentElement.className = b.dataset.size;
+  document.querySelectorAll('[data-size]').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+});
+show(0);
+</script>
+</body>
+</html>

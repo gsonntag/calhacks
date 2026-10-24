@@ -71,6 +71,13 @@ def call_asks(audit: dict, pol: dict) -> list[str]:
     return asks
 
 
+def save_replay(case: dict) -> None:
+    """Keep the event stream of the latest finished case per scenario for case.html?replay=1 (Wi-Fi insurance)."""
+    events = [e for e in bus.history(case["id"]) if e["kind"] not in ("tool_call", "tool_result", "agent_thought")
+              or e.get("tool") == "create_payment_plan"]
+    (config.DATA_DIR / f"replay_{case.get('scenario', 'default')}.json").write_text(json.dumps(events, default=str))
+
+
 def record_turn(case: dict, role: str, text: str, n: int = 0) -> None:
     """Webhooks and polling both report turns; emit each (role, text, n) once. n is which repeat of that
     (role, text) this is in the call, so a rep saying "Okay." twice shows twice."""
@@ -246,6 +253,7 @@ async def run_case(case: dict) -> None:
         bus.emit(cid, "case_done", summary={
             "started_at": case["bill"]["amount_due"], "now": balance, "case_number": outcome.get("case_number"),
             "plan": plan["plan"], "plan_created": plan_created})
+        save_replay(case)
     except Exception as e:
         case["status"] = "error"
         bus.emit(cid, "error", text=f"{type(e).__name__}: {e}")
