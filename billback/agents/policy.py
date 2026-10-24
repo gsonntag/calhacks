@@ -13,12 +13,15 @@ from ..integrations import brightdata
 
 EXTRACT_SYSTEM = """You read a hospital's financial assistance / charity care policy and extract its eligibility
 tiers based on income as a percent of the Federal Poverty Level (FPL).
-Return JSON: {"tiers": [{"max_fpl_pct": number, "discount_pct": number, "quote": "exact sentence from the text"}],
+Return JSON: {"tiers": [{"max_fpl_pct": number, "discount_pct": number, "applies_to": "all"|"insured"|"uninsured",
+"min_oop_pct_income": number|null, "quote": "exact sentence from the text"}],
 "no_collections_while_pending": true|false|null, "collections_quote": "exact sentence or empty",
 "apply_how": "one sentence"}
 Only use what the text states. Every quote must be copied verbatim. If the text has no FPL tiers, return "tiers": [].
-discount_pct = percent of the balance written off (100 = free). Omit tiers without a numeric FPL upper limit and
-a numeric percent discount."""
+discount_pct = percent of the balance written off (100 = free). applies_to = who the tier is for (default "all").
+min_oop_pct_income = for "high medical cost" rules, the percent of family income the patient's out-of-pocket
+medical costs must exceed (e.g. 10), else null. Omit tiers without a numeric FPL upper limit and a numeric
+percent discount."""
 
 FIND_SYSTEM = """You find a hospital's official financial assistance policy (FAP) page. Use web_search, then
 fetch_page on the most official-looking result (the hospital's or health system's own domain, ideally the
@@ -31,6 +34,15 @@ SAMPLE_TIERS = {"tiers": [
     "no_collections_while_pending": True,
     "collections_quote": "The hospital will not send an account to collections while a financial assistance application is pending.",
     "apply_how": "Apply any time with 3 months of pay stubs or bank statements."}
+HIGH_COST_TIERS = {"tiers": [
+    {"max_fpl_pct": 400, "discount_pct": 100, "applies_to": "uninsured", "min_oop_pct_income": None,
+     "quote": "Uninsured patients whose family income is at or below 400% of the Federal Poverty Level (FPL) qualify for full charity care"},
+    {"max_fpl_pct": 400, "discount_pct": 100, "applies_to": "insured", "min_oop_pct_income": 10,
+     "quote": "Insured patients whose family income is at or below 400% of the FPL qualify for full charity care (100% of the patient balance written off) if their out-of-pocket medical expenses in the prior 12 months exceed 10% of their family income"}],
+    "no_collections_while_pending": True,
+    "collections_quote": "The hospital will not send an account to collections while a financial assistance application is pending.",
+    "apply_how": "Apply with proof of income and your insurance statement."}
+SAMPLES = {"policy_sample.md": SAMPLE_TIERS, "policy_sample_high_cost.md": HIGH_COST_TIERS}
 
 
 async def _find_policy_url(case: dict) -> str | None:
@@ -56,18 +68,18 @@ async def _find_policy_url(case: dict) -> str | None:
 LIVE_TIMEOUT = 45  # seconds for search + fetch before falling back to the sample policy
 
 
-async def _extract(cid: str, text: str) -> tuple[dict, bool]:
+async def _extract(cid: str, text: str, sample: dict = SAMPLE_TIERS) -> tuple[dict, bool]:
     """Policy text -> ({"tiers": [clean numeric tiers], ...}, extracted_ok). Never raises: on failure it
     returns the sample tiers and False so the caller labels them as the sample policy."""
     if not llm.available():
-        return {**SAMPLE_TIERS, "tiers": finance.clean_tiers(SAMPLE_TIERS["tiers"])}, True
+        return {**sample, "tiers": finance.clean_tiers(sample["tiers"])}, True
     try:
         found = await asyncio.wait_for(llm.json_out(EXTRACT_SYSTEM, f"POLICY TEXT:\n{text[:30000]}"), 90)
         if not isinstance(found, dict):
             raise ValueError("extraction did not return an object")
     except Exception as e:
         bus.emit(cid, "warning", "policy", text=f"Policy extraction failed ({type(e).__name__}); using sample policy")
-        return {**SAMPLE_TIERS, "tiers": finance.clean_tiers(SAMPLE_TIERS["tiers"])}, False
+        return {**sample, "tiers": finance.clean_tiers(sample["tiers"])}, False
     return {**found, "tiers": finance.clean_tiers(found.get("tiers"))}, True
 
 
@@ -92,12 +104,14 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
         except Exception as e:
             bus.emit(cid, "warning", "policy", text=f"Live fetch failed ({type(e).__name__}: {e}); using sample policy")
             text = None
+    sample_file = hosp.get("sample_policy") or "policy_sample.md"
+    sample = SAMPLES.get(sample_file, SAMPLE_TIERS)
     if text is None:
-        text = brightdata.sample_policy()
-    found, ok = await _extract(cid, text)
+        text = brightdata.sample_policy(sample_file)
+    found, ok = await _extract(cid, text, sample)
     if live and ok and not found["tiers"]:
         bus.emit(cid, "warning", "policy", text="Live policy had no FPL tiers; using sample policy")
-        found, ok = await _extract(cid, brightdata.sample_policy())
+        found, ok = await _extract(cid, brightdata.sample_policy(sample_file), sample)
     if not ok or not found["tiers"]:
         source, live = "sample policy (offline)", False
     tiers = found["tiers"]
@@ -108,7 +122,9 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     step(cid, "policy", "income", "Estimate income", "running")
     txns = await txns_ready
     inc = finance.income(txns, today=finance._d(case["today"]))
-    elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], tiers)
+    eob = case.get("eob") or {}
+    elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], tiers,
+                                    insured=bool(eob), out_of_pocket=float(eob.get("patient_responsibility") or 0))
     step(cid, "policy", "income", "Estimate income", "ok",
          f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr from payroll deposits)")
     bus.emit(cid, "evidence", "policy", label="Income vs poverty line",
@@ -119,7 +135,9 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     step(cid, "policy", "free", "Check free care", "running")
     await asyncio.sleep(0.4)
     if elig["discount_pct"] == 100:
-        step(cid, "policy", "free", "Check free care", "win", "You qualify for free care")
+        why = (f" (your out-of-pocket is {elig['oop_pct_income']:.0f}% of income)"
+               if elig["tier"].get("min_oop_pct_income") is not None else "")
+        step(cid, "policy", "free", "Check free care", "win", f"You qualify for free care{why}")
     elif free:
         step(cid, "policy", "free", "Check free care", "clear",
              f"Nothing found, income is above the {free[0]['max_fpl_pct']:.0f}% limit")
@@ -138,18 +156,30 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
 
     if not owed_ready.done():
         step(cid, "policy", "wait", "Wait for Auditor", "wait", "Waiting for the Auditor's balance")
-    owed = await owed_ready
+    got = await owed_ready
+    owed = got["owed"]
     step(cid, "policy", "wait", "Wait for Auditor", "ok", f"Got it: ${owed:,.0f} owed")
 
-    target = finance.apply_discount(owed, elig["discount_pct"])
-    label = "Apply free care" if elig["discount_pct"] == 100 else "Apply discount"
+    d = elig["discount_pct"]
+    st = finance.settle(got["responsibility"], got["paid"], d)
+    target = st["balance"]
+    label = "Apply free care" if d == 100 else "Apply discount"
     step(cid, "policy", "apply", label, "running")
     await asyncio.sleep(0.3)
-    step(cid, "policy", "apply", label, "ok",
-         f"${owed:,.0f} − {elig['discount_pct']:.0f}% = ${target:,.0f}" if elig["discount_pct"] else f"${owed:,.0f} stays")
+    paid = f" − ${got['paid']:,.0f} paid" if got["paid"] else ""
+    end = f"you're owed ${st['refund']:,.0f} back" if st["refund"] else f"${target:,.0f}"
+    if d == 100 and not got["paid"]:
+        text = f"${got['responsibility']:,.0f} written off = $0"
+    elif d:
+        text = f"${got['responsibility']:,.0f} share − {d:.0f}% = ${st['discounted_share']:,.0f}{paid} = {end}"
+    else:
+        text = f"${owed:,.0f} stays"
+    step(cid, "policy", "apply", label, "ok", text)
 
-    result = ("Free care → $0" if elig["discount_pct"] == 100
-              else f"{elig['discount_pct']:.0f}% off → ${target:,.0f}" if elig["discount_pct"] else "No discount")
-    note = "charity-care discount" if elig["discount_pct"] else "income is above the policy's limits"
+    result = ((f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}") if d else "No discount")
+    if st["refund"]:
+        result += f" + ${st['refund']:,.0f} refund"
+    note = "charity-care discount" if d else "income is above the policy's limits"
     bus.emit(cid, "agent_finished", "policy", summary=result, note=note)
-    return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live, "target": target}
+    return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live,
+            "target": target, "refund": st["refund"], "discounted_share": st["discounted_share"]}

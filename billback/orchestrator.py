@@ -18,14 +18,18 @@ from .integrations.nessie import get_bank
 cases: dict[str, dict] = {}
 
 
-def demo_case() -> dict:
-    return json.loads((config.DEMO_DIR / "case.json").read_text())
+SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
 
 
-def new_case(overrides: dict | None = None) -> dict:
-    base = demo_case()
+def demo_case(scenario: str = "default") -> dict:
+    return json.loads((config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")).read_text())
+
+
+def new_case(overrides: dict | None = None, scenario: str = "default") -> dict:
+    scenario = scenario if scenario in SCENARIOS else "default"
+    base = demo_case(scenario)
     base.update({k: v for k, v in (overrides or {}).items() if v})
-    case = {**base, "id": uuid.uuid4().hex[:8], "status": "created", "today": date.today().isoformat(),
+    case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": date.today().isoformat(),
             "result": {}, "call_done": asyncio.Event(),
             "call_outcome": {}, "turns_seen": set(), "wh_counts": {}, "wh_turn_ids": set()}
     cases[case["id"]] = case
@@ -45,18 +49,24 @@ def audit_summary(audit: dict) -> dict:
 
 def policy_summary(pol: dict) -> dict:
     d = pol["eligibility"]["discount_pct"]
-    return {"result": "Free care → $0" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}" if d else "No discount",
+    result = (f"Free care → ${pol['target']:,.0f}" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}") if d else "No discount"
+    if pol.get("refund"):
+        result += f" + ${pol['refund']:,.0f} back"
+    return {"result": result,
             "note": "charity-care discount" if d else "income is above the policy's limits"}
 
 
 def call_asks(audit: dict, pol: dict) -> list[str]:
     rec, d = audit["reconciliation"], pol["eligibility"]["discount_pct"]
-    asks = [f"Apply your insurance: the EOB says you owe ${rec['patient_responsibility']:,.0f}, not ${rec['billed_due']:,.0f}"]
+    asks = []
+    if rec["billed_due"] > rec["patient_responsibility"]:
+        asks.append(f"Apply your insurance: the EOB says you owe ${rec['patient_responsibility']:,.0f}, not ${rec['billed_due']:,.0f}")
     if rec["paid"]:
         asks.append(f"Show the ${rec['paid']:,.0f} you already paid, bringing it to ${rec['owed']:,.0f}")
     if d:
+        refund = f" and refunding ${pol['refund']:,.0f} you overpaid" if pol.get("refund") else ""
         asks.append(f"Ask for the {'free care' if d == 100 else f'{d:.0f}% charity-care discount'} under their own policy, "
-                    f"bringing the bill to ${pol['target']:,.0f}")
+                    f"bringing the bill to ${pol['target']:,.0f}{refund}")
     asks.append("Ask them to pause collections while it's reviewed, and get a case number")
     return asks
 

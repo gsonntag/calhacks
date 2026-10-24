@@ -1,6 +1,7 @@
 """Seed the synthetic demo patient into Capital One Nessie.
 
-    uv run python scripts/seed_nessie.py
+    uv run python scripts/seed_nessie.py            # main demo patient
+    uv run python scripts/seed_nessie.py freecare   # second demo patient
 
 Creates customer, checking account, merchants, deposits, purchases and the hospital bill,
 then writes the ids to data/nessie_ids.json (the app reads the account id from there).
@@ -13,13 +14,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from billback import config  # noqa: E402
-from billback.integrations.nessie import IDS_FILE, NessieClient  # noqa: E402
+from billback.integrations.nessie import NessieClient, ids_file  # noqa: E402
+from billback.orchestrator import SCENARIOS  # noqa: E402
 
 
 async def main() -> None:
     if not config.NESSIE_API_KEY:
         sys.exit("Set NESSIE_API_KEY in .env first")
-    case = json.loads((config.DEMO_DIR / "case.json").read_text())
+    scenario = sys.argv[1] if len(sys.argv) > 1 else "default"
+    case = json.loads((config.DEMO_DIR / SCENARIOS[scenario]).read_text())
     n = NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL)
     p = case["patient"]
 
@@ -45,9 +48,10 @@ async def main() -> None:
                                b["amount_due"], b["due_date"])
     print("bill", bill.get("_id"))
 
-    IDS_FILE.write_text(json.dumps({"customer_id": cust["_id"], "account_id": acct["_id"],
+    out = ids_file(scenario)
+    out.write_text(json.dumps({"customer_id": cust["_id"], "account_id": acct["_id"],
                                     "hospital_bill_id": bill.get("_id"), "merchants": merchants}, indent=2))
-    print("wrote", IDS_FILE)
+    print("wrote", out)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,140 @@
+{
+  "_note": "SYNTHETIC second demo case: insured patient on a high-deductible plan. Under a California-style policy (free care at or below 400% FPL when out-of-pocket costs exceed 10% of family income) the balance goes to $0.",
+  "patient": {
+    "first_name": "Marcus",
+    "last_name": "Lee",
+    "household_size": 3,
+    "dob": "1984-03-17",
+    "phone_label": "Marcus's phone",
+    "address": {
+      "street_number": "1418",
+      "street_name": "Ashby Ave",
+      "city": "Berkeley",
+      "state": "CA",
+      "zip": "94703"
+    }
+  },
+  "hospital": {
+    "name": "Eastshore Medical Center",
+    "billing_phone_label": "Patient Financial Services",
+    "policy_url": "",
+    "policy_search_query": "Eastshore Medical Center financial assistance policy",
+    "sample_policy": "policy_sample_high_cost.md"
+  },
+  "bill": {
+    "provider": "Eastshore Medical Center",
+    "account_number": "EMC-30772154",
+    "statement_date": "2026-10-08",
+    "notice": "PAST DUE - second notice. Please pay the balance below or call to arrange payment.",
+    "due_date": "2026-11-07",
+    "service_date": "2026-07-19",
+    "total_charges": 12400.0,
+    "amount_due": 5600.0,
+    "line_items": [
+      {
+        "code": "99285",
+        "description": "Emergency dept visit, highest severity",
+        "amount": 4210.0
+      },
+      {
+        "code": "29881",
+        "description": "Knee arthroscopy, meniscectomy",
+        "amount": 5980.0
+      },
+      {
+        "code": "73721",
+        "description": "MRI knee without contrast",
+        "amount": 1640.0
+      },
+      {
+        "code": "97161",
+        "description": "Physical therapy evaluation",
+        "amount": 570.0
+      }
+    ]
+  },
+  "eob": {
+    "insurer": "Bay Area Choice HDHP",
+    "member_id": "BAC-55120847",
+    "claim_number": "C-2026-0731-90215",
+    "provider": "Eastshore Medical Center",
+    "service_date": "2026-07-19",
+    "billed": 12400.0,
+    "allowed": 7300.0,
+    "plan_paid": 1700.0,
+    "patient_responsibility": 5600.0,
+    "status": "Processed 2026-08-04 (deductible applied)"
+  },
+  "transactions": [
+    {
+      "type": "deposit",
+      "date": "2026-07-31",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-14",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-28",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-09-11",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-09-25",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-10-09",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-10-23",
+      "amount": 1782.0,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-01",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-22",
+      "amount": 186.0,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-01",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-01",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    }
+  ]
+}

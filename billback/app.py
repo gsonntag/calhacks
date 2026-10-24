@@ -139,9 +139,10 @@ async def gmail_scan():
 
 
 @app.post("/api/cases")
-async def start_case(files: list[UploadFile] = File(default=[])):
-    """Start a case from uploaded bill/EOB files, or the sample bill when none are sent."""
-    case = orchestrator.new_case()
+async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default"):
+    """Start a case from uploaded bill/EOB files, or the sample bill when none are sent.
+    ?scenario=freecare picks the second demo patient (bank history + sample policy)."""
+    case = orchestrator.new_case(scenario=scenario)
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
     case["documents"] = [n for n, _ in uploads] or ["sample-hospital-bill.pdf", "sample-insurance-eob.pdf"]
     if uploads and llm.available():

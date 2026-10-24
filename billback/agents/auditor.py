@@ -51,11 +51,13 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     step(cid, "auditor", "balance", "Calculate balance", "running")
     await asyncio.sleep(0.4)
     paid = f" − ${rec['paid']:,.0f}" if rec["paid"] else ""
+    adj = rec["billed_due"] - rec["patient_responsibility"]
     step(cid, "auditor", "balance", "Calculate balance", "ok",
-         f"${rec['billed_due']:,.0f} − ${rec['billed_due'] - rec['patient_responsibility']:,.0f} insurance{paid} = ${rec['owed']:,.0f}")
+         f"${rec['billed_due']:,.0f} − ${adj:,.0f} insurance{paid} = ${rec['owed']:,.0f}" if adj > 0 or rec["paid"]
+         else f"${rec['owed']:,.0f} — the bill matches your insurance statement")
     bus.emit(cid, "reconciliation", "auditor", **{k: rec[k] for k in ("lines", "owed", "billed_due", "overbilled_by")})
     bus.emit(cid, "balance", "auditor", amount=rec["owed"], label="Actually owed")
-    owed_ready.set_result(rec["owed"])
+    owed_ready.set_result({"owed": rec["owed"], "responsibility": rec["patient_responsibility"], "paid": rec["paid"]})
 
     note = (_dup_note(rec["duplicates"][0]) if rec["duplicates"]
             else "no errors on the bill")
