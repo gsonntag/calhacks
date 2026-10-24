@@ -39,7 +39,7 @@ async def main() -> None:
 
     agent_cfg = {"instructions": (WEBHOOK_INSTRUCTIONS if webhooks else POLLING_INSTRUCTIONS) + TAIL,
                  "initial_message": None,
-                 "model": {"id": "claude-haiku-5.5", "temperature": 0.3},
+                 "model": {"id": "claude-haiku-5.5"},
                  "audio": {"output": {"voice_id": config.CARTESIA_VOICE_ID}},
                  "system_tools": {"end_call": {}}, "tools": tools}
     if "--update" in sys.argv and config.CARTESIA_AGENT_ID:
