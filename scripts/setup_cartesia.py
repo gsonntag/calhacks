@@ -1,8 +1,11 @@
-"""One-time Cartesia setup: phone number, webhook, outcome tool, and the BillBack caller agent.
+"""One-time Cartesia setup: phone number and the BillBack caller agent.
 
-    PUBLIC_BASE_URL=https://<your-tunnel> uv run python scripts/setup_cartesia.py
+    uv run python scripts/setup_cartesia.py            # polling mode: no public URL needed
+    PUBLIC_BASE_URL=https://... uv run python scripts/setup_cartesia.py   # also wires webhooks + outcome tool
 
-Prints the ids to paste into .env. Re-run with --update to push new instructions to the existing agent.
+Polling mode: we poll the call for its transcript and Claude extracts the outcome after the call, so
+Cartesia never has to reach this server. Prints the ids to paste into .env. Re-run with --update to push
+new instructions to the existing agent.
 """
 import asyncio
 import sys
@@ -14,7 +17,11 @@ from billback import config  # noqa: E402
 from billback.agents.caller import SYSTEM  # noqa: E402
 from billback.integrations.cartesia import _req  # noqa: E402
 
-INSTRUCTIONS = SYSTEM.replace("call record_outcome", "use the record_outcome tool") + """
+WEBHOOK_INSTRUCTIONS = SYSTEM.replace("call record_outcome", "use the record_outcome tool")
+POLLING_INSTRUCTIONS = SYSTEM.replace(
+    "When the rep gives a case/reference number, call record_outcome. When the goals are done or the rep\n  ends it, call end_call and say a short goodbye.",
+    "When the rep gives a case/reference number, repeat it back clearly to confirm it. When the goals are done\n  or the rep ends it, say a short goodbye and use end_call.")
+TAIL = """
 The patient is {{patient_name}}. Internal case id: {{case_id}} (never say it out loud).
 CASE BRIEF (JSON): {{case_brief}}
 Wait for the representative to say hello, then introduce yourself."""
@@ -23,10 +30,39 @@ Wait for the representative to say hello, then introduce yourself."""
 async def main() -> None:
     if not config.CARTESIA_API_KEY:
         sys.exit("Set CARTESIA_API_KEY in .env")
-    if not config.PUBLIC_BASE_URL.startswith("https://"):
-        sys.exit("Set PUBLIC_BASE_URL to a public https URL (cloudflared/ngrok tunnel) first")
-    base = config.PUBLIC_BASE_URL.rstrip("/")
+    webhooks = config.PUBLIC_BASE_URL.startswith("https://")
+    tools, hook_id = [], None
+    if webhooks:
+        tool_id, hook_id = await _wire_webhooks(config.PUBLIC_BASE_URL.rstrip("/"))
+        tools = [{"id": tool_id}]
+    print("mode:", "webhooks" if webhooks else "polling (no public URL needed)")
 
+    agent_cfg = {"instructions": (WEBHOOK_INSTRUCTIONS if webhooks else POLLING_INSTRUCTIONS) + TAIL,
+                 "initial_message": None,
+                 "model": {"id": "claude-haiku-5.5", "temperature": 0.3},
+                 "audio": {"output": {"voice_id": config.CARTESIA_VOICE_ID}},
+                 "system_tools": {"end_call": {}}, "tools": tools}
+    if "--update" in sys.argv and config.CARTESIA_AGENT_ID:
+        agent_id = config.CARTESIA_AGENT_ID
+        await _req("PATCH", f"/v1/agents/{agent_id}", {"config": agent_cfg})
+    else:
+        agent = await _req("POST", "/v1/agents", {"name": "BillBack Caller", "config": agent_cfg})
+        agent_id = agent.get("id") or agent.get("agent_id")
+    if hook_id:
+        await _req("PATCH", f"/agents/{agent_id}", {"webhook_id": hook_id})
+    print("agent", agent_id)
+
+    number_id = config.CARTESIA_FROM_NUMBER_ID
+    if not number_id:
+        num = await _req("POST", "/agents/phone-numbers/provision", {"label": "BillBack"})
+        number_id = num.get("id") or num.get("phone_number_id")
+        print("number", num)
+
+    print("\nAdd to .env:")
+    print(f"CARTESIA_AGENT_ID={agent_id}\nCARTESIA_FROM_NUMBER_ID={number_id}")
+
+
+async def _wire_webhooks(base: str) -> tuple[str, str]:
     tool = await _req("POST", "/v1/agents/tools", {
         "type": "webhook", "name": "record_outcome",
         "description": "Record what the hospital agreed to and the case/reference number. Call it as soon as the rep gives a case number, and again if anything changes.",
@@ -46,28 +82,7 @@ async def main() -> None:
     hook = await _req("POST", "/agents/webhooks", {"url": f"{base}/webhooks/cartesia", "secret": config.CARTESIA_WEBHOOK_SECRET})
     hook_id = hook.get("id") or hook.get("webhook_id")
     print("webhook", hook_id)
-
-    agent_cfg = {"instructions": INSTRUCTIONS, "initial_message": None,
-                 "model": {"id": "claude-haiku-4.5", "temperature": 0.3},
-                 "audio": {"output": {"voice_id": config.CARTESIA_VOICE_ID}},
-                 "system_tools": {"end_call": {}}, "tools": [{"id": tool_id}]}
-    if "--update" in sys.argv and config.CARTESIA_AGENT_ID:
-        agent_id = config.CARTESIA_AGENT_ID
-        await _req("PATCH", f"/v1/agents/{agent_id}", {"config": agent_cfg})
-    else:
-        agent = await _req("POST", "/v1/agents", {"name": "BillBack Caller", "config": agent_cfg})
-        agent_id = agent.get("id") or agent.get("agent_id")
-    await _req("PATCH", f"/agents/{agent_id}", {"webhook_id": hook_id})
-    print("agent", agent_id)
-
-    number_id = config.CARTESIA_FROM_NUMBER_ID
-    if not number_id:
-        num = await _req("POST", "/agents/phone-numbers/provision", {"label": "BillBack"})
-        number_id = num.get("id") or num.get("phone_number_id")
-        print("number", num)
-
-    print("\nAdd to .env:")
-    print(f"CARTESIA_AGENT_ID={agent_id}\nCARTESIA_FROM_NUMBER_ID={number_id}")
+    return tool_id, hook_id
 
 
 if __name__ == "__main__":
