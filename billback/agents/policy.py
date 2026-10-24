@@ -1,33 +1,33 @@
-"""Policy agent: finds the hospital's own financial-assistance policy (Bright Data) and extracts its
-eligibility tiers with exact quotes (Claude). Runs in parallel with the Auditor: it fetches the policy
-right away, then waits for the Auditor's transactions (income) and balance. The discount math is in
-finance.py, not done by the model."""
+"""Policy agent: the hospital's own financial-assistance policy -> the patient's discount.
+
+Where the policy comes from, in order:
+  1. the policy database (policydb/, built by real Bright Data crawls: billback/policies/) - instant;
+  2. a live crawl through the same pipeline (SERP API -> Web Unlocker -> Claude -> quote verification),
+     stored for next time - slow, every stage shown on the dashboard;
+  3. OFFLINE TEST FIXTURE (demo/policy_sample*.md) - only when Bright Data is not configured at all.
+If the live crawl fails we say so and apply no discount; the fixture is never a silent stand-in.
+Runs in parallel with the Auditor and waits for its transactions (income) and balance. Money math is
+finance.py, not the model."""
 import asyncio
-import re
 from urllib.parse import urlparse
 
 from .. import config, finance, llm
 from ..events import bus, step
-from ..harness import Agent, Tool, ToolRegistry
 from ..integrations import brightdata
+from ..policies import pipeline, registry
+from ..policies.store import PolicyStore
 
-EXTRACT_SYSTEM = """You read a hospital's financial assistance / charity care policy and extract its eligibility
+LIVE_CRAWL_TIMEOUT = 300  # seconds; SERP + page + PDFs + extraction. Slow is fine, it's shown step by step.
+
+# ---- OFFLINE TEST FIXTURE: sample (not real) policies, used only when Bright Data isn't configured ----
+FIXTURE_LABEL = "sample policy (offline test fixture, not a real hospital)"
+FIXTURE_EXTRACT_SYSTEM = """You read a hospital's financial assistance / charity care policy and extract its eligibility
 tiers based on income as a percent of the Federal Poverty Level (FPL).
 Return JSON: {"tiers": [{"max_fpl_pct": number, "discount_pct": number, "applies_to": "all"|"insured"|"uninsured",
 "min_oop_pct_income": number|null, "quote": "exact sentence from the text"}],
 "no_collections_while_pending": true|false|null, "collections_quote": "exact sentence or empty",
 "apply_how": "one sentence"}
-Only use what the text states. Every quote must be copied verbatim. If the text has no FPL tiers, return "tiers": [].
-discount_pct = percent of the balance written off (100 = free). applies_to = who the tier is for (default "all").
-min_oop_pct_income = for "high medical cost" rules, the percent of family income the patient's out-of-pocket
-medical costs must exceed (e.g. 10), else null. Omit tiers without a numeric FPL upper limit and a numeric
-percent discount."""
-
-FIND_SYSTEM = """You find a hospital's official financial assistance policy (FAP) page. Use web_search, then
-fetch_page on the most official-looking result (the hospital's or health system's own domain, ideally the
-policy document or plain-language summary). If a page doesn't contain eligibility rules, try another.
-When you have a page with FPL-based eligibility rules, reply with just its URL."""
-
+Only use what the text states. Every quote must be copied verbatim. If the text has no FPL tiers, return "tiers": []."""
 SAMPLE_TIERS = {"tiers": [
     {"max_fpl_pct": 200, "discount_pct": 100, "quote": "Patients whose family income is at or below 200% of the Federal Poverty Level (FPL) qualify for full charity care"},
     {"max_fpl_pct": 400, "discount_pct": 75, "quote": "above 200% and at or below 400% of the FPL qualify for discounted payment: the patient's balance is reduced by 75%"}],
@@ -44,43 +44,110 @@ HIGH_COST_TIERS = {"tiers": [
     "apply_how": "Apply with proof of income and your insurance statement."}
 SAMPLES = {"policy_sample.md": SAMPLE_TIERS, "policy_sample_high_cost.md": HIGH_COST_TIERS}
 
-
-async def _find_policy_url(case: dict) -> str | None:
-    cid = case["id"]
-    reg = ToolRegistry(cid, "policy")
-
-    async def web_search(query: str) -> list:
-        return await brightdata.search(query)
-
-    async def fetch_page(url: str) -> str:
-        return (await brightdata.fetch_text(url))[:6000]
-
-    reg.add(Tool("web_search", "Google search via Bright Data SERP API", {
-        "type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}, web_search))
-    reg.add(Tool("fetch_page", "Fetch a public web page via Bright Data Web Unlocker (returns text)", {
-        "type": "object", "properties": {"url": {"type": "string"}}, "required": ["url"]}, fetch_page))
-    answer = await Agent(cid, "policy", FIND_SYSTEM, reg, max_steps=6).run(
-        f"Find the financial assistance policy for: {case['hospital']['policy_search_query']}")
-    m = re.search(r"https?://\S+", answer or "")
-    return m.group(0).rstrip(").,") if m else None
+CRAWL_STEPS = {"discover": ("search", "Search for the policy (Bright Data SERP API)"),
+               "fetch": ("fetch", "Fetch policy pages + PDFs (Bright Data Web Unlocker)"),
+               "extract": ("verify", "Extract rules + verify every quote"),
+               "verify": ("verify", "Extract rules + verify every quote"),
+               "store": ("store", "Save to the policy database")}
 
 
-LIVE_TIMEOUT = 45  # seconds for search + fetch before falling back to the sample policy
+def store() -> PolicyStore:
+    return PolicyStore()
 
 
-async def _extract(cid: str, text: str, sample: dict = SAMPLE_TIERS) -> tuple[dict, bool]:
-    """Policy text -> ({"tiers": [clean numeric tiers], ...}, extracted_ok). Never raises: on failure it
-    returns the sample tiers and False so the caller labels them as the sample policy."""
-    if not llm.available():
-        return {**sample, "tiers": finance.clean_tiers(sample["tiers"])}, True
+def _site(row: dict) -> str:
+    pages = [d["url"] for d in row["documents"] if d["kind"] == "page"] or row["source_urls"]
+    return urlparse(pages[0]).netloc.removeprefix("www.") if pages else ""
+
+
+def _primary_source(row: dict) -> str:
+    docs = row["documents"]
+    doc = next((d for d in docs if d["role"] == "policy_doc"), docs[0] if docs else None)
+    return doc["url"] if doc else ""
+
+
+def _from_row(row: dict, origin: str) -> dict:
+    return {"found": row["extracted"], "source": _primary_source(row), "live": True, "origin": origin,
+            "fetched_at": row["fetched_at"], "version": row["version"], "sources": row["source_urls"]}
+
+
+def _lookup(db: PolicyStore, name: str) -> tuple[registry.Hospital | None, dict | None]:
+    h = registry.match(name, db.hospitals())
+    return h, (db.current(h.id) if h else None)
+
+
+async def _live_crawl(cid: str, db: PolicyStore, hosp: dict) -> dict | None:
+    """Crawl a hospital that isn't in the database yet, streaming each stage to the dashboard."""
+    h = registry.match(hosp["name"], list(registry.SEED)) or registry.Hospital(
+        registry.slug(hosp["name"]), hosp["name"], city=hosp.get("city", ""))
+
+    def on_event(kind: str, **e) -> None:
+        if kind == "brightdata":
+            bus.emit(cid, "brightdata", "policy", product=e["product"], stage=e["stage"], url=e["url"],
+                     status=e["status"], bytes=e["bytes"], latency_ms=e["latency_ms"], ok=bool(e["ok"]))
+        elif kind == "crawl_stage" and e["stage"] in CRAWL_STEPS:
+            key, label = CRAWL_STEPS[e["stage"]]
+            step(cid, "policy", key, label, e["status"], e["text"])
+
     try:
-        found = await asyncio.wait_for(llm.json_out(EXTRACT_SYSTEM, f"POLICY TEXT:\n{text[:30000]}"), 90)
-        if not isinstance(found, dict):
-            raise ValueError("extraction did not return an object")
+        row = await asyncio.wait_for(pipeline.crawl_hospital(db, h, on_event=on_event), LIVE_CRAWL_TIMEOUT)
     except Exception as e:
-        bus.emit(cid, "warning", "policy", text=f"Policy extraction failed ({type(e).__name__}); using sample policy")
-        return {**sample, "tiers": finance.clean_tiers(sample["tiers"])}, False
-    return {**found, "tiers": finance.clean_tiers(found.get("tiers"))}, True
+        bus.emit(cid, "warning", "policy", text=f"Live policy crawl for {hosp['name']} failed ({type(e).__name__}: {e}). "
+                                                "No verified policy, so no discount is applied.")
+        return None
+    db.write_export()
+    return _from_row(row, "live_crawl")
+
+
+async def _fixture(cid: str, hosp: dict) -> dict:
+    """OFFLINE TEST FIXTURE. Only reached when Bright Data is not configured."""
+    name = hosp.get("sample_policy") or "policy_sample.md"
+    sample = SAMPLES.get(name, SAMPLE_TIERS)
+    found = {**sample, "tiers": finance.clean_tiers(sample["tiers"])}
+    if llm.available():
+        try:
+            text = (config.DEMO_DIR / name).read_text()
+            got = await asyncio.wait_for(llm.json_out(FIXTURE_EXTRACT_SYSTEM, f"POLICY TEXT:\n{text}"), 90)
+            if not isinstance(got, dict):
+                raise ValueError("extraction did not return an object")
+            found = {**got, "tiers": finance.clean_tiers(got.get("tiers"))}
+        except Exception as e:
+            bus.emit(cid, "warning", "policy", text=f"Fixture extraction failed ({type(e).__name__}); using its known tiers")
+    return {"found": found, "source": FIXTURE_LABEL, "live": False, "origin": "offline_fixture",
+            "fetched_at": None, "version": None, "sources": []}
+
+
+async def find_policy(cid: str, hosp: dict) -> dict:
+    step(cid, "policy", "find", "Find assistance policy", "running", f"Looking up {hosp['name']} in the policy database")
+    db = store()
+    h, row = _lookup(db, hosp["name"])
+    if row:  # status "no_tiers" counts too: a crawl found no fixed-percent rule, re-crawling won't change that
+        got = _from_row(row, "policy_db")
+        bus.emit(cid, "policy_source", "policy", origin="policy_db", hospital=h.name, hospital_id=h.id,
+                 version=row["version"], fetched_at=row["fetched_at"], sources=row["source_urls"],
+                 content_sha256=row["content_sha256"], tiers_verified=row["tiers_verified"])
+        step(cid, "policy", "find", "Find assistance policy", "ok",
+             f"From policy DB: fetched {row['fetched_at'][:10]} from {_site(row)} via Bright Data, "
+             f"{row['tiers_verified']} verified quotes")
+        return got
+    if brightdata.live() and brightdata.serp_live() and llm.available():
+        step(cid, "policy", "find", "Find assistance policy", "running",
+             f"{hosp['name']} isn't in the policy database yet: crawling live with Bright Data")
+        got = await _live_crawl(cid, db, hosp)
+        if got:
+            bus.emit(cid, "policy_source", "policy", origin="live_crawl", hospital=hosp["name"],
+                     version=got["version"], fetched_at=got["fetched_at"], sources=got["sources"])
+            step(cid, "policy", "find", "Find assistance policy", "ok" if got["found"]["tiers"] else "clear",
+                 f"Crawled live via Bright Data and saved to the policy DB · {urlparse(got['source']).netloc}")
+            return got
+        step(cid, "policy", "find", "Find assistance policy", "flag", "Live crawl failed: no verified policy")
+        return {"found": {"tiers": []}, "source": "live crawl failed", "live": False, "origin": "failed",
+                "fetched_at": None, "version": None, "sources": []}
+    got = await _fixture(cid, hosp)
+    bus.emit(cid, "policy_source", "policy", origin="offline_fixture", hospital=hosp["name"], sources=[])
+    step(cid, "policy", "find", "Find assistance policy", "ok",
+         "Bright Data not configured: using the OFFLINE TEST FIXTURE (sample policy, not a real hospital)")
+    return got
 
 
 async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future) -> dict:
@@ -88,38 +155,11 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     hosp = case["hospital"]
     bus.emit(cid, "agent_started", "policy", text=f"Checking {hosp['name']}'s financial-assistance policy")
 
-    step(cid, "policy", "find", "Find assistance policy", "running")
-    source, text, live = "sample policy (offline)", None, False
-    # without a configured URL, finding the page needs the SERP zone too
-    if brightdata.live() and (hosp.get("policy_url") or config.BRIGHTDATA_SERP_ZONE):
-        async def _fetch():
-            url = hosp.get("policy_url") or await _find_policy_url(case)
-            if url:
-                step(cid, "policy", "find", f"Reading {urlparse(url).netloc}…", "running")
-                return await brightdata.fetch_text(url), url
-            return None, None
-        try:
-            text, url = await asyncio.wait_for(_fetch(), LIVE_TIMEOUT)
-            if text is not None:
-                source, live = url, True
-        except Exception as e:
-            bus.emit(cid, "warning", "policy", text=f"Live fetch failed ({type(e).__name__}: {e}); using sample policy")
-            text = None
-    sample_file = hosp.get("sample_policy") or "policy_sample.md"
-    sample = SAMPLES.get(sample_file, SAMPLE_TIERS)
-    if text is None:
-        text = brightdata.sample_policy(sample_file)
-    found, ok = await _extract(cid, text, sample)
-    if live and ok and not found["tiers"]:
-        bus.emit(cid, "warning", "policy", text="Live policy had no FPL tiers; using sample policy")
-        found, ok = await _extract(cid, brightdata.sample_policy(sample_file), sample)
-    if not ok or not found["tiers"]:
-        source, live = "sample policy (offline)", False
+    got = await find_policy(cid, hosp)
+    found, source, live = got["found"], got["source"], got["live"]
     tiers = found["tiers"]
-    step(cid, "policy", "find", "Find assistance policy", "ok" if tiers else "clear",
-         ((f"{hosp['policy_owner']}'s published policy (live)" if hosp.get("policy_owner")
-           else "Found on the hospital's website (live)") if live else "Using the sample policy (offline)")
-         if tiers else "No income-based discount rules found")
+    if not tiers:
+        step(cid, "policy", "find", "Find assistance policy", "clear", "No verified income-based discount rules")
 
     step(cid, "policy", "income", "Estimate income", "running")
     txns = await txns_ready
@@ -153,27 +193,28 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
              f"You qualify for {elig['discount_pct']:.0f}% off" if elig["discount_pct"] else "No discount tier matched")
 
     for t in tiers:
-        bus.emit(cid, "policy_quote", "policy", quote=t.get("quote", ""), source=source, live=live,
-                 matched=elig["tier"] is not None and t.get("max_fpl_pct") == elig["tier"]["max_fpl_pct"])
+        bus.emit(cid, "policy_quote", "policy", quote=t.get("quote", ""), source=t.get("source_url") or source, live=live,
+                 verified=bool(t.get("verified")), origin=got["origin"],
+                 matched=elig["tier"] is not None and t is elig["tier"])
 
     if not owed_ready.done():
         step(cid, "policy", "wait", "Wait for Auditor", "wait", "Waiting for the Auditor's balance")
-    got = await owed_ready
-    owed = got["owed"]
+    paid_info = await owed_ready
+    owed = paid_info["owed"]
     step(cid, "policy", "wait", "Wait for Auditor", "ok", f"Got it: ${owed:,.0f} owed")
 
     d = elig["discount_pct"]
-    st = finance.settle(got["responsibility"], got["paid"], d)
+    st = finance.settle(paid_info["responsibility"], paid_info["paid"], d)
     target = st["balance"]
     label = "Apply free care" if d == 100 else "Apply discount"
     step(cid, "policy", "apply", label, "running")
     await asyncio.sleep(0.3)
-    paid = f" − ${got['paid']:,.0f} paid" if got["paid"] else ""
+    paid = f" − ${paid_info['paid']:,.0f} paid" if paid_info["paid"] else ""
     end = f"you're owed ${st['refund']:,.0f} back" if st["refund"] else f"${target:,.0f}"
-    if d == 100 and not got["paid"]:
-        text = f"${got['responsibility']:,.0f} written off = $0"
+    if d == 100 and not paid_info["paid"]:
+        text = f"${paid_info['responsibility']:,.0f} written off = $0"
     elif d:
-        text = f"${got['responsibility']:,.0f} share − {d:.0f}% = ${st['discounted_share']:,.0f}{paid} = {end}"
+        text = f"${paid_info['responsibility']:,.0f} share − {d:.0f}% = ${st['discounted_share']:,.0f}{paid} = {end}"
     else:
         text = f"${owed:,.0f} stays"
     step(cid, "policy", "apply", label, "ok", text)
@@ -184,4 +225,5 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     note = "charity-care discount" if d else "income is above the policy's limits"
     bus.emit(cid, "agent_finished", "policy", summary=result, note=note)
     return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live,
+            "origin": got["origin"], "fetched_at": got["fetched_at"], "sources": got["sources"],
             "target": target, "refund": st["refund"], "discounted_share": st["discounted_share"]}

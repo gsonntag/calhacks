@@ -1,12 +1,15 @@
-"""Per-case event bus + append-only audit log.
+"""Per-case event bus + append-only audit log + case store.
 
 Everything an agent does is an event: the dashboard renders them live over WebSocket,
 and the same stream is written to data/<case_id>.audit.jsonl as the audit trail.
+Case state is snapshotted to data/cases/<case_id>.json; on startup both are loaded back, so cases,
+their call history and follow-ups survive restarts.
 """
 import asyncio
 import json
 import time
 from collections import defaultdict
+from pathlib import Path
 from typing import Any
 
 from .config import DATA_DIR
@@ -40,8 +43,48 @@ class EventBus:
     def reset(self) -> None:
         self._history.clear()
 
+    def restore(self, case_id: str) -> None:
+        """Reload a case's history from its audit log (after a restart)."""
+        f = DATA_DIR / f"{case_id}.audit.jsonl"
+        if case_id in self._history or not f.exists():
+            return
+        for line in f.read_text().splitlines():
+            try:
+                self._history[case_id].append(json.loads(line))
+            except json.JSONDecodeError:
+                continue  # a half-written last line from a crash
+
 
 bus = EventBus()
+
+
+def _cases_dir() -> Path:
+    d = DATA_DIR / "cases"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def save_case(case_id: str, state: dict) -> None:
+    """Atomic snapshot: write to a temp file, then rename over the old one."""
+    d = _cases_dir()
+    tmp = d / f".{case_id}.json.tmp"
+    tmp.write_text(json.dumps(state, default=str))
+    tmp.replace(d / f"{case_id}.json")
+
+
+def load_cases() -> list[dict]:
+    out = []
+    for f in sorted(_cases_dir().glob("*.json"), key=lambda f: f.stat().st_mtime):
+        try:
+            out.append(json.loads(f.read_text()))
+        except (json.JSONDecodeError, OSError):
+            continue
+    return out
+
+
+def delete_cases() -> None:
+    for f in _cases_dir().glob("*.json"):
+        f.unlink(missing_ok=True)
 
 
 def step(case_id: str, agent: str, key: str, label: str, status: str, result: str = "") -> None:

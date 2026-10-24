@@ -1,5 +1,7 @@
 """Cartesia: Managed Agent phone calls + Sonic TTS.
 
+(The self-hosted phone pipeline, Twilio + streaming Ink STT + Sonic TTS, is in billback/voice/.)
+
 Phone mode: a Cartesia-hosted agent (Claude Haiku on Cartesia) places the outbound call with the case
 brief as a dynamic variable. It reports outcomes through a webhook tool on our server, and call events
 (turns, completion) arrive at /webhooks/cartesia. We also poll the call as a backup in case webhooks lag.
@@ -11,6 +13,7 @@ import re
 import httpx
 
 from .. import config
+from ..voice import pronounce as pron, voices
 
 API = "https://api.cartesia.ai"
 VERSION = "2026-08-14"
@@ -79,13 +82,14 @@ async def poll_call(call_id: str, on_turn, on_done, every: float = 1.5, max_minu
         await asyncio.sleep(every)
 
 
-async def tts(text: str) -> bytes:
-    """Sonic TTS as WAV, used by the desk-mode call page."""
+async def tts(text: str, voice_id: str | None = None, pronounce: bool = True) -> bytes:
+    """Sonic TTS as WAV (desk-mode call page, voice previews). Text goes through the same pronunciation
+    normalizer as the phone pipeline; pronounce=False sends it raw (used to demo before/after)."""
+    v = voices.resolve(voice_id)
+    body = {"model_id": config.CARTESIA_TTS_MODEL, "transcript": pron.normalize(text, v.language) if pronounce else text,
+            **v.tts_fields(), "output_format": {"container": "wav", "encoding": "pcm_s16le", "sample_rate": 44100}}
     async with httpx.AsyncClient(timeout=30) as c:
         r = await c.post(f"{API}/tts/bytes", headers={"Authorization": f"Bearer {config.CARTESIA_API_KEY}",
-                                                      "Cartesia-Version": VERSION},
-                         json={"model_id": "sonic-3.6", "transcript": text, "voice": config.CARTESIA_VOICE_ID,
-                               "language": "en", "output_format": {"container": "wav", "encoding": "pcm_s16le",
-                                                                   "sample_rate": 44100}})
+                                                      "Cartesia-Version": VERSION}, json=body)
     r.raise_for_status()
     return r.content

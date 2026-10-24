@@ -1,0 +1,622 @@
+[page 1]
+ 
+Patient Financial Assistance, 
+Prescription Assistance, and 
+Charity Care 
+POLICY 3.04.07 
+Finance & Business Operations 
+Patient Financial Assistance, 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+ 
+Office of Origin: Patient Financial Services 
+ 
+I. PURPOSE 
+A. UCSF Medical Center strives to provide quality patient care and high standards for the 
+communities we serve. This policy demonstrates UCSF Medical Center’s 
+commitment to our mission and vision by helping to meet the needs of the low 
+income, uninsured patients and underinsured patients in our community. This policy 
+is not intended to waive or alter any contractual provisions or rates negotiated by and 
+between UCSF Medical Center and a third- party payer, nor is the policy intended to 
+provide discounts to a non-contracted third-party payer or other entities that are 
+legally responsible to make payment on behalf of a beneficiary, covered person or 
+insured. 
+B. This policy is intended to comply with California Health & Safety Code section 
+127400 et seq., Hospital Fair Pricing Policies, effective January 1, 2007, and as 
+amended. It is also intended to comply with IRS Regulations and the Office of 
+Inspector General (OIG), Department of Health and Human Services (HHS) guidance 
+regarding Financial Assistance to uninsured and underinsured patients. 
+C. This policy provides guidelines for identifying patients who may qualify for 
+Financial Assistance. This policy also establishes financial screening criteria to 
+determine which patients qualify for Financial Assistance. The financial screening 
+criteria provided for in this policy are based primarily on the Federal Poverty Level 
+(FPL) guidelines updated periodically in the Federal Register by the United States 
+Department of Health and Human Services. Uninsured patients who do not meet the 
+criteria for Financial Assistance under this policy may receive a self-pay discount as 
+set forth in Administrative Policy 3.04.06, Patient Financial Assistance, Prescription 
+Assistance, Charity Care and Discounts (Patient Version). 
+D. UCSF Medical Center is a participant in the Federal 340B Drug Pricing Program. 
+The intent of the 340B Program as stated by Congress is to permit safety net 
+providers to stretch scarce Federal Resources, reaching more eligible patients and 
+providing more comprehensive 
+services. This policy affirms UCSF Medical Center’s commitment to meet the 
+intent of Congress. Underinsured or uninsured patients may be eligible for 
+Financial Assistance through UCSF Medical Center’s Prescription Assistance 
+Program. 
+ 
+II. REFERENCES 
+California Health & Safety Code § 127400 et seq 
+UCSF Medical Center Administrative Policies: 
+3.04.06 Patient Financial Assistance, Prescription Assistance, Charity Care and 
+ Page 1 of 12 
+
+[page 2]
+ 
+Patient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+Discounts  (Patient Version) 
+3.07.01 Medication Billing Integrity 
+6.03.09 EMTALA Requirements for Emergency Medical Treatment 
+6.03.01 Admission and Transfer-In Acceptance 
+Department of Pharmacy Policies: 
+221.410 340B Program Contract Pharmacy 
+221.400 Medication Management: 340B Program Oversight and Administration 
+III. DEFINITIONS 
+Charity care: Refers to free medical care provided to patients 
+340B:  A federal drug discount program established by Section 340B of the Public Health 
+Service Act. 
+Family Income: The annual earnings of all members of the Patient Family from the prior 
+twelve months or prior tax year as shown by the recent pay stubs or income tax returns, 
+less payments made for alimony and child support. 
+Financial Assistance: The discounts available to patients who UCSF Medical Center 
+determines are eligible to be a Full Charity Care Patient or a High Medical Cost Charity 
+Care Patient. 
+Full Charity Care Patient: A patient who: 
+1. Is a Self-Pay Patient; and 
+2. Has Family Income at or below 400% of the Federal Poverty Level (FPL). 
+Contract Pharmacy: A pharmacy that contracts with a 340B covered entity to 
+provide prescriptions to eligible patients filled with 340B drugs. 
+High Medical Cost Charity Care Patient: A patient who: 
+1. Is not a Self-Pay Patient (i.e. the patient has a third-party source of payment); 
+2. Has Family Income at or below 400% of the Federal Poverty Level (FPL); 
+3. Has out-of-pocket medical expenses in the prior twelve months (whether 
+incurred at UCSF Medical Center or at other medical providers) that exceed 10% 
+of Family Income. 
+Discount: A reduction applied to billed charges to determine patient liability for any 
+charge that is reduced but not free. 
+Medically Necessary Service: A medical service or treatment that is necessary to treat 
+or diagnose a medical condition, the omission of which could adversely affect the 
+patient’s condition, illness or injury, and is not an elective or cosmetic surgery or 
+treatment. 
+ 
+ 
+ Page 2 of 12 
+
+[page 3]
+Page 3 of 12 
+ 
+P
+atient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+ 
+Pat
+ient Family: F
+or patients eighteen (18) years of age and older, the Patient Family 
+includes the patient’s spouse, domestic partner, dependent children under twenty-one (21) 
+years of age, and dependent children of any age if those children are disabled whether living 
+at home or not. For patients under eighteen (18) years of age, the Patient Family includes the 
+patient’s parent(s) or caretaker relative(s), and other children under twenty-one (21) years of 
+age of the parent(s) or caretaker relative(s) if those other children are disabled. 
+Patient Responsibility: A copayment, coinsurance, deductible, or other amount due 
+from an insured patient under the insured patient’s benefit plan. Patient Responsibility 
+does not include amounts due from an insured patient for services that are not covered 
+benefits under the insured patient’s benefit plan.  
+Retail Drug: A medication that is dispensed in a retail pharmacy upon the prescription of a 
+healthcare provider. 
+Prescription Assistance: The discounts available to patients who UCSF Medical Center 
+determines are eligible for help with pharmacy charges and out-of-pocket expenses. 
+Self-Pay Patient: A patient who has no third-party source of payment for health care 
+services. Self-Pay Patients include without limitation: (i) patients who qualify for a 
+government program but receive services that are not covered under the program; and 
+(ii) patients whose benefits have exhausted prior to or during the provision of services. 
+IV. POLICY 
+A. Patients of UCSF Medical Center shall be entitled to apply for Financial Assistance 
+for all Medically Necessary Services. Patients are not entitled to Financial Assistance 
+for (i) services that are not Medically Necessary Services; (ii) physician services 
+billed separately from UCSF Medical Center; and (iii) prescription drugs covered by 
+any medical benefit available to the patient, including but not limited to group or 
+individual medical plans, workers compensation, Medicare, Medicaid, 
+pharmaceutical assistance programs provided directly to the patient(s) by drug 
+manufacturers, state, federal or military programs, county aide, third party liability 
+payers, or any other situation in which another person or entity may have a legal 
+responsibility to pay for the costs of medical services, including prescription drugs. 
+B. This Policy and the financial screening criteria will be consistently applied to all 
+cases throughout UCSF Medical Center. If the application of this policy 
+conflicts with payer contracting or coverage requirements, consult with UCSF 
+Medical Center legal counsel. 
+C. This Policy applies to hospital inpatient and outpatient departments, including 
+hospital-based professional fees and outpatient prescription drugs, but excluding 
+separately billed physician professional fees. 
+D. Patients are hereby notified that emergency physicians, as defined in California 
+Health and Safety Code Section 127450, who provide emergency medical services 
+at UCSF Medical Center are also required by law to provide discounts to 
+uninsured patients or patients with high medical costs who are at or below 350% of 
+the Federal Poverty Level (FPL). Current UCSF eligibility is at or below 400% of 
+FPL. 
+
+[page 4]
+ 
+Patient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+ 
+V. PROCEDURE 
+A. Eligibility Criteria 
+1. Patients are eligible for Financial Assistance when they submit a completed 
+application for Financial Assistance and demonstrate through the application 
+process that they meet one of the following eligibility criteria: 
+2. The Federal Poverty Guideline table can be found on our Help Paying Your Bill 
+page at:  https://www.ucsfhealth.org/billing-and-insurance/help-paying-your-bill 
+TABLE 1: 
+ 
+Category of 
+Financial 
+Assistance 
+Eligibility Discount 
+Full Charity Care 
+Discount 1. Self-Pay Patient; and 
+2. Family Income at or below 400% of 
+the Federal Poverty Level (FPL) 
+100% write off 
+of amount due 
+from patient 
+High Medical Cost 
+Charity Care 
+Discount 
+1. Not a Self-Pay Patient (i.e. patient has 
+third party coverage); and 
+2. Family Income at or below 400% of 
+the Federal Poverty Level (FPL); or 
+3. Out-of-pocket medical expenses in 
+prior twelve (12) months (whether 
+paid or unpaid at UCSF Medical 
+Center or paid and documented at 
+other health care organizations) exceed 
+10% of Family Income. UCSF may 
+evaluate unpaid expenses at other 
+health care organizations 
+on a case-by-case basis. 
+100% write off of 
+Patient 
+Responsibility 
+B. Financial Assistance Application 
+1. The Financial Assistance application is available by visiting 
+https://www.ucsfhealth.org/billing_and_records/ via MyChart or by calling 
+Patient Financial Services at 1-866-433-4035. 
+2. All patients will be offered an opportunity to complete a Financial 
+Assistance Application. The form is available in English and in the other 
+primary languages of UCSF Medical Center’s service area. 
+3. A patient should make best efforts to submit a completed Financial Assistance 
+application form within 240 days (i.e. eight (8) months) of the day UCSF Medical 
+Center sends the first bill for medical services to the patient. A patient requesting 
+Prescription Assistance should submit a completed application form within 
+ Page 4 of 12 
+
+[page 5]
+ 
+P
+atient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+four
+teen days of prescription start date. UCSF Medical Center may extend the 
+time to submit the application for good cause. 
+ 
+4. Financial Assistance screening and means testing will be performed by Financial 
+Counselors in the Admitting Department, 340B Analyst, the Pharmaceutical 
+Services and/or by Patient Financial Services. It is the patient’s responsibility to 
+cooperate with the information gathering process. 
+5. Information submitted by a patient on a Financial Assistance Application shall 
+not be used in any way during the collection process. 
+C. Identification of Patients Potentially Eligible for Financial Assistance. 
+(Responsibility: Admitting/Registration, Pharmaceutical Services, Emergency 
+Department, Outpatient Settings, Ancillary Registration Areas, Clinics, Patient 
+Financial Services) 
+1. Every effort will be made to screen all patients identified to be Self-Pay 
+Patients or in potential need of Financial Assistance. Screened patients’ 
+financial information will be monitored as appropriate. Screened patients will 
+be provided assistance in assessing patient eligibility for Medi-Cal or any other 
+third-party coverage. 
+2. Patients without third party coverage will be financially screened for potential 
+eligibility for state and federal governmental programs as well as Financial 
+Assistance at the time of service or as near to the time of service as possible. 
+Patient-specific information will be provided to the county and state in 
+accordance with county and state guidelines for eligibility determinations. 
+3. If a patient does not indicate coverage by a third-party payer, or requests a 
+discounted price or Financial Assistance, the patient should be provided with a 
+financial counseling resource and information on assistance provided to apply 
+for the Medi-Cal program. 
+4. Patients with third party coverage who have high medical costs will be screened 
+by a Financial Counselor in the Admitting Department or by Patient Financial 
+Services to determine whether they qualify as a High Medical Cost Charity Care 
+Patient. Upon such patient request for Financial Assistance, the patient will be 
+informed of the criteria to qualify as a High Medical Cost Charity Care Patient 
+and the need to provide receipts if claiming services rendered at other providers 
+in the past twelve (12) months. 
+D. Procedures for Review of Financial Assistance Application 
+(Responsibility: Admitting/Registration and Patient Financial 
+Services) 
+1. UCSF Medical Center Patient Financial Services shall publish policies and 
+train staff regarding the availability of the Financial Assistance described in 
+this policy and the process for reviewing applications for Financial Assistance. 
+2. The criteria for Financial Assistance will be consistently applied throughout 
+ Page 5 of 12 
+
+[page 6]
+POLICY 3.04.07 
+Finance & Business Operations 
+Patient Financial Assistance, 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+Patient Financial Assistance, 
+Prescription Assistance, and 
+Charity Care 
+Page 6 of 12 
+ 
+ 
+UCS
+F Medical Center in making a determination on each patient’s 
+application. 
+3.
+ Family Income will be verified with either the most recent filed federal tax 
+return or recent paycheck stubs. 
+4. For the purpose of determining if a patient meets the requirements for the High 
+Medical Cost Charity Care Discount, the patient is required to provide proof of 
+payment of medical costs. Proof of payment may be verified. 
+5. Patients will be notified in writing if UCSF Medical Center determines that the 
+patient is eligible for Financial Assistance. The written notification shall be in 
+the primary 
+languages of UCSF Medical Center’s service area. Interpreter Services available in 
+other languages as needed. 
+6. Patients must submit a new Financial Assistance Application each time the patient 
+is admitted. A grant of Financial Assistance is valid for the current admission plus 
+any other outstanding patient liability due to UCSF Medical Center at the time of 
+determination. The grant of Financial Assistance is valid for outpatient services 
+for six (6) calendar months starting with the month of eligibility determination 
+and applies to any other patient financial liability due to UCSF Medical Center at 
+the time of determination. Prescription Assistance is valid for that specific 
+medication, any modifications or changes require a new application submission. 
+7. Patients granted the High Medical Cost Charity Care Discount will be approved 
+on a one- time basis. A grant of Financial Assistance is valid for the current 
+admission plus any other outstanding patient liability due to UCSF Medical 
+Center at the time of determination. The patient may apply again with additional 
+information to demonstrate high medical cost. 
+8. A patient will not be eligible for Financial Assistance if the 
+patient/responsible party provides false information about financial 
+eligibility. 
+9. UCSF Medical Center may consider a patient/responsible party’s failure to 
+make every reasonable effort to apply for and receive government-sponsored 
+insurance benefits for which they may be eligible grounds for denial of 
+Financial Assistance. If benefits are denied, UCSF Medical Center must 
+receive a copy of the denial. 
+10. Patients who are homeless or expire while admitted to a UCSF Medical Center 
+and have no source of funding or responsible party or estate may be eligible for 
+Financial Assistance even if a Financial Assistance application has not been 
+completed. All such cases must be reviewed by the Patient Access Director or 
+the Patient Financial Services Director or their designee(s) on a case-by-case 
+basis. 
+11. UCSF Medical Center understands that there may be circumstances under which 
+a patient's qualification for Financial Assistance may be established without 
+completing the formal assistance application. Under these circumstances, UCSF 
+
+[page 7]
+ 
+P
+atient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+Me
+dical Center may utilize other sources of information to make an individual 
+assessment of financial need to determine Financial Assistance. This information 
+will enable UCSF Medical Center to make an informed decision on the financial 
+need of non-responsive patients utilizing the best estimates available in the 
+absence of information provided directly by the patient. UCSF Medical Center 
+may utilize a third-party to conduct an electronic review of patient information to 
+assess Financial Assistance. Relief granted using this method will be identified as 
+presumptive Financial Assistance This review utilizes a health care industry recognized 
+predictive model that is based on public record databases. The model's rule based, 
+electronic technology is calibrated to the historical approvals for financial assistance 
+under the general application process and is designed to statistically match the Medical 
+Center’s policy. 
+Presumptive eligibility may also be determined on the basis of individual life 
+circumstances that may include: 
+• State-funded prescription programs 
+• Homeless or received care from a homeless clinic 
+• Participation in Women, Infants and Children programs (WIC) 
+• Supplemental Nutrition Assistance Program (SNAP) (e.g., food stamp 
+eligibility) 
+• Subsidized school lunch program eligibility 
+• Eligibility for other state or local assistance programs that are unfunded 
+• Low income/subsidized housing is provided as a valid address; and/or 
+• Patient is deceased with no known estate. 
+ 
+12. A patient who is denied charity care or discounts may appeal the decision by 
+writing to: Self-Pay Billing Office Assistant Director, UCSF Medical Center, 
+Patient Financial Services, Box 0810, San Francisco, CA 94143-0810. Appeals 
+must be submitted within thirty (30) days of the hospital’s decision on the 
+Financial Assistance application. In the event of a dispute or denial, patients 
+may seek a second level appeal by writing to the Director of Patient Financial 
+Services at the same listed address.  
+13. If a patient believes they were wrongfully denied financial assistance, they can file a 
+complaint with the state Hospital Bill Complaint Program by visiting this website: 
+https://hcai.ca.gov/affordability/hospital-fair-billingprogram/  
+The Hospital Complaint Program will review the hospital’s decision regarding 
+whether the patient qualifies for help paying their hospital bill  
+ 
+ 
+E. Calculation of Discount 
+ Page 7 of 12 
+
+[page 8]
+ 
+Patient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+1. Patients determined to be eligible for Financial Assistance will receive the 
+discounts set forth in Table 1 above. 
+2. This policy permits non-routine waiver (i.e. the High Medical Cost Charity Care 
+Discount) of patients’ out-of-pocket medical costs based on an individual 
+determination of financial need, which patients show through the application 
+process for Financial Assistance. This policy does not permit the routine waiver 
+of deductibles, co-payments and/or co-insurance imposed by insurance 
+companies for patients who have not demonstrated eligibility for the High 
+Medical Cost Charity Care Discount. 
+3. UCSF Medical Center will issue a Prescription Assistance card or voucher upon 
+program approval to patient(s), valid for up to 6 months for covered prescription 
+drugs. UCSF Medical Center will not cover prescriptions that have already been 
+dispensed but may elect to issue a Prescription Assistance card for up to 6 
+months of remaining refills. 
+F. Pharmacy Limitation: 
+1. Patients approved for Financial Assistance under this policy will be required 
+to obtain prescription services at the Contract Pharmacy or UCSF-owned retail 
+pharmacy to receive the discounted price. 
+2. Narcotics, lifestyle medication and over-the-counter items are excluded 
+from the Prescription Assistance Program. 
+G. Publication of Financial Assistance Policy: UCSF Medical Center publicizes the 
+availability of Financial Assistance as follows: 
+1. Website 
+a. This policy, the Financial Assistance Application, and a Plain Language 
+Summary of the policy shall be placed in a conspicuous location on the UCSF 
+Medical Center website. 
+2. Paper Copies 
+a. Copies of the policy, the Financial Assistance Application, and a Plain 
+Language Summary of the policy shall be available upon request and 
+without charge, both by mail and in public locations, including in the 
+primary waiting room area and the Emergency Room waiting area. 
+3. Public Displays 
+a. UCSF Medical Center conspicuously posts information about the availability 
+of Financial Assistance in public areas around the facility, including the 
+Admitting Department, Emergency Room and other outpatient hospital settings. 
+All postings shall be in in English and in the other primary languages of UCSF 
+Medical Center’s service area (as described above). 
+4. Notification to Community 
+a. UCSF Medical Center will notify key community partners about the 
+availability of the Financial Assistance provided for in this policy. 
+ Page 8 of 12 
+
+[page 9]
+ 
+P
+atient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+5.
+ During Admission and Discharge Process 
+a. Patient shall be able to receive a Plain Language Summary of the policy 
+during the admission and discharge processes. 
+6. Billing Statements 
+a. All billing statements to patients shall include a Plain Language Summary 
+of the policy. Billing statements must also include the telephone number of 
+Patient Financial Services, information about the application process for 
+Financial Assistance, and the website address where patients can obtain or 
+view copies of the policy and the Financial Assistance Application. 
+H. Patient Billing and Collection Practices (Responsibility: Patient Financial Services) 
+1. Patients who have not provided proof of coverage by a third party at or before 
+care is provided will receive with the statement of charges for services rendered 
+at the hospital a request to provide the hospital with health insurance or third 
+party coverage information. An additional statement will be provided on the bill 
+that informs the patient that if they do not have health insurance coverage, the 
+patient may be eligible for Medi-Cal or Financial Assistance under this policy. 
+2. Patients can request information about Financial Assistance verbally or in writing. 
+Upon such request, the hospital will give the patient the requested information in 
+person or mail the information to the patient/guarantor’s address. Written 
+correspondence to the patient shall be in the primary languages of UCSF Medical 
+Center’s service area (as described above). 
+3. If a patient is attempting to qualify for eligibility under the policy, and is 
+attempting in good faith to settle the outstanding bill, the hospital shall not send 
+the unpaid bill to any collection agency or other assignee unless that entity has 
+agreed to comply with this policy. 
+4. Patients are required to report to UCSF Medical Center any change in their 
+financial information promptly. 
+5. Prior to commencing collection activities against a patient, the hospital and any 
+collection agency working on behalf of the hospital will provide a notice containing 
+a statement that non-profit credit counseling may be available, as well as the 
+following statement: 
+“State and federal law require debt collectors to treat you fairly and prohibit 
+debt collectors from making false statements or threats of violence, using 
+obscene or profane language, and making improper communications with 
+third parties, including your employer. Except under unusual circumstances, 
+debt collectors may not contact you before 8:00 a.m. or after 9:00 p.m. In 
+general, a debt collector may not give information about your debt to another 
+person, other than your attorney or spouse. A debt collector may contact 
+another person to confirm your location or to enforce a judgment. For more 
+information about debt collection activities, you may contact the Federal 
+Trade Commission by telephone at 1-877-FTC-HELP (382-4357) or online at 
+ Page 9 of 12 
+
+[page 10]
+ 
+P
+atient Financial Assistance, POLICY 3.04.07 
+Finance & Business Operations 
+Prescription Assistance, and Patient Financial Assistance, 
+Charity Care 
+Prescription Assistance, and 
+Charity Care 
+Issued: 10/2004 
+Last Approval: 07/2025 
+w
+ww.ftc.gov.” 
+6. Payment Plans 
+a. Patients can be offered an extended payment plan. Extended payment plans 
+will be interest-free. 
+b. Standard payment plan length will be twelve (12) months or less, depending 
+on the outstanding balance. Longer payment plans can be provided on an 
+exception basis, with sufficient management approval. If hospital and patient 
+are unable to agree on the terms of a payment plan, the default payment plan 
+shall be a monthly payment of not more than ten percent (10%) of the 
+patient’s Family Income after excluding 
+essential living expenses. “Essential living expenses” means any of the 
+following: rent or house payment and maintenance, food and household 
+supplies, utilities and telephone, clothing, medical and dental payments, 
+insurance, school or childcare, child or spousal support, transportation and 
+auto expenses, including insurance, gas, and repairs, installment payments, 
+laundry and cleaning, and other extraordinary expenses. 
+c. A payment plan may be declared inoperative after the patient’s failure to 
+make all consecutive payments due during a ninety (90) day period. Before 
+declaring a payment plan no longer operative, the hospital, collection 
+agency, or assignee shall make a reasonable attempt to contact the patient by 
+telephone and to give notice in writing that the extended payment plan may 
+become inoperative, and of the opportunity to renegotiate the extended 
+payment plan. Prior to the payment plan being declared inoperative, the 
+hospital, collection agency, or assignee shall attempt to renegotiate the terms 
+of the defaulted extended payment plan, if requested by the patient For the 
+purposes of this section, the notice and telephone call to the patient may be 
+made to the last known telephone number and address of the patient. 
+7. UCSF Medical Center, or its contracted collection agencies, will undertake 
+reasonable collection efforts to collect amounts due from patients. These efforts 
+will include assistance with application for possible government program 
+coverage, evaluation for Financial Assistance, offers of no-interest payment plans, 
+and offers of discounts for prompt payment. UCSF Medical Center shall not 
+employ wage garnishments or place liens on primary residences. This requirement 
+does not preclude the UCSF Medical Center from pursuing reimbursement from 
+third party liability settlements or other legally responsible parties. 
+8. Each collection agency must sign a written agreement that it will adhere to the 
+hospital’s standards and scope of practices. The collection agency must also 
+agree to: 
+a. Not report adverse information to a consumer credit reporting agency or 
+commence civil action against the patient for nonpayment at any time. 
+b. Not use wage garnishments. 
+c. Not place liens on primary residences. 
+ Page 10 of 12 
+
+[page 11]
+ 
+ 
+ 
+d. Adhere to all requirements as identified in Health & Safety Code Section 
+127400 et seq. 
+e. Not engage in any activity that is considered an Extraordinary Collection 
+Activity under IRS Code section 501(r). 
+9. In the event that a patient is overcharged, the hospital shall reimburse the 
+patient the overcharged amount with 10% interest per annum calculated from 
+the date the patient made the overpayment. 
+I. Reporting Procedures (Responsibility: Patient Financial Services) 
+1. This policy and attachments shall be provided to the Office of Statewide Health 
+Planning and Development (OSHPD) at least biennially, or with significant 
+revision. If no significant revision has been made by UCSF Medical Center since 
+the policies and financial information form was previously provided, OSPHD 
+will be notified that there has been no significant revision. 
+VI. RESPONSIBILITY 
+Questions about the implementation of this policy should be directed to the Assistant 
+Director of the Self-Pay Billing Office/Patient Financial Services. Questions about 
+Financial Assistance eligibility should be directed to the Self-Pay Billing Office. 
+VII. HISTORY OF POLICY 
+Prepared by Patient Financial Services Directors/Admitting Directors 
+Reviewed December 2007 by Robin Hanson, Manager of Patient Financial Services, and 
+Lucia Kwan, Director of Patient Financial Services 
+Reviewed March 2009 by Lucia Kwan, Ann Sparkman, Legal Affairs, Susan Penney, 
+Risk Management, Cindi Drew, Ambulatory Services and Paul Axelrod, Medical Center 
+Administration 
+Approved April 2009 by Mark Laret, Chief Executive Officer 
+Reviewed February 2013 by Lucia Kwan, Patient Financial Services Director and Bryan 
+Chamberlin, Executive Director of Revenue Cycle (Interim) 
+Reviewed and Approved March 2013 by Barrie Strickland, CFO on behalf of Policy 
+Steering Committee 
+Reviewed July 2014 by Lucia Kwan, Patient Financial Services Director and Michael 
+Sciarabba, Admissions and Registration Director (no changes); Approved on behalf of 
+Policy Steering Committee 
+Reviewed August 2015 by Lucia Kwan, Revenue Cycle Director and Robin Hanson, 
+Customer Service Manager 
+Revised July 2016 by Lucia Kwan, Revenue Cycle Director and Joseph Zheng, Credit 
+and Collections Manager (Interim). 
+Reviewed and Approved August 2016 by Policy Steering 
+
+[page 12]
+ 
+ 
+ 
+ 
+ 
+Committee Reviewed and Approved June 2016 by Policy Steering 
+Committee 
+Revised April 2019 by Laura Vance, Director Patient Access, Lucia Kwan, Director of 
+Patient Financial Services and Joseph Zheng, Assistant Director, Self-Pay Billing Office 
+Revised October 2019 by Michael Powell, Chief Pharmacy Officer, Gil Radtke, Director 
+of Patient Financial Services and Joseph Zheng, Assistant Director, Self-Pay Billing 
+Office 
+Revised October 2020 by Michael Powell, Chief Pharmacy Officer, Gil Radtke, Director 
+of Patient Financial Services and Joseph Zheng, Assistant Director, Self-Pay Billing 
+Office 
+Reviewed and Approved October 2020 by Policy Steering 
+Committee Revised February 2023 by Laura Vance, Director 
+Patient Access Reviewed and Approved March 2023 by Policy 
+Steering Committee 
+Reviewed and Approved June 2025 by Antonio Fonseca, Director, Revenue Cycle 
+Reviewed and Approved July 2025 by Policy Steering Committee 
+VIII. APPENDIX 
+Not applicable. 
+This guideline is intended for use by UCSF Medical Center staff and personnel and no representations or 
+warranties are made for outside use. Not for outside production or publication without permission. Direct inquiries 
+to the Office of Origin or Medical Center Administration at (415) 353-2733. 

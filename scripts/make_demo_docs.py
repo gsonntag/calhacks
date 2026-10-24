@@ -1,8 +1,11 @@
-"""Render the synthetic demo bill and EOB from demo/case.json as PDFs you can upload on stage.
+"""Render the synthetic demo bills and EOBs (demo/case.json, demo/case_freecare.json) as PDFs you can upload
+on stage, into demo/ and web/samples/. The hospitals are real but the patients and bills are not, so every page
+carries a diagonal "SAMPLE" watermark.
 
     uv run --with reportlab python scripts/make_demo_docs.py
 """
 import json
+import shutil
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -10,11 +13,43 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 ROOT = Path(__file__).resolve().parent.parent
-case = json.loads((ROOT / "demo" / "case.json").read_text())
-p, b, e = case["patient"], case["bill"], case["eob"]
-name = f"{p['first_name']} {p['last_name']}"
-addr = f"{p['address']['street_number']} {p['address']['street_name']}, {p['address']['city']}, {p['address']['state']} {p['address']['zip']}"
+OUTPUTS = {"case.json": ("sample-hospital-bill.pdf", "sample-insurance-eob.pdf"),
+           "case_freecare.json": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf")}
 W, H = letter
+p = b = e = {}
+name = addr = ""
+
+
+def load(case_file: str) -> None:
+    global p, b, e, name, addr
+    case = json.loads((ROOT / "demo" / case_file).read_text())
+    p, b, e = case["patient"], case["bill"], case["eob"]
+    name = f"{p['first_name']} {p['last_name']}"
+    addr = f"{p['address']['street_number']} {p['address']['street_name']}, {p['address']['city']}, {p['address']['state']} {p['address']['zip']}"
+
+
+class Watermarked(canvas.Canvas):
+    """Every page gets the diagonal SAMPLE stamp, drawn when the page is finished."""
+
+    def showPage(self) -> None:
+        stamp(self)
+        super().showPage()
+
+    def save(self) -> None:
+        if self._code:  # unfinished last page
+            stamp(self)
+        super().save()
+
+
+def stamp(c: canvas.Canvas) -> None:
+    c.saveState()
+    c.translate(W / 2, H / 2)
+    c.rotate(35)
+    c.setFillColor(colors.Color(0.75, 0.2, 0.22, alpha=0.16))
+    c.setFont("Helvetica-Bold", 30)
+    c.drawCentredString(0, 16, "SAMPLE \u2014 synthetic patient,")
+    c.drawCentredString(0, -24, "not a real bill")
+    c.restoreState()
 
 
 def header(c: canvas.Canvas, title: str, sub: str) -> None:
@@ -24,12 +59,12 @@ def header(c: canvas.Canvas, title: str, sub: str) -> None:
     c.drawString(50, H - 76, sub)
     c.setFont("Helvetica-Oblique", 8)
     c.setFillColor(colors.grey)
-    c.drawRightString(W - 50, H - 40, "SAMPLE DOCUMENT - synthetic patient for a hackathon demo")
+    c.drawRightString(W - 50, H - 40, "SAMPLE DOCUMENT - synthetic patient for a hackathon demo, not a real bill")
     c.setFillColor(colors.black)
 
 
-def bill() -> None:
-    c = canvas.Canvas(str(ROOT / "demo" / "sample-hospital-bill.pdf"), pagesize=letter)
+def bill(out: Path) -> None:
+    c = Watermarked(str(out), pagesize=letter)
     header(c, b["provider"], "Patient Financial Services · Statement")
     c.setFillColor(colors.HexColor("#BE3337"))
     c.rect(50, H - 120, W - 100, 26, fill=1, stroke=0)
@@ -60,8 +95,8 @@ def bill() -> None:
     c.save()
 
 
-def eob() -> None:
-    c = canvas.Canvas(str(ROOT / "demo" / "sample-insurance-eob.pdf"), pagesize=letter)
+def eob(out: Path) -> None:
+    c = Watermarked(str(out), pagesize=letter)
     header(c, e["insurer"], "Explanation of Benefits · THIS IS NOT A BILL")
     c.setFont("Helvetica", 11)
     y = H - 120
@@ -90,5 +125,10 @@ def eob() -> None:
 
 
 if __name__ == "__main__":
-    bill(); eob()
-    print("wrote demo/sample-hospital-bill.pdf and demo/sample-insurance-eob.pdf")
+    for case_file, (bill_pdf, eob_pdf) in OUTPUTS.items():
+        load(case_file)
+        bill(ROOT / "demo" / bill_pdf)
+        eob(ROOT / "demo" / eob_pdf)
+        for f in (bill_pdf, eob_pdf):
+            shutil.copy(ROOT / "demo" / f, ROOT / "web" / "samples" / f)
+            print("wrote demo/" + f, "and web/samples/" + f)
