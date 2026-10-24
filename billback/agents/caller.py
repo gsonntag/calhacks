@@ -50,6 +50,9 @@ def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
         what = "free care" if elig["discount_pct"] == 100 else f"a {elig['discount_pct']:.0f}% discount"
         goals.append(f"Request a financial-assistance review under the hospital's own policy: the patient qualifies "
                      f"for {what}, which brings the balance to ${policy['target']:,.0f}. Quote the policy.")
+        if policy.get("refund"):
+            goals.append(f"Ask for the ${policy['refund']:,.0f} the patient already paid to be refunded once "
+                         f"the assistance is applied.")
     goals.append("Ask for the account to be placed on hold so it isn't sent to collections while this is reviewed.")
     goals.append("Get a case or reference number and the rep's name; repeat the case number back to confirm.")
     return goals

@@ -17,7 +17,7 @@
   "hospital": {
     "name": "Eastshore Medical Center",
     "billing_phone_label": "Patient Financial Services",
-    "policy_url": "",
+    "policy_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance", "policy_owner": "Sutter Health",
     "policy_search_query": "Eastshore Medical Center financial assistance policy",
     "sample_policy": "policy_sample_high_cost.md"
   },

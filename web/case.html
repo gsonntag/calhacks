@@ -459,6 +459,10 @@ function render() {
   $('finalAmt').textContent = final != null ? money(final) : '';
   $('finalWas').textContent = m.bill ? money(m.bill.amount_due) : '';
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
+  const refund = m.done && m.done.refund;
+  $('finalNote').innerHTML = refund
+    ? `<b style="color:var(--green-ink,#2F5B34)">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
+    : 'We’ll check back once billing confirms your new balance.';
   const pa = m.approvals.planner;
   const showPlan = m.plan && m.plan.months > 0;
   $('planBox').hidden = !showPlan;

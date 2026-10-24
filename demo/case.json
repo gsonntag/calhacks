@@ -11,7 +11,7 @@
   "hospital": {
     "name": "Bayview Community Hospital",
     "billing_phone_label": "Patient Financial Services",
-    "policy_url": "",
+    "policy_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance", "policy_owner": "Sutter Health",
     "policy_search_query": "Bayview Community Hospital financial assistance policy"
   },
   "bill": {
@@ -45,18 +45,18 @@
     "status": "Processed 2026-08-21"
   },
   "transactions": [
-    {"type": "deposit", "date": "2026-07-31", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-08-14", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-08-28", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-09-11", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-09-25", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-10-09", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-10-23", "amount": 1300.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-07-31", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-08-14", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-08-28", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-09-11", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-09-25", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-10-09", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-10-23", "amount": 900.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
     {"type": "purchase", "date": "2026-08-02", "amount": 75.00, "merchant": "Berkeley Urgent Care", "description": "Follow-up visit copay"},
     {"type": "purchase", "date": "2026-08-03", "amount": 75.00, "merchant": "Berkeley Urgent Care", "description": "Follow-up visit copay"},
     {"type": "purchase", "date": "2026-08-20", "amount": 64.00, "merchant": "Berkeley Bowl", "description": "Groceries"},
-    {"type": "purchase", "date": "2026-09-01", "amount": 1450.00, "merchant": "Sacramento St Apts", "description": "Rent"},
+    {"type": "purchase", "date": "2026-09-01", "amount": 1050.00, "merchant": "Sacramento St Apts", "description": "Rent (shared apt)"},
     {"type": "purchase", "date": "2026-09-14", "amount": 500.00, "merchant": "Bayview Community Hospital", "description": "Payment acct BCH-48213977"},
-    {"type": "purchase", "date": "2026-10-01", "amount": 1450.00, "merchant": "Sacramento St Apts", "description": "Rent"}
+    {"type": "purchase", "date": "2026-10-01", "amount": 1050.00, "merchant": "Sacramento St Apts", "description": "Rent (shared apt)"}
   ]
 }
