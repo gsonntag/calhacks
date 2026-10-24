@@ -68,6 +68,9 @@
   .summary p{margin:0;padding-top:6px;font-size:15px;line-height:1.6;color:var(--muted)}
   .summary strong{color:var(--ink);font-weight:600}
   .small{font-size:13px;color:var(--muted-2)}
+  #caseError{margin:0 0 16px;padding:12px 16px;border-radius:14px;background:var(--tint);color:#9E2A2E;font-weight:600;font-size:15px;line-height:1.45}
+  #caseWarnings:empty{display:none}
+  #caseWarnings{margin:0 0 16px;display:flex;flex-direction:column;gap:4px}
   .lead{margin:0;font-size:16px;line-height:1.6;color:var(--muted)}
 
   .drop{position:relative;border:1.5px dashed #E3C4C5;background:#FFFFFF;border-radius:16px;padding:36px 20px;display:flex;flex-direction:column;
@@ -143,7 +146,7 @@
       <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
       <b>Bill<span>Back</span></b>
     </a>
-    <nav aria-label="Main"><a id="hoodLink" href="ops.html">Under the hood</a><a href="about.html">About</a></nav>
+    <nav aria-label="Main"><a id="hoodLink" href="ops.html">Under the hood</a></nav>
   </div>
   <nav class="tabs" aria-label="Cases">
     <div id="tabList" style="display:contents"></div>
@@ -152,6 +155,8 @@
 </header>
 
 <main>
+  <div id="caseError" role="alert" hidden></div>
+  <div id="caseWarnings" class="small" aria-live="polite"></div>
   <section class="step" data-step="0" aria-label="Step 1: Upload">
     <div class="rail"><span class="marker"><svg class="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg><span class="num">1</span></span><span class="line"></span></div>
     <div class="body">
@@ -191,6 +196,7 @@
         <p style="margin:0;font-size:17px;line-height:1.6">Can BillBack call <strong id="approveProvider"></strong> billing for you? On the call we’ll:</p>
         <ul class="ask" id="askList"></ul>
         <p class="small" style="margin:0;font-size:14px;line-height:1.5">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
+        <p class="meta" style="margin:0">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
         <div class="actions" style="gap:8px 16px">
           <button type="button" class="primary" id="approveBtn" style="padding:0 26px">Approve the call</button>
           <button type="button" class="ghost secondary" id="notYetBtn">Not yet</button>
@@ -225,6 +231,7 @@
           </div>
         </div></div>
         <span class="small" id="deskLink"></span>
+        <button type="button" class="link-btn" id="endCallBtn" hidden>End call</button>
       </div></div></div>
       <div class="reveal summary"><div><p id="callSummary"></p></div></div>
     </div>
@@ -276,7 +283,8 @@ const ICON = {
 function blankModel() {
   return { bill: null, docs: [], steps: { auditor: [], policy: [] }, agent: {}, review: null, approvals: {},
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
-           balances: [], plan: null, planDecided: null, done: null, error: null, listening: true, mode: null };
+           balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
+           warnings: [], quotes: [] };
 }
 const state = { tabs: [], active: null, models: {}, drafts: {}, ws: null, now: Date.now() / 1000 };
 const model = (id) => (state.models[id] ||= blankModel());
@@ -295,7 +303,7 @@ function apply(m, e) {
     }
     case 'review_done': m.review = { auditor: e.auditor, policy: e.policy }; break;
     case 'balance': m.balances.push(e.amount); break;
-    case 'approval_requested': m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; if (e.agent === 'planner') m.plan = e.detail; break;
+    case 'approval_requested': m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; if (e.agent === 'planner') m.plan = { ...(m.plan || {}), ...e.detail }; break;
     case 'approval_resolved': {
       const who = Object.keys(m.approvals).find((k) => m.approvals[k].id === e.approval_id);
       if (who) { m.approvals[who].resolved = e.approved;
@@ -303,7 +311,10 @@ function apply(m, e) {
         if (who === 'planner') m.planDecided = e.approved; }
       break;
     }
-    case 'call_ready': m.call = { ts: e.ts, mode: e.mode, rep_url: e.rep_url }; break;
+    case 'call_ready': m.call = { ts: e.ts, mode: e.mode, call_id: e.call_id }; break;
+    case 'tool_result': if (e.tool === 'create_payment_plan') m.planResult = e.result || {}; break;
+    case 'warning': m.warnings.push(e.text); break;
+    case 'policy_quote': m.quotes.push(e); break;
     case 'transcript': m.lines.push({ who: e.speaker, text: e.text }); break;
     case 'call_outcome': m.outcome = e.outcome || m.outcome; break;
     case 'call_ended': m.outcome = e.outcome || m.outcome; m.callEnded = e.ts; break;
@@ -314,9 +325,11 @@ function apply(m, e) {
 }
 
 function stageOf(m) {
+  if (m.error) return m.bill ? 4 : 1;
   if (!m.bill) return 1;
   if (m.done || m.callEnded || m.callDeclined || m.approvals.planner) return 4;
   if (m.call) return 3;
+  if (m.approvals.caller && m.approvals.caller.resolved === true) return 3;  // approved, dialing
   if (m.approvals.caller && m.approvals.caller.resolved === undefined) return 2;
   return 1;
 }
@@ -325,13 +338,14 @@ function stageOf(m) {
 function renderAgent(key, name, role, m) {
   const steps = m.steps[key], a = m.agent[key] || {};
   const waiting = steps.some((s) => s.status === 'wait');
-  const status = a.done ? 'Done' : waiting ? 'Waiting' : a.started ? 'Working' : 'Queued';
-  const color = a.done ? 'var(--green-ink)' : waiting ? 'var(--amber)' : a.started ? '#9E2A2E' : 'var(--muted-2)';
-  const dot = a.done ? 'green' : waiting ? 'amber' : a.started ? 'live' : '';
+  const stopped = m.error && !a.done;
+  const status = a.done ? 'Done' : stopped ? 'Stopped' : waiting ? 'Waiting' : a.started ? 'Working' : 'Queued';
+  const color = a.done ? 'var(--green-ink)' : stopped ? 'var(--muted-2)' : waiting ? 'var(--amber)' : a.started ? '#9E2A2E' : 'var(--muted-2)';
+  const dot = a.done ? 'green' : stopped ? '' : waiting ? 'amber' : a.started ? 'live' : '';
   const sk = state.active + '-' + key;
   const items = steps.map((s, i) => {
     const res = s.status === 'running' ? '' : `<span class="rs ${['flag', 'win', 'wait'].includes(s.status) ? s.status : ''}">${esc(s.result)}</span>`;
-    return `<li${fresh(sk, i)}><span class="ic">${ICON[s.status] || ICON.ok}</span><div class="tx"><span class="lb">${esc(s.label)}</span>${res}</div></li>`;
+    return `<li${fresh(sk, i)}><span class="ic">${(stopped && s.status === 'running') ? ICON.clear : (ICON[s.status] || ICON.ok)}</span><div class="tx"><span class="lb">${esc(s.label)}</span>${res}</div></li>`;
   }).join('');
   seen[sk] = steps.length;
   return `<div class="agent"><div style="display:flex;flex-direction:column;gap:3px">
@@ -356,6 +370,13 @@ function phaseText(m) {
   return last.who === 'rep' ? 'Billing is responding' : 'BillBack is making your case';
 }
 
+function policyQuote(m) {
+  const q = m.quotes.find((x) => x.matched) || m.quotes[0];
+  if (!q || !q.quote) return '';
+  const src = /^https?:/.test(q.source || '') ? ` <a href="${esc(q.source)}" target="_blank" rel="noopener">source</a>` : ` (${esc(q.source || '')})`;
+  return `<br><span class="small">“${esc(q.quote)}”${src}</span>`;
+}
+
 function outcomeText(m) {
   const o = m.outcome || {};
   if (m.callDeclined) return 'You chose not to have BillBack call yet';
@@ -363,6 +384,7 @@ function outcomeText(m) {
   if (o.case_number) bits.push(`Case ${o.case_number} opened`);
   if (o.account_on_hold) bits.push('account on hold');
   if (o.assistance_review_opened && !o.case_number) bits.push('assistance review opened');
+  if (!bits.length && m.warnings.includes('Call timed out')) return 'Call timed out';
   return bits.length ? bits.join(', ') : (o.next_step || 'Call finished');
 }
 
@@ -373,6 +395,11 @@ function render() {
   const m = draft ? blankModel() : model(state.active || '_');
   const stage = draft || !tab ? 0 : stageOf(m);
   $('hoodLink').href = tab && !draft ? `ops.html?id=${tab.id}` : 'ops.html';
+  $('caseError').hidden = !m.error;
+  $('caseError').textContent = m.error ? 'Something went wrong: ' + m.error : '';
+  setHTML($('caseWarnings'), m.warnings.map((w) => `<span>⚠ ${esc(w)}</span>`).join(''));
+  const phoneUrl = tab && !draft ? `${location.origin}/approve.html?case=${tab.id}` : '';
+  $('phoneApprove').href = phoneUrl || '#'; $('phoneApprove').textContent = phoneUrl;
 
   document.querySelectorAll('.step').forEach((el) => {
     const i = +el.dataset.step;
@@ -395,7 +422,7 @@ function render() {
   const ra = (m.review && m.review.auditor) || m.agent.auditor || {}, rp = (m.review && m.review.policy) || m.agent.policy || {};
   setHTML($('reviewSummary'),
     `<dt>Auditor</dt><dd><b>${esc(ra.result || ra.summary || '')}</b> <span>· ${esc(ra.note || '')}</span></dd>` +
-    `<dt>Policy</dt><dd><b>${esc(rp.result || rp.summary || '')}</b> <span>· ${esc(rp.note || '')}</span></dd>`);
+    `<dt>Policy</dt><dd><b>${esc(rp.result || rp.summary || '')}</b> <span>· ${esc(rp.note || '')}</span>${policyQuote(m)}</dd>`);
 
   // 3 · Approval
   const am = $('approveMeta');
@@ -422,7 +449,8 @@ function render() {
     return `<p${fresh(tk, i)}><b class="${them ? 'them' : ''}">${them ? 'Billing' : 'BillBack'}</b>&nbsp; <span>${esc(l.text)}</span></p>`;
   }).join(''));
   seen[tk] = m.lines.length;
-  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${esc(m.call.rep_url)}" target="_blank">open the billing-rep console</a>` : '');
+  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}" target="_blank">open the billing-rep console</a>` : '');
+  $('endCallBtn').hidden = !(m.call && !m.callEnded && !m.done);
   $('callSummary').textContent = m.callDeclined ? 'No call made' : outcomeText(m);
 
   // 5 · Resolved
@@ -435,7 +463,10 @@ function render() {
   $('planBox').hidden = !showPlan;
   if (showPlan) {
     const p = m.plan;
-    $('planText').innerHTML = m.planDecided === true ? `✓ Plan saved: <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free. ${esc(p.reason || '')}`
+    $('planText').innerHTML = m.planDecided === true
+      ? (!m.planResult ? 'Saving the plan to your bank…'
+        : m.planResult.error ? `Couldn't save the plan to your bank. You can set up <b>${p.months} × ${money(p.monthly)}/mo</b> yourself.`
+        : `✓ Plan saved: <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free. ${esc(p.reason || '')}`)
       : m.planDecided === false ? 'No plan set up. You can pay the balance whenever you’re ready.'
       : `Pay what's left as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free? ${esc(p.reason || '')}`;
     $('planYes').hidden = $('planNo').hidden = !(pa && pa.resolved === undefined);
@@ -500,6 +531,7 @@ $('approveBtn').addEventListener('click', () => decide('caller', true));
 $('notYetBtn').addEventListener('click', () => decide('caller', false));
 $('planYes').addEventListener('click', () => decide('planner', true));
 $('planNo').addEventListener('click', () => decide('planner', false));
+$('endCallBtn').addEventListener('click', () => { if (state.active) fetch(`/api/cases/${state.active}/end-call`, { method: 'POST' }); });
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
 
 setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.active]; if (m && m.call && !m.callEnded) render(); }, 500);

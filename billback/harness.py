@@ -26,6 +26,7 @@ class Tool:
     input_schema: dict
     fn: Callable[..., Awaitable[Any]]
     tier: Tier = "read"
+    approval_title: Callable[[dict], str] | None = None  # patient-facing title for consequential tools
 
     def spec(self) -> dict:
         return {"name": self.name, "description": self.description, "input_schema": self.input_schema}
@@ -84,7 +85,8 @@ class ToolRegistry:
             return {"error": f"unknown tool {name}"}
         bus.emit(self.case_id, "tool_call", self.agent, tool=name, tier=tool.tier, args=args)
         if tool.tier == "consequential":
-            ok = await gate.request(self.case_id, self.agent, f"{self.agent} wants to: {name}", args)
+            title = tool.approval_title(args) if tool.approval_title else f"{self.agent} wants to: {name}"
+            ok = await gate.request(self.case_id, self.agent, title, args)
             if not ok:
                 bus.emit(self.case_id, "tool_blocked", self.agent, tool=name)
                 return {"blocked": True, "reason": "patient declined or did not respond"}

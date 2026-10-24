@@ -6,6 +6,7 @@ brief as a dynamic variable. It reports outcomes through a webhook tool on our s
 """
 import asyncio
 import json
+import re
 
 import httpx
 
@@ -21,7 +22,7 @@ def headers() -> dict:
 
 def phone_ready() -> bool:
     return bool(config.CARTESIA_API_KEY and config.CARTESIA_AGENT_ID and config.CARTESIA_FROM_NUMBER_ID
-                and config.REP_PHONE_NUMBER)
+                and re.fullmatch(r"\+1\d{10}", config.REP_PHONE_NUMBER or ""))
 
 
 async def _req(method: str, path: str, body: dict | None = None) -> dict:
@@ -52,16 +53,26 @@ async def cancel_call(call_id: str) -> None:
     await _req("POST", f"/agents/calls/{call_id}/cancel")
 
 
-async def poll_call(call_id: str, on_turn, on_done, every: float = 1.5, max_minutes: float = 15) -> None:
-    """Backup for webhooks: emits transcript turns we haven't seen and the final state."""
+async def poll_call(call_id: str, on_turn, on_done, every: float = 1.5, max_minutes: float = 15,
+                    on_error=None) -> None:
+    """Backup for webhooks: emits transcript turns we haven't seen and the final state.
+    After 3 failed polls in a row, on_error(text) is called once so the dashboard shows why."""
+    fails, warned = 0, False
     for _ in range(int(max_minutes * 60 / every)):
         try:
             call = await get_call(call_id)
-        except Exception:
+            fails = 0
+        except Exception as e:
+            fails += 1
+            if fails >= 3 and not warned and on_error:
+                warned = True
+                on_error(f"Can't read the call status from Cartesia: {e}")
             await asyncio.sleep(every)
             continue
-        for i, t in enumerate(call.get("transcript") or []):
-            on_turn(i, t.get("role"), t.get("text", ""))
+        call = call.get("call", call) if isinstance(call.get("call"), dict) else call
+        transcript = call.get("transcript") or []
+        for i in range(len(transcript)):
+            on_turn(transcript, i)
         if call.get("status") in ("completed", "failed"):
             on_done(call)
             return

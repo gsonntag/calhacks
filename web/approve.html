@@ -53,8 +53,9 @@ async function poll() {
   setTimeout(poll, 1200);
 }
 async function decide(id, ok) {
-  await fetch(`/api/approvals/${id}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({approved: ok})});
-  root.className = 'done'; root.textContent = ok ? '✓ Approved' : 'Declined';
+  let r = {};
+  try { r = await (await fetch(`/api/approvals/${id}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({approved: ok})})).json(); } catch (e) {}
+  root.className = 'done'; root.textContent = !r.ok ? 'This request already expired or was answered elsewhere' : (ok ? '✓ Approved' : 'Declined');
 }
 if (caseId) poll(); else root.textContent = 'Open this from the case page.';
 </script>

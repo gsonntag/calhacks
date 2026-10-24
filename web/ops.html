@@ -209,7 +209,7 @@ function handle(e) {
     case 'call_ready':
       laneState('caller', 'active', 'Dialing hospital billing…');
       $('callBadge').innerHTML = '<span class="badge live">LIVE</span>';
-      $('callHint') && ($('callHint').innerHTML = `Calling… <a href="${esc(e.rep_url)}" target="_blank">rep console</a>`);
+      $('callHint') && ($('callHint').innerHTML = e.mode === 'desk' ? `Calling… <a href="${location.origin}/rep.html?call=${encodeURIComponent(e.call_id)}" target="_blank">rep console</a>` : 'Calling…');
       break;
     case 'transcript': addLine(e.speaker, e.text); break;
     case 'call_outcome': case 'call_ended': {

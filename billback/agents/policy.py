@@ -4,6 +4,7 @@ right away, then waits for the Auditor's transactions (income) and balance. The 
 finance.py, not done by the model."""
 import asyncio
 import re
+from urllib.parse import urlparse
 
 from .. import finance, llm
 from ..events import bus, step
@@ -15,7 +16,9 @@ tiers based on income as a percent of the Federal Poverty Level (FPL).
 Return JSON: {"tiers": [{"max_fpl_pct": number, "discount_pct": number, "quote": "exact sentence from the text"}],
 "no_collections_while_pending": true|false|null, "collections_quote": "exact sentence or empty",
 "apply_how": "one sentence"}
-Only use what the text states. Every quote must be copied verbatim. If the text has no FPL tiers, return "tiers": []."""
+Only use what the text states. Every quote must be copied verbatim. If the text has no FPL tiers, return "tiers": [].
+discount_pct = percent of the balance written off (100 = free). Omit tiers without a numeric FPL upper limit and
+a numeric percent discount."""
 
 FIND_SYSTEM = """You find a hospital's official financial assistance policy (FAP) page. Use web_search, then
 fetch_page on the most official-looking result (the hospital's or health system's own domain, ideally the
@@ -50,6 +53,24 @@ async def _find_policy_url(case: dict) -> str | None:
     return m.group(0).rstrip(").,") if m else None
 
 
+LIVE_TIMEOUT = 45  # seconds for search + fetch before falling back to the sample policy
+
+
+async def _extract(cid: str, text: str) -> tuple[dict, bool]:
+    """Policy text -> ({"tiers": [clean numeric tiers], ...}, extracted_ok). Never raises: on failure it
+    returns the sample tiers and False so the caller labels them as the sample policy."""
+    if not llm.available():
+        return {**SAMPLE_TIERS, "tiers": finance.clean_tiers(SAMPLE_TIERS["tiers"])}, True
+    try:
+        found = await asyncio.wait_for(llm.json_out(EXTRACT_SYSTEM, f"POLICY TEXT:\n{text[:30000]}"), 90)
+        if not isinstance(found, dict):
+            raise ValueError("extraction did not return an object")
+    except Exception as e:
+        bus.emit(cid, "warning", "policy", text=f"Policy extraction failed ({type(e).__name__}); using sample policy")
+        return {**SAMPLE_TIERS, "tiers": finance.clean_tiers(SAMPLE_TIERS["tiers"])}, False
+    return {**found, "tiers": finance.clean_tiers(found.get("tiers"))}, True
+
+
 async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future) -> dict:
     cid = case["id"]
     hosp = case["hospital"]
@@ -58,17 +79,28 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     step(cid, "policy", "find", "Find assistance policy", "running")
     source, text, live = "sample policy (offline)", None, False
     if brightdata.live():
-        try:
+        async def _fetch():
             url = hosp.get("policy_url") or await _find_policy_url(case)
             if url:
-                text, source, live = await brightdata.fetch_text(url), url, True
+                step(cid, "policy", "find", f"Reading {urlparse(url).netloc}…", "running")
+                return await brightdata.fetch_text(url), url
+            return None, None
+        try:
+            text, url = await asyncio.wait_for(_fetch(), LIVE_TIMEOUT)
+            if text is not None:
+                source, live = url, True
         except Exception as e:
-            bus.emit(cid, "warning", "policy", text=f"Live fetch failed ({e}); using sample policy")
+            bus.emit(cid, "warning", "policy", text=f"Live fetch failed ({type(e).__name__}: {e}); using sample policy")
+            text = None
     if text is None:
         text = brightdata.sample_policy()
-    found = (await llm.json_out(EXTRACT_SYSTEM, f"POLICY TEXT:\n{text[:30000]}") if llm.available()
-             else SAMPLE_TIERS)
-    tiers = found.get("tiers", [])
+    found, ok = await _extract(cid, text)
+    if live and ok and not found["tiers"]:
+        bus.emit(cid, "warning", "policy", text="Live policy had no FPL tiers; using sample policy")
+        found, ok = await _extract(cid, brightdata.sample_policy())
+    if not ok or not found["tiers"]:
+        source, live = "sample policy (offline)", False
+    tiers = found["tiers"]
     step(cid, "policy", "find", "Find assistance policy", "ok" if tiers else "clear",
          ("Found on the hospital's website (live)" if live else "Using the sample policy (offline)")
          if tiers else "No income-based discount rules found")
@@ -90,7 +122,7 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
         step(cid, "policy", "free", "Check free care", "win", "You qualify for free care")
     elif free:
         step(cid, "policy", "free", "Check free care", "clear",
-             f"Nothing found, income is above the {free[0]['max_fpl_pct']}% limit")
+             f"Nothing found, income is above the {free[0]['max_fpl_pct']:.0f}% limit")
     else:
         step(cid, "policy", "free", "Check free care", "clear", "This policy has no free-care tier")
 

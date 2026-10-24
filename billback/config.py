@@ -21,8 +21,17 @@ BRIGHTDATA_SERP_ZONE = os.getenv("BRIGHTDATA_SERP_ZONE", "")
 CARTESIA_API_KEY = os.getenv("CARTESIA_API_KEY", "")
 CARTESIA_AGENT_ID = os.getenv("CARTESIA_AGENT_ID", "")          # from scripts/setup_cartesia.py
 CARTESIA_FROM_NUMBER_ID = os.getenv("CARTESIA_FROM_NUMBER_ID", "")
-CARTESIA_WEBHOOK_SECRET = os.getenv("CARTESIA_WEBHOOK_SECRET", "change-me")
-CARTESIA_TOOL_TOKEN = os.getenv("CARTESIA_TOOL_TOKEN", "change-me-too")
+# Placeholder values (public in .env.example) count as unset, and unset means the endpoints reject everything.
+_PLACEHOLDERS = {"", "change-me", "change-me-too", "pick-a-long-random-string", "pick-another-long-random-string"}
+
+
+def _secret(name: str) -> str:
+    v = os.getenv(name, "").strip()
+    return "" if v in _PLACEHOLDERS else v
+
+
+CARTESIA_WEBHOOK_SECRET = _secret("CARTESIA_WEBHOOK_SECRET")
+CARTESIA_TOOL_TOKEN = _secret("CARTESIA_TOOL_TOKEN")
 CARTESIA_VOICE_ID = os.getenv("CARTESIA_VOICE_ID", "6ccbfb76-1fc6-48f7-b71d-91ac6298247b")
 REP_PHONE_NUMBER = os.getenv("REP_PHONE_NUMBER", "")  # teammate playing hospital billing, +1XXXXXXXXXX
 

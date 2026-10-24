@@ -23,34 +23,53 @@
   button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:0 18px;min-height:48px;cursor:pointer}
   #mic{background:#E9EEF7}#mic.on{background:var(--accent);color:#fff}
   #send{background:#22314A;color:#fff}
+  #hang{background:#F2F2F4;color:var(--accent)}
   #answer{margin:auto;font-size:20px;padding:0 32px;min-height:64px;background:#2F8F46;color:#fff}
 </style>
 </head>
 <body>
 <header>Bayview Community Hospital · Patient Financial Services<small id="sub">Incoming call</small></header>
 <div id="log"><button id="answer">📞 Answer</button></div>
-<footer><button id="mic" title="Hold to talk">🎤 Hold</button><input id="txt" placeholder="Say something as the billing rep…"><button id="send">Send</button></footer>
+<footer><button id="mic" title="Hold to talk">🎤 Hold</button><input id="txt" placeholder="Say something as the billing rep… e.g. case number FA-2291"><button id="send">Send</button><button id="hang">Hang up</button></footer>
 <script>
 const callId = new URLSearchParams(location.search).get('call');
 const $ = (x) => document.getElementById(x);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let busy = false, ended = false;
 function add(cls, text) { $('log').insertAdjacentHTML('beforeend', `<div class="l ${cls}">${esc(text)}</div>`); $('log').scrollTop = 1e9; }
-async function speak(text) {
+let audio = null;
+async function speakOnce(text) {
   try {
     const r = await fetch('/api/tts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text})});
-    if (r.ok) { const a = new Audio(URL.createObjectURL(await r.blob())); await a.play(); await new Promise((res) => a.onended = res); return; }
+    if (r.ok) { audio = new Audio(URL.createObjectURL(await r.blob())); await audio.play(); await new Promise((res) => { audio.onended = res; audio.onerror = res; }); return; }
   } catch (e) {}
-  await new Promise((res) => { const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = res; speechSynthesis.speak(u); });
+  await new Promise((res) => { const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = res; u.onerror = res; speechSynthesis.speak(u); });
+}
+// Chrome sometimes never fires onend; never let a stuck voice lock the console.
+function speak(text) {
+  const limit = 8000 + text.length * 90;
+  return Promise.race([speakOnce(text), new Promise((res) => setTimeout(() => {
+    try { speechSynthesis.cancel(); if (audio) audio.pause(); } catch (e) {}
+    res();
+  }, limit))]);
 }
 async function turn(repSaid) {
   if (busy || ended) return; busy = true;
-  if (repSaid) add('me', repSaid);
-  const r = await (await fetch(`/api/calls/${callId}/turn`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})})).json();
-  if (r.say) { add('bb', r.say); await speak(r.say); }
-  if (r.ended) { ended = true; $('sub').textContent = 'Call ended'; }
-  busy = false;
+  try {
+    if (repSaid) add('me', repSaid);
+    const res = await fetch(`/api/calls/${callId}/turn`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})});
+    if (!res.ok) throw new Error('turn ' + res.status);
+    const r = await res.json();
+    if (r.say) { add('bb', r.say); await speak(r.say); }
+    if (r.ended) { ended = true; $('sub').textContent = 'Call ended'; }
+  } catch (e) {
+    add('bb', '(connection hiccup, try again)');
+  } finally { busy = false; }
 }
+$('hang').onclick = async () => {
+  ended = true; $('sub').textContent = 'Call ended';
+  try { await fetch(`/api/calls/${callId}/hangup`, {method: 'POST'}); } catch (e) {}
+};
 $('answer').onclick = () => { $('answer').remove(); $('sub').textContent = 'On call with BillBack (automated assistant)'; turn('Patient Financial Services, this is Diane, how can I help you?'); };
 $('send').onclick = () => { const t = $('txt').value.trim(); if (t) { $('txt').value = ''; turn(t); } };
 $('txt').onkeydown = (e) => { if (e.key === 'Enter') $('send').click(); };

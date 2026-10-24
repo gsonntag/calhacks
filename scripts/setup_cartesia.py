@@ -32,6 +32,8 @@ async def main() -> None:
         sys.exit("Set CARTESIA_API_KEY in .env")
     webhooks = config.PUBLIC_BASE_URL.startswith("https://")
     tools, hook_id = [], None
+    if webhooks and not (config.CARTESIA_WEBHOOK_SECRET and config.CARTESIA_TOOL_TOKEN):
+        sys.exit("Set CARTESIA_WEBHOOK_SECRET and CARTESIA_TOOL_TOKEN in .env to fresh random strings first")
     if webhooks:
         tool_id, hook_id = await _wire_webhooks(config.PUBLIC_BASE_URL.rstrip("/"))
         tools = [{"id": tool_id}]
@@ -74,7 +76,8 @@ async def _wire_webhooks(base: str) -> tuple[str, str]:
                 "case_number": {"type": "string"}, "rep_name": {"type": "string"},
                 "account_on_hold": {"type": "boolean"}, "assistance_review_opened": {"type": "boolean"},
                 "adjustment_applied": {"type": "boolean"}, "payment_applied": {"type": "boolean"},
-                "next_step": {"type": "string"}}, "required": ["next_step"]},
+                "next_step": {"type": "string"}},
+                "required": ["next_step", "account_on_hold", "assistance_review_opened"]},
             "authentication": {"mode": "bearer", "token": {"type": "secret", "secret_value": config.CARTESIA_TOOL_TOKEN}}}})
     tool_id = tool.get("id") or tool.get("tool_id")
     print("tool", tool_id)

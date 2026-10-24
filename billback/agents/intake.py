@@ -28,5 +28,6 @@ async def parse(case_id: str, files: list[tuple[str, bytes]]) -> dict:
         return {}
     bus.emit(case_id, "agent_started", "intake", text=f"Reading {len(blocks)} document(s)")
     out = await llm.json_out(SYSTEM, blocks + [{"type": "text", "text": "Extract the bill and EOB."}])
-    bus.emit(case_id, "agent_finished", "intake", summary="Bill and EOB extracted", extracted=out)
+    found = [k for k in ("bill", "eob") if isinstance(out, dict) and out.get(k)]
+    bus.emit(case_id, "agent_finished", "intake", summary="Bill and EOB extracted", found=found)
     return out
