@@ -1,0 +1,61 @@
+{
+  "_note": "SYNTHETIC demo patient. All people, accounts and amounts are fictional. Edit hospital fields to point at a real hospital whose financial-assistance policy you scrape live.",
+  "patient": {
+    "first_name": "Rosa",
+    "last_name": "Martinez",
+    "household_size": 1,
+    "phone_label": "Rosa's phone",
+    "address": {"street_number": "2210", "street_name": "Sacramento St", "city": "Berkeley", "state": "CA", "zip": "94702"}
+  },
+  "hospital": {
+    "name": "Bayview Community Hospital",
+    "billing_phone_label": "Patient Financial Services",
+    "policy_url": "",
+    "policy_search_query": "Bayview Community Hospital financial assistance policy"
+  },
+  "bill": {
+    "provider": "Bayview Community Hospital",
+    "account_number": "BCH-48213977",
+    "statement_date": "2026-10-10",
+    "notice": "FINAL NOTICE - account may be referred to a collection agency if not paid by 2026-11-03",
+    "due_date": "2026-11-03",
+    "service_date": "2026-08-02",
+    "total_charges": 8700.00,
+    "amount_due": 8700.00,
+    "line_items": [
+      {"code": "99284", "description": "Emergency dept visit, high severity", "amount": 3150.00},
+      {"code": "74177", "description": "CT abdomen and pelvis with contrast", "amount": 3890.00},
+      {"code": "80053", "description": "Comprehensive metabolic panel", "amount": 420.00},
+      {"code": "85025", "description": "Complete blood count", "amount": 190.00},
+      {"code": "96374", "description": "IV push, single drug", "amount": 610.00},
+      {"code": "J2405", "description": "Ondansetron injection", "amount": 440.00}
+    ]
+  },
+  "eob": {
+    "insurer": "Golden State Health Plan",
+    "member_id": "GSH-7712093",
+    "claim_number": "C-2026-0815-44917",
+    "provider": "Bayview Community Hospital",
+    "service_date": "2026-08-02",
+    "billed": 8700.00,
+    "allowed": 3260.00,
+    "plan_paid": 2160.00,
+    "patient_responsibility": 1100.00,
+    "status": "Processed 2026-08-21"
+  },
+  "transactions": [
+    {"type": "deposit", "date": "2026-07-31", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-08-14", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-08-28", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-09-11", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-09-25", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-10-09", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-10-23", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "purchase", "date": "2026-08-02", "amount": 42.18, "merchant": "Walgreens #3321", "description": "Rx pickup"},
+    {"type": "purchase", "date": "2026-08-03", "amount": 42.18, "merchant": "Walgreens #3321", "description": "Rx pickup"},
+    {"type": "purchase", "date": "2026-08-20", "amount": 64.30, "merchant": "Berkeley Bowl", "description": "Groceries"},
+    {"type": "purchase", "date": "2026-09-01", "amount": 1450.00, "merchant": "Sacramento St Apts", "description": "Rent"},
+    {"type": "purchase", "date": "2026-09-14", "amount": 500.00, "merchant": "Bayview Community Hospital", "description": "Payment acct BCH-48213977"},
+    {"type": "purchase", "date": "2026-10-01", "amount": 1450.00, "merchant": "Sacramento St Apts", "description": "Rent"}
+  ]
+}
