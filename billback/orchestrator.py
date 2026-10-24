@@ -8,7 +8,7 @@ import json
 import uuid
 from datetime import date
 
-from . import config, finance
+from . import config, finance, llm
 from .agents import auditor, caller, planner, policy
 from .events import bus
 from .harness import gate
@@ -102,7 +102,28 @@ async def _phone_call(case: dict, brief: dict) -> dict:
         on_done=lambda call: finish_call(case, call)))
     await _wait_call(case)
     poller.cancel()
+    if not case["call_outcome"].get("case_number") and llm.available():
+        await _extract_outcome(case)
     return case["call_outcome"]
+
+
+OUTCOME_SYSTEM = """You read the transcript of a call between BillBack (an assistant calling for a patient) and a
+hospital billing representative. Extract only what the representative actually agreed to or said.
+Return JSON: {"case_number": string|null, "rep_name": string|null, "account_on_hold": bool,
+"assistance_review_opened": bool, "adjustment_applied": bool, "payment_applied": bool, "next_step": string}"""
+
+
+async def _extract_outcome(case: dict) -> None:
+    """Polling mode has no mid-call outcome tool, so Claude reads the finished transcript instead."""
+    lines = [f"{'BillBack' if e['speaker'] == 'billback' else 'Billing'}: {e['text']}"
+             for e in bus.history(case["id"]) if e["kind"] == "transcript"]
+    if not lines:
+        return
+    try:
+        out = await llm.json_out(OUTCOME_SYSTEM, "\n".join(lines), model=config.MODEL_FAST)
+        record_outcome(case, out)
+    except Exception as e:
+        bus.emit(case["id"], "warning", "caller", text=f"Couldn't read the call outcome: {e}")
 
 
 calls_by_cartesia_id: dict[str, str] = {}
