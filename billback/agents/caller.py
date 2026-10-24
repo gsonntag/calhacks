@@ -15,17 +15,17 @@ from ..harness import ToolRegistry, Tool
 
 SYSTEM = """You are BillBack, an AI assistant on a live phone call with a hospital billing representative,
 calling on behalf of a patient who authorized you. You speak out loud, so:
-- Say 1-3 short sentences per turn. No lists, no markdown, no reading out long numbers digit by digit
-  unless asked (account numbers are fine when asked).
+- Say 1-2 short sentences per turn and make ONE request per turn, then stop and let the rep answer.
+  No lists, no markdown, never several paragraphs.
 - Open by saying you are an automated assistant calling on behalf of the patient with their authorization,
   give the patient's name and account number, and state the purpose in one sentence.
 
-Goals, in order:
-1. Get the insurance adjustment applied: the EOB says patient responsibility is lower than the bill.
-2. Get the payment already made applied (give date, amount, and reference when asked).
-3. Ask for a financial-assistance (charity care) review under the hospital's OWN policy, citing it.
-4. Ask for the account to be placed on hold / not sent to collections while the review is pending.
-5. Get a case or reference number and the representative's name. Repeat the case number back to confirm.
+Work through the "goals" list in the CASE BRIEF, in order, one at a time. Skip any goal the rep has already
+granted. Only bring up evidence when it supports the current goal.
+
+If the rep needs to verify identity, give the patient's date of birth and insurance member ID from the brief.
+If they insist the patient must call personally, ask them to note the account (disputed / assistance review
+requested) and for a reference number, and ask what the patient should say when she calls.
 
 Rules:
 - Use only the facts in the CASE BRIEF. Never invent numbers, policies, or laws.
@@ -39,10 +39,26 @@ Rules:
 """
 
 
+def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
+    goals = []
+    if rec["billed_due"] > rec["patient_responsibility"]:
+        goals.append(f"Get the insurance adjustment applied: the EOB says the patient owes "
+                     f"${rec['patient_responsibility']:,.0f}, not ${rec['billed_due']:,.0f}.")
+    if rec["paid"]:
+        goals.append(f"Get the ${rec['paid']:,.0f} already paid applied (give date and reference when asked).")
+    if elig["discount_pct"]:
+        what = "free care" if elig["discount_pct"] == 100 else f"a {elig['discount_pct']:.0f}% discount"
+        goals.append(f"Request a financial-assistance review under the hospital's own policy: the patient qualifies "
+                     f"for {what}, which brings the balance to ${policy['target']:,.0f}. Quote the policy.")
+    goals.append("Ask for the account to be placed on hold so it isn't sent to collections while this is reviewed.")
+    goals.append("Get a case or reference number and the rep's name; repeat the case number back to confirm.")
+    return goals
+
+
 def build_brief(case: dict, audit: dict, policy: dict) -> dict:
     rec, elig = audit["reconciliation"], policy["eligibility"]
-    discounted = round(rec["owed"] * (1 - elig["discount_pct"] / 100), 2)
     return {
+        "goals": call_goals(rec, elig, policy),
         "patient": f"{case['patient']['first_name']} {case['patient']['last_name']}",
         "hospital": case["hospital"]["name"],
         "account_number": case["bill"]["account_number"],
@@ -51,14 +67,19 @@ def build_brief(case: dict, audit: dict, policy: dict) -> dict:
         "insurer": case["eob"]["insurer"],
         "claim_number": case["eob"]["claim_number"],
         "eob_patient_responsibility": rec["patient_responsibility"],
-        "payments_made": [{"date": p["date"][:10], "amount": p["amount"], "reference": p["id"]} for p in rec["payments"]],
+        # short reference: a full transaction UUID is unreadable on a phone call
+        "payments_made": [{"date": p["date"][:10], "amount": p["amount"], "reference": str(p["id"])[:8].upper()}
+                          for p in rec["payments"]],
         "correct_balance": rec["owed"],
         "income_pct_fpl": elig["fpl_pct"],
         "policy_tier": elig["tier"],
         "policy_quotes": [t.get("quote") for t in policy["policy"].get("tiers", [])],
         "collections_quote": policy["policy"].get("collections_quote"),
         "policy_source": policy["source"],
-        "balance_after_assistance": discounted,
+        "balance_after_assistance": policy["target"],
+        "refund_due_after_assistance": policy.get("refund", 0),
+        "patient_date_of_birth": case["patient"].get("dob"),
+        "insurance_member_id": case["eob"].get("member_id"),
         "deadline_on_notice": case["bill"]["due_date"],
     }
 

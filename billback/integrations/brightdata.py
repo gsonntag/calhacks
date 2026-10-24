@@ -64,5 +64,5 @@ async def fetch_text(url: str, attempts: int = 2) -> str:
     raise RuntimeError(f"Bright Data fetch failed for {url}: {last}")
 
 
-def sample_policy() -> str:
-    return (config.DEMO_DIR / "policy_sample.md").read_text()
+def sample_policy(name: str = "policy_sample.md") -> str:
+    return (config.DEMO_DIR / name).read_text()

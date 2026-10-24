@@ -132,13 +132,18 @@ class LocalMirror:
         return list(self.bills.values())
 
 
-def load_ids() -> dict:
-    return json.loads(IDS_FILE.read_text()) if IDS_FILE.exists() else {}
+def ids_file(scenario: str = "default"):
+    return IDS_FILE if scenario == "default" else config.DATA_DIR / f"nessie_ids_{scenario}.json"
+
+
+def load_ids(scenario: str = "default") -> dict:
+    f = ids_file(scenario)
+    return json.loads(f.read_text()) if f.exists() else {}
 
 
 def get_bank(demo_case: dict) -> tuple[Any, str, str]:
-    """Returns (client, account_id, label)."""
-    ids = load_ids()
+    """Returns (client, account_id, label). Each demo scenario has its own seeded Nessie account."""
+    ids = load_ids(demo_case.get("scenario", "default"))
     if config.NESSIE_API_KEY and ids.get("account_id"):
         return NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL), ids["account_id"], "Capital One Nessie (live)"
     return LocalMirror(demo_case), "mirror", "Nessie sandbox mirror (offline)"

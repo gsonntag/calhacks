@@ -79,16 +79,29 @@ def find_duplicates(txns: list[dict], window_days: int = 3) -> list[dict]:
     return out
 
 
+PAY_PERIODS = [(7, 52, "weekly"), (14, 26, "every two weeks"), (15, 24, "twice a month"), (30, 12, "monthly")]
+
+
 def income(txns: list[dict], today: date | None = None, lookback_days: int = 90) -> dict:
-    """Annualize payroll-like deposits from the last ~90 days."""
+    """Annualize payroll-like deposits from the last ~90 days by pay frequency (average paycheck x paychecks
+    per year). Summing the window and scaling by 365/90 overstates income when an extra payday lands in it."""
     today = today or date.today()
     start = today - timedelta(days=lookback_days)
-    deposits = [t for t in txns if t["type"] == "deposit" and _d(t["date"]) >= start
-                and re.search(r"payroll|salary|direct dep|paycheck|wages", _norm(t.get("description", "")))]
+    deposits = sorted([t for t in txns if t["type"] == "deposit" and _d(t["date"]) >= start
+                       and re.search(r"payroll|salary|direct dep|paycheck|wages", _norm(t.get("description", "")))],
+                      key=lambda t: t["date"])
     total = round(sum(t["amount"] for t in deposits), 2)
-    annual = round(total * 365 / lookback_days, 2)
+    gaps = sorted((_d(b["date"]) - _d(a["date"])).days for a, b in zip(deposits, deposits[1:]))
+    if gaps:
+        median = gaps[len(gaps) // 2]
+        _, per_year, freq = min(PAY_PERIODS, key=lambda p: abs(p[0] - median))
+        annual = round(total / len(deposits) * per_year, 2)
+        how = f"{len(deposits)} Nessie payroll deposits, paid {freq} (avg ${total / len(deposits):,.0f} x {per_year})"
+    else:
+        annual = round(total * 365 / lookback_days, 2)
+        how = f"{len(deposits)} Nessie payroll deposits, last {lookback_days} days"
     return {"deposits": deposits, "window_total": total, "annual": annual, "monthly": round(annual / 12, 2),
-            "source": f"{len(deposits)} Nessie payroll deposits, last {lookback_days} days"}
+            "source": how}
 
 
 def _num(v, discount: bool = False) -> float | None:
@@ -114,19 +127,44 @@ def clean_tiers(tiers) -> list[dict]:
         mx, disc = _num(t.get("max_fpl_pct")), _num(t.get("discount_pct"), discount=True)
         if mx is None or disc is None:
             continue
-        out.append({**t, "max_fpl_pct": mx, "discount_pct": min(100.0, max(0.0, disc))})
+        applies = str(t.get("applies_to") or "all").lower()
+        oop = _num(t.get("min_oop_pct_income"))
+        out.append({**t, "max_fpl_pct": mx, "discount_pct": min(100.0, max(0.0, disc)),
+                    "applies_to": applies if applies in ("all", "insured", "uninsured") else "all",
+                    "min_oop_pct_income": oop})
     return out
 
 
-def charity_discount(annual_income: float, household_size: int, tiers: list[dict]) -> dict:
-    """tiers: [{"max_fpl_pct": 200, "discount_pct": 100}, ...] extracted from the hospital's own policy."""
+def charity_discount(annual_income: float, household_size: int, tiers: list[dict],
+                     insured: bool = True, out_of_pocket: float = 0.0) -> dict:
+    """tiers: [{"max_fpl_pct": 200, "discount_pct": 100, "applies_to": "all"|"insured"|"uninsured",
+    "min_oop_pct_income": 10 | None}, ...] extracted from the hospital's own policy. Picks the best
+    discount among the tiers the patient meets."""
     pct = round(100 * annual_income / fpl(household_size), 1)
+    oop_pct = round(100 * out_of_pocket / annual_income, 1) if annual_income else 0.0
     tiers = [t for t in tiers if isinstance(t.get("max_fpl_pct"), (int, float))
              and isinstance(t.get("discount_pct"), (int, float))]
-    eligible = sorted([t for t in tiers if pct <= t["max_fpl_pct"]], key=lambda t: t["max_fpl_pct"])
+
+    def meets(t: dict) -> bool:
+        who = t.get("applies_to") or "all"
+        if (who == "insured" and not insured) or (who == "uninsured" and insured):
+            return False
+        need = t.get("min_oop_pct_income")
+        return pct <= t["max_fpl_pct"] and (need is None or oop_pct > need)
+
+    eligible = sorted([t for t in tiers if meets(t)], key=lambda t: (-t["discount_pct"], t["max_fpl_pct"]))
     tier = eligible[0] if eligible else None
-    return {"fpl_pct": pct, "fpl_amount": fpl(household_size), "fpl_year": FPL_YEAR,
-            "household_size": household_size, "tier": tier, "discount_pct": tier["discount_pct"] if tier else 0}
+    return {"fpl_pct": pct, "fpl_amount": fpl(household_size), "fpl_year": FPL_YEAR, "household_size": household_size,
+            "insured": insured, "oop_pct_income": oop_pct, "tier": tier,
+            "discount_pct": tier["discount_pct"] if tier else 0}
+
+
+def settle(responsibility: float, paid: float, discount_pct: float) -> dict:
+    """The discount applies to the patient's share of the bill; payments already made count against the
+    discounted share. A negative remainder is a refund owed to the patient."""
+    share = round(responsibility * (1 - discount_pct / 100), 2)
+    remainder = round(share - paid, 2)
+    return {"discounted_share": share, "balance": max(0.0, remainder), "refund": max(0.0, -remainder)}
 
 
 def apply_discount(owed: float, discount_pct: float) -> float:

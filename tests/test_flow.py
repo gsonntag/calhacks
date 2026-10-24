@@ -80,7 +80,7 @@ async def test_offline_end_to_end(client):
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
     assert CASE_HTML_KINDS <= kinds, CASE_HTML_KINDS - kinds
-    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600, 150]
+    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 2100, 150]
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)
@@ -139,7 +139,7 @@ async def _run_policy(case):
     loop = asyncio.get_running_loop()
     txns, owed = loop.create_future(), loop.create_future()
     txns.set_result([{"id": f"t{i}", "merchant": "", **t} for i, t in enumerate(case["transactions"])])
-    owed.set_result(600.0)
+    owed.set_result({"owed": 2100.0, "responsibility": 2600.0, "paid": 500.0})
     return await policy.run(case, txns, owed)
 
 
@@ -161,7 +161,7 @@ async def test_bad_policy_extraction_never_crashes(monkeypatch, reply):
     if isinstance(reply, Exception):  # falls back to the labelled sample policy
         assert out["target"] == 150 and out["source"] == "sample policy (offline)"
     else:  # nothing usable: honest "no discount", no crash
-        assert out["policy"]["tiers"] == [] and out["target"] == 600
+        assert out["policy"]["tiers"] == [] and out["target"] == 2100
 
 
 async def test_caller_llm_error_keeps_history_valid(monkeypatch):
