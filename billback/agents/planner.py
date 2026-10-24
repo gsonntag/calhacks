@@ -26,7 +26,8 @@ async def run(case: dict, bank, account_id: str, balance: float, monthly_income:
     reg.add(Tool("create_payment_plan", "Create a recurring monthly payment in the patient's bank", {
         "type": "object", "properties": {"monthly": {"type": "number"}, "months": {"type": "integer"},
                                          "payee": {"type": "string"}}, "required": ["monthly", "months", "payee"]},
-        create_payment_plan, tier="consequential"))
+        create_payment_plan, tier="consequential",
+        approval_title=lambda a: f"Set up a {a['months']} x ${a['monthly']:.0f} interest-free plan with {a['payee']}?"))
 
     created = await reg.call("create_payment_plan", {"monthly": plan["monthly"], "months": plan["months"],
                                                      "payee": case["hospital"]["name"]})

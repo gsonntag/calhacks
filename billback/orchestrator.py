@@ -27,18 +27,18 @@ def new_case(overrides: dict | None = None) -> dict:
     base.update({k: v for k, v in (overrides or {}).items() if v})
     case = {**base, "id": uuid.uuid4().hex[:8], "status": "created", "today": date.today().isoformat(),
             "result": {}, "call_done": asyncio.Event(),
-            "call_outcome": {}, "turns_seen": set()}
+            "call_outcome": {}, "turns_seen": set(), "wh_counts": {}, "wh_turn_ids": set()}
     cases[case["id"]] = case
     return case
 
 
 def public(case: dict) -> dict:
-    return {k: v for k, v in case.items() if k not in ("call_done", "transactions", "turns_seen")}
+    return {k: v for k, v in case.items() if k not in ("call_done", "transactions", "turns_seen", "wh_counts", "wh_turn_ids")}
 
 
 def audit_summary(audit: dict) -> dict:
     rec = audit["reconciliation"]
-    note = (f"duplicate ${rec['duplicates'][0]['amount']:,.2f} charge flagged" if rec["duplicates"]
+    note = (auditor._dup_note(rec["duplicates"][0]) if rec["duplicates"]
             else "no errors on the bill")
     return {"result": f"${rec['owed']:,.0f} owed", "note": note}
 
@@ -61,13 +61,32 @@ def call_asks(audit: dict, pol: dict) -> list[str]:
     return asks
 
 
-def record_turn(case: dict, role: str, text: str) -> None:
-    """Webhooks and polling both report turns; emit each (role, text) once."""
-    key = (role, text.strip())
-    if not text.strip() or key in case["turns_seen"]:
+def record_turn(case: dict, role: str, text: str, n: int = 0) -> None:
+    """Webhooks and polling both report turns; emit each (role, text, n) once. n is which repeat of that
+    (role, text) this is in the call, so a rep saying "Okay." twice shows twice."""
+    key = (role, (text or "").strip(), n)
+    if not key[1] or key in case["turns_seen"]:
         return
     case["turns_seen"].add(key)
     bus.emit(case["id"], "transcript", "caller", speaker="billback" if role == "assistant" else "rep", text=text)
+
+
+def repeat_index(transcript: list, i: int) -> int:
+    """How many earlier turns in this transcript have the same (role, text) as turn i."""
+    key = (transcript[i].get("role"), (transcript[i].get("text") or "").strip())
+    return sum(1 for t in transcript[:i] if (t.get("role"), (t.get("text") or "").strip()) == key)
+
+
+def record_webhook_turn(case: dict, turn: dict) -> None:
+    tid = turn.get("id")
+    if tid and tid in case["wh_turn_ids"]:
+        return
+    if tid:
+        case["wh_turn_ids"].add(tid)
+    key = (turn.get("role"), (turn.get("text") or "").strip())
+    n = case["wh_counts"].get(key, 0)
+    case["wh_counts"][key] = n + 1
+    record_turn(case, turn.get("role"), turn.get("text", ""), n)
 
 
 def record_outcome(case: dict, fields: dict) -> None:
@@ -78,8 +97,9 @@ def record_outcome(case: dict, fields: dict) -> None:
 def finish_call(case: dict, call: dict | None = None) -> None:
     if case["call_done"].is_set():
         return
-    for t in (call or {}).get("transcript") or []:
-        record_turn(case, t.get("role"), t.get("text", ""))
+    transcript = (call or {}).get("transcript") or []
+    for i, t in enumerate(transcript):
+        record_turn(case, t.get("role"), t.get("text", ""), repeat_index(transcript, i))
     bus.emit(case["id"], "call_ended", "caller", reason=(call or {}).get("end_reason", ""), outcome=case["call_outcome"])
     case["call_done"].set()
 
@@ -93,18 +113,42 @@ async def _wait_call(case: dict) -> None:
 
 async def _phone_call(case: dict, brief: dict) -> dict:
     name = f"{case['patient']['first_name']} {case['patient']['last_name']}"
-    call_id = await cartesia.place_call(case["id"], name, brief)
+    try:
+        call_id = await cartesia.place_call(case["id"], name, brief)
+    except Exception as e:  # only the dial is covered: never switch modes after a real call started
+        bus.emit(case["id"], "warning", "caller", text=f"Phone call failed ({e}); switching to desk mode")
+        return await _desk_call(case, brief)
     case["cartesia_call_id"] = call_id
     calls_by_cartesia_id[call_id] = case["id"]
     bus.emit(case["id"], "call_ready", "caller", mode="phone", call_id=call_id, to=config.REP_PHONE_NUMBER[-4:])
     poller = asyncio.create_task(cartesia.poll_call(
-        call_id, on_turn=lambda i, role, text: record_turn(case, role, text),
-        on_done=lambda call: finish_call(case, call)))
+        call_id, on_turn=lambda tr, i: record_turn(case, tr[i].get("role"), tr[i].get("text", ""), repeat_index(tr, i)),
+        on_done=lambda call: finish_call(case, call),
+        on_error=lambda text: bus.emit(case["id"], "warning", "caller", text=text)))
     await _wait_call(case)
     poller.cancel()
-    if not case["call_outcome"].get("case_number") and llm.available():
-        await _extract_outcome(case)
+    await _fill_outcome(case)
     return case["call_outcome"]
+
+
+async def _desk_call(case: dict, brief: dict) -> dict:
+    session = caller.CallSession(case["id"], brief)
+    caller.sessions[session.id] = session
+    case["call_id"] = session.id
+    bus.emit(case["id"], "call_ready", "caller", mode="desk", call_id=session.id,
+             rep_url=f"/rep.html?call={session.id}")
+    await _wait_call(case)
+    case["call_outcome"].update(session.outcome)
+    await _fill_outcome(case)
+    return case["call_outcome"]
+
+
+async def _fill_outcome(case: dict) -> None:
+    """If the call agent didn't record a case number and a hold/review, read them from the transcript.
+    Only fills missing fields; what the agent recorded during the call wins."""
+    o = case["call_outcome"]
+    if llm.available() and not (o.get("case_number") and (o.get("account_on_hold") or o.get("assistance_review_opened"))):
+        await _extract_outcome(case)
 
 
 OUTCOME_SYSTEM = """You read the transcript of a call between BillBack (an assistant calling for a patient) and a
@@ -121,12 +165,29 @@ async def _extract_outcome(case: dict) -> None:
         return
     try:
         out = await llm.json_out(OUTCOME_SYSTEM, "\n".join(lines), model=config.MODEL_FAST)
-        record_outcome(case, out)
+        known = case["call_outcome"]
+        record_outcome(case, {k: v for k, v in out.items() if not known.get(k)})
     except Exception as e:
         bus.emit(case["id"], "warning", "caller", text=f"Couldn't read the call outcome: {e}")
 
 
 calls_by_cartesia_id: dict[str, str] = {}
+
+
+async def end_call(case: dict) -> None:
+    """Manual hang-up from the dashboard or rep console, for either call mode."""
+    s = caller.sessions.get(case.get("call_id", ""))
+    if s:
+        if not s.ended:
+            await s._end("hung up")
+        case["call_done"].set()
+        return
+    if case.get("cartesia_call_id"):
+        try:
+            await cartesia.cancel_call(case["cartesia_call_id"])
+        except Exception as e:
+            bus.emit(case["id"], "warning", "caller", text=f"Couldn't cancel the phone call: {e}")
+    finish_call(case)
 
 
 async def run_case(case: dict) -> None:
@@ -158,26 +219,23 @@ async def run_case(case: dict) -> None:
         outcome: dict = {}
         if ok:
             case["status"] = "calling"
-            if cartesia.phone_ready():
-                outcome = await _phone_call(case, brief)
-            else:
-                session = caller.CallSession(cid, brief)
-                caller.sessions[session.id] = session
-                case["call_id"] = session.id
-                bus.emit(cid, "call_ready", "caller", mode="desk", call_id=session.id,
-                         rep_url=f"{config.PUBLIC_BASE_URL}/rep.html?call={session.id}")
-                await _wait_call(case)
-                outcome = session.outcome
+            outcome = await (_phone_call(case, brief) if cartesia.phone_ready() else _desk_call(case, brief))
 
         case["status"] = "planning"
         balance = target if outcome.get("assistance_review_opened") or outcome.get("account_on_hold") else owed
+        if balance != target:
+            bus.emit(cid, "balance", amount=balance, label="Still owed")
         plan = await planner.run(case, bank, account_id, balance, pol["income"]["monthly"])
 
+        c = plan.get("created") or {}
+        plan_created = bool(c) and not c.get("blocked") and not c.get("error")
+        if c.get("error"):
+            bus.emit(cid, "warning", "planner", text="Couldn't save the plan to your bank")
         case["status"] = "done"
         case["result"].update({"outcome": outcome, "plan": plan["plan"], "final_balance": balance})
         bus.emit(cid, "case_done", summary={
             "started_at": case["bill"]["amount_due"], "now": balance, "case_number": outcome.get("case_number"),
-            "plan": plan["plan"], "plan_created": bool(plan.get("created") and not plan["created"].get("blocked"))})
+            "plan": plan["plan"], "plan_created": plan_created})
     except Exception as e:
         case["status"] = "error"
         bus.emit(cid, "error", text=f"{type(e).__name__}: {e}")

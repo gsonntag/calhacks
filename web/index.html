@@ -79,7 +79,7 @@
       <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span class="logo-word">Bill<span>Back</span></span>
     </a>
-    <nav class="nav" aria-label="Main"><a href="about.html">About</a></nav>
+    <nav class="nav" aria-label="Main"><a href="case.html">My cases</a></nav>
   </header>
 
   <main>
@@ -99,6 +99,7 @@
           </button>
         </div>
       </div>
+      <p class="sim" style="margin:8px 0 0;text-align:center">Demo only. Please don't upload real medical bills.</p>
       <div class="gmail-row">
         <button class="gmail-btn" id="gmailBtn" type="button"><img src="gmail-icon.svg" alt=""><span>Connect Gmail</span></button>
       </div>
@@ -107,7 +108,7 @@
 </div>
 
 <script>
-const state = { files: [], typing: false, gmail: 'off', history: [], caseId: null };
+const state = { files: [], sentFiles: [], typing: false, gmail: 'off', history: [], caseId: null };
 const $ = (id) => document.getElementById(id);
 const app = $('app'), thread = $('thread'), inner = $('threadInner'), input = $('msgInput'),
       sendBtn = $('sendBtn'), pending = $('pending'), pill = $('pill'), gmailBtn = $('gmailBtn');
@@ -142,13 +143,19 @@ async function sendText(override) {
   const fd = new FormData();
   fd.append('history', JSON.stringify(state.history));
   fd.append('message', text);
-  files.forEach((f) => fd.append('files', f));
+  fd.append('case_id', state.caseId || '');
+  // Re-send every file attached so far, so they are there on the turn the case starts.
+  state.sentFiles = state.sentFiles.concat(files);
+  state.sentFiles.forEach((f) => fd.append('files', f));
   state.files = []; input.value = '';
   const done = showTyping();
   try {
-    const r = await (await fetch('/api/chat', { method: 'POST', body: fd })).json();
+    const res = await fetch('/api/chat', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error('chat ' + res.status);
+    const r = await res.json();
     const note = files.length ? ` [attached: ${files.map((f) => f.name).join(', ')}]` : '';
-    state.history.push({ role: 'user', content: (text || '(sent files)') + note }, { role: 'assistant', content: r.reply });
+    state.history.push({ role: 'user', content: (text || '(sent files)') + note });
+    if (r.reply) state.history.push({ role: 'assistant', content: r.reply });
     if (r.case_id) state.caseId = r.case_id;
     done(); addBot(r.reply);
   } catch (e) { done(); addBot("Sorry, I couldn't reach the server. Try again in a moment."); }

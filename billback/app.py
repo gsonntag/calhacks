@@ -1,6 +1,9 @@
 """FastAPI server: chat intake, case runner, live events, approvals, and the call-turn endpoint."""
 import asyncio
+import hmac
 import json
+
+import anthropic
 
 from fastapi import FastAPI, File, Form, Request, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse, JSONResponse, Response
@@ -36,6 +39,10 @@ CANNED = [
 ]
 
 
+ALREADY = "I'm already on it. Follow along in your case."
+NUMERIC = {"bill": ("total_charges", "amount_due"), "eob": ("billed", "allowed", "plan_paid", "patient_responsibility")}
+
+
 def _launch(case: dict) -> dict:
     t = asyncio.create_task(orchestrator.run_case(case))
     _tasks.add(t)
@@ -47,36 +54,79 @@ def _start() -> dict:
     return _launch(orchestrator.new_case())
 
 
+async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
+    """Merge Claude's reading of the uploads into the case field by field. Missing, null or non-numeric
+    values keep the sample values, unknown keys are ignored, and a failed parse falls back to the sample."""
+    try:
+        parsed = await intake.parse(case["id"], uploads)
+    except Exception as e:
+        bus.emit(case["id"], "warning", "intake", text=f"Couldn't read the files, using the sample bill ({type(e).__name__})")
+        return
+    if not isinstance(parsed, dict):
+        return
+    for key in ("bill", "eob"):
+        part = parsed.get(key)
+        if not isinstance(part, dict):
+            continue
+        clean = {f: v for f, v in part.items() if f in case[key] and v not in (None, "", [])}
+        for f in NUMERIC[key]:
+            if f in clean:
+                try:
+                    clean[f] = float(str(clean[f]).replace("$", "").replace(",", ""))
+                except ValueError:
+                    clean.pop(f)
+        case[key] = {**case[key], **clean}
+    if isinstance(parsed.get("bill"), dict) and parsed["bill"].get("provider"):
+        case["hospital"] = {**case["hospital"], "name": case["bill"]["provider"]}
+
+
 @app.get("/api/mode")
 async def mode():
     return config.mode()
 
 
 @app.post("/api/chat")
-async def chat(history: str = Form("[]"), message: str = Form(""), files: list[UploadFile] = File(default=[])):
+async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str = Form(""),
+               files: list[UploadFile] = File(default=[])):
     """history: JSON list of {role, content} (text only). Returns {reply, case_id?}."""
-    msgs = json.loads(history)
+    if case_id in orchestrator.cases:  # one chat, one case: never start a second pipeline
+        return {"reply": ALREADY, "case_id": case_id}
+    try:
+        msgs = json.loads(history)
+    except json.JSONDecodeError:
+        msgs = []
+    msgs = [m for m in msgs if isinstance(m, dict) and m.get("role") in ("user", "assistant")
+            and str(m.get("content", "")).strip()]
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
     note = f" [attached: {', '.join(n for n, _ in uploads)}]" if uploads else ""
     msgs.append({"role": "user", "content": (message or "(sent files)") + note})
 
-    if not llm.available():
-        turn = sum(1 for m in msgs if m["role"] == "user") - 1
-        if turn >= len(CANNED) - 1:
-            case = _start()
-            return {"reply": CANNED[-1], "case_id": case["id"]}
-        return {"reply": CANNED[turn]}
-
-    resp = await llm.create(system=CHAT_SYSTEM, messages=msgs, tools=[START_TOOL], max_tokens=300)
-    reply = " ".join(b.text for b in resp.content if b.type == "text").strip()
-    if any(b.type == "tool_use" for b in resp.content):
+    async def launch() -> dict:
         case = orchestrator.new_case()
         if uploads:
-            parsed = await intake.parse(case["id"], uploads)
-            case.update({k: v for k, v in parsed.items() if v})
-        _launch(case)
-        return {"reply": reply or CANNED[-1], "case_id": case["id"]}
-    return {"reply": reply}
+            case["documents"] = [n for n, _ in uploads]
+            if llm.available():
+                await _apply_uploads(case, uploads)
+        return _launch(case)
+
+    if llm.available():
+        try:
+            resp = await llm.create(system=CHAT_SYSTEM, messages=msgs, tools=[START_TOOL], max_tokens=2000, effort="low")
+        except anthropic.APIError as e:  # key/rate-limit trouble: keep the demo going on the canned script
+            print("chat LLM error, using canned replies:", type(e).__name__)
+            resp = None
+        if resp is not None:
+            reply = " ".join(b.text for b in resp.content if b.type == "text").strip()
+            if any(b.type == "tool_use" for b in resp.content):
+                case = await launch()
+                return {"reply": reply or CANNED[-1], "case_id": case["id"]}
+            return {"reply": reply or "Sorry, could you say that again?"}
+
+    turn = sum(1 for m in msgs if m["role"] == "user") - 1
+    if turn == len(CANNED) - 1:
+        case = await launch()
+        return {"reply": CANNED[-1], "case_id": case["id"]}
+    return {"reply": CANNED[turn] if turn < len(CANNED) else ALREADY}
 
 
 @app.post("/api/gmail/scan")
@@ -95,8 +145,7 @@ async def start_case(files: list[UploadFile] = File(default=[])):
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
     case["documents"] = [n for n, _ in uploads] or ["sample-hospital-bill.pdf", "sample-insurance-eob.pdf"]
     if uploads and llm.available():
-        parsed = await intake.parse(case["id"], uploads)
-        case.update({k: v for k, v in parsed.items() if v})
+        await _apply_uploads(case, uploads)
     _launch(case)
     return {"case_id": case["id"]}
 
@@ -154,7 +203,13 @@ async def call_turn(call_id: str, t: Turn):
     s = caller.sessions.get(call_id)
     if not s:
         return JSONResponse({"error": "no such call"}, 404)
-    say = await s.turn(t.rep_said)
+    try:
+        say = await s.turn(t.rep_said)
+    except Exception as e:  # never leave the rep console without a JSON answer
+        if s.messages and s.messages[-1]["role"] == "user" and isinstance(s.messages[-1]["content"], str):
+            s.messages.pop()
+        bus.emit(s.case_id, "warning", "caller", text=f"Call turn failed: {type(e).__name__}")
+        return {"say": "Sorry, could you repeat that?", "ended": s.ended, "outcome": s.outcome}
     if s.ended:
         orchestrator.cases[s.case_id]["call_done"].set()
     return {"say": say, "ended": s.ended, "outcome": s.outcome}
@@ -169,6 +224,16 @@ async def hangup(call_id: str):
     return {"ok": True}
 
 
+@app.post("/api/cases/{case_id}/end-call")
+async def end_call(case_id: str):
+    """Manual hang-up for either call mode, so a call that never ends can't stall the case."""
+    case = orchestrator.cases.get(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    await orchestrator.end_call(case)
+    return {"ok": True}
+
+
 @app.get("/api/calls/{call_id}")
 async def call_info(call_id: str):
     s = caller.sessions.get(call_id)
@@ -178,7 +243,8 @@ async def call_info(call_id: str):
 @app.post("/api/cartesia/tools/record_outcome")
 async def cartesia_record_outcome(request: Request):
     """Webhook tool the Cartesia-hosted caller agent calls mid-call."""
-    if request.headers.get("authorization") != f"Bearer {config.CARTESIA_TOOL_TOKEN}":
+    if not _check(request.headers.get("authorization", ""), f"Bearer {config.CARTESIA_TOOL_TOKEN}",
+                  config.CARTESIA_TOOL_TOKEN):
         return JSONResponse({"error": "unauthorized"}, 401)
     body = await request.json()
     case = orchestrator.cases.get(body.get("case_id", ""))
@@ -189,27 +255,44 @@ async def cartesia_record_outcome(request: Request):
 
 
 _seen_webhooks: set[str] = set()
+_logged_shape = False
+
+
+def _check(got: str, want: str, configured: str) -> bool:
+    """Constant-time compare; an unset secret rejects everything."""
+    return bool(configured) and hmac.compare_digest(got.encode(), want.encode())
 
 
 @app.post("/webhooks/cartesia")
 async def cartesia_events(request: Request):
-    if request.headers.get("x-webhook-secret") != config.CARTESIA_WEBHOOK_SECRET:
+    global _logged_shape
+    if not _check(request.headers.get("x-webhook-secret", ""), config.CARTESIA_WEBHOOK_SECRET,
+                  config.CARTESIA_WEBHOOK_SECRET):
         return JSONResponse({"error": "bad secret"}, 401)
     ev = await request.json()
-    rid = ev.get("webhook_request_id")
-    if rid in _seen_webhooks:
-        return {"ok": True}
-    _seen_webhooks.add(rid)
+    if not _logged_shape:  # first delivery: log the payload shape (names only, no values)
+        _logged_shape = True
+        print("cartesia webhook keys:", sorted(ev.keys()), "headers:", sorted(request.headers.keys()))
+    rid = (ev.get("webhook_request_id") or request.headers.get("webhook-request-id")
+           or request.headers.get("x-webhook-request-id"))
+    if rid:  # dedupe only real ids; record_turn and finish_call are already idempotent
+        if rid in _seen_webhooks:
+            return {"ok": True}
+        _seen_webhooks.add(rid)
     call = ev.get("call") or {}
-    call_id = call.get("id") or ev.get("call_id") or call.get("agent_call_id")
+    turn = ev.get("turn") or {}
+    call_id = (call.get("id") or ev.get("call_id") or ev.get("agent_call_id") or call.get("agent_call_id")
+               or turn.get("call_id"))
     case_id = (call.get("dynamic_variables") or {}).get("case_id") or orchestrator.calls_by_cartesia_id.get(call_id)
+    if not case_id and len(orchestrator.calls_by_cartesia_id) == 1:
+        case_id = next(iter(orchestrator.calls_by_cartesia_id.values()))  # only one call runs during the demo
     case = orchestrator.cases.get(case_id or "")
-    if not case:
-        return {"ok": True}
     kind = ev.get("type") or ev.get("event")
+    if not case:
+        print("cartesia webhook unmatched:", kind, sorted(ev.keys()))
+        return {"ok": True}
     if kind == "call_turn":
-        t = ev.get("turn") or {}
-        orchestrator.record_turn(case, t.get("role"), t.get("text", ""))
+        orchestrator.record_webhook_turn(case, turn)
     elif kind in ("call_completed", "call_failed"):
         orchestrator.finish_call(case, call)
     elif kind == "post_call_analysis":
@@ -236,6 +319,8 @@ async def reset():
         t.cancel()
     orchestrator.cases.clear()
     caller.sessions.clear()
+    orchestrator.calls_by_cartesia_id.clear()
+    _seen_webhooks.clear()
     bus.reset()
     return {"ok": True}
 

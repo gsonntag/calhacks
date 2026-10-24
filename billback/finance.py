@@ -91,9 +91,38 @@ def income(txns: list[dict], today: date | None = None, lookback_days: int = 90)
             "source": f"{len(deposits)} Nessie payroll deposits, last {lookback_days} days"}
 
 
+def _num(v, discount: bool = False) -> float | None:
+    """Coerce an LLM-extracted tier value: 200, "200%", "up to 400" -> float; "free"/"full" discount -> 100."""
+    if isinstance(v, bool):
+        return None
+    if isinstance(v, (int, float)):
+        return float(v)
+    if isinstance(v, str):
+        if discount and re.search(r"\b(free|full)\b", v, re.I):
+            return 100.0
+        m = re.search(r"\d+(\.\d+)?", v.replace(",", ""))
+        return float(m.group(0)) if m else None
+    return None
+
+
+def clean_tiers(tiers) -> list[dict]:
+    """Keep only tiers with a numeric FPL limit and percent discount (clamped to 0-100)."""
+    out = []
+    for t in tiers if isinstance(tiers, list) else []:
+        if not isinstance(t, dict):
+            continue
+        mx, disc = _num(t.get("max_fpl_pct")), _num(t.get("discount_pct"), discount=True)
+        if mx is None or disc is None:
+            continue
+        out.append({**t, "max_fpl_pct": mx, "discount_pct": min(100.0, max(0.0, disc))})
+    return out
+
+
 def charity_discount(annual_income: float, household_size: int, tiers: list[dict]) -> dict:
     """tiers: [{"max_fpl_pct": 200, "discount_pct": 100}, ...] extracted from the hospital's own policy."""
     pct = round(100 * annual_income / fpl(household_size), 1)
+    tiers = [t for t in tiers if isinstance(t.get("max_fpl_pct"), (int, float))
+             and isinstance(t.get("discount_pct"), (int, float))]
     eligible = sorted([t for t in tiers if pct <= t["max_fpl_pct"]], key=lambda t: t["max_fpl_pct"])
     tier = eligible[0] if eligible else None
     return {"fpl_pct": pct, "fpl_amount": fpl(household_size), "fpl_year": FPL_YEAR,

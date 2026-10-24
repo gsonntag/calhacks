@@ -8,6 +8,10 @@ from .. import finance
 from ..events import bus, step
 
 
+def _dup_note(d: dict) -> str:
+    return f"also: possible double charge at {d['duplicate']['merchant']} (${d['amount']:,.2f}), separate from this bill"
+
+
 async def run(case: dict, bank, account_id: str, bank_label: str,
               txns_ready: asyncio.Future, owed_ready: asyncio.Future) -> dict:
     cid = case["id"]
@@ -38,7 +42,7 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     if rec["duplicates"]:
         d = rec["duplicates"][0]
         step(cid, "auditor", "dupes", "Check for duplicates", "flag",
-             f"{d['duplicate']['merchant']} charged ${d['amount']:,.2f} twice")
+             f"{d['duplicate']['merchant']} charged ${d['amount']:,.2f} twice (separate from this bill, dispute with your bank)")
         bus.emit(cid, "evidence", "auditor", label="Duplicate charge",
                  value=f"{d['duplicate']['merchant']} ${d['amount']:,.2f}", source=d["source"])
     else:
@@ -53,7 +57,7 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     bus.emit(cid, "balance", "auditor", amount=rec["owed"], label="Actually owed")
     owed_ready.set_result(rec["owed"])
 
-    note = (f"duplicate ${rec['duplicates'][0]['amount']:,.2f} charge flagged" if rec["duplicates"]
+    note = (_dup_note(rec["duplicates"][0]) if rec["duplicates"]
             else "no errors on the bill")
     bus.emit(cid, "agent_finished", "auditor", summary=f"${rec['owed']:,.0f} owed", note=note)
     return {"reconciliation": rec, "transactions": txns}

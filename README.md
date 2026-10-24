@@ -36,7 +36,7 @@ verbatim quotes and does the talking; it never invents a number.
 | Sponsor | Where |
 |---|---|
 | **Cartesia** | Managed Agent places the real outbound call (Claude Haiku on Cartesia), webhook tool reports outcome, call events stream the transcript. Sonic TTS for desk mode. |
-| **Capital One Nessie** | Patient's account: payroll deposits (income), the $500 payment, duplicate pharmacy charge, the hospital bill, and the approved recurring payment plan. |
+| **Capital One Nessie** | Patient's account: payroll deposits (income), the $500 payment, duplicate urgent-care copay (separate from the hospital bill), the hospital bill, and the approved recurring payment plan. |
 | **Bright Data** | SERP API finds the hospital's financial-assistance policy; Web Unlocker fetches it live. |
 | **Anthropic Claude** | Chat intake, bill/EOB vision extraction, policy extraction with quotes, the call brain (desk mode). |
 

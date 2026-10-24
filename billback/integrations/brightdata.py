@@ -5,7 +5,7 @@ Offline path: demo/policy_sample.md, labelled as a sample on the dashboard.
 """
 import json
 import re
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, unquote
 
 import httpx
 
@@ -30,16 +30,18 @@ async def _request(zone: str, url: str, fmt: str = "raw", timeout: float = 25, m
 
 async def search(query: str) -> list[dict]:
     """Google results via the SERP zone. Returns [{title, link}]."""
-    zone = config.BRIGHTDATA_SERP_ZONE or config.BRIGHTDATA_UNLOCKER_ZONE
-    raw = await _request(zone, f"https://www.google.com/search?q={quote_plus(query)}&brd_json=1")
+    if not config.BRIGHTDATA_SERP_ZONE:
+        raise RuntimeError("BRIGHTDATA_SERP_ZONE not set (Google search needs a SERP zone, not the Unlocker zone)")
+    raw = await _request(config.BRIGHTDATA_SERP_ZONE, f"https://www.google.com/search?q={quote_plus(query)}&brd_json=1")
     try:
         data = json.loads(raw)
         if "body" in data and "organic" not in data:  # format=json wraps the payload
             data = json.loads(data["body"])
         return [{"title": o.get("title", ""), "link": o.get("link", "")} for o in data.get("organic", [])][:8]
     except json.JSONDecodeError:  # zone returned HTML; pull links out crudely
-        return [{"title": "", "link": u} for u in re.findall(r'href="(https?://[^"]+)"', raw)
-                if "google" not in u][:8]
+        links = [unquote(u) for u in re.findall(r'/url\?q=(https?://[^&"]+)', raw)]
+        links += re.findall(r'href="(https?://[^"]+)"', raw)
+        return [{"title": "", "link": u} for u in dict.fromkeys(links) if "google" not in u][:8]
 
 
 def html_to_text(html: str) -> str:
@@ -54,6 +56,8 @@ async def fetch_text(url: str, attempts: int = 2) -> str:
     for _ in range(attempts):
         try:
             raw = await _request(config.BRIGHTDATA_UNLOCKER_ZONE, url, markdown=True)
+            if raw.lstrip().startswith("%PDF"):
+                raise RuntimeError("got a PDF, not a web page")
             return html_to_text(raw) if "<" in raw[:500] else raw
         except Exception as e:
             last = e
