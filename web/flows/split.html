@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before / After · BillBack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="base.css">
+<!-- MOCK: one bill, two versions. Drag the divider: left = what the hospital sent, right = the same bill corrected by BillBack. -->
+<style>
+  main{max-width:900px;margin:0 auto;padding:8px 16px 56px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+  .labels{width:100%;max-width:680px;display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+  .labels .l{color:var(--accent)} .labels .r{color:var(--green-ink)}
+  .cmp{position:relative;width:100%;max-width:680px;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:ew-resize}
+  .doc{padding:26px 28px;text-align:left;background:#FFFFFF}
+  .layer-before{position:absolute;inset:0;background:#FFFFFF;clip-path:inset(0 calc(100% - var(--x)) 0 0)}
+  .layer-before .doc{background:#FFFDFB}
+  .dh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:14px;border-bottom:2px solid #1A1A1E}
+  .dh .h{font-size:15px;font-weight:800;letter-spacing:.02em}
+  .dh .s{font-size:12px;color:var(--muted-2);line-height:1.5}
+  .stamp{width:112px;flex:none;text-align:center;font-size:12px;font-weight:800;padding:4px 6px;border-radius:6px;border:2px solid;white-space:nowrap;transform:rotate(-3deg)}
+  .stamp.red{color:var(--accent);border-color:var(--accent)} .stamp.green{color:var(--green-ink);border-color:var(--green)}
+  table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+  td{padding:7px 0;border-bottom:1px solid #F1EAEA;vertical-align:top}
+  td:last-child{width:96px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;padding-left:10px}
+  td .code{color:var(--muted-2);font-size:12px;margin-right:6px}
+  tr.sec td{padding-top:14px;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--muted-2);border-bottom:0}
+  .muted{color:#B3A8A8}
+  .fix td:last-child{color:var(--green-ink)}
+  .note{display:block;font-size:11.5px;font-weight:700;color:var(--green-ink);margin-top:2px}
+  .due{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;padding:14px 16px;border-radius:14px}
+  .due span{font-size:14px;font-weight:800;letter-spacing:.04em}
+  .due b{font-size:40px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .due.red{background:var(--tint);color:var(--accent)} .due.green{background:var(--green-bg);color:var(--green-ink)}
+  .handle{position:absolute;top:0;bottom:0;left:var(--x);width:0;pointer-events:none}
+  .handle::before{content:"";position:absolute;top:0;bottom:0;left:-1.5px;width:3px;background:#1A1A1E}
+  .knob{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:999px;background:#1A1A1E;color:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+  .range{width:100%;max-width:680px;accent-color:var(--accent)}
+  .saved{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .saved b{font-size:22px;color:var(--green-ink)}
+  @media (max-width:600px){ .doc{padding:18px 14px} table{font-size:12.5px} .due b{font-size:30px} .dh .h{font-size:13px} }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/" target="_top" aria-label="BillBack home">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <b>Bill<span>Back</span></b>
+  </a>
+  <span class="aside">Case FA-20931</span>
+</header>
+<main>
+  <h1 class="title" style="font-size:36px">Same bill. <span>Drag to see the truth.</span></h1>
+  <div class="labels"><span class="l">← What Bayview sent</span><span class="r">What you actually owe →</span></div>
+  <div class="cmp" id="cmp" style="--x:50%">
+    <!-- AFTER (underneath, full) -->
+    <div class="doc" id="after"></div>
+    <!-- BEFORE (on top, clipped) -->
+    <div class="layer-before"><div class="doc" id="before"></div></div>
+    <div class="handle"><span class="knob"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span></div>
+  </div>
+  <input class="range" id="range" type="range" min="0" max="100" value="50" aria-label="Compare before and after">
+  <div class="saved"><span class="chip green">You saved</span><b>$8,550</b><a class="btn" href="receipt.html">See the receipt</a></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const ITEMS = [['99284', 'Emergency dept visit, high severity', '3,150.00'], ['74177', 'CT abdomen and pelvis w/ contrast', '3,890.00'],
+  ['80053', 'Comprehensive metabolic panel', '420.00'], ['85025', 'Complete blood count', '190.00'], ['96374', 'IV push, single drug', '610.00'], ['J2405', 'Ondansetron injection', '440.00']];
+const head = (stamp, cls) => `<div class="dh"><div><div class="h">BAYVIEW COMMUNITY HOSPITAL</div><div class="s">Patient: Rosa Martinez · Acct BCH-48213977<br>Service date Aug 2, 2026 · Statement Oct 10</div></div><span class="stamp ${cls}">${stamp}</span></div>`;
+const items = ITEMS.map(([c, d, a]) => `<tr><td><span class="code">${c}</span>${d}</td><td>$${a}</td></tr>`).join('');
+const ADJ = [
+  ['Insurance adjustment', '—', '−$6,100.00', 'Allowed $4,760, plan paid $2,160 · claim C-2026-0815-44917'],
+  ['Payments received', '$0.00', '−$500.00', 'Found in your Capital One account, Sep 14'],
+  ['Financial assistance', 'Not applied', '−$1,950.00', '75% of your $2,600 share · FA-20931'],
+];
+$('before').innerHTML = head('FINAL NOTICE', 'red') + `<table><tr class="sec"><td>CHARGES</td><td></td></tr>${items}<tr class="sec"><td>CREDITS</td><td></td></tr>` +
+  ADJ.map(([k, b, , n]) => `<tr><td>${k}<span class="note" style="visibility:hidden">${n}</span></td><td class="muted">${b}</td></tr>`).join('') +
+  `</table><div class="due red"><span>AMOUNT DUE</span><b>$8,700.00</b></div>`;
+$('after').innerHTML = head('CORRECTED', 'green') + `<table><tr class="sec"><td>CHARGES</td><td></td></tr>${items}<tr class="sec"><td>CREDITS</td><td></td></tr>` +
+  ADJ.map(([k, , a, n]) => `<tr class="fix"><td>${k}<span class="note">${n}</span></td><td>${a}</td></tr>`).join('') +
+  `</table><div class="due green"><span>YOU OWE</span><b>$150.00</b></div>`;
+
+const cmp = $('cmp'), range = $('range');
+let dragging = false, auto = true;
+function set(p) { p = Math.max(0, Math.min(100, p)); cmp.style.setProperty('--x', p + '%'); range.value = p; }
+function fromEvent(e) { const r = cmp.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 100; }
+cmp.addEventListener('pointerdown', (e) => { dragging = true; auto = false; cmp.setPointerCapture(e.pointerId); set(fromEvent(e)); });
+cmp.addEventListener('pointermove', (e) => { if (dragging) set(fromEvent(e)); });
+cmp.addEventListener('pointerup', () => { dragging = false; });
+cmp.addEventListener('pointercancel', () => { dragging = false; });
+range.addEventListener('input', () => { auto = false; set(+range.value); });
+// Intro sweep: show the before, then reveal the after, then settle in the middle.
+(function intro() {
+  const keys = [[0, 92], [900, 92], [2200, 8], [3200, 8], [4200, 50]];
+  const t0 = performance.now();
+  const tick = (t) => {
+    if (!auto) return;
+    const el = t - t0;
+    let i = 0; while (i < keys.length - 1 && el > keys[i + 1][0]) i++;
+    if (i >= keys.length - 1) { set(keys[keys.length - 1][1]); return; }
+    const [ta, a] = keys[i], [tb, b] = keys[i + 1], p = (el - ta) / (tb - ta), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    set(a + (b - a) * e); requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

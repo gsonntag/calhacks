@@ -326,6 +326,15 @@ async def reset():
     return {"ok": True}
 
 
+@app.get("/api/replay")
+async def replay(scenario: str = "default"):
+    """Latest recorded run (data/), else the committed fallback recording (demo/)."""
+    for f in (config.DATA_DIR / f"replay_{scenario}.json", config.DEMO_DIR / f"replay_{scenario}.json"):
+        if f.exists():
+            return Response(f.read_text(), media_type="application/json")
+    return JSONResponse({"error": "no recording yet: finish one case first"}, 404)
+
+
 @app.get("/")
 async def index():
     return FileResponse(WEB / "index.html")
