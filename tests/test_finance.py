@@ -4,6 +4,7 @@ import pytest
 
 from billback import finance
 from billback.orchestrator import demo_case
+from billback.agents.policy import HIGH_COST_TIERS
 
 DEMO_TODAY = date(2026, 10, 24)
 
@@ -38,11 +39,15 @@ def test_demo_income_fpl_and_discount(demo):
     elig = finance.charity_discount(inc["annual"], demo["patient"]["household_size"],
                                     finance.clean_tiers([{"max_fpl_pct": 200, "discount_pct": 100},
                                                          {"max_fpl_pct": 400, "discount_pct": 75}]))
-    assert inc["annual"] == 1300 * 26  # biweekly pay annualized by frequency, not by the 90-day window
-    assert elig["fpl_pct"] == pytest.approx(216.0, abs=0.1)
-    assert elig["discount_pct"] == 75
-    # the discount applies to her share ($2,600), then her $500 payment counts against it
-    assert finance.settle(2600, 500, elig["discount_pct"]) == {"discounted_share": 650.0, "balance": 150.0, "refund": 0.0}
+    assert inc["annual"] == 900 * 26  # biweekly pay annualized by frequency, not by the 90-day window
+    assert elig["fpl_pct"] == pytest.approx(149.5, abs=0.1)
+    assert elig["discount_pct"] == 100
+    # her whole $2,600 share is written off, so the $500 she already paid comes back
+    assert finance.settle(2600, 500, elig["discount_pct"]) == {"discounted_share": 0.0, "balance": 0.0, "refund": 500.0}
+    # same answer under the insured high-medical-cost rule (Sutter's): $2,600 is 11% of her income
+    sutter = finance.charity_discount(inc["annual"], 1, finance.clean_tiers(HIGH_COST_TIERS["tiers"]),
+                                      insured=True, out_of_pocket=2600)
+    assert sutter["discount_pct"] == 100
 
 
 def test_settle_refund_when_overpaid():
@@ -66,7 +71,6 @@ def test_freecare_scenario():
     tx = [{"id": f"t{i}", "merchant": "", **t} for i, t in enumerate(c["transactions"])]
     rec = finance.reconcile(c["bill"], c["eob"], tx)
     inc = finance.income(tx, today=DEMO_TODAY)
-    from billback.agents.policy import HIGH_COST_TIERS
     elig = finance.charity_discount(inc["annual"], 3, finance.clean_tiers(HIGH_COST_TIERS["tiers"]),
                                     insured=True, out_of_pocket=c["eob"]["patient_responsibility"])
     assert rec["owed"] == 5600 and elig["discount_pct"] == 100

@@ -6,7 +6,7 @@ import asyncio
 import re
 from urllib.parse import urlparse
 
-from .. import finance, llm
+from .. import config, finance, llm
 from ..events import bus, step
 from ..harness import Agent, Tool, ToolRegistry
 from ..integrations import brightdata
@@ -90,7 +90,8 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
 
     step(cid, "policy", "find", "Find assistance policy", "running")
     source, text, live = "sample policy (offline)", None, False
-    if brightdata.live():
+    # without a configured URL, finding the page needs the SERP zone too
+    if brightdata.live() and (hosp.get("policy_url") or config.BRIGHTDATA_SERP_ZONE):
         async def _fetch():
             url = hosp.get("policy_url") or await _find_policy_url(case)
             if url:
@@ -116,7 +117,8 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
         source, live = "sample policy (offline)", False
     tiers = found["tiers"]
     step(cid, "policy", "find", "Find assistance policy", "ok" if tiers else "clear",
-         ("Found on the hospital's website (live)" if live else "Using the sample policy (offline)")
+         ((f"{hosp['policy_owner']}'s published policy (live)" if hosp.get("policy_owner")
+           else "Found on the hospital's website (live)") if live else "Using the sample policy (offline)")
          if tiers else "No income-based discount rules found")
 
     step(cid, "policy", "income", "Estimate income", "running")

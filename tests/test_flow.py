@@ -1,4 +1,4 @@
-"""Offline end-to-end: sample case -> approve call -> desk-mode call -> approve plan -> case_done at $150."""
+"""Offline end-to-end: sample case -> approve call -> desk-mode call -> case_done at $0 with $500 back."""
 import asyncio
 import json
 from datetime import date
@@ -67,20 +67,16 @@ async def test_offline_end_to_end(client):
     assert r["ended"] is True
     assert r["outcome"]["case_number"] == "58213"
 
-    plan_req = await _approve(c, case_id, "planner")
-    assert plan_req["title"] == "Set up a 3 x $50 interest-free plan with Bayview Community Hospital?"
-
     done = await _wait_for(case_id, lambda e: e["kind"] == "case_done")
     s = done["summary"]
-    assert s["started_at"] == 8700 and s["now"] == 150
+    assert s["started_at"] == 8700 and s["now"] == 0 and s["refund"] == 500
     assert s["case_number"] == "58213"
-    assert s["plan"]["months"] == 3 and s["plan"]["monthly"] == 50
-    assert s["plan_created"] is True
+    assert s["plan"]["months"] == 0 and s["plan_created"] is False
 
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
     assert CASE_HTML_KINDS <= kinds, CASE_HTML_KINDS - kinds
-    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 2100, 150]
+    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 2100, 0]
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)
@@ -159,7 +155,7 @@ async def test_bad_policy_extraction_never_crashes(monkeypatch, reply):
     case = orchestrator.new_case()
     out = await _run_policy(case)
     if isinstance(reply, Exception):  # falls back to the labelled sample policy
-        assert out["target"] == 150 and out["source"] == "sample policy (offline)"
+        assert out["target"] == 0 and out["refund"] == 500 and out["source"] == "sample policy (offline)"
     else:  # nothing usable: honest "no discount", no crash
         assert out["policy"]["tiers"] == [] and out["target"] == 2100
 

@@ -252,7 +252,8 @@ async def run_case(case: dict) -> None:
         case["result"].update({"outcome": outcome, "plan": plan["plan"], "final_balance": balance})
         bus.emit(cid, "case_done", summary={
             "started_at": case["bill"]["amount_due"], "now": balance, "case_number": outcome.get("case_number"),
-            "plan": plan["plan"], "plan_created": plan_created})
+            "plan": plan["plan"], "plan_created": plan_created,
+            "refund": pol.get("refund", 0) if balance == target else 0})
         save_replay(case)
     except Exception as e:
         case["status"] = "error"
