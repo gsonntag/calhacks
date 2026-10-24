@@ -34,9 +34,10 @@
     <span class="m3-brand-name">BillBack</span>
   </span>
 </header>
-<div class="wrap">
+<main class="wrap">
+<h1 class="sr-only">BillBack approval</h1>
 <div id="root" class="wait" role="status" aria-live="polite">Nothing needs your OK right now.<br>Leave this open.</div>
-</div>
+</main>
 <script>
 const caseId = new URLSearchParams(location.search).get('case');
 const root = document.getElementById('root');
@@ -57,7 +58,7 @@ async function poll() {
       navigator.vibrate && navigator.vibrate([120, 60, 120]);
       root.className = 'card';
       root.innerHTML = `<span class="ic" aria-hidden="true"><span class="material-symbols-rounded">approval</span></span>
-        <h1 class="headline-s">${esc(a.title)}</h1><p class="body-l">${esc(detailText(a.detail))}</p>
+        <h2 class="headline-s">${esc(a.title)}</h2><p class="body-l">${esc(detailText(a.detail))}</p>
         <div class="actions"><button class="m3-btn filled" id="y" type="button">Approve</button><button class="m3-btn outlined" id="n" type="button">Decline</button></div>`;
       document.getElementById('y').onclick = () => decide(a.approval_id, true);
       document.getElementById('n').onclick = () => decide(a.approval_id, false);

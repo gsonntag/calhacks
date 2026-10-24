@@ -28,7 +28,7 @@
   --st-success: #2E7D32;  --st-success-container: #E3F1DF;  --st-on-success-container: #17451B;
   --st-warn: #A64A00;     --st-warn-container: #FFE3D3;     --st-on-warn-container: #6B2E00;
   --st-info: #1B5FBE;     --st-info-container: #DCE8FF;     --st-on-info-container: #0B3A80;
-  --st-money: #2E8B3A;    /* large savings figures */
+  --st-money: #2E7D32;    /* savings figures (4.5:1 on white, also at small sizes) */
   /* type */
   --md-font: "Roboto Flex", Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
   /* shape */
@@ -333,6 +333,14 @@ img, svg { max-width: 100%; }
 .m3-bubble { max-width: 80%; padding: 10px 16px; border-radius: 20px; font: 400 16px/24px var(--md-font); overflow-wrap: anywhere; }
 .m3-bubble.me   { align-self: flex-end; background: var(--md-primary); color: var(--md-on-primary); border-bottom-right-radius: 6px; }
 .m3-bubble.them { align-self: flex-start; background: var(--md-surface-container-high); color: var(--md-on-surface); border-bottom-left-radius: 6px; }
+
+/* touch: 44px minimum targets on phones / coarse pointers (M3 visuals stay 40px on desktop) */
+@media (pointer: coarse), (max-width: 640px) {
+  .m3-btn, .m3-tab, .m3-segmented button { min-height: 44px; height: auto; }
+  .m3-icon-btn { width: 44px; height: 44px; }
+  .m3-chip { min-height: 44px; height: auto; }
+  .m3-brand { min-height: 44px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
