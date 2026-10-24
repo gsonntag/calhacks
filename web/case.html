@@ -4,275 +4,338 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BillBack — Case</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="m3.css">
 <!--
-  BillBack — V2 case flow, driven by the live backend.
-  Tabs = cases (/api/cases). The active case streams events over /ws/cases/{id}; render() derives the
-  timeline (Upload → Review → Approval → Call → Resolved) from those events.
+  BillBack — live case timeline, driven by the backend.
+  Case tabs = /api/cases. The active case streams events over /ws/cases/{id}; render() derives the
+  top summary (headline, stat cards, what needs you), the Steps card and the assistant line from those events.
 -->
 <style>
-  :root{
-    --accent:#BE3337; --tint:#FDECEC; --ink:#1A1A1E; --ink-2:#333338; --muted:#4D4D55; --muted-2:#6B6B73;
-    --green:#3F7A45; --green-ink:#2F5B34; --green-line:#B9D2BB; --amber:#8A4B08; --amber-dot:#D98A1A;
-    --line:#EEE7E7; --hair:#F1E6E6; --ease:cubic-bezier(.2,.8,.2,1);
+  .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
+
+  /* case tabs (one per case) */
+  .case-tabs { display: flex; align-items: center; gap: 8px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--md-outline-variant); }
+  .case-tabs::-webkit-scrollbar { display: none; }
+  .tab, .new-case { min-height: 40px; height: auto; flex: none; }
+  .tab .status { font-weight: 400; opacity: .85; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); flex: none; }
+  .dot.live { background: var(--st-warn); animation: m3-pulse 1.4s var(--md-ease) infinite; }
+  .dot.amber { background: var(--st-warn); } .dot.green { background: var(--st-success); }
+  .new-case { flex: none; }
+
+  main.m3-page { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; }
+  #caseError { margin: 0; }
+  #caseWarnings:empty { display: none; }
+  #caseWarnings { display: flex; flex-direction: column; gap: 4px; color: var(--st-warn); }
+  #caseWarnings span { display: inline-flex; align-items: center; gap: 6px; }
+  .hero h1 { margin: 0; overflow-wrap: anywhere; }
+  .hero p { margin: 8px 0 0; }
+  .stat-value.pending { color: var(--md-on-surface-variant); }
+
+  /* things that need the user */
+  .attn-card { border: 2px solid var(--md-primary); background: var(--md-surface-container-low); display: flex; flex-direction: column; gap: 16px; }
+  .attn-head { display: flex; align-items: center; gap: 8px; color: var(--md-primary); }
+  .attn-card p { margin: 0; }
+  .ask { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .ask li { display: flex; align-items: flex-start; gap: 12px; }
+  .ask .material-symbols-rounded { color: var(--md-primary); font-size: 20px; margin-top: 2px; }
+  .voice-pick { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; color: var(--md-on-surface-variant); }
+  .voice-pick .m3-select { width: auto; max-width: 100%; min-width: 0; flex: 0 1 auto; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .m3-btn.text.muted-btn { color: var(--md-on-surface-variant); }
+
+  /* upload (new case) */
+  .drop { position: relative; border: 1.5px dashed var(--md-outline); background: var(--md-surface-container-lowest); border-radius: var(--md-shape-l);
+    padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; cursor: pointer; transition: background var(--md-dur-s) var(--md-ease); }
+  .drop:hover { background: var(--md-surface-container-low); }
+  .drop.dragging { background: var(--md-primary-container); border-color: var(--md-primary); }
+  .drop:focus-within { outline: 3px solid var(--md-primary); outline-offset: 2px; }
+  .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .drop .material-symbols-rounded { color: var(--md-primary); font-size: 32px; }
+  .drop .t span { color: var(--md-primary); text-decoration: underline; }
+  .files { margin: 0; padding: 0; list-style: none; }
+  .files li { display: flex; align-items: center; gap: 12px; min-height: 48px; border-bottom: 1px solid var(--md-outline-variant); }
+  .files li > span:not(.material-symbols-rounded) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+  /* Steps card */
+  .steps-card { padding: 16px 24px 8px; }
+  .steps-card h2 { margin: 0 0 4px; }
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .step { border-bottom: 1px solid var(--md-outline-variant); }
+  .step:last-child { border-bottom: 0; }
+  .row-btn { position: relative; overflow: hidden; isolation: isolate; display: flex; align-items: center; gap: 12px; width: calc(100% + 32px); margin: 0 -16px;
+    min-height: 72px; padding: 12px 16px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: var(--md-shape-m); }
+  .row-btn::after { content: ""; position: absolute; inset: 0; background: currentColor; opacity: 0; pointer-events: none; z-index: -1; transition: opacity var(--md-dur-s) var(--md-ease); }
+  .row-btn:hover::after { opacity: .06; } .row-btn:active::after { opacity: .1; }
+  .row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .row-title { font: 500 16px/24px var(--md-font); letter-spacing: .15px; }
+  .row-sum { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .step.is-up .row-title { color: var(--md-on-surface-variant); font-weight: 400; }
+  .row-status { flex: none; display: flex; align-items: center; }
+  .row-status .m3-check { font-size: 26px; }
+  .row-status .m3-status .m3-spinner { width: 14px; height: 14px; border-width: 2px; border-color: currentColor; border-right-color: transparent; margin-left: -2px; }
+  .muted-status { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .chev { color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
+  .row-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .row-detail { padding: 0 0 20px; display: flex; flex-direction: column; gap: 16px; animation: fadein var(--md-dur-m) var(--md-ease); }
+  .row-detail p { margin: 0; }
+  .sub-h { margin: 0; color: var(--md-on-surface-variant); }
+
+  /* Review details */
+  .agents { display: flex; flex-wrap: wrap; gap: 24px 32px; }
+  .agent { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+  .agent-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+  .agent ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .agent li { display: flex; align-items: flex-start; gap: 10px; }
+  .agent li .ic { width: 20px; height: 22px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .agent li .ic .material-symbols-rounded { font-size: 20px; }
+  .agent li .ic .m3-spinner { width: 16px; height: 16px; border-width: 2px; }
+  .agent li .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .agent li .lb { font: 400 15px/22px var(--md-font); }
+  .agent li .rs { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); overflow-wrap: anywhere; }
+  .rs.flag { color: var(--md-error) !important; font-weight: 500 !important; }
+  .rs.win { color: var(--st-success) !important; font-weight: 500 !important; }
+  .rs.wait { color: var(--st-warn) !important; }
+  .ic-ok, .ic-win { color: var(--st-success); } .ic-flag { color: var(--md-error); } .ic-wait { color: var(--st-warn); } .ic-clear { color: var(--md-on-surface-variant); }
+  .sum-list { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
+  .sum-list dt { color: var(--md-on-surface-variant); } .sum-list dd { margin: 0; min-width: 0; overflow-wrap: anywhere; } .sum-list dd span { color: var(--md-on-surface-variant); }
+  .ev-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .ev-list li { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); min-width: 0; }
+  .ev-src { overflow-wrap: anywhere; color: var(--md-on-surface-variant); }
+  .quote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--md-primary); display: flex; flex-direction: column; gap: 8px; }
+  .quote q { quotes: "“" "”"; }
+  .quote .m3-row { gap: 8px; }
+  .quote .m3-status { height: 24px; font-size: 12px; padding: 0 10px; }
+
+  /* Call details */
+  .live-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; }
+  .live-row .who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .live-dot { width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--st-success); animation: m3-pulse 1.4s var(--md-ease) infinite; }
+  .live-title { font: 500 16px/24px var(--md-font); overflow-wrap: anywhere; }
+  .live-title span { font-variant-numeric: tabular-nums; }
+  #callTimer { color: var(--md-on-surface-variant); font-weight: 400; }
+  .phase { color: var(--md-on-surface-variant); font: 400 14px/20px var(--md-font); }
+  .listen[aria-pressed="true"] { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: transparent; }
+  .transcript-wrap:not(.open) { display: none; }
+  #transcript { display: flex; flex-direction: column; gap: 8px; }
+  .bubble-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .bubble-wrap.me { align-items: flex-end; } .bubble-wrap.them { align-items: flex-start; }
+  .bubble-who { font: 500 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; }
+  .bubble-wrap .m3-bubble { font-size: 15px; line-height: 22px; }
+  @media (max-width: 640px) { .bubble-wrap .m3-bubble { max-width: 92%; } }
+  #deskLink:empty { display: none; }
+
+  /* Resolved details */
+  .final { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; }
+  .final b { color: var(--st-money); }
+  .final s { color: var(--md-on-surface-variant); font-size: 20px; }
+  .plan { display: flex; flex-direction: column; gap: 12px; }
+  .follow { background: var(--md-surface-container-low); border-color: transparent; display: flex; flex-direction: column; gap: 10px; }
+  .follow p { margin: 0; }
+
+  /* assistant */
+  .assistant { padding: 4px 0 0; }
+  .assistant .m3-quote { overflow-wrap: anywhere; }
+  .assistant .m3-status { align-self: flex-start; }
+
+  .in { animation: fadein .35s var(--md-ease); }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .replay #deskLink, .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn { display: none !important; }
+
+  @media (max-width: 640px) {
+    .m3-top-app-bar { padding: 8px 12px; }
+    main.m3-page { padding-top: 20px; gap: 20px; }
+    .hero h1 { font-size: 26px; line-height: 32px; }
+    .steps-card { padding: 12px 16px 4px; }
+    .row-btn { width: calc(100% + 16px); margin: 0 -8px; padding: 12px 8px; gap: 8px; }
+    .m3-card { padding: 16px; }
   }
-  *{box-sizing:border-box}
-  [hidden]{display:none!important}
-  html,body{margin:0;background:#FFFFFF;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
-  a{color:var(--ink)} a:hover{color:var(--accent)}
-  button{font:inherit}
-  button:focus-visible,a:focus-visible,.drop:focus-within{outline:2px solid var(--accent);outline-offset:2px}
-  .ghost{border:0;background:transparent;cursor:pointer;border-radius:999px}
-  .ghost:hover{background:#FFF4F4}
-
-  header{border-bottom:1px solid var(--hair)}
-  .bar{padding:14px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
-  .logo b{font-size:18px;font-weight:800;letter-spacing:-.02em} .logo b span{color:var(--accent)}
-  .bar nav a{padding:12px;font-size:15px;font-weight:500;text-decoration:none}
-  .tabs{padding:0 12px;margin-top:6px;display:flex;align-items:center;gap:4px;overflow-x:auto}
-  .tab{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 12px;border:0;border-bottom:2px solid transparent;
-    background:transparent;color:#5F5F66;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .3s}
-  .tab:hover{color:var(--ink)}
-  .tab[aria-current="page"]{color:var(--ink);font-weight:600;border-bottom-color:var(--accent)}
-  .tab .status{font-weight:400;color:var(--muted-2)}
-  .dot{width:7px;height:7px;border-radius:999px;background:#C4C4CA;flex:none}
-  .dot.live{background:var(--accent);animation:live 1.6s infinite}
-  .dot.amber{background:var(--amber-dot)} .dot.green{background:var(--green)}
-  .new-case{display:inline-flex;align-items:center;gap:6px;min-height:40px;margin-left:4px;padding:0 12px;color:var(--muted);font-size:14px;font-weight:600;white-space:nowrap}
-
-  main{max-width:760px;margin:0 auto;padding:48px 20px 80px}
-  .step{display:flex;gap:20px}
-  .rail{flex:none;width:28px;display:flex;flex-direction:column;align-items:center}
-  .marker{width:28px;height:28px;flex:none;border-radius:999px;background:#FFFFFF;color:var(--muted-2);border:1.5px solid #DCD3D3;
-    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:background .4s,box-shadow .5s,border-color .4s,color .4s}
-  .marker .check{display:none}
-  .line{width:2px;flex:1;min-height:16px;margin:6px 0;border-radius:2px;background:var(--line);transition:background .5s}
-  .body{flex:1;min-width:0;padding-bottom:28px;transition:padding .6s var(--ease)}
-  .head{min-height:28px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
-  .head h2{margin:0;font-size:17px;font-weight:500;color:var(--muted-2);letter-spacing:-.015em;line-height:28px;transition:font-size .6s var(--ease),color .4s}
-  .meta{font-size:14px;color:var(--muted-2)} .meta.attn{color:var(--amber);font-weight:600}
-
-  .step.is-active .marker{background:var(--accent);border-color:var(--accent);color:#FFFFFF;box-shadow:0 0 0 6px var(--tint)}
-  .step.is-active .head h2{font-size:26px;font-weight:700;color:var(--ink)}
-  .step.is-active .body{padding-bottom:48px}
-  .step.is-done .marker{background:var(--green);border-color:var(--green);color:#FFFFFF}
-  .step.is-done .marker .check{display:block} .step.is-done .marker .num{display:none}
-  .step.is-done .line{background:var(--green-line)}
-  .step.is-done .head h2{font-weight:600;color:var(--ink)}
-
-  .reveal{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
-  .reveal>div{overflow:hidden;min-height:0}
-  .step.is-active .full,.step.is-done .summary{grid-template-rows:1fr}
-  .full .inner{padding-top:18px;display:flex;flex-direction:column;gap:16px}
-  .summary p{margin:0;padding-top:6px;font-size:15px;line-height:1.6;color:var(--muted)}
-  .summary strong{color:var(--ink);font-weight:600}
-  .small{font-size:13px;color:var(--muted-2)}
-  #caseError{margin:0 0 16px;padding:12px 16px;border-radius:14px;background:var(--tint);color:#9E2A2E;font-weight:600;font-size:15px;line-height:1.45}
-  #caseWarnings:empty{display:none}
-  #caseWarnings{margin:0 0 16px;display:flex;flex-direction:column;gap:4px}
-  .lead{margin:0;font-size:16px;line-height:1.6;color:var(--muted)}
-
-  .drop{position:relative;border:1.5px dashed #E3C4C5;background:#FFFFFF;border-radius:16px;padding:36px 20px;display:flex;flex-direction:column;
-    align-items:center;gap:8px;text-align:center;cursor:pointer;transition:background .2s,border-color .2s}
-  .drop:hover{background:#FFF8F8} .drop.dragging{background:var(--tint);border-color:var(--accent)}
-  .drop input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
-  .drop .t{font-size:15px;font-weight:600} .drop .t span{color:var(--accent);text-decoration:underline}
-  .files{margin:0;padding:0;list-style:none}
-  .files li{display:flex;align-items:center;gap:10px;min-height:44px;border-bottom:1px solid #F4EEEE}
-  .files li span{flex:1;min-width:0;font-size:15px;overflow-wrap:anywhere}
-  .icon-btn{width:36px;height:36px;color:var(--muted-2);display:flex;align-items:center;justify-content:center}
-  .actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px}
-  .primary{min-height:48px;padding:0 24px;border:0;border-radius:999px;background:var(--accent);color:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
-  .primary:disabled{background:#E8C4C5;cursor:default}
-  .link-btn{min-height:44px;padding:0;border:0;background:transparent;color:var(--muted);font-size:14px;font-weight:500;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-
-  .agents{padding-top:20px;display:flex;flex-wrap:wrap;gap:28px 40px}
-  .agent{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:14px}
-  .agent-head{display:flex;align-items:center;gap:10px}
-  .agent-head b{font-size:16px}
-  .agent-status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
-  .agent ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
-  .agent li{display:flex;align-items:flex-start;gap:10px}
-  .agent li .ic{width:16px;height:21px;flex:none;display:flex;align-items:center}
-  .agent li .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
-  .agent li .lb{font-size:15px;color:var(--ink-2)}
-  .agent li .rs{font-size:14px;line-height:1.45;color:var(--muted-2)}
-  .rs.flag{color:var(--accent);font-weight:600} .rs.win{color:var(--green-ink);font-weight:600} .rs.wait{color:var(--amber)}
-  .sum-list{margin:0;padding-top:6px;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:15px;line-height:1.5}
-  .sum-list dt{color:var(--muted-2)} .sum-list dd{margin:0} .sum-list dd b{font-weight:600} .sum-list dd span{color:var(--muted-2)}
-
-  .voice-pick{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;font-size:15px;color:var(--muted)}
-  .voice-pick select{font:inherit;color:var(--ink);padding:8px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;max-width:100%}
-  .voice-pick button{min-height:0;padding:6px 12px;font-size:14px}
-  .ask{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
-  .ask li{display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.5;color:var(--ink-2)}
-  .ask svg{flex:none;margin-top:4px}
-  .secondary{min-height:48px;padding:0 18px;color:var(--muted);font-size:15px;font-weight:600}
-
-  .live-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
-  .live-row .who{display:flex;align-items:center;gap:14px;min-width:0}
-  .live-dot{width:10px;height:10px;flex:none;border-radius:999px;background:var(--accent);animation:live 1.6s infinite}
-  .live-title{font-size:17px;font-weight:600} .live-title span{color:var(--muted-2);font-weight:400;font-variant-numeric:tabular-nums}
-  .phase{font-size:15px;color:var(--muted)}
-  .listen{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border:1.5px solid #E3C4C5;border-radius:999px;background:#FFFFFF;
-    color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
-  .listen[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#FFFFFF}
-  .transcript-wrap.open{grid-template-rows:1fr}
-  .transcript{border-left:2px solid var(--tint);padding:2px 0 2px 18px;display:flex;flex-direction:column;gap:14px}
-  .transcript p{margin:0;font-size:15px;line-height:1.6} .transcript p b{color:var(--accent)} .transcript p b.them{color:var(--muted)}
-  .transcript p span{color:var(--ink-2)}
-  .bars{display:flex;align-items:flex-end;gap:3px;height:14px}
-  .bars i{width:3px;height:14px;border-radius:2px;background:var(--accent);transform-origin:bottom;animation:bar 1s ease-in-out infinite}
-  .bars i:nth-child(2){animation-delay:.15s}.bars i:nth-child(3){animation-delay:.3s}.bars i:nth-child(4){animation-delay:.45s}
-
-  .final{display:flex;align-items:baseline;flex-wrap:wrap;gap:14px}
-  .final b{font-size:60px;line-height:1;font-weight:700;letter-spacing:-.04em;color:var(--accent)}
-  .final s{font-size:20px;color:var(--muted-2)}
-  .plan{margin-top:14px;border:1.5px solid #E3C4C5;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
-  .plan p{margin:0;font-size:16px;line-height:1.5}
-
-  .in{animation:fadein .4s ease-out}
-  .spin{animation:spin .9s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @keyframes live{0%{box-shadow:0 0 0 0 rgba(190,51,55,.5)}70%{box-shadow:0 0 0 7px rgba(190,51,55,0)}100%{box-shadow:0 0 0 0 rgba(190,51,55,0)}}
-  @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-  @keyframes bar{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
-  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
-  .follow{margin-top:14px;border:1.5px solid var(--green-line);background:#F7FBF7;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
-  .follow p{margin:0;font-size:16px;line-height:1.5} .follow .small{font-size:14px}
-  .replay #deskLink, .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn{display:none!important}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="bar">
-    <a href="/" class="logo" aria-label="BillBack home">
-      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <b>Bill<span>Back</span></b>
-    </a>
-    <nav aria-label="Main"><a href="dashboard.html">All cases</a><a id="hoodLink" href="ops.html">Under the hood</a></nav>
-  </div>
-  <nav class="tabs" aria-label="Cases">
-    <div id="tabList" style="display:contents"></div>
-    <button type="button" class="ghost new-case" id="newCase"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>New case</button>
+<header class="m3-top-app-bar">
+  <a href="/" class="m3-brand" aria-label="BillBack home">
+    <span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span>
+    <span class="m3-brand-name">BillBack</span>
+  </a>
+  <nav class="m3-tabs" aria-label="Main">
+    <a class="m3-tab" href="/">New case</a>
+    <a class="m3-tab" href="dashboard.html" aria-current="page">Cases</a>
+    <a class="m3-tab" href="hospitals.html">Hospitals</a>
+    <a class="m3-tab" id="hoodLink" href="ops.html">Under the hood</a>
   </nav>
 </header>
+<nav class="case-tabs" aria-label="Cases">
+  <div id="tabList" style="display:contents"></div>
+  <button type="button" class="m3-chip new-case" id="newCase"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</button>
+</nav>
 
-<main>
-  <div id="caseError" role="alert" hidden></div>
-  <div id="caseWarnings" class="small" aria-live="polite"></div>
-  <section class="step" data-step="0" aria-label="Step 1: Upload">
-    <div class="rail"><span class="marker"><svg class="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg><span class="num">1</span></span><span class="line"></span></div>
-    <div class="body">
-      <div class="head"><h2>Upload your bill</h2></div>
-      <div class="reveal full"><div><div class="inner">
-        <p class="lead">Add your hospital bill and your insurance statement (EOB). Photos are fine.</p>
-        <label class="drop" id="drop">
-          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Upload your bill and insurance statement">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#BE3337" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-          <span class="t">Drag files here, or <span>browse</span></span>
-          <span class="small">PDF, JPG or PNG</span>
-        </label>
-        <ul class="files" id="fileList"></ul>
-        <div class="actions">
-          <button type="button" class="primary" id="startBtn" disabled>Start review</button>
-          <button type="button" class="link-btn" id="sampleBtn">Try a sample bill</button>
+<main class="m3-page narrow">
+  <div id="caseError" class="m3-card error" role="alert" hidden></div>
+  <div id="caseWarnings" class="body-m" aria-live="polite"></div>
+
+  <!-- TOP: what's happening, the money, what needs you -->
+  <section class="hero" aria-live="polite">
+    <h1 class="headline-l" id="caseTitle">Loading your case…</h1>
+    <p class="body-l muted" id="caseSub"></p>
+  </section>
+
+  <div class="m3-grid-2" id="stats">
+    <div class="m3-card m3-stat">
+      <span class="stat-label">Hospital says</span>
+      <span class="stat-value" id="statOrig">—</span>
+      <span class="stat-support">Original statement</span>
+    </div>
+    <div class="m3-card success m3-stat">
+      <span class="stat-label">You actually owe</span>
+      <span class="stat-value" id="statOwe">—</span>
+      <span class="stat-support" id="statOweSupport">Checking…</span>
+    </div>
+  </div>
+
+  <!-- new case: upload -->
+  <section class="m3-card m3-stack" id="uploadPanel" hidden aria-label="Upload your bill">
+    <label class="drop" id="drop">
+      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Upload your bill and insurance statement">
+      <span class="material-symbols-rounded" aria-hidden="true">upload_file</span>
+      <span class="title-m t">Drag files here, or <span>browse</span></span>
+      <span class="body-m muted">PDF, JPG or PNG</span>
+    </label>
+    <ul class="files" id="fileList"></ul>
+    <div class="actions">
+      <button type="button" class="m3-btn filled" id="startBtn" disabled>Start review</button>
+      <button type="button" class="m3-btn text" id="sampleBtn">Try a sample bill</button>
+    </div>
+  </section>
+
+  <!-- needs you: call approval -->
+  <section class="m3-card attn-card" id="approvalCard" hidden aria-labelledby="approvalHead">
+    <div class="attn-head"><span class="material-symbols-rounded" aria-hidden="true">front_hand</span><span class="title-m" id="approvalHead">Needs your OK</span></div>
+    <p class="body-l">Can BillBack call <strong id="approveProvider"></strong> billing <span id="approveAgain">for you</span>? On the call we’ll:</p>
+    <ul class="ask" id="askList"></ul>
+    <p class="body-m muted">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
+    <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
+      <select id="voiceSel" class="m3-select compact"></select>
+      <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
+    </label>
+    <p class="body-m muted">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
+    <div class="actions">
+      <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call billing</button>
+      <button type="button" class="m3-btn outlined" id="notYetBtn">Not now</button>
+    </div>
+  </section>
+  <div id="planSlotTop"></div>
+
+  <!-- Steps -->
+  <section class="m3-card steps-card" aria-labelledby="stepsHead">
+    <h2 class="title-l" id="stepsHead">Steps</h2>
+    <ol class="steps">
+      <li class="step" data-step="0">
+        <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail0">
+          <span class="row-text"><span class="row-title">Read your bill</span><span class="row-sum" id="uploadLine"></span></span>
+          <span class="row-status" id="status0"></span>
+          <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
+        </button>
+        <div class="row-detail" id="detail0" hidden><div id="uploadSummary" class="body-m"></div></div>
+      </li>
+
+      <li class="step" data-step="1">
+        <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail1">
+          <span class="row-text"><span class="row-title">Review <span class="muted" style="font-weight:400">(Auditor + Policy)</span></span><span class="row-sum" id="reviewLine"></span></span>
+          <span class="row-status" id="status1"></span>
+          <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
+        </button>
+        <div class="row-detail" id="detail1" hidden>
+          <span class="body-m muted" id="reviewMeta"></span>
+          <div class="agents" id="agents"></div>
+          <dl class="sum-list body-m" id="reviewSummary"></dl>
+          <div class="m3-stack" id="evidenceBox" hidden><h3 class="title-s sub-h">Evidence</h3><ul class="ev-list" id="evidenceList"></ul></div>
+          <div class="m3-stack" id="quoteBox" hidden><h3 class="title-s sub-h">From the hospital’s own policy</h3><div class="m3-stack" id="quoteList"></div></div>
         </div>
-      </div></div></div>
-      <div class="reveal summary"><div><p id="uploadSummary"></p></div></div>
-    </div>
-  </section>
+      </li>
 
-  <section class="step" data-step="1" aria-label="Step 2: Review">
-    <div class="rail"><span class="marker"><svg class="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg><span class="num">2</span></span><span class="line"></span></div>
-    <div class="body">
-      <div class="head"><h2>Review the bill</h2><span class="meta" id="reviewMeta"></span></div>
-      <div class="reveal full"><div><div class="agents" id="agents"></div></div></div>
-      <div class="reveal summary"><div><dl class="sum-list" id="reviewSummary"></dl></div></div>
-    </div>
-  </section>
-
-  <section class="step" data-step="2" aria-label="Step 3: Approval">
-    <div class="rail"><span class="marker"><svg class="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg><span class="num">3</span></span><span class="line"></span></div>
-    <div class="body">
-      <div class="head"><h2>Your approval</h2><span class="meta" id="approveMeta"></span></div>
-      <div class="reveal full"><div><div class="inner">
-        <p style="margin:0;font-size:17px;line-height:1.6">Can BillBack call <strong id="approveProvider"></strong> billing <span id="approveAgain">for you</span>? On the call we’ll:</p>
-        <ul class="ask" id="askList"></ul>
-        <p class="small" style="margin:0;font-size:14px;line-height:1.5">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
-        <label class="voice-pick" for="voiceSel"><span>Caller voice</span>
-          <select id="voiceSel"></select>
-          <button type="button" class="ghost secondary" id="voicePlay" aria-label="Hear this voice">▶ Hear it</button>
-        </label>
-        <p class="meta" style="margin:0">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
-        <div class="actions" style="gap:8px 16px">
-          <button type="button" class="primary" id="approveBtn" style="padding:0 26px">Approve the call</button>
-          <button type="button" class="ghost secondary" id="notYetBtn">Not yet</button>
+      <li class="step" data-step="2">
+        <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail2">
+          <span class="row-text"><span class="row-title">Your approval</span><span class="row-sum" id="approveMeta"></span></span>
+          <span class="row-status" id="status2"></span>
+          <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
+        </button>
+        <div class="row-detail" id="detail2" hidden>
+          <p class="body-m" id="approveSummary"></p>
+          <ul class="ask body-m" id="askDone"></ul>
         </div>
-      </div></div></div>
-      <div class="reveal summary"><div><p id="approveSummary"></p></div></div>
-    </div>
-  </section>
+      </li>
 
-  <section class="step" data-step="3" aria-label="Step 4: Call">
-    <div class="rail"><span class="marker"><svg class="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg><span class="num">4</span></span><span class="line"></span></div>
-    <div class="body">
-      <div class="head"><h2 id="callTitle">Call billing</h2><span class="meta" id="callMeta"></span></div>
-      <div class="reveal full"><div><div class="inner" style="gap:20px">
-        <div class="live-row">
-          <div class="who">
-            <span class="live-dot"></span>
-            <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-              <span class="live-title">On the phone with <span id="callProvider" style="color:inherit;font-weight:inherit"></span> <span id="callTimer">· 0:00</span></span>
-              <span class="phase" id="callPhase">Dialing…</span>
+      <li class="step" data-step="3">
+        <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail3">
+          <span class="row-text"><span class="row-title" id="callTitle">Call billing</span><span class="row-sum" id="callSummary"></span></span>
+          <span class="row-status" id="status3"></span>
+          <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
+        </button>
+        <div class="row-detail" id="detail3" hidden>
+          <div class="live-row" id="liveRow">
+            <div class="who">
+              <span class="live-dot" id="liveDot"></span>
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                <span class="live-title"><span id="callVerb">On the phone with</span> <span id="callProvider"></span> <span id="callTimer">· 0:00</span></span>
+                <span class="phase" id="callPhase">Dialing…</span>
+              </div>
+            </div>
+            <button type="button" class="m3-btn outlined listen" id="listenBtn" aria-pressed="false">
+              <span class="material-symbols-rounded" aria-hidden="true">headphones</span>
+              <span id="listenLabel">Listen in</span>
+            </button>
+          </div>
+          <span class="body-m muted" id="callMeta"></span>
+          <div class="transcript-wrap" id="transcriptWrap">
+            <div id="transcript" aria-live="polite"></div>
+          </div>
+          <span class="body-m muted" id="deskLink"></span>
+          <div><button type="button" class="m3-btn outlined" id="endCallBtn" hidden><span class="material-symbols-rounded" aria-hidden="true">call_end</span>End call</button></div>
+        </div>
+      </li>
+
+      <li class="step" data-step="4">
+        <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail4">
+          <span class="row-text"><span class="row-title" id="finalTitle">Resolved</span><span class="row-sum" id="finalLine"></span></span>
+          <span class="row-status" id="status4"></span>
+          <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
+        </button>
+        <div class="row-detail" id="detail4" hidden>
+          <div class="final"><b class="money-xl" id="finalAmt"></b><s id="finalWas"></s></div>
+          <span class="title-m" id="finalOutcome"></span>
+          <div id="planSlotFinal">
+            <div class="m3-card plan" id="planBox" hidden>
+              <p class="body-l" id="planText"></p>
+              <div class="actions">
+                <button type="button" class="m3-btn filled" id="planYes">Set up the plan</button>
+                <button type="button" class="m3-btn outlined" id="planNo">No thanks</button>
+              </div>
             </div>
           </div>
-          <button type="button" class="listen" id="listenBtn" aria-pressed="false">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg>
-            <span id="listenLabel">Listen in</span>
-          </button>
-        </div>
-        <div class="reveal transcript-wrap" id="transcriptWrap"><div>
-          <div class="transcript">
-            <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <div id="transcript" style="display:flex;flex-direction:column;gap:14px"></div>
+          <span class="body-m muted" id="finalNote">We’ll check back once billing confirms your new balance.</span>
+          <div class="m3-card follow" id="followBox" hidden>
+            <p class="body-l" id="followText"></p>
+            <span class="body-m muted" id="followPromised"></span>
+            <div class="actions">
+              <button type="button" class="m3-btn filled" id="callAgainBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call again</button>
+              <a class="m3-btn text" href="dashboard.html">See all cases</a>
+            </div>
           </div>
-        </div></div>
-        <span class="small" id="deskLink"></span>
-        <button type="button" class="link-btn" id="endCallBtn" hidden>End call</button>
-      </div></div></div>
-      <div class="reveal summary"><div><p id="callSummary"></p></div></div>
-    </div>
+        </div>
+      </li>
+    </ol>
   </section>
 
-  <section class="step" data-step="4" aria-label="Step 5: Resolved">
-    <div class="rail"><span class="marker"><span class="num">5</span></span></div>
-    <div class="body" style="padding-bottom:0">
-      <div class="head"><h2>Resolved</h2></div>
-      <div class="reveal full"><div><div class="inner" style="gap:6px;padding-top:16px">
-        <div class="final"><b id="finalAmt"></b><s id="finalWas"></s></div>
-        <span style="margin-top:8px;font-size:16px;font-weight:600" id="finalOutcome"></span>
-        <div class="plan" id="planBox" hidden>
-          <p id="planText"></p>
-          <div class="actions" style="gap:8px 16px">
-            <button type="button" class="primary" id="planYes">Set up the plan</button>
-            <button type="button" class="ghost secondary" id="planNo">No thanks</button>
-          </div>
-        </div>
-        <span style="font-size:15px;color:var(--muted-2)" id="finalNote">We’ll check back once billing confirms your new balance.</span>
-        <div class="follow" id="followBox" hidden>
-          <p id="followText"></p>
-          <span class="small" id="followPromised"></span>
-          <div class="actions" style="gap:8px 16px">
-            <button type="button" class="primary" id="callAgainBtn">Call again</button>
-            <a class="link-btn" href="dashboard.html" style="display:inline-flex;align-items:center">See all cases</a>
-          </div>
-        </div>
-      </div></div></div>
-    </div>
+  <!-- BillBack Assistant -->
+  <section class="m3-assistant assistant" aria-labelledby="asstHead">
+    <div class="m3-assistant-head" id="asstHead"><span class="m3-wave" id="asstWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>BillBack Assistant</div>
+    <p class="m3-quote" id="asstQuote" aria-live="polite"></p>
+    <span class="m3-status" id="asstChip">Voice agent ready</span>
   </section>
 </main>
 
@@ -283,29 +346,33 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const money = (n) => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
 const setHTML = (el, html) => { if (el._html !== html) { el.innerHTML = html; el._html = html; } };
+const setText = (el, t) => { if (el.textContent !== t) el.textContent = t; };
 const timer = (sec) => { const s = Math.max(0, Math.floor(sec)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 const seen = {};
 const fresh = (key, i) => (i >= (seen[key] || 0) ? ' class="in"' : '');
+const sym = (name, label, cls = '') => `<span class="material-symbols-rounded ${cls}"${label ? ` role="img" aria-label="${label}"` : ' aria-hidden="true"'}>${name}</span>`;
 const ICON = {
-  running: '<svg class="spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#BE3337" stroke-width="2.6" stroke-linecap="round" aria-label="In progress"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg>',
-  wait: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A4B08" stroke-width="2.6" stroke-linecap="round" aria-label="Waiting"><path d="M9 6v12M15 6v12"/></svg>',
-  ok: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3F7A45" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg>',
-  flag: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#BE3337" stroke-width="2.6" stroke-linecap="round" aria-label="Issue found"><path d="M12 5v9M12 19v.01"/></svg>',
-  clear: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9A9AA2" stroke-width="2.6" stroke-linecap="round" aria-label="Nothing found"><path d="M6 12h12"/></svg>',
-  win: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3F7A45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-label="Qualifies"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z"/></svg>',
-  file: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6B73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
-  x: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',
-  check: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BE3337" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>'
+  running: '<span class="m3-spinner" role="img" aria-label="In progress"></span>',
+  wait: sym('pause_circle', 'Waiting', 'ic-wait'),
+  ok: sym('check_circle', 'Done', 'ic-ok'),
+  flag: sym('error', 'Issue found', 'ic-flag'),
+  clear: sym('remove', 'Nothing found', 'ic-clear'),
+  win: sym('star', 'Qualifies', 'ic-win icon-fill'),
+  file: sym('description', '', 'muted'),
+  x: sym('close'),
+  check: sym('check')
 };
+const DONE_ICON = sym('check_circle', 'Done', 'm3-check icon-fill');
+const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; } };
 
 // ---------- case model, built from the event stream ----------
 function blankModel() {
   return { bill: null, docs: [], steps: { auditor: [], policy: [] }, agent: {}, review: null, approvals: {},
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
-           warnings: [], quotes: [], calls: [], followup: null, round: 1 };
+           warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1 };
 }
-const state = { tabs: [], active: null, models: {}, drafts: {}, ws: null, now: Date.now() / 1000 };
+const state = { tabs: [], active: null, models: {}, drafts: {}, ws: null, now: Date.now() / 1000, ui: {} };
 const model = (id) => (state.models[id] ||= blankModel());
 
 function apply(m, e) {
@@ -334,6 +401,7 @@ function apply(m, e) {
     case 'tool_result': if (e.tool === 'create_payment_plan') m.planResult = e.result || {}; break;
     case 'warning': m.warnings.push(e.text); break;
     case 'policy_quote': m.quotes.push(e); break;
+    case 'evidence': m.evidence.push(e); break;
     case 'transcript': m.lines.push({ who: e.speaker, text: e.text }); break;
     case 'call_outcome': m.outcome = e.outcome || m.outcome; break;
     case 'call_ended': m.outcome = e.outcome || m.outcome; m.callEnded = e.ts; break;
@@ -359,30 +427,37 @@ function stageOf(m) {
   return 1;
 }
 
+// which Steps row is "current" (0 Read bill · 1 Review · 2 Approval · 3 Call · 4 Resolved)
+function rowStage(m, draft) {
+  if (draft) return 0;
+  if (!m.bill) return 0;
+  if (m.error) return !m.review ? 1 : !m.call && !m.callDeclined ? 2 : m.call && !m.callEnded ? 3 : 4;
+  return stageOf(m);
+}
+
 // ---------- rendering ----------
 function renderAgent(key, name, role, m) {
   const steps = m.steps[key], a = m.agent[key] || {};
   const waiting = steps.some((s) => s.status === 'wait');
   const stopped = m.error && !a.done;
-  const status = a.done ? 'Done' : stopped ? 'Stopped' : waiting ? 'Waiting' : a.started ? 'Working' : 'Queued';
-  const color = a.done ? 'var(--green-ink)' : stopped ? 'var(--muted-2)' : waiting ? 'var(--amber)' : a.started ? '#9E2A2E' : 'var(--muted-2)';
-  const dot = a.done ? 'green' : stopped ? '' : waiting ? 'amber' : a.started ? 'live' : '';
+  const status = a.done ? 'Done' : stopped ? 'Stopped' : waiting ? 'Waiting' : a.started ? 'Working…' : 'Queued';
+  const cls = a.done ? 'success' : stopped ? '' : waiting ? 'warn' : a.started ? 'warn live' : '';
   const sk = state.active + '-' + key;
   const items = steps.map((s, i) => {
     const res = s.status === 'running' ? '' : `<span class="rs ${['flag', 'win', 'wait'].includes(s.status) ? s.status : ''}">${esc(s.result)}</span>`;
     return `<li${fresh(sk, i)}><span class="ic">${(stopped && s.status === 'running') ? ICON.clear : (ICON[s.status] || ICON.ok)}</span><div class="tx"><span class="lb">${esc(s.label)}</span>${res}</div></li>`;
   }).join('');
   seen[sk] = steps.length;
-  return `<div class="agent"><div style="display:flex;flex-direction:column;gap:3px">
-      <div class="agent-head"><b>${name}</b><span class="agent-status" style="color:${color}"><span class="dot ${dot}"></span>${status}</span></div>
-      <span class="small">${role}</span></div><ol>${items}</ol></div>`;
+  return `<div class="agent"><div style="display:flex;flex-direction:column;gap:2px">
+      <div class="agent-head"><b class="title-m">${name}</b><span class="m3-status ${cls}">${a.done ? sym('check', '') : ''}${status}</span></div>
+      <span class="body-m muted">${role}</span></div><ol>${items}</ol></div>`;
 }
 
 function renderTabs() {
   const tabs = state.tabs.map((t) => {
     const stage = t.draft ? 0 : (state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1);
     const dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
-    return `<button type="button" class="tab" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
+    return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
       <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${STATUS[stage]}</span></button>`;
   });
   setHTML($('tabList'), tabs.join(''));
@@ -395,11 +470,14 @@ function phaseText(m) {
   return last.who === 'rep' ? 'Billing is responding' : 'BillBack is making your case';
 }
 
-function policyQuote(m) {
-  const q = m.quotes.find((x) => x.matched) || m.quotes[0];
+function quoteHTML(q) {
   if (!q || !q.quote) return '';
-  const src = /^https?:/.test(q.source || '') ? ` <a href="${esc(q.source)}" target="_blank" rel="noopener">source</a>` : ` (${esc(q.source || '')})`;
-  return `<br><span class="small">“${esc(q.quote)}”${src}</span>`;
+  const src = /^https?:/.test(q.source || '')
+    ? `<a class="body-m" href="${esc(q.source)}" target="_blank" rel="noopener">${esc(host(q.source))}</a>`
+    : `<span class="body-m muted">${esc(q.source || '')}</span>`;
+  const badges = (q.verified ? `<span class="m3-status success">${sym('verified', '')}Verified</span>` : '') +
+                 (q.matched ? `<span class="m3-status info">Applies to you</span>` : '');
+  return `<blockquote class="quote"><q class="body-l">${esc(q.quote)}</q><div class="m3-row">${badges}${src}</div></blockquote>`;
 }
 
 function outcomeText(m) {
@@ -413,58 +491,195 @@ function outcomeText(m) {
   return bits.length ? bits.join(', ') : (o.next_step || 'Call finished');
 }
 
+function correctedBalance(m) {
+  if (m.done && m.done.now != null) return m.done.now;
+  return m.balances.length > 1 ? m.balances[m.balances.length - 1] : null;
+}
+function planOf(m) {
+  if (m.done && m.done.plan && m.done.plan.months > 0) return m.done.plan;
+  return m.plan && m.plan.months > 0 ? m.plan : null;
+}
+
+function rowStatusHTML(i, ds, m, draft) {
+  const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
+  const chip = (cls, text, extra = '') => `<span class="m3-status ${cls}">${extra}${text}</span>`;
+  const spin = '<span class="m3-spinner" aria-hidden="true"></span>';
+  if (m.callDeclined && !draft) {
+    if (i === 2) return '<span class="muted-status">Not approved</span>';
+    if (i === 3) return '<span class="muted-status">Skipped</span>';
+  }
+  if (i < ds) return DONE_ICON;
+  if (i === ds) {
+    if (m.error) return chip('error', 'Stopped');
+    if (i === 0) return draft ? chip('warn', 'Waiting for files') : chip('warn', 'Working…', spin);
+    if (i === 1) return chip('warn live', 'Investigating');
+    if (i === 2) return chip('warn live', 'Waiting for you');
+    if (i === 3) return chip('warn live', m.call ? 'On the call' : 'Dialing…');
+    if (m.done) return DONE_ICON;
+    if (planPending) return chip('warn live', 'Waiting for you');
+    if (m.callDeclined) return '';
+    return chip('warn', 'Working…', spin);
+  }
+  if (i === ds + 1 && !m.error) return chip('info', 'Next step');
+  return '';
+}
+
+function assistantLine(m, ds, draft, tab) {
+  const prov = m.bill ? m.bill.provider : (tab && !draft ? tab.name : 'the hospital');
+  const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
+  if (draft) return { text: 'Add your bill and insurance statement, and I’ll check what you actually owe.', chip: 'Voice agent ready' };
+  if (!tab) return { text: '', chip: 'Voice agent ready' };
+  if (m.error) return { text: 'I hit a problem: ' + m.error, chip: 'Stopped', cls: 'error' };
+  if (ds === 0) return { text: 'I’m reading your documents.', chip: 'Reviewing', cls: 'warn' };
+  if (ds === 1) {
+    const run = [...m.steps.auditor, ...m.steps.policy].filter((s) => s.status === 'running').pop();
+    return { text: run ? `I’m checking your ${prov} bill: ${run.label.toLowerCase()}…` : `I’m checking your ${prov} bill.`, chip: 'Reviewing', cls: 'warn' };
+  }
+  const saved = orig != null && now != null ? orig - now : 0;
+  const found = saved > 0 ? `I found ${money(saved)} ${prov} shouldn’t be charging you.` : '';
+  const ra = (m.review && m.review.auditor) || {}, rp = (m.review && m.review.policy) || {};
+  const reviewed = [ra.result && `Auditor: ${ra.result}`, rp.result && `Policy: ${rp.result}`].filter(Boolean).join('; ');
+  if (ds === 2) return { text: (found || (reviewed ? `I checked your bill. ${reviewed}.` : '')) + ` Want me to call ${prov} billing?`, chip: 'Voice agent ready' };
+  if (ds === 3) {
+    const mine = m.lines.filter((l) => l.who !== 'rep').pop();
+    const said = mine ? (mine.text.length > 180 ? mine.text.slice(0, 177).trimEnd() + '…' : mine.text) : '';
+    return { text: said ? `“${said}”` : `I’m dialing ${prov} billing.`, chip: 'On the call', cls: 'success', live: true };
+  }
+  // ds 4
+  if (m.callDeclined) return { text: `Okay, I didn’t call ${prov}.` + (found ? ' ' + found : ''), chip: 'Voice agent ready' };
+  const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
+  if (planPending) { const p = m.plan || {}; return { text: `The call is done. Want me to set up ${p.months} × ${money(p.monthly)}/mo with ${prov}?`, chip: 'Waiting for you', cls: 'warn' }; }
+  if (!m.done) return { text: `The call is done. ${outcomeText(m)}.`, chip: 'Wrapping up' };
+  const bits = [orig != null && now != null && now !== orig ? `Your ${prov} bill went from ${money(orig)} to ${money(now)}.` : `Your ${prov} balance is ${money(now)}.`];
+  if (m.done.case_number) bits.push(`Case ${m.done.case_number} is open.`);
+  if (m.done.refund) bits.push(`They owe you ${money(m.done.refund)} back.`);
+  if (m.followup) bits.push(`I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.`);
+  return { text: bits.join(' '), chip: 'Done', cls: 'success' };
+}
+
+function headline(m, ds, draft, tab) {
+  const prov = m.bill ? m.bill.provider : (tab && !draft ? tab.name : '');
+  if (draft) return ['Start a new case', 'Add your hospital bill and your insurance statement (EOB). Photos are fine.'];
+  if (!tab) return ['Loading your case…', ''];
+  if (m.error) return ['Something went wrong', prov];
+  if (ds === 0) return ['Reading your bill', prov];
+  if (ds === 1) return [`Reviewing your ${prov} bill`, 'Two agents are checking what you actually owe.'];
+  if (ds === 2) return ['Waiting for your OK', `BillBack is ready to call ${prov} billing${m.round > 1 ? ' again' : ''}.`];
+  if (ds === 3) return [`Calling ${prov}`, m.call ? phaseText(m) : 'Dialing…'];
+  const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
+  if (m.done) return ['Resolved', prov + (m.done.case_number ? ` · case ${m.done.case_number}` : '')];
+  if (planPending) return ['Waiting for your OK', `${prov} · one more decision: the payment plan.`];
+  if (m.callDeclined) return ['Call not approved', `You chose not to have BillBack call ${prov} yet.`];
+  return ['Wrapping up', prov];
+}
+
 function render() {
   renderTabs();
   const tab = state.tabs.find((t) => t.id === state.active);
   const draft = tab && tab.draft ? state.drafts[tab.id] : null;
   const m = draft ? blankModel() : model(state.active || '_');
-  const stage = draft || !tab ? 0 : stageOf(m);
+  const ds = rowStage(m, draft);
+  const prov = m.bill ? m.bill.provider : '';
+  const pa = m.approvals.planner;
+  const planPending = !!(pa && pa.resolved === undefined);
   $('hoodLink').href = tab && !draft ? `ops.html?id=${tab.id}` : 'ops.html';
   $('caseError').hidden = !m.error;
   $('caseError').textContent = m.error ? 'Something went wrong: ' + m.error : '';
-  setHTML($('caseWarnings'), m.warnings.map((w) => `<span>⚠ ${esc(w)}</span>`).join(''));
+  setHTML($('caseWarnings'), m.warnings.map((w) => `<span>${sym('warning', '')}${esc(w)}</span>`).join(''));
   const phoneUrl = tab && !draft ? `${location.origin}/approve.html?case=${tab.id}` : '';
   $('phoneApprove').href = phoneUrl || '#'; $('phoneApprove').textContent = phoneUrl;
 
+  // ---- TOP: headline, stats, what needs you ----
+  const [h, sub] = headline(m, ds, draft, tab);
+  setText($('caseTitle'), h); setText($('caseSub'), sub);
+  $('stats').hidden = !!draft;
+  $('uploadPanel').hidden = !draft;
+  const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
+  setText($('statOrig'), orig != null ? money(orig) : '—');
+  setText($('statOwe'), now != null ? money(now) : '—');
+  $('statOwe').classList.toggle('pending', now == null);
+  let support = 'Checking…';
+  if (m.bill && now != null && (m.review || ds > 1)) {
+    const parts = [], saved = orig - now, p = planOf(m);
+    parts.push(saved > 0 ? `Saves ${money(saved)}` : 'Same as the bill');
+    if (p) parts.push(`${p.months} × ${money(p.monthly)}/mo, interest-free`);
+    if (m.done && m.done.refund) parts.push(`+ ${money(m.done.refund)} back to you`);
+    support = parts.join(' · ');
+  } else if (m.error) support = '';
+  setText($('statOweSupport'), support);
+  $('approvalCard').hidden = !(tab && !draft && ds === 2 && !m.error);
+
+  // ---- Steps card: classes, statuses, expand state ----
+  const key = state.active || '_';
+  const ui = (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1 });
+  if (ds !== ui.last) {
+    if (ui.last >= 0 && !ui.touched.has(ui.last)) ui.open.delete(ui.last);
+    if (!draft && ds !== 2 && !(ds === 0 && !m.bill)) ui.open.add(ds);   // approval lives in the top card
+    ui.last = ds;
+  }
   document.querySelectorAll('.step').forEach((el) => {
     const i = +el.dataset.step;
-    el.classList.toggle('is-active', i === stage);
-    el.classList.toggle('is-done', i < stage);
-    el.classList.toggle('is-up', i > stage);
+    el.classList.toggle('is-active', i === ds);
+    el.classList.toggle('is-done', i < ds);
+    el.classList.toggle('is-up', i > ds);
+    setHTML($('status' + i), rowStatusHTML(i, ds, m, draft));
+    const open = ui.open.has(i);
+    const btn = el.querySelector('.row-btn');
+    if (btn.getAttribute('aria-expanded') !== String(open)) btn.setAttribute('aria-expanded', String(open));
+    $('detail' + i).hidden = !open;
   });
 
-  // 1 · Upload
+  // 1 · Read your bill (upload)
   const files = draft ? draft.files : [];
   setHTML($('fileList'), files.map((f, i) =>
-    `<li class="in">${ICON.file}<span>${esc(f.name)}</span><button type="button" class="ghost icon-btn" data-remove="${i}" aria-label="Remove file">${ICON.x}</button></li>`).join(''));
+    `<li class="in">${ICON.file}<span>${esc(f.name)}</span><button type="button" class="m3-icon-btn" data-remove="${i}" aria-label="Remove file">${ICON.x}</button></li>`).join(''));
   $('startBtn').disabled = !files.length || (draft && draft.sending);
-  if (m.bill) setHTML($('uploadSummary'), `<strong>${esc(m.bill.provider)}, ${money(m.bill.amount_due)}</strong> · ${esc(m.bill.notice || '')}<br><span class="small">${esc((m.docs || []).join(', '))}</span>`);
+  setText($('uploadLine'), m.bill ? `${prov} · ${money(m.bill.amount_due)} · ${(m.docs || []).length} document${(m.docs || []).length === 1 ? '' : 's'}`
+    : draft ? 'Add your bill and insurance statement' : tab ? 'Reading your documents…' : '');
+  setHTML($('uploadSummary'), m.bill
+    ? `<p><strong>${esc(prov)}, ${money(m.bill.amount_due)}</strong>${m.bill.notice ? ' · ' + esc(m.bill.notice) : ''}</p><p class="muted">${esc((m.docs || []).join(', '))}</p>`
+    : '<p class="muted">Waiting for your documents.</p>');
 
   // 2 · Review
-  $('reviewMeta').textContent = stage === 1 ? 'Two agents are on it' : '';
+  $('reviewMeta').textContent = ds === 1 && !m.error ? 'Two agents are on it' : '';
   setHTML($('agents'), renderAgent('auditor', 'Auditor', 'Finds what you actually owe', m) +
                        renderAgent('policy', 'Policy', 'Checks the charity-care policy', m));
   const ra = (m.review && m.review.auditor) || m.agent.auditor || {}, rp = (m.review && m.review.policy) || m.agent.policy || {};
+  const ares = ra.result || ra.summary, pres = rp.result || rp.summary;
+  setText($('reviewLine'), (ares || pres) ? `Auditor: ${ares || 'working…'} · Policy: ${pres || 'working…'}`
+    : ds >= 1 && m.bill ? 'Auditor and Policy are checking your bill' : 'Two agents check what you owe and the hospital’s policy');
+  $('reviewSummary').hidden = !(ares || pres);
   setHTML($('reviewSummary'),
-    `<dt>Auditor</dt><dd><b>${esc(ra.result || ra.summary || '')}</b> <span>· ${esc(ra.note || '')}</span></dd>` +
-    `<dt>Policy</dt><dd><b>${esc(rp.result || rp.summary || '')}</b> <span>· ${esc(rp.note || '')}</span>${policyQuote(m)}</dd>`);
+    `<dt>Auditor</dt><dd><b>${esc(ares || '')}</b>${ra.note ? ` <span>· ${esc(ra.note)}</span>` : ''}</dd>` +
+    `<dt>Policy</dt><dd><b>${esc(pres || '')}</b>${rp.note ? ` <span>· ${esc(rp.note)}</span>` : ''}</dd>`);
+  $('evidenceBox').hidden = !m.evidence.length;
+  setHTML($('evidenceList'), m.evidence.map((e) =>
+    `<li><span class="title-s">${esc(e.label)}</span><span class="body-l">${esc(e.value)}</span><span class="body-s ev-src">${esc(e.source || '')}</span></li>`).join(''));
+  const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
+  $('quoteBox').hidden = !quotes.some((q) => q.quote);
+  setHTML($('quoteList'), quotes.map(quoteHTML).join(''));
 
   // 3 · Approval
-  const am = $('approveMeta');
-  am.textContent = stage > 2 ? (m.callDeclined ? 'Not approved' : m.approvedAt) : stage === 2 ? 'Waiting on you' : '';
-  am.classList.toggle('attn', stage === 2);
-  $('approveProvider').textContent = m.bill ? m.bill.provider : '';
-  setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}${esc(q)}</li>`).join(''));
+  setText($('approveMeta'), ds > 2 || m.callDeclined ? (m.callDeclined ? 'You chose not to call yet' : `Accepted · ${m.approvedAt}`)
+    : ds === 2 ? 'Waiting on you · see above' : 'You decide before BillBack calls');
+  $('approveProvider').textContent = prov;
+  setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
+  setHTML($('askDone'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
   $('approveAgain').textContent = m.round > 1 ? 'again' : 'for you';
   $('callTitle').textContent = m.round > 1 ? 'Follow-up call' : 'Call billing';
   setHTML($('approveSummary'), m.callDeclined ? 'You chose not to call yet'
-    : `<span style="color:var(--green-ink);font-weight:600">Accepted</span> · you approved the call to ${esc(m.bill ? m.bill.provider : '')}`);
+    : ds > 2 ? `<span class="text-success" style="font-weight:500">Accepted</span> · you approved the call to ${esc(prov)}${m.asks.length ? '. On the call we asked to:' : ''}`
+    : ds === 2 ? 'Waiting for your OK in the card above.' : 'Nothing to approve yet.');
 
   // 4 · Call
   const end = m.callEnded || state.now;
   const el = m.call ? end - m.call.ts : 0;
-  $('callMeta').textContent = m.callEnded && m.call ? timer(el) : '';
-  $('callProvider').textContent = m.bill ? m.bill.provider : '';
+  const ended = !!(m.callEnded || m.done);
+  $('callMeta').textContent = m.callEnded && m.call ? `Call length ${timer(el)}` : '';
+  $('callProvider').textContent = prov;
+  $('callVerb').textContent = ended ? 'Called' : 'On the phone with';
+  $('liveDot').hidden = ended || !m.call;
+  $('liveRow').hidden = !m.call;
   $('callTimer').textContent = '· ' + timer(el);
   $('callPhase').textContent = phaseText(m);
   $('listenBtn').setAttribute('aria-pressed', m.listening ? 'true' : 'false');
@@ -473,21 +688,26 @@ function render() {
   const tk = state.active + '-call';
   setHTML($('transcript'), m.lines.map((l, i) => {
     const them = l.who === 'rep';
-    return `<p${fresh(tk, i)}><b class="${them ? 'them' : ''}">${them ? 'Billing' : 'BillBack'}</b>&nbsp; <span>${esc(l.text)}</span></p>`;
+    return `<div class="bubble-wrap ${them ? 'them' : 'me'}${i >= (seen[tk] || 0) ? ' in' : ''}"><span class="bubble-who">${them ? 'Billing' : 'BillBack'}</span><span class="m3-bubble ${them ? 'them' : 'me'}">${esc(l.text)}</span></div>`;
   }).join(''));
   seen[tk] = m.lines.length;
-  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}&hospital=${encodeURIComponent(m.bill ? m.bill.provider : '')}" target="_blank">open the billing-rep console</a>` : '');
+  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}&hospital=${encodeURIComponent(prov)}" target="_blank">open the billing-rep console</a>` : '');
   $('endCallBtn').hidden = !(m.call && !m.callEnded && !m.done);
-  $('callSummary').textContent = m.callDeclined ? 'No call made' : outcomeText(m);
+  $('callSummary').textContent = m.callDeclined ? 'No call made'
+    : m.call ? (m.callEnded ? `${outcomeText(m)} · ${timer(el)}` : `${phaseText(m)} · ${timer(el)}`)
+    : ds === 3 ? 'Dialing…' : 'BillBack calls billing for you';
 
   // 5 · Resolved
   const final = m.done ? m.done.now : m.balances[m.balances.length - 1];
   $('finalAmt').textContent = final != null ? money(final) : '';
   $('finalWas').textContent = m.bill ? money(m.bill.amount_due) : '';
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
+  $('finalTitle').textContent = m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
+  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${outcomeText(m)}` : planPending ? 'Payment plan waiting on you · see above'
+    : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund;
   $('finalNote').innerHTML = refund
-    ? `<b style="color:var(--green-ink,#2F5B34)">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
+    ? `<b class="text-success">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
     : 'We’ll check back once billing confirms your new balance.';
   const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
   $('followBox').hidden = !(m.done && fu);
@@ -497,9 +717,11 @@ function render() {
     $('followPromised').textContent = lastCall && lastCall.promised.length
       ? `${lastCall.rep || 'Billing'} promised: ${lastCall.promised.join('; ')}${lastCall.timeframe_text ? ' (' + lastCall.timeframe_text + ')' : ''}.` : '';
   }
-  const pa = m.approvals.planner;
   const showPlan = m.plan && m.plan.months > 0;
   $('planBox').hidden = !showPlan;
+  const slot = planPending ? $('planSlotTop') : $('planSlotFinal');
+  if ($('planBox').parentNode !== slot) slot.appendChild($('planBox'));
+  $('planBox').classList.toggle('attn-card', planPending);
   if (showPlan) {
     const p = m.plan;
     $('planText').innerHTML = m.planDecided === true
@@ -508,8 +730,15 @@ function render() {
         : `✓ Plan saved: <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free. ${esc(p.reason || '')}`)
       : m.planDecided === false ? 'No plan set up. You can pay the balance whenever you’re ready.'
       : `Pay what's left as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free? ${esc(p.reason || '')}`;
-    $('planYes').hidden = $('planNo').hidden = !(pa && pa.resolved === undefined);
+    $('planYes').hidden = $('planNo').hidden = $('planYes').parentNode.hidden = !(pa && pa.resolved === undefined);
   }
+
+  // ---- BillBack Assistant ----
+  const a = assistantLine(m, ds, draft, tab);
+  setText($('asstQuote'), a.text);
+  setText($('asstChip'), a.chip);
+  $('asstChip').className = 'm3-status' + (a.cls ? ' ' + a.cls : '') + (a.live ? ' live' : '');
+  $('asstWave').classList.toggle('live', !!a.live);
 }
 
 // ---------- data ----------
@@ -556,6 +785,14 @@ $('tabList').addEventListener('click', (e) => {
   const t = state.tabs.find((x) => x.id === b.dataset.tab);
   if (t.draft) { state.active = t.id; if (state.ws) { state.ws.onclose = null; state.ws.close(); state.ws = null; } render(); } else openCase(t.id);
 });
+document.querySelector('.steps').addEventListener('click', (e) => {
+  const b = e.target.closest('.row-btn'); if (!b) return;
+  const i = +b.closest('.step').dataset.step;
+  const ui = (state.ui[state.active || '_'] ||= { open: new Set(), touched: new Set(), last: -1 });
+  ui.touched.add(i);
+  if (ui.open.has(i)) ui.open.delete(i); else ui.open.add(i);
+  render();
+});
 $('newCase').addEventListener('click', newDraft);
 const addFiles = (list) => { const d = state.drafts[state.active]; if (d) { d.files = d.files.concat([...(list || [])]); render(); } };
 $('fileInput').addEventListener('change', (e) => { addFiles(e.target.files); e.target.value = ''; });
@@ -576,7 +813,8 @@ $('startBtn').addEventListener('click', () => { const d = state.drafts[state.act
 $('voiceSel').addEventListener('change', () => {
   if (state.active && state.active !== 'replay') fetch(`/api/cases/${state.active}/voice`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ voice_id: $('voiceSel').value }) });
 });
-$('voicePlay').addEventListener('click', async () => {
+$('voicePlay').addEventListener('click', async (e) => {
+  e.preventDefault();
   const r = await fetch('/api/voices/sample', { method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: 'Hi, this is an automated assistant calling about claim C-2026-0815-44917 and an ondansetron charge of $440.', voice_id: $('voiceSel').value }) });
   if (r.ok) new Audio(URL.createObjectURL(await r.blob())).play();
@@ -592,6 +830,7 @@ $('callAgainBtn').addEventListener('click', async () => {
   try { await fetch(`/api/cases/${state.active}/call-again`, { method: 'POST' }); } finally { $('callAgainBtn').disabled = false; }
 });
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
+window.addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
 setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.active]; if (m && m.call && !m.callEnded) render(); }, 500);
 setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);

@@ -4,115 +4,113 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BillBack — Cases</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="m3.css">
 <!--
   Case dashboard: every saved case (data/cases/), its balance, calls, the follow-up BillBack scheduled and
   when it's due. Polls /api/dashboard. Per-case actions: Ask BillBack (/ask), Call again (/call-again, which
   waits on the patient's approval on the case page), and a demo clock (/clock) to make a follow-up come due.
 -->
 <style>
-  :root{
-    --accent:#BE3337; --tint:#FDECEC; --ink:#1A1A1E; --ink-2:#333338; --muted:#4D4D55; --muted-2:#6B6B73;
-    --green:#3F7A45; --green-ink:#2F5B34; --green-bg:#F3F8F3; --green-line:#B9D2BB; --amber:#8A4B08; --amber-bg:#FFF5E6; --amber-dot:#D98A1A;
-    --line:#EEE7E7; --hair:#F1E6E6; --border:#EBD5D5; --ease:cubic-bezier(.2,.8,.2,1);
+  /* shared top app bar layout (wraps the tabs under the brand on phones) */
+  .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
+  @media (max-width: 720px) { .m3-top-app-bar .m3-tabs { order: 2; flex-basis: 100%; margin: 0 -16px; padding: 0 8px; gap: 0; } .m3-top-app-bar .m3-tab { padding: 0 10px; } }
+
+  .hero h1 { margin: 8px 0 4px; }
+  .hero p { margin: 0; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 760px) { .stats { grid-template-columns: 1fr; gap: 12px; } .stats .m3-card { padding: 14px 20px; } .stats .stat-value { font-size: 28px; line-height: 36px; } }
+  .section-title { margin: 16px 0 0; }
+
+  .attn .m3-card-title { font-size: 18px; line-height: 24px; }
+  .attn-row { width: calc(100% + 32px); background: none; border: 0; text-align: left; font: inherit; color: inherit; }
+  .attn-row .li-trailing .material-symbols-rounded { font-size: 20px; }
+
+  #cases { display: flex; flex-direction: column; gap: 12px; }
+  .case { padding: 0; overflow: hidden; }
+  .case.overdue { border-color: var(--st-warn); }
+  .case-head {
+    width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; text-align: left;
+    background: none; border: 0; color: inherit; font: inherit; cursor: pointer; border-radius: 0;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:#FFFFFF;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
-  a{color:var(--ink)} a:hover{color:var(--accent)}
-  button,input{font:inherit}
-  button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  header{border-bottom:1px solid var(--hair)}
-  .bar{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
-  .logo b{font-size:18px;font-weight:800;letter-spacing:-.02em} .logo b span{color:var(--accent)}
-  .bar nav{display:flex;flex-wrap:wrap}
-  .bar nav a{padding:12px;font-size:15px;font-weight:500;text-decoration:none}
-  .bar nav a[aria-current="page"]{font-weight:700;color:var(--accent)}
+  .case-head:focus-visible { outline-offset: -3px; border-radius: var(--md-shape-l); }
+  .ch-top { display: flex; align-items: flex-start; gap: 12px; }
+  .ch-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .ch-who b { font: 500 18px/24px var(--md-font); letter-spacing: 0; overflow-wrap: anywhere; }
+  .ch-who span { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .ch-right { flex: none; display: flex; align-items: center; gap: 4px; }
+  .chev { color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
+  .case-head[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .ch-money { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-variant-numeric: tabular-nums; }
+  .ch-money .from { font: 400 16px/24px var(--md-font); color: var(--md-on-surface-variant); }
+  .ch-money .arrow { font-size: 18px; color: var(--md-on-surface-variant); align-self: center; }
+  .ch-money .now { font: 700 28px/36px var(--md-font); letter-spacing: -.3px; }
+  .ch-money .now.down { color: var(--st-money); }
+  .ch-money .back { font: 500 14px/20px var(--md-font); color: var(--st-money); }
+  .ch-next { display: flex; align-items: flex-start; gap: 8px; }
+  .ch-next .nx { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .ch-next .material-symbols-rounded { margin-top: 1px; }
+  .ch-next { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .ch-next .material-symbols-rounded { font-size: 18px; }
+  .ch-next .act { color: var(--md-on-surface); font-weight: 500; }
 
-  main{max-width:880px;margin:0 auto;padding:40px 16px 80px}
-  h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em}
-  .sub{margin:6px 0 28px;font-size:16px;color:var(--muted);line-height:1.5}
-  .empty{border:1.5px dashed #E3C4C5;border-radius:16px;padding:36px 20px;text-align:center;color:var(--muted);font-size:16px}
-  .empty a{color:var(--accent);font-weight:700}
-  #cases{display:flex;flex-direction:column;gap:20px}
+  .case-body { padding: 4px 20px 20px; border-top: 1px solid var(--md-outline-variant); display: flex; flex-direction: column; gap: 20px; }
+  .tl { display: flex; flex-direction: column; gap: 16px; }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; }
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font: 400 14px/20px var(--md-font); }
+  .facts dt { color: var(--md-on-surface-variant); }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .sub-h { margin: 0 0 2px; }
+  .case-body .m3-list-item { min-height: 48px; padding: 10px 0; }
+  .case-body .li-leading .material-symbols-rounded { font-size: 20px; }
+  .none { margin: 4px 0 0; font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
 
-  .card{border:1px solid var(--border);border-radius:20px;padding:22px;background:#FFFFFF;box-shadow:0 12px 32px -24px rgba(150,40,45,.35)}
-  .card.overdue{border-color:#E3A3A5;box-shadow:0 0 0 4px var(--tint)}
-  .top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 20px}
-  .who b{display:block;font-size:19px;font-weight:700;letter-spacing:-.01em}
-  .who span{font-size:14px;color:var(--muted-2)}
-  .pill{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 12px;border-radius:999px;background:#F6F1F1;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
-  .pill.green{background:var(--green-bg);color:var(--green-ink)} .pill.amber{background:var(--amber-bg);color:var(--amber)} .pill.red{background:var(--tint);color:#9E2A2E}
-  .dot{width:7px;height:7px;border-radius:999px;background:#C4C4CA;flex:none}
-  .dot.live{background:var(--accent);animation:live 1.6s infinite} .dot.amber{background:var(--amber-dot)} .dot.green{background:var(--green)}
-  .money{margin-top:16px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
-  .money b{font-size:44px;line-height:1;font-weight:700;letter-spacing:-.04em;color:var(--accent)}
-  .money s{font-size:18px;color:var(--muted-2)}
-  .money .back{font-size:15px;font-weight:700;color:var(--green-ink)}
-  .facts{margin:16px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:15px;line-height:1.5}
-  .facts dt{color:var(--muted-2)} .facts dd{margin:0;min-width:0;overflow-wrap:anywhere} .facts dd span{color:var(--muted-2)}
-  .next{margin-top:18px;border-radius:16px;padding:14px 16px;background:#FBF7F7;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
-  .next.overdue{background:var(--tint)} .next.done{background:var(--green-bg)}
-  .next .what{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 300px}
-  .next .what b{font-size:16px;font-weight:600;line-height:1.4}
-  .next .what span{font-size:14px;color:var(--muted-2)}
-  .badge{display:inline-block;margin-left:6px;padding:2px 9px;border-radius:999px;background:var(--accent);color:#FFFFFF;font-size:11.5px;font-weight:800;letter-spacing:.04em;vertical-align:2px}
-  .badge.today{background:var(--amber-dot)}
-  .actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
-  .primary{min-height:44px;padding:0 20px;border:0;border-radius:999px;background:var(--accent);color:#FFFFFF;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
-  .primary:hover{color:#FFFFFF} .primary:disabled{background:#E8C4C5;cursor:default}
-  .secondary{min-height:44px;padding:0 18px;border:1.5px solid #E3C4C5;border-radius:999px;background:#FFFFFF;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
-  .secondary:hover{background:#FFF8F8}
+  .ask { display: flex; flex-direction: column; gap: 10px; }
+  .ask-row { display: flex; gap: 8px; align-items: center; }
+  .ask-row .m3-input { min-height: 48px; flex: 1; min-width: 0; }
+  .ask-row .m3-input.pill:focus { border: 2px solid var(--md-primary); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips .m3-chip { height: 40px; }
+  .answer { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: var(--md-shape-l); background: var(--md-surface-container-low); }
+  .answer:empty { display: none; }
+  .answer .avatar { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--md-primary-container); color: var(--md-on-primary-container); }
+  .answer .avatar .material-symbols-rounded { font-size: 20px; }
+  .answer p { margin: 4px 0 0; font: 400 15px/22px var(--md-font); letter-spacing: .25px; min-width: 0; overflow-wrap: anywhere; }
+  .answer small { display: block; margin-top: 4px; font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
 
-  details{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
-  summary{cursor:pointer;min-height:36px;display:flex;align-items:center;font-size:14px;font-weight:600;color:var(--muted)}
-  .timeline{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
-  .timeline li{display:flex;gap:12px}
-  .timeline .tdot{width:10px;height:10px;margin-top:6px;flex:none;border-radius:999px;background:var(--green)}
-  .timeline .tbody{display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.5;min-width:0}
-  .timeline .tbody span{color:var(--muted-2);font-size:14px}
+  .clock { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; border-radius: var(--md-shape-m); border: 1px dashed var(--md-outline-variant); font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .clock b { color: var(--md-on-surface); font-weight: 500; }
+  .clock .lbl { flex-basis: 100%; }
+  .clock .lbl .material-symbols-rounded { font-size: 18px; vertical-align: -4px; margin-right: 6px; }
+  @media (min-width: 720px) { .clock .lbl { flex-basis: auto; margin-right: 4px; } }
+  .clock .m3-chip { height: 40px; }
 
-  .ask{margin-top:16px;display:flex;flex-direction:column;gap:10px}
-  .ask-row{display:flex;gap:8px;border:1px solid var(--border);border-radius:999px;padding:5px 5px 5px 16px;align-items:center}
-  .ask-row:focus-within{border-color:#E9A9AB;box-shadow:0 0 0 4px rgba(190,51,55,.10)}
-  .ask-row input{flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:15px;color:var(--ink);padding:8px 0}
-  .ask-row button{min-height:38px;padding:0 16px;border:0;border-radius:999px;background:var(--accent);color:#FFFFFF;font-weight:700;font-size:14px;cursor:pointer}
-  .ask-row button:disabled{background:#E8C4C5}
-  .answer{display:flex;align-items:flex-start;gap:12px}
-  .answer:empty{display:none}
-  .avatar{width:28px;height:28px;flex:none;border-radius:999px;background:var(--accent);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
-  .answer p{margin:3px 0 0;font-size:15.5px;line-height:1.6}
-  .answer small{display:block;margin-top:4px;color:var(--muted-2);font-size:12px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{min-height:32px;padding:0 12px;border:1px solid var(--border);border-radius:999px;background:#FFFFFF;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer}
-  .chip:hover{background:#FFF8F8}
-
-  .clock{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13px;color:var(--muted-2)}
-  .clock b{color:var(--ink-2);font-weight:600}
-  .clock button{min-height:32px;padding:0 10px;border:1px dashed #D9C3C4;border-radius:999px;background:#FFFFFF;color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer}
-  .clock button:hover{background:#FFF8F8}
-  .dim{color:var(--muted-2)}
-  @keyframes live{0%{box-shadow:0 0 0 0 rgba(190,51,55,.5)}70%{box-shadow:0 0 0 7px rgba(190,51,55,0)}100%{box-shadow:0 0 0 0 rgba(190,51,55,0)}}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
-  @media (max-width:560px){ .card{padding:18px} .money b{font-size:36px} h1{font-size:26px} .facts{grid-template-columns:1fr;gap:0 0} .facts dt{margin-top:6px} }
+  .empty { text-align: center; padding: 40px 24px; }
+  .empty .material-symbols-rounded { font-size: 40px; color: var(--md-primary); }
+  .empty p { margin: 8px 0 16px; color: var(--md-on-surface-variant); }
+  @media (max-width: 560px) {
+    .case-head { padding: 16px; } .case-body { padding: 4px 16px 16px; }
+    .facts { grid-template-columns: 1fr; gap: 0; } .facts dt { margin-top: 6px; }
+    .ask-row .m3-btn { padding: 0 16px; }
+  }
 </style>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <a href="/" class="logo" aria-label="BillBack home">
-      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <b>Bill<span>Back</span></b>
-    </a>
-    <nav aria-label="Main"><a href="/">Chat</a><a href="dashboard.html" aria-current="page">Cases</a><a href="case.html">Live case</a><a href="ops.html">Under the hood</a></nav>
-  </div>
+<header class="m3-top-app-bar">
+  <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">New case</a><a class="m3-tab" href="dashboard.html" aria-current="page">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 
-<main>
-  <h1>Your cases</h1>
-  <p class="sub">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+<main class="m3-page m3-stack">
+  <div class="hero">
+    <h1 class="headline-l">Your billing, handled.</h1>
+    <p class="body-l muted">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+  </div>
+  <div class="stats" id="stats" hidden></div>
+  <section class="m3-card attn" id="attention" aria-labelledby="attnTitle" hidden></section>
+  <h2 class="title-l section-title" id="casesTitle" hidden>All cases</h2>
   <div id="cases" aria-live="polite"></div>
 </main>
 
@@ -122,96 +120,177 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 const money = (n) => '$' + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
 const day = (iso) => { if (!iso) return ''; const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); };
 const setHTML = (el, html) => { if (el._html !== html) { el.innerHTML = html; el._html = html; } };
+const icon = (name, cls = '') => `<span class="material-symbols-rounded ${cls}" aria-hidden="true">${name}</span>`;
 const STATUS = {
-  created: ['Starting', 'live'], reviewing: ['Reviewing', 'live'], awaiting_call_approval: ['Needs your OK', 'amber'],
-  calling: ['On a call', 'live'], planning: ['Planning', 'live'], done: ['Resolved', 'green'],
-  interrupted: ['Interrupted', ''], error: ['Error', 'red'],
+  created: ['Starting', 'info live'], reviewing: ['Reviewing', 'info live'], awaiting_call_approval: ['Needs your OK', 'warn'],
+  calling: ['On a call', 'info live'], planning: ['Planning', 'info live'], done: ['Resolved', 'success'],
+  interrupted: ['Interrupted', ''], error: ['Error', 'error'],
 };
 const cards = {};
 
+function statusChip(c) {
+  if (c.next && c.next.overdue) return `<span class="m3-status warn">${icon('schedule')}Follow-up overdue</span>`;
+  const [label, cls] = STATUS[c.status] || [c.status, ''];
+  return `<span class="m3-status ${cls}">${esc(label)}</span>`;
+}
+
 function when(n) {
   if (!n.due) return '';
-  if (n.overdue) return `Was due ${day(n.due)}<span class="badge">OVERDUE</span>`;
-  if (n.due_today) return `Due today, ${day(n.due)}<span class="badge today">TODAY</span>`;
-  if (n.days_left != null) return `By ${day(n.due)} · in ${n.days_left} day${n.days_left === 1 ? '' : 's'}`;
-  return day(n.due);
+  if (n.overdue) return `<span>Was due ${day(n.due)}</span><span class="m3-status warn">Overdue</span>`;
+  if (n.due_today) return `<span>Due today, ${day(n.due)}</span><span class="m3-status info">Today</span>`;
+  if (n.days_left != null) return `<span>By ${day(n.due)} · in ${n.days_left} day${n.days_left === 1 ? '' : 's'}</span>`;
+  return `<span>${day(n.due)}</span>`;
 }
 
-function mainHTML(c) {
-  const [label, dot] = STATUS[c.status] || [c.status, ''];
-  const n = c.next || {}, last = c.last_call;
-  const pillCls = c.next.overdue ? 'red' : dot === 'green' ? 'green' : dot === 'amber' ? 'amber' : '';
-  const facts = [
-    `<dt>Case number</dt><dd>${c.case_number ? `<b>${esc(c.case_number)}</b>` : '<span>none yet</span>'}</dd>`,
-    `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}<br><span>${esc(last.summary || '')}</span>` : '<span>not called yet</span>'}</dd>`,
-  ];
-  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${c.plan.months} × ${money(c.plan.monthly)}/mo <span>interest-free</span></dd>`);
-  const nextCls = n.overdue ? 'overdue' : (!n.due && c.status === 'done') ? 'done' : '';
+function needsYou(c) {
+  const n = c.next || {};
+  if (c.status === 'awaiting_call_approval') return ['Approve the call', 'warn'];
+  if (n.overdue) return ['Overdue', 'warn'];
+  if (n.due_today) return ['Due today', 'info'];
+  if (c.status === 'error') return ['Error', 'error'];
+  return null;
+}
+
+/* collapsed row: hospital and patient, status, billed -> now, next action with its due date */
+function headHTML(c) {
+  const n = c.next || {};
+  const down = c.current_balance < c.original;
+  return `<span class="ch-top">
+      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)} · opened ${day(c.created)}</span></span>
+      <span class="ch-right">${statusChip(c)}${icon('expand_more', 'chev')}</span>
+    </span>
+    <span class="ch-money">${c.current_balance !== c.original
+        ? `<span class="from">${money(c.original)} billed</span>${icon('arrow_forward', 'arrow')}<span class="now ${down ? 'down' : ''}">${money(c.current_balance)}</span>`
+        : `<span class="now">${money(c.current_balance)}</span><span class="from">billed</span>`}
+      ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}</span>
+    <span class="ch-next">${icon(n.overdue ? 'warning' : 'event')}<span class="nx"><span class="act">Next: ${esc(n.action || '')}</span>${when(n)}</span></span>`;
+}
+
+function actsHTML(c) {
+  const n = c.next || {};
   const needsOk = c.status === 'awaiting_call_approval';
-  const btn = needsOk ? `<a class="primary" href="case.html?id=${c.id}">Approve on the case page</a>`
-    : c.can_call_again ? `<button type="button" class="${n.overdue || n.due_today ? 'primary' : 'secondary'}" data-call="${c.id}">Call again</button>` : '';
-  return `
-    <div class="top">
-      <div class="who"><b>${esc(c.provider)}</b><span>${esc(c.patient)} · opened ${day(c.created)}</span></div>
-      <span class="pill ${pillCls}"><span class="dot ${dot}"></span>${n.overdue ? 'Follow-up overdue' : label}</span>
-    </div>
-    <div class="money"><b>${money(c.current_balance)}</b>${c.current_balance !== c.original ? `<s>${money(c.original)}</s>` : '<span class="dim">billed</span>'}
-      ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}</div>
-    <dl class="facts">${facts.join('')}</dl>
-    <div class="next ${nextCls}">
-      <div class="what"><b>Next: ${esc(n.action || '')}</b><span>${when(n)}</span></div>
-      <div class="actions">${btn}<a class="secondary" href="case.html?id=${c.id}">Open case</a></div>
-    </div>`;
+  const btn = needsOk ? `<a class="m3-btn filled" href="case.html?id=${c.id}">${icon('how_to_reg')}Approve on the case page</a>`
+    : c.can_call_again ? `<button type="button" class="m3-btn ${n.overdue || n.due_today ? 'filled' : 'tonal'}" data-call="${c.id}">${icon('call')}Call again</button>` : '';
+  return `${btn}<a class="m3-btn outlined" href="case.html?id=${c.id}">${icon('open_in_new')}Open case page</a>`;
 }
 
-function timelineHTML(c) {
-  if (!c.calls.length) return '<p class="dim" style="margin:6px 0 0;font-size:14px">No calls yet.</p>';
-  const items = c.calls.map((x) => `<li><span class="tdot"></span><div class="tbody">
-      <b>${day(x.date)} · ${x.kind === 'followup' ? 'Follow-up call' : 'Call'} with ${esc(x.rep || 'billing')}${x.case_number ? ` · case ${esc(x.case_number)}` : ''}</b>
-      <span>${esc(x.summary || '')}</span>
-      ${x.promised.length ? `<span>Promised: ${esc(x.promised.join('; '))}${x.timeframe_text ? ` (${esc(x.timeframe_text)})` : ''}</span>` : ''}
-      ${x.follow_up_date && x.promised.length ? `<span>Check back by ${day(x.follow_up_date)}${x.timeframe_assumed ? ' (no timeframe given; default 5 business days)' : ''}</span>` : ''}
-    </div></li>`);
-  const fu = c.followups.filter((f) => f.status === 'done').map((f) => `<li><span class="tdot" style="background:var(--muted-2)"></span><div class="tbody"><span>Follow-up from ${day(f.created)} closed by the call on ${day(f.closed)}</span></div></li>`);
-  return `<ul class="timeline">${items.concat(fu).join('')}</ul>`;
+/* expanded details: facts, calls, promises, follow-ups */
+function detailHTML(c) {
+  const last = c.last_call;
+  const facts = [
+    `<dt>Case number</dt><dd>${c.case_number ? `<b>${esc(c.case_number)}</b>` : '<span class="muted">none yet</span>'}</dd>`,
+    `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}` : '<span class="muted">not called yet</span>'}</dd>`,
+  ];
+  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${c.plan.months} × ${money(c.plan.monthly)}/mo <span class="muted">interest-free</span></dd>`);
+
+  const calls = c.calls.length ? `<ul class="m3-list">${c.calls.map((x) => `<li class="m3-list-item">
+      <span class="li-leading">${icon('call')}</span>
+      <span class="li-text"><span class="li-headline">${day(x.date)} · ${x.kind === 'followup' ? 'Follow-up call' : 'Call'} with ${esc(x.rep || 'billing')}${x.case_number ? ` · case ${esc(x.case_number)}` : ''}</span>
+      <span class="li-support" style="display:block">${esc(x.summary || '')}</span></span></li>`).join('')}</ul>`
+    : '<p class="none">No calls yet.</p>';
+
+  const promised = c.calls.flatMap((x) => (x.promised || []).map((p) => ({ p, x })));
+  const promises = promised.length ? `<ul class="m3-list">${promised.map(({ p, x }) => `<li class="m3-list-item">
+      <span class="li-leading">${icon('handshake')}</span>
+      <span class="li-text"><span class="li-headline">${esc(p)}</span>
+      <span class="li-support" style="display:block">${esc(x.rep || 'Billing')} on ${day(x.date)}${x.timeframe_text ? ` · ${esc(x.timeframe_text)}` : ''}${x.follow_up_date ? ` · check back by ${day(x.follow_up_date)}${x.timeframe_assumed ? ' (no timeframe given; default 5 business days)' : ''}` : ''}</span></span></li>`).join('')}</ul>`
+    : '<p class="none">No promises recorded yet.</p>';
+
+  const fus = c.followups.length ? `<ul class="m3-list">${c.followups.map((f) => {
+      const done = f.status === 'done';
+      const overdue = !done && c.next && c.next.overdue && c.next.due === f.due;
+      const chip = done ? `<span class="m3-status success">${icon('check')}Done</span>` : overdue ? '<span class="m3-status warn">Overdue</span>' : '<span class="m3-status info">Scheduled</span>';
+      return `<li class="m3-list-item">
+        <span class="li-text"><span class="li-headline">${esc(f.action || 'Follow-up')}</span>
+        <span class="li-support" style="display:block">${done ? `Set ${day(f.created)} · closed by the call on ${day(f.closed)}` : `Set ${day(f.created)} · due ${day(f.due)}`}</span></span>
+        <span class="li-trailing">${chip}</span></li>`; }).join('')}</ul>`
+    : '<p class="none">No follow-ups scheduled.</p>';
+
+  return `<dl class="facts">${facts.join('')}</dl>
+    <div><h3 class="title-m sub-h">Calls</h3>${calls}</div>
+    <div><h3 class="title-m sub-h">Promises</h3>${promises}</div>
+    <div><h3 class="title-m sub-h">Follow-ups</h3>${fus}</div>`;
 }
 
 function clockHTML(c) {
-  return `Case clock: <b>${day(c.today)}</b>${c.clock_days ? ` (+${c.clock_days} day${c.clock_days === 1 ? '' : 's'} simulated)` : ''}
-    <button type="button" data-clock="1" data-id="${c.id}">+1 day</button>
-    <button type="button" data-clock="7" data-id="${c.id}">+1 week</button>
-    ${c.next && c.next.due && !c.next.overdue ? `<button type="button" data-clock="due" data-id="${c.id}">Skip past due date</button>` : ''}
-    ${c.clock_days ? `<button type="button" data-clock="reset" data-id="${c.id}">Reset</button>` : ''}`;
+  return `<span class="lbl">${icon('schedule')}Demo clock: <b>${day(c.today)}</b>${c.clock_days ? ` (+${c.clock_days} day${c.clock_days === 1 ? '' : 's'} simulated)` : ''}</span>
+    <button type="button" class="m3-chip" data-clock="1" data-id="${c.id}">+1 day</button>
+    <button type="button" class="m3-chip" data-clock="7" data-id="${c.id}">+1 week</button>
+    ${c.next && c.next.due && !c.next.overdue ? `<button type="button" class="m3-chip" data-clock="due" data-id="${c.id}">Skip past due date</button>` : ''}
+    ${c.clock_days ? `<button type="button" class="m3-chip" data-clock="reset" data-id="${c.id}">Reset</button>` : ''}`;
 }
 
 function ensureCard(c) {
   if (cards[c.id]) return cards[c.id];
   const el = document.createElement('article');
-  el.className = 'card'; el.id = 'case-' + c.id;
-  el.innerHTML = `<div class="main"></div>
-    <div class="ask">
-      <form class="ask-row" data-ask="${c.id}"><input name="q" type="text" placeholder="Ask BillBack about this case…" aria-label="Ask BillBack about this case" autocomplete="off"><button type="submit">Ask</button></form>
-      <div class="chips"><button type="button" class="chip" data-q="What's the status?">What's the status?</button><button type="button" class="chip" data-q="When will you check back?">When will you check back?</button><button type="button" class="chip" data-q="How much do I owe now?">How much do I owe now?</button></div>
-      <div class="answer" aria-live="polite"></div>
-    </div>
-    <details><summary>Call history</summary><div class="tl"></div></details>
-    <div class="clock"></div>`;
+  el.className = 'm3-card case card'; el.id = 'case-' + c.id;
+  el.innerHTML = `<button type="button" class="case-head" aria-expanded="false" aria-controls="body-${c.id}"><span class="main"></span></button>
+    <div class="case-body" id="body-${c.id}" hidden>
+      <div class="acts"></div>
+      <div class="tl"></div>
+      <div class="ask">
+        <h3 class="title-m sub-h">Ask BillBack</h3>
+        <form class="ask-row" data-ask="${c.id}"><input class="m3-input pill" name="q" type="text" placeholder="Ask about this case…" aria-label="Ask BillBack about this case" autocomplete="off"><button type="submit" class="m3-btn filled">Ask</button></form>
+        <div class="chips"><button type="button" class="m3-chip" data-q="What's the status?">What's the status?</button><button type="button" class="m3-chip" data-q="When will you check back?">When will you check back?</button><button type="button" class="m3-chip" data-q="How much do I owe now?">How much do I owe now?</button></div>
+        <div class="answer" aria-live="polite"></div>
+      </div>
+      <div class="clock"></div>
+    </div>`;
   $('cases').appendChild(el);
   return (cards[c.id] = el);
 }
 
+function setOpen(el, open) {
+  el.querySelector('.case-head').setAttribute('aria-expanded', String(open));
+  el.querySelector('.case-body').hidden = !open;
+}
+
+function summaryHTML(list) {
+  const billed = list.reduce((a, c) => a + (c.original || 0), 0);
+  const now = list.reduce((a, c) => a + (c.current_balance || 0), 0);
+  const back = list.reduce((a, c) => a + (c.refund || 0), 0);
+  const saved = Math.max(0, billed - now);
+  const resolved = list.filter((c) => c.status === 'done').length;
+  return `<div class="m3-card m3-stat"><span class="stat-label">Total billed</span><span class="stat-value">${money(billed)}</span><span class="stat-support">Across ${list.length} case${list.length === 1 ? '' : 's'}</span></div>
+    <div class="m3-card m3-stat"><span class="stat-label">Now owed</span><span class="stat-value">${money(now)}</span><span class="stat-support">${resolved} resolved</span></div>
+    <div class="m3-card success m3-stat"><span class="stat-label">Saved</span><span class="stat-value">${money(saved)}</span><span class="stat-support">${back ? `Including ${money(back)} back to you` : 'Off the original bills'}</span></div>`;
+}
+
+function attentionHTML(list) {
+  const rows = list.map((c) => [c, needsYou(c)]).filter(([, w]) => w);
+  let body;
+  if (rows.length) {
+    body = rows.map(([c, [label, cls]]) => `<li><button type="button" class="m3-list-item interactive attn-row" data-goto="${c.id}">
+        <span class="li-text"><span class="li-headline" style="display:block">${esc(c.provider)} · ${esc(c.patient)}</span><span class="li-support" style="display:block">${esc((c.next || {}).action || '')}</span></span>
+        <span class="li-trailing"><span class="m3-status ${cls}">${esc(label)}</span>${icon('chevron_right')}</span></button></li>`).join('');
+  } else {
+    const soon = list.filter((c) => c.next && c.next.due).sort((a, b) => a.next.due.localeCompare(b.next.due))[0];
+    body = `<li class="m3-list-item"><span class="li-text"><span class="li-headline" style="display:block">Nothing needs you right now</span><span class="li-support" style="display:block">BillBack will flag it here when a follow-up comes due.</span></span><span class="li-trailing">${icon('check_circle', 'm3-check icon-fill')}</span></li>` +
+      (soon ? `<li><button type="button" class="m3-list-item interactive attn-row" data-goto="${soon.id}"><span class="li-text"><span class="li-headline" style="display:block">Next check-back: ${day(soon.next.due)}</span><span class="li-support" style="display:block">${esc(soon.provider)} · ${esc(soon.next.action)}</span></span><span class="li-trailing"><span class="m3-status info">Next step</span>${icon('chevron_right')}</span></button></li>` : '');
+  }
+  return `<h2 class="m3-card-title" id="attnTitle">${rows.length ? `Needs you (${rows.length})` : 'Needs you'}</h2><ul class="m3-list">${body}</ul>`;
+}
+
 function render(list) {
-  if (!list.length) { Object.keys(cards).forEach((id) => delete cards[id]); setHTML($('cases'), '<div class="empty">No cases yet. <a href="/">Start one</a> and BillBack will keep track of every call and follow-up here.</div>'); return; }
+  const has = list.length > 0;
+  $('stats').hidden = $('attention').hidden = $('casesTitle').hidden = !has;
+  if (!has) { Object.keys(cards).forEach((id) => delete cards[id]); setHTML($('cases'), `<div class="m3-card empty">${icon('receipt_long')}<p>No cases yet. Start one and BillBack will keep track of every call and follow-up here.</p><a class="m3-btn filled" href="/">Start a case</a></div>`); return; }
   if ($('cases').querySelector('.empty')) { $('cases').innerHTML = ''; $('cases')._html = null; }
+  setHTML($('stats'), summaryHTML(list));
+  setHTML($('attention'), attentionHTML(list));
   const ids = new Set(list.map((c) => c.id));
   Object.keys(cards).forEach((id) => { if (!ids.has(id)) { cards[id].remove(); delete cards[id]; } });
   list.forEach((c, i) => {
+    const fresh = !cards[c.id];
     const el = ensureCard(c);
     if ($('cases').children[i] !== el) $('cases').insertBefore(el, $('cases').children[i] || null);
     el.classList.toggle('overdue', !!(c.next && c.next.overdue));
     el._case = c;
-    setHTML(el.querySelector('.main'), mainHTML(c));
-    setHTML(el.querySelector('.tl'), timelineHTML(c));
+    // open what needs attention, unless the user has already toggled this case
+    if (!el._touched && (fresh || needsYou(c))) setOpen(el, !!needsYou(c));
+    setHTML(el.querySelector('.main'), headHTML(c));
+    setHTML(el.querySelector('.acts'), actsHTML(c));
+    setHTML(el.querySelector('.tl'), detailHTML(c));
     setHTML(el.querySelector('.clock'), clockHTML(c));
   });
 }
@@ -223,12 +302,13 @@ async function refresh() {
 async function ask(id, q) {
   const el = cards[id]; if (!el || !q) return;
   const box = el.querySelector('.answer'), btn = el.querySelector('.ask-row button');
+  const av = `<span class="avatar">${icon('graphic_eq')}</span>`;
   btn.disabled = true;
-  box.innerHTML = `<span class="avatar" aria-hidden="true">B</span><p class="dim">Checking your case history…</p>`;
+  box.innerHTML = `${av}<p class="muted">Checking your case history…</p>`;
   try {
     const r = await (await fetch(`/api/cases/${id}/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q }) })).json();
-    box.innerHTML = `<span class="avatar" aria-hidden="true">B</span><p>${esc(r.answer)}<small>“${esc(q)}” · answered from ${r.source === 'claude' ? 'the case history by Claude' : 'the case history'}</small></p>`;
-  } catch (e) { box.innerHTML = `<span class="avatar" aria-hidden="true">B</span><p>Sorry, I couldn't reach the server.</p>`; }
+    box.innerHTML = `${av}<p>${esc(r.answer)}<small>“${esc(q)}” · answered from ${r.source === 'claude' ? 'the case history by Claude' : 'the case history'}</small></p>`;
+  } catch (e) { box.innerHTML = `${av}<p>Sorry, I couldn't reach the server.</p>`; }
   btn.disabled = false;
 }
 
@@ -237,6 +317,15 @@ document.addEventListener('submit', (e) => {
   e.preventDefault(); const q = f.q.value.trim(); f.q.value = ''; ask(f.dataset.ask, q);
 });
 document.addEventListener('click', async (e) => {
+  const head = e.target.closest('.case-head');
+  if (head) { const el = head.closest('.case'); el._touched = true; setOpen(el, head.getAttribute('aria-expanded') !== 'true'); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) {
+    const el = cards[go.dataset.goto]; if (!el) return;
+    el._touched = true; setOpen(el, true);
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.querySelector('.case-head').focus({ preventScroll: true });
+    return;
+  }
   const chip = e.target.closest('[data-q]');
   if (chip) return ask(chip.closest('.card').id.slice(5), chip.dataset.q);
   const call = e.target.closest('[data-call]');
@@ -254,6 +343,7 @@ document.addEventListener('click', async (e) => {
     refresh();
   }
 });
+addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
 refresh();
 setInterval(refresh, 3000);
