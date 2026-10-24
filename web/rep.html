@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing rep console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
+<style>
+  /* Desk-mode call: a teammate plays the hospital billing rep in the browser.
+     Backup for when the Cartesia phone call isn't available. Hold the mic button to talk (Chrome),
+     or type. BillBack's replies play through Cartesia TTS (or the browser voice if no key). */
+  :root{--accent:#BE3337;--ink:#1A1A1E;--muted:#6B6B73}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:#F6F6F8;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column}
+  header{padding:14px 16px;background:#22314A;color:#fff;font-weight:700}
+  header small{display:block;font-weight:500;opacity:.75}
+  #log{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .l{max-width:85%;padding:10px 14px;border-radius:16px;font-size:16px;line-height:1.45}
+  .l.bb{background:#fff;border:1px solid #E4E4EA;align-self:flex-start}
+  .l.me{background:#22314A;color:#fff;align-self:flex-end}
+  footer{padding:12px;display:flex;gap:8px;background:#fff;border-top:1px solid #E4E4EA}
+  input{flex:1;font:inherit;font-size:16px;padding:12px 14px;border:1px solid #DDD;border-radius:999px}
+  button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:0 18px;min-height:48px;cursor:pointer}
+  #mic{background:#E9EEF7}#mic.on{background:var(--accent);color:#fff}
+  #send{background:#22314A;color:#fff}
+  #answer{margin:auto;font-size:20px;padding:0 32px;min-height:64px;background:#2F8F46;color:#fff}
+</style>
+</head>
+<body>
+<header>Bayview Community Hospital · Patient Financial Services<small id="sub">Incoming call</small></header>
+<div id="log"><button id="answer">📞 Answer</button></div>
+<footer><button id="mic" title="Hold to talk">🎤 Hold</button><input id="txt" placeholder="Say something as the billing rep…"><button id="send">Send</button></footer>
+<script>
+const callId = new URLSearchParams(location.search).get('call');
+const $ = (x) => document.getElementById(x);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let busy = false, ended = false;
+function add(cls, text) { $('log').insertAdjacentHTML('beforeend', `<div class="l ${cls}">${esc(text)}</div>`); $('log').scrollTop = 1e9; }
+async function speak(text) {
+  try {
+    const r = await fetch('/api/tts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text})});
+    if (r.ok) { const a = new Audio(URL.createObjectURL(await r.blob())); await a.play(); await new Promise((res) => a.onended = res); return; }
+  } catch (e) {}
+  await new Promise((res) => { const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = res; speechSynthesis.speak(u); });
+}
+async function turn(repSaid) {
+  if (busy || ended) return; busy = true;
+  if (repSaid) add('me', repSaid);
+  const r = await (await fetch(`/api/calls/${callId}/turn`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})})).json();
+  if (r.say) { add('bb', r.say); await speak(r.say); }
+  if (r.ended) { ended = true; $('sub').textContent = 'Call ended'; }
+  busy = false;
+}
+$('answer').onclick = () => { $('answer').remove(); $('sub').textContent = 'On call with BillBack (automated assistant)'; turn('Patient Financial Services, this is Diane, how can I help you?'); };
+$('send').onclick = () => { const t = $('txt').value.trim(); if (t) { $('txt').value = ''; turn(t); } };
+$('txt').onkeydown = (e) => { if (e.key === 'Enter') $('send').click(); };
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SR) {
+  const rec = new SR(); rec.lang = 'en-US'; rec.interimResults = false; let heard = '';
+  rec.onresult = (e) => { heard = [...e.results].map((r) => r[0].transcript).join(' '); };
+  rec.onend = () => { $('mic').classList.remove('on'); if (heard.trim()) turn(heard.trim()); heard = ''; };
+  const start = (e) => { e.preventDefault(); if (!busy && !ended) { $('mic').classList.add('on'); rec.start(); } };
+  $('mic').addEventListener('pointerdown', start);
+  $('mic').addEventListener('pointerup', () => rec.stop());
+} else { $('mic').style.display = 'none'; }
+</script>
+</body>
+</html>
