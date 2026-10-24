@@ -36,6 +36,31 @@ def public(case: dict) -> dict:
     return {k: v for k, v in case.items() if k not in ("call_done", "transactions", "turns_seen")}
 
 
+def audit_summary(audit: dict) -> dict:
+    rec = audit["reconciliation"]
+    note = (f"duplicate ${rec['duplicates'][0]['amount']:,.2f} charge flagged" if rec["duplicates"]
+            else "no errors on the bill")
+    return {"result": f"${rec['owed']:,.0f} owed", "note": note}
+
+
+def policy_summary(pol: dict) -> dict:
+    d = pol["eligibility"]["discount_pct"]
+    return {"result": "Free care → $0" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}" if d else "No discount",
+            "note": "charity-care discount" if d else "income is above the policy's limits"}
+
+
+def call_asks(audit: dict, pol: dict) -> list[str]:
+    rec, d = audit["reconciliation"], pol["eligibility"]["discount_pct"]
+    asks = [f"Apply your insurance: the EOB says you owe ${rec['patient_responsibility']:,.0f}, not ${rec['billed_due']:,.0f}"]
+    if rec["paid"]:
+        asks.append(f"Show the ${rec['paid']:,.0f} you already paid, bringing it to ${rec['owed']:,.0f}")
+    if d:
+        asks.append(f"Ask for the {'free care' if d == 100 else f'{d:.0f}% charity-care discount'} under their own policy, "
+                    f"bringing the bill to ${pol['target']:,.0f}")
+    asks.append("Ask them to pause collections while it's reviewed, and get a case number")
+    return asks
+
+
 def record_turn(case: dict, role: str, text: str) -> None:
     """Webhooks and polling both report turns; emit each (role, text) once."""
     key = (role, text.strip())
@@ -87,27 +112,28 @@ async def run_case(case: dict) -> None:
     cid = case["id"]
     try:
         bank, account_id, bank_label = get_bank(case)
-        bus.emit(cid, "case_started", modes=config.mode(), bank=bank_label,
+        bus.emit(cid, "case_started", modes=config.mode(), bank=bank_label, documents=case.get("documents", []),
                  bill={k: case["bill"][k] for k in ("provider", "amount_due", "notice", "due_date")})
         bus.emit(cid, "balance", amount=case["bill"]["amount_due"], label="Hospital says")
 
-        case["status"] = "auditing"
-        audit = await auditor.run(case, bank, account_id, bank_label)
-        case["status"] = "checking_policy"
-        pol = await policy.run(case, audit["income"]["annual"])
+        case["status"] = "reviewing"
+        loop = asyncio.get_running_loop()
+        txns_ready, owed_ready = loop.create_future(), loop.create_future()
+        audit, pol = await asyncio.gather(
+            auditor.run(case, bank, account_id, bank_label, txns_ready, owed_ready),
+            policy.run(case, txns_ready, owed_ready))
 
-        owed = audit["reconciliation"]["owed"]
-        target = finance.apply_discount(owed, pol["eligibility"]["discount_pct"])
+        owed, target = audit["reconciliation"]["owed"], pol["target"]
         if target != owed:
             bus.emit(cid, "balance", amount=target, label="With the hospital's own discount")
         brief = caller.build_brief(case, audit, pol)
         case["result"].update({"owed": owed, "target": target, "brief": brief})
+        bus.emit(cid, "review_done", auditor=audit_summary(audit), policy=policy_summary(pol))
 
         case["status"] = "awaiting_call_approval"
         ok = await gate.request(cid, "caller", f"Call {case['hospital']['name']} billing for you?", {
-            "say": f"I'll ask them to fix the balance to ${owed:,.2f}, open a financial-assistance review "
-                   f"(you qualify for {pol['eligibility']['discount_pct']}% off), and hold collections. "
-                   "I won't agree to pay anything on the call."})
+            "asks": call_asks(audit, pol),
+            "say": "I won't agree to pay anything on the call. Any payment comes back to you first."})
         outcome: dict = {}
         if ok:
             case["status"] = "calling"
@@ -124,7 +150,7 @@ async def run_case(case: dict) -> None:
 
         case["status"] = "planning"
         balance = target if outcome.get("assistance_review_opened") or outcome.get("account_on_hold") else owed
-        plan = await planner.run(case, bank, account_id, balance, audit["income"]["monthly"])
+        plan = await planner.run(case, bank, account_id, balance, pol["income"]["monthly"])
 
         case["status"] = "done"
         case["result"].update({"outcome": outcome, "plan": plan["plan"], "final_balance": balance})

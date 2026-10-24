@@ -72,10 +72,10 @@ class NessieClient:
     # --- used by agents ---
     async def create_bill(self, account_id: str, payee: str, nickname: str, amount: float, payment_date: str,
                           status: str = "pending", recurring_date: int | None = None) -> dict:
-        body = {"status": status, "payee": payee, "nickname": nickname,
-                "payment_date": payment_date, "payment_amount": amount}
-        if recurring_date:
-            body["recurring_date"] = recurring_date
+        # Nessie's list endpoint errors on any bill created without recurring_date (the server only derives
+        # upcoming_payment_date when it's present), so always send it, even for one-off bills.
+        body = {"status": status, "payee": payee, "nickname": nickname, "payment_date": payment_date,
+                "payment_amount": amount, "recurring_date": recurring_date or int(payment_date[8:10])}
         return await self._create(f"/accounts/{account_id}/bills", body, f"/accounts/{account_id}/bills",
                                   {"nickname": nickname})
 
