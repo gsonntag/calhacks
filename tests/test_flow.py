@@ -145,6 +145,7 @@ async def _run_policy(case):
 ])
 async def test_bad_policy_extraction_never_crashes(monkeypatch, reply):
     from billback import llm
+    from billback.agents import policy
     async def fake_json_out(*a, **k):
         if isinstance(reply, Exception):
             raise reply
@@ -153,11 +154,26 @@ async def test_bad_policy_extraction_never_crashes(monkeypatch, reply):
     monkeypatch.setattr(llm, "json_out", fake_json_out)
     monkeypatch.setattr(orchestrator, "date", _Today)
     case = orchestrator.new_case()
+    # a hospital that isn't in the policy DB, with Bright Data off -> the offline test fixture path
+    case["hospital"] = {**case["hospital"], "name": "Nowhere General Hospital"}
     out = await _run_policy(case)
-    if isinstance(reply, Exception):  # falls back to the labelled sample policy
-        assert out["target"] == 0 and out["refund"] == 500 and out["source"] == "sample policy (offline)"
+    assert out["origin"] == "offline_fixture" and out["live"] is False
+    if isinstance(reply, Exception):  # fixture's known tiers, labelled as the fixture
+        assert out["target"] == 0 and out["refund"] == 500 and out["source"] == policy.FIXTURE_LABEL
     else:  # nothing usable: honest "no discount", no crash
         assert out["policy"]["tiers"] == [] and out["target"] == 2100
+
+
+async def test_policy_comes_from_the_policy_db_offline():
+    """Rosa's hospital is in the committed policy DB: no network, real verified Sutter policy, $0 + $500 back."""
+    case = orchestrator.new_case()
+    out = await _run_policy(case)
+    assert out["origin"] == "policy_db" and out["live"] is True and out["fetched_at"]
+    assert "sutterhealth" in out["source"] or "sutterhealt" in out["source"]
+    assert out["target"] == 0 and out["refund"] == 500
+    assert all(t["verified"] and t["source_url"] for t in out["policy"]["tiers"])
+    kinds = [e for e in bus.history(case["id"]) if e["kind"] == "policy_source"]
+    assert kinds and kinds[0]["origin"] == "policy_db" and kinds[0]["hospital_id"] == "sutter-cpmc"
 
 
 async def test_caller_llm_error_keeps_history_valid(monkeypatch):

@@ -1,0 +1,3186 @@
+{
+ "exported_at": "2026-10-24T22:35:35+00:00",
+ "bright_data_requests": {
+  "serp": 6,
+  "unlocker": 22
+ },
+ "runs": [
+  {
+   "id": "crawl-20261024T223009-5a66f0",
+   "kind": "crawl",
+   "started_at": "2026-10-24T22:30:09+00:00",
+   "finished_at": "2026-10-24T22:32:28+00:00",
+   "hospitals": [
+    "sutter-cpmc",
+    "ucsf-health",
+    "zsfg",
+    "chinese-hospital"
+   ],
+   "summary": {
+    "sutter-cpmc": {
+     "version": 1,
+     "status": "ok",
+     "tiers": 2,
+     "tiers_verified": 2,
+     "tiers_rejected": 0,
+     "sources": [
+      "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+     ],
+     "fetched_at": "2026-10-24T22:30:51+00:00"
+    },
+    "ucsf-health": {
+     "version": 1,
+     "status": "ok",
+     "tiers": 2,
+     "tiers_verified": 2,
+     "tiers_rejected": 0,
+     "sources": [
+      "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+      "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+      "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf"
+     ],
+     "fetched_at": "2026-10-24T22:31:06+00:00"
+    },
+    "zsfg": {
+     "version": 1,
+     "status": "no_tiers",
+     "tiers": 0,
+     "tiers_verified": 0,
+     "tiers_rejected": 0,
+     "sources": [
+      "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+      "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+      "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/"
+     ],
+     "fetched_at": "2026-10-24T22:31:32+00:00"
+    },
+    "chinese-hospital": {
+     "error": "RuntimeError: no policy page or document could be fetched"
+    }
+   }
+  },
+  {
+   "id": "crawl-20261024T223248-7594f4",
+   "kind": "crawl",
+   "started_at": "2026-10-24T22:32:48+00:00",
+   "finished_at": "2026-10-24T22:33:34+00:00",
+   "hospitals": [
+    "chinese-hospital"
+   ],
+   "summary": {
+    "chinese-hospital": {
+     "version": 1,
+     "status": "ok",
+     "tiers": 1,
+     "tiers_verified": 1,
+     "tiers_rejected": 0,
+     "sources": [
+      "https://chinesehospital-sf.org/financial-assistance/",
+      "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf"
+     ],
+     "fetched_at": "2026-10-24T22:33:34+00:00"
+    }
+   }
+  },
+  {
+   "id": "recheck-20261024T223341-bdb2a7",
+   "kind": "recheck",
+   "started_at": "2026-10-24T22:33:41+00:00",
+   "finished_at": "2026-10-24T22:35:35+00:00",
+   "hospitals": [
+    "chinese-hospital",
+    "sutter-cpmc",
+    "ucsf-health",
+    "zsfg"
+   ],
+   "summary": {
+    "chinese-hospital": {
+     "hospital_id": "chinese-hospital",
+     "changed": false,
+     "version": 1,
+     "content_sha256": "9979dd787cbabb871120518e5fb2ab442de04b4a4b735a46d904ed482d9ed810",
+     "requests": 2
+    },
+    "sutter-cpmc": {
+     "hospital_id": "sutter-cpmc",
+     "changed": false,
+     "version": 1,
+     "content_sha256": "256d542b4c32a00543f99fd79cfda5ef62d6b6487aef13408093e7c80b0a75db",
+     "requests": 3
+    },
+    "ucsf-health": {
+     "hospital_id": "ucsf-health",
+     "changed": false,
+     "version": 1,
+     "content_sha256": "b0484cafc39bca3b48120c0a6996ac1c876d6ef0e63336f49b5a7547b84422c3",
+     "requests": 3
+    },
+    "zsfg": {
+     "hospital_id": "zsfg",
+     "changed": false,
+     "version": 1,
+     "content_sha256": "42b07c096fa5428164521e990f9d5e03608a4e3d5da0fa0daedb47af5b8cdbc3",
+     "requests": 3
+    }
+   }
+  }
+ ],
+ "hospitals": [
+  {
+   "id": "chinese-hospital",
+   "name": "Chinese Hospital",
+   "system": "Chinese Hospital",
+   "city": "San Francisco",
+   "domains": [
+    "chinesehospital-sf.org"
+   ],
+   "aliases": [
+    "Chinese Hospital San Francisco"
+   ],
+   "query": "Chinese Hospital San Francisco financial assistance charity care policy",
+   "versions": [
+    {
+     "id": 4,
+     "hospital_id": "chinese-hospital",
+     "version": 1,
+     "fetched_at": "2026-10-24T22:33:34+00:00",
+     "content_sha256": "9979dd787cbabb871120518e5fb2ab442de04b4a4b735a46d904ed482d9ed810",
+     "source_urls": [
+      "https://chinesehospital-sf.org/financial-assistance/",
+      "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf"
+     ],
+     "documents": [
+      {
+       "url": "https://chinesehospital-sf.org/financial-assistance/",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "efbb95afb112a7ce4ee52c1b32bf31eb3886c6a79de756a2749e214e1472d87d",
+       "nbytes": 24843,
+       "via": "unlocker",
+       "title": "Help Paying Your Bill",
+       "pages": null,
+       "artifacts": [
+        "raw/chinese-hospital/page-efbb95afb112.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain chinesehospital-sf.org",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'help paying' (+3)",
+        "mentions 'financial-assistance' (+4)",
+        "Google rank 1 (-0.25)"
+       ],
+       "text_sha256": "f96d2615f9e791bd82ca2b417d89e83c7e629db4d2378dd2e1b2496f6077274b"
+      },
+      {
+       "url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "6bde4c69e79851cf45a32c3d9ae066601342deb54af35c7964799aca2b31ddb8",
+       "nbytes": 231314,
+       "via": "unlocker",
+       "title": "English",
+       "pages": 11,
+       "artifacts": [
+        "raw/chinese-hospital/pdf-6bde4c69e798.pdf",
+        "raw/chinese-hospital/pdf-6bde4c69e798.txt"
+       ],
+       "found_on": "https://chinesehospital-sf.org/financial-assistance/",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial_assistance' (+3)",
+        "English (+1)"
+       ],
+       "text_sha256": "2b7da5cfe485e8bec9a7b91f990bcbda4fdd40dddcd3005c508349bb6091c10b"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "Chinese Hospital San Francisco financial assistance charity care policy"
+      ],
+      "serp_artifacts": [
+       "raw/chinese-hospital/serp-9fddf42f46.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://chinesehospital-sf.org/financial-assistance/",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 20.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'financial-assistance' (+4)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=49f3fe58-612c-4b20-a6bf-1e9499e1ddd9",
+        "title": "FINANCIAL ASSISTANCE PROGRAM POLICY",
+        "serp_rank": 2,
+        "kind": "regulator",
+        "score": 18.5,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'polic' (+2)",
+         "names the hospital (2 words)",
+         "Google rank 2 (-0.5)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=5daa1cc5-2a54-4b53-98c9-ad15051dcc73",
+        "title": "Chinese Hospital Financial Assistance Program Policy",
+        "serp_rank": 8,
+        "kind": "regulator",
+        "score": 17.0,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'polic' (+2)",
+         "names the hospital (2 words)",
+         "Google rank 8 (-2)"
+        ]
+       },
+       {
+        "url": "https://chinesehospital-sf.org/billing-insurance/",
+        "title": "Billing & Insurance",
+        "serp_rank": 3,
+        "kind": "official",
+        "score": 16.25,
+        "is_pdf": false,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'billing' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://chinesehospital-sf.org/wp-content/uploads/2021/03/CHA_Charity_Care_020819_EN.pdf",
+        "title": "policy summary/intent",
+        "serp_rank": 7,
+        "kind": "official",
+        "score": 12.25,
+        "is_pdf": true,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'charity' (+2)",
+         "mentions 'polic' (+2)",
+         "Google rank 7 (-1.75)"
+        ]
+       },
+       {
+        "url": "https://chinesehospital-sf.org/wp-content/uploads/2026/04/Financial_Assistance_Application_EN_4-10-26.pdf",
+        "title": "Financial Assistance Policy",
+        "serp_rank": 4,
+        "kind": "official",
+        "score": 12.0,
+        "is_pdf": true,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'polic' (+2)",
+         "mentions 'application' (-3)",
+         "Google rank 4 (-1)"
+        ]
+       },
+       {
+        "url": "https://www.ucsfbenioffchildrens.org/billing-and-insurance/help-paying-your-bill",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 9,
+        "kind": "other",
+        "score": 5.75,
+        "is_pdf": false,
+        "reasons": [
+         "other domain ucsfbenioffchildrens.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'billing' (+1)",
+         "Google rank 9 (-2.25)"
+        ]
+       },
+       {
+        "url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+        "title": "Help Paying Your Bill | Hyde Hospital",
+        "serp_rank": 6,
+        "kind": "other",
+        "score": 3.5,
+        "is_pdf": false,
+        "reasons": [
+         "other domain sfcommunityhospitals.ucsfhealth.org",
+         "mentions 'help paying' (+3)",
+         "mentions 'billing' (+1)",
+         "names the hospital (1 words)",
+         "Google rank 6 (-1.5)"
+        ]
+       },
+       {
+        "url": "https://dollarfor.org/medical-debt-help-san-francisco-chinese-hospital/",
+        "title": "Medical Bill Help from Chinese Hospital",
+        "serp_rank": 5,
+        "kind": "aggregator",
+        "score": -8.25,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dollarfor.org",
+         "mentions 'discount' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 5 (-1.25)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://chinesehospital-sf.org/financial-assistance/",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 20.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'financial-assistance' (+4)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://chinesehospital-sf.org/billing-insurance/",
+        "title": "Billing & Insurance",
+        "serp_rank": 3,
+        "kind": "official",
+        "score": 16.25,
+        "is_pdf": false,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'billing' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://chinesehospital-sf.org/wp-content/uploads/2021/03/CHA_Charity_Care_020819_EN.pdf",
+        "title": "policy summary/intent",
+        "serp_rank": 7,
+        "kind": "official",
+        "score": 12.25,
+        "is_pdf": true,
+        "reasons": [
+         "official domain chinesehospital-sf.org",
+         "mentions 'charity' (+2)",
+         "mentions 'polic' (+2)",
+         "Google rank 7 (-1.75)"
+        ]
+       }
+      ],
+      "regulator_doc": {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=49f3fe58-612c-4b20-a6bf-1e9499e1ddd9",
+       "title": "FINANCIAL ASSISTANCE PROGRAM POLICY",
+       "serp_rank": 2,
+       "kind": "regulator",
+       "score": 18.5,
+       "is_pdf": true,
+       "reasons": [
+        "regulator domain api.hdc.hcai.ca.gov",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity care' (+4)",
+        "mentions 'charity' (+2)",
+        "mentions 'discount' (+1)",
+        "mentions 'polic' (+2)",
+        "names the hospital (2 words)",
+        "Google rank 2 (-0.5)"
+       ]
+      }
+     },
+     "extracted": {
+      "tiers": [
+       {
+        "max_fpl_pct": 200.0,
+        "discount_pct": 100.0,
+        "applies_to": "uninsured",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "Chinese Hospital shall not seek any payment for any Eligible Services it provides to a Self-Pay Patient at or below 200 percent of the Federal Poverty Level or to a patient otherwise eligible for Charity Care.",
+        "limit_quote": "",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       }
+      ],
+      "other_relief": [
+       {
+        "what": "Uninsured (self-pay) patients with family income above 200% up to 300% of FPL owe only 50% of the Medicare allowed amount.",
+        "quote": ">200% to 300% of the Federal Poverty Level 50% of Medicare Allowed Amount",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "verified": true,
+        "applies_to": "uninsured",
+        "max_fpl_pct": 300.0,
+        "min_oop_pct_income": null
+       },
+       {
+        "what": "Uninsured (self-pay) patients with family income above 300% up to 400% of FPL owe only 75% of the Medicare allowed amount for emergency and other medically necessary services.",
+        "quote": ">300% to 400% of the Federal Poverty Level 75% of Medicare Allowed Amount",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "verified": true,
+        "applies_to": "uninsured",
+        "max_fpl_pct": 400.0,
+        "min_oop_pct_income": null
+       },
+       {
+        "what": "Patients with high medical costs and family income at or below 400% of FPL owe only the Medicare-allowed amount less what their insurer paid, which is zero if the insurer paid at least the Medicare amount.",
+        "quote": "400% or Less of the Federal Poverty Level The amount that would be allowed by Medicare for the same service LESS the amount paid by the patient\u2019s insurer.",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "verified": true,
+        "applies_to": "insured",
+        "max_fpl_pct": 400.0,
+        "min_oop_pct_income": 10.0
+       }
+      ],
+      "no_collections_while_pending": null,
+      "collections_quote": "",
+      "collections_source": null,
+      "apply_how": "Download the financial assistance application and mail it to Patient Financial Services at 845 Jackson St, or email it to patientfinancialservices@chasf.org; staff can help with the form.",
+      "apply_quote": "To apply for financial assistance, please download the application below and send it to: **Chinese Hospital Patient Financial Services Department, 845 Jackson St, Lobby Floor, San Francisco, CA 94133.**",
+      "notes": "Applies only to services under the hospital's general acute care license and billed by Chinese Hospital; retail operations and outside physician fees (e.g., emergency physician groups, radiology, pathology) are excluded."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "tier",
+        "quote": "Chinese Hospital shall not seek any payment for any Eligible Services it provides to a Self-Pay Patient at or below 200 percent of the Federal Poverty Level or to a patient otherwise eligible for Charity Care.",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "tier": {
+         "max_fpl_pct": 200,
+         "discount_pct": 100,
+         "applies_to": "uninsured",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "other_relief",
+        "quote": ">200% to 300% of the Federal Poverty Level 50% of Medicare Allowed Amount",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "summary": "Uninsured (self-pay) patients with family income above 200% up to 300% of FPL owe only 50% of the Medicare allowed amount."
+       },
+       {
+        "what": "other_relief",
+        "quote": ">300% to 400% of the Federal Poverty Level 75% of Medicare Allowed Amount",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "summary": "Uninsured (self-pay) patients with family income above 300% up to 400% of FPL owe only 75% of the Medicare allowed amount for emergency and other medically necessary services."
+       },
+       {
+        "what": "other_relief",
+        "quote": "400% or Less of the Federal Poverty Level The amount that would be allowed by Medicare for the same service LESS the amount paid by the patient\u2019s insurer.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+        "summary": "Patients with high medical costs and family income at or below 400% of FPL owe only the Medicare-allowed amount less what their insurer paid, which is zero if the insurer paid at least the Medicare amount."
+       },
+       {
+        "what": "collections",
+        "quote": "",
+        "verified": false,
+        "source_url": null
+       },
+       {
+        "what": "apply",
+        "quote": "To apply for financial assistance, please download the application below and send it to: **Chinese Hospital Patient Financial Services Department, 845 Jackson St, Lobby Floor, San Francisco, CA 94133.**",
+        "verified": true,
+        "source_url": "https://chinesehospital-sf.org/financial-assistance/"
+       }
+      ],
+      "tiers_verified": 1,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 1,
+     "tiers_rejected": 0,
+     "status": "ok",
+     "run_id": "crawl-20261024T223248-7594f4",
+     "is_current": 1
+    }
+   ],
+   "checks": [
+    {
+     "id": 5,
+     "hospital_id": "chinese-hospital",
+     "checked_at": "2026-10-24T22:34:11+00:00",
+     "content_sha256": "9979dd787cbabb871120518e5fb2ab442de04b4a4b735a46d904ed482d9ed810",
+     "changed": 0,
+     "version_id": 4,
+     "note": "unchanged",
+     "run_id": "recheck-20261024T223341-bdb2a7"
+    },
+    {
+     "id": 4,
+     "hospital_id": "chinese-hospital",
+     "checked_at": "2026-10-24T22:33:34+00:00",
+     "content_sha256": "9979dd787cbabb871120518e5fb2ab442de04b4a4b735a46d904ed482d9ed810",
+     "changed": 1,
+     "version_id": 4,
+     "note": "initial crawl: version 1",
+     "run_id": "crawl-20261024T223248-7594f4"
+    }
+   ],
+   "crawl_log": [
+    {
+     "id": 54,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:31:52+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: Chinese Hospital San Francisco financial assistance charity care policy",
+     "status": 200,
+     "bytes": 22983,
+     "latency_ms": 19526,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 55,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:31:52+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "no fetchable official page in first results; retrying with: \"Chinese Hospital\" financial assistance policy pdf"
+    },
+    {
+     "id": 56,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:32:28+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: \"Chinese Hospital\" financial assistance policy pdf",
+     "status": 200,
+     "bytes": 20284,
+     "latency_ms": 35803,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 57,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:32:28+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=498ab632-3d14-4a52-92eb-750acf533a93 \u2014 score 16.0: regulator domain api.hdc.hcai.ca.gov; mentions 'financial assistance' (+4); mentions 'charity care' (+4); mentions 'charity' (+2); mentions 'discount' (+1); mentions 'polic' (+2); Google rank 4 (-1)"
+    },
+    {
+     "id": 58,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:32:28+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=498ab632-3d14-4a52-92eb-750acf533a93"
+    },
+    {
+     "id": 59,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:32:28+00:00",
+     "stage": "pipeline",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 0,
+     "note": "RuntimeError: no policy page or document could be fetched"
+    },
+    {
+     "id": 60,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:10+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: Chinese Hospital San Francisco financial assistance charity care policy",
+     "status": 200,
+     "bytes": 23766,
+     "latency_ms": 22566,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 61,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:10+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://chinesehospital-sf.org/financial-assistance/ \u2014 score 20.75: official domain chinesehospital-sf.org; mentions 'financial assistance' (+4); mentions 'help paying' (+3); mentions 'financial-assistance' (+4); Google rank 1 (-0.25)"
+    },
+    {
+     "id": 62,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:10+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://chinesehospital-sf.org/billing-insurance/ \u2014 score 16.25: official domain chinesehospital-sf.org; mentions 'financial assistance' (+4); mentions 'billing' (+1); names the hospital (2 words); Google rank 3 (-0.75)"
+    },
+    {
+     "id": 63,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:10+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://chinesehospital-sf.org/wp-content/uploads/2021/03/CHA_Charity_Care_020819_EN.pdf \u2014 score 12.25: official domain chinesehospital-sf.org; mentions 'charity' (+2); mentions 'polic' (+2); Google rank 7 (-1.75)"
+    },
+    {
+     "id": 64,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:10+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=49f3fe58-612c-4b20-a6bf-1e9499e1ddd9 \u2014 score 18.5: regulator domain api.hdc.hcai.ca.gov; mentions 'financial assistance' (+4); mentions 'charity care' (+4); mentions 'charity' (+2); mentions 'discount' (+1); mentions 'polic' (+2); names the hospital (2 words); Google rank 2 (-0.5)"
+    },
+    {
+     "id": 65,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:10+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://dollarfor.org/medical-debt-help-san-francisco-chinese-hospital/"
+    },
+    {
+     "id": 66,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:20+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://chinesehospital-sf.org/financial-assistance/",
+     "status": 200,
+     "bytes": 24843,
+     "latency_ms": 9948,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 67,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:20+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://chinesehospital-sf.org/financial-assistance/: 106 links, policy documents: https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf [PDF (+2), says policy (+3), 'financial_assistance' (+3), English (+1)]"
+    },
+    {
+     "id": 68,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:28+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+     "status": 200,
+     "bytes": 231314,
+     "latency_ms": 2334,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 69,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:28+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=49f3fe58-612c-4b20-a6bf-1e9499e1ddd9"
+    },
+    {
+     "id": 70,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:34+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf | 'Chinese Hospital shall not seek any payment for any Eligible Services it provides to a Self-Pay Patient at or below 200 percent of the Federal Poverty Level or '"
+    },
+    {
+     "id": 71,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:34+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf | '>200% to 300% of the Federal Poverty Level 50% of Medicare Allowed Amount'"
+    },
+    {
+     "id": 72,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:34+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf | '>300% to 400% of the Federal Poverty Level 75% of Medicare Allowed Amount'"
+    },
+    {
+     "id": 73,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:34+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf | '400% or Less of the Federal Poverty Level The amount that would be allowed by Medicare for the same service LESS the amount paid by the patient\u2019s insurer.'"
+    },
+    {
+     "id": 74,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:34+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections REJECTED: not found | ''"
+    },
+    {
+     "id": 75,
+     "run_id": "crawl-20261024T223248-7594f4",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:34+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://chinesehospital-sf.org/financial-assistance/ | 'To apply for financial assistance, please download the application below and send it to: **Chinese Hospital Patient Financial Services Department, 845 Jackson S'"
+    },
+    {
+     "id": 76,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:43+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://chinesehospital-sf.org/financial-assistance/",
+     "status": 200,
+     "bytes": 24843,
+     "latency_ms": 1648,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 77,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:33:43+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://chinesehospital-sf.org/financial-assistance/: 106 links, policy documents: https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf [PDF (+2), says policy (+3), 'financial_assistance' (+3), English (+1)]"
+    },
+    {
+     "id": 78,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:34:11+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+     "status": 200,
+     "bytes": 231314,
+     "latency_ms": 27724,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 79,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "chinese-hospital",
+     "ts": "2026-10-24T22:34:11+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=49f3fe58-612c-4b20-a6bf-1e9499e1ddd9"
+    }
+   ]
+  },
+  {
+   "id": "sutter-cpmc",
+   "name": "California Pacific Medical Center",
+   "system": "Sutter Health",
+   "city": "San Francisco",
+   "domains": [
+    "sutterhealth.org"
+   ],
+   "aliases": [
+    "Sutter CPMC",
+    "CPMC",
+    "CPMC Van Ness",
+    "Sutter California Pacific Medical Center"
+   ],
+   "query": "California Pacific Medical Center San Francisco financial assistance policy",
+   "versions": [
+    {
+     "id": 1,
+     "hospital_id": "sutter-cpmc",
+     "version": 1,
+     "fetched_at": "2026-10-24T22:30:51+00:00",
+     "content_sha256": "256d542b4c32a00543f99fd79cfda5ef62d6b6487aef13408093e7c80b0a75db",
+     "source_urls": [
+      "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+     ],
+     "documents": [
+      {
+       "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "53cf44b77138896d6328839142b2ccc0c8fede27b5fb84e382829ebe02e76a5d",
+       "nbytes": 47859,
+       "via": "unlocker",
+       "title": "Help paying your bill (financial assistance)",
+       "pages": null,
+       "artifacts": [
+        "raw/sutter-cpmc/page-53cf44b77138.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain sutterhealth.org",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'help paying' (+3)",
+        "mentions 'financial-assistance' (+4)",
+        "mentions 'billing' (+1)",
+        "Google rank 1 (-0.25)"
+       ],
+       "text_sha256": "2fcb705916cce86a21947b02809b02a60d900ed76563ee052aca07925e5717c9"
+      },
+      {
+       "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "de8f2a9a21a480740f9ba9b7f53de1b071db6dde4b7c75a4b382f818fbdd0da9",
+       "nbytes": 1286168,
+       "via": "unlocker",
+       "title": "Financial Assistance Policy and Application - English (PDF)",
+       "pages": 46,
+       "artifacts": [
+        "raw/sutter-cpmc/pdf-de8f2a9a21a4.pdf",
+        "raw/sutter-cpmc/pdf-de8f2a9a21a4.txt"
+       ],
+       "found_on": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial assistance' (+3)",
+        "English (+1)",
+        "policy + application packet (-1)"
+       ],
+       "text_sha256": "00a47a1ff28429d17d09ee82e68afc18ae907b4ed0beb84cc0f0e11ff61c6d3c"
+      },
+      {
+       "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "9a00bfd6ccfd603a2ea1088c92ec3e5185aa4fea0a69fcee5df50ae6e66054b9",
+       "nbytes": 563661,
+       "via": "unlocker",
+       "title": "Hospital Billing/Collections Policy - English (PDF)",
+       "pages": 21,
+       "artifacts": [
+        "raw/sutter-cpmc/pdf-9a00bfd6ccfd.pdf",
+        "raw/sutter-cpmc/pdf-9a00bfd6ccfd.txt"
+       ],
+       "found_on": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial-assistance' (+3)",
+        "English (+1)",
+        "collections policy (-1)"
+       ],
+       "text_sha256": "0f3f8e44df77b1080b9ccfadecc7f0e1ad5cca40ce80f575d74fc1aa087dd4ad"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "California Pacific Medical Center San Francisco financial assistance policy"
+      ],
+      "serp_artifacts": [
+       "raw/sutter-cpmc/serp-11ae09c63b.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "title": "Help paying your bill (financial assistance)",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 21.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain sutterhealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'billing' (+1)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194",
+        "title": "Policy on Financial Assistance for Sutter Hospitals (Charity ...",
+        "serp_rank": 7,
+        "kind": "regulator",
+        "score": 10.25,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'polic' (+2)",
+         "Google rank 7 (-1.75)"
+        ]
+       },
+       {
+        "url": "https://syfphr.hcai.ca.gov/",
+        "title": "HCAI Syfphr",
+        "serp_rank": 2,
+        "kind": "regulator",
+        "score": 8.5,
+        "is_pdf": false,
+        "reasons": [
+         "regulator domain syfphr.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'discount' (+1)",
+         "Google rank 2 (-0.5)"
+        ]
+       },
+       {
+        "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 6,
+        "kind": "other",
+        "score": 7.5,
+        "is_pdf": false,
+        "reasons": [
+         "other domain ucsfhealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'billing' (+1)",
+         "names the hospital (1 words)",
+         "Google rank 6 (-1.5)"
+        ]
+       },
+       {
+        "url": "https://www.pacificmedicalcenters.org/wp-content/uploads/2023/04/2023-PACMED-FA-APPLICATION-2023.pdf",
+        "title": "Charity Care/Financial Assistance Application Form ...",
+        "serp_rank": 5,
+        "kind": "other",
+        "score": 6.75,
+        "is_pdf": true,
+        "reasons": [
+         "other domain pacificmedicalcenters.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'application' (-3)",
+         "Google rank 5 (-1.25)"
+        ]
+       },
+       {
+        "url": "https://www.careroute.ai/hospital-financial-assistance/sutter-health",
+        "title": "Sutter Health Financial Assistance: Free Care, Income ...",
+        "serp_rank": 3,
+        "kind": "aggregator",
+        "score": -1.75,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain careroute.ai",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'discount' (+1)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://coveredusa.org/en/blog/sutter-health-financial-assistance-california",
+        "title": "Sutter Health Financial Assistance: CA Hospital Fair Pricing ...",
+        "serp_rank": 9,
+        "kind": "aggregator",
+        "score": -3.25,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain coveredusa.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "names the hospital (1 words)",
+         "Google rank 9 (-2.25)"
+        ]
+       },
+       {
+        "url": "https://dollarfor.org/medical-debt-help-san-francisco-california-pacific-medical-center---st.-lukes-campus/",
+        "title": "Medical Bill Help from California Pacific Medical Center",
+        "serp_rank": 4,
+        "kind": "aggregator",
+        "score": -6.0,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dollarfor.org",
+         "mentions 'discount' (+1)",
+         "names the hospital (4 words)",
+         "Google rank 4 (-1)"
+        ]
+       },
+       {
+        "url": "https://www.sfserviceguide.org/services/6379",
+        "title": "Hospital Financial Assistance",
+        "serp_rank": 8,
+        "kind": "aggregator",
+        "score": -8.0,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain sfserviceguide.org",
+         "mentions 'financial assistance' (+4)",
+         "Google rank 8 (-2)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "title": "Help paying your bill (financial assistance)",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 21.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain sutterhealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'billing' (+1)",
+         "Google rank 1 (-0.25)"
+        ]
+       }
+      ],
+      "regulator_doc": {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194",
+       "title": "Policy on Financial Assistance for Sutter Hospitals (Charity ...",
+       "serp_rank": 7,
+       "kind": "regulator",
+       "score": 10.25,
+       "is_pdf": true,
+       "reasons": [
+        "regulator domain api.hdc.hcai.ca.gov",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity' (+2)",
+        "mentions 'polic' (+2)",
+        "Google rank 7 (-1.75)"
+       ]
+      }
+     },
+     "extracted": {
+      "tiers": [
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "uninsured",
+        "min_oop_pct_income": null,
+        "doc": 1,
+        "quote": "Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).",
+        "limit_quote": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "source_role": "policy_page",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "insured",
+        "min_oop_pct_income": 10.0,
+        "doc": 1,
+        "quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+        "limit_quote": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "source_role": "policy_page",
+        "verified": true
+       }
+      ],
+      "other_relief": [
+       {
+        "what": "Uninsured patients above 400% of FPL get a 40% reduction of billed charges for inpatient services and 20% for outpatient services.",
+        "quote": "Standard Uninsured Discount is a 40% reduction of Billed Charges for inpatient services and 20% reduction of Billed Charges for outpatient services.",
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+        "verified": true,
+        "applies_to": "uninsured",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": null
+       },
+       {
+        "what": "Patients who are insured but exhaust their benefits and have family income at or below 400% of FPL are eligible for financial assistance.",
+        "quote": "Patients who are covered by insurance but exhaust their benefits either before or during their stay at the hospital and have a family income at or below 400% of the federal poverty level.",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "verified": true,
+        "applies_to": "insured",
+        "max_fpl_pct": 400.0,
+        "min_oop_pct_income": null
+       },
+       {
+        "what": "If patient and hospital cannot agree on a payment plan, monthly payments will be no more than 10% of monthly income after essential living expenses; all payment plans are interest-free.",
+        "quote": "If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make a monthly payment of not more than ten percent (10%) of the Patient\u2019s monthly family income after excluding essential living expenses.",
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+        "verified": true,
+        "applies_to": "all",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": null
+       }
+      ],
+      "no_collections_while_pending": true,
+      "collections_quote": "Hospital and Collection Agencies shall not pursue collection from a Patient who has submitted an application for Financial Assistance and shall return any amount received from the Patient before or during the time the Patient\u2019s application is pending.",
+      "collections_source": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+      "apply_how": "Apply using the application form from Patient Financial Services at the hospital, by calling 855-398-1633, or via the Sutter Health website; staff will help complete it.",
+      "apply_quote": "You may apply for Financial Assistance using the application form that is available from Patient Financial Services, which is located at the Patient Access/Registration Departments at the Hospital, or by calling Patient Financial Services at 855-398-1633, or on the Sutter Health or Hospital website below.",
+      "notes": "The policy excludes physician services (e.g., emergency room doctors, anesthesiologists, radiologists, hospitalists, pathologists), elective services such as cosmetic procedures, and patients who falsify information or whose payer refuses payment due to non-cooperation."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "tier",
+        "quote": "Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "uninsured",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "insured",
+         "min_oop_pct_income": 10
+        }
+       },
+       {
+        "what": "other_relief",
+        "quote": "Standard Uninsured Discount is a 40% reduction of Billed Charges for inpatient services and 20% reduction of Billed Charges for outpatient services.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+        "summary": "Uninsured patients above 400% of FPL get a 40% reduction of billed charges for inpatient services and 20% for outpatient services."
+       },
+       {
+        "what": "other_relief",
+        "quote": "Patients who are covered by insurance but exhaust their benefits either before or during their stay at the hospital and have a family income at or below 400% of the federal poverty level.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "summary": "Patients who are insured but exhaust their benefits and have family income at or below 400% of FPL are eligible for financial assistance."
+       },
+       {
+        "what": "other_relief",
+        "quote": "If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make a monthly payment of not more than ten percent (10%) of the Patient\u2019s monthly family income after excluding essential living expenses.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+        "summary": "If patient and hospital cannot agree on a payment plan, monthly payments will be no more than 10% of monthly income after essential living expenses; all payment plans are interest-free."
+       },
+       {
+        "what": "collections",
+        "quote": "Hospital and Collection Agencies shall not pursue collection from a Patient who has submitted an application for Financial Assistance and shall return any amount received from the Patient before or during the time the Patient\u2019s application is pending.",
+        "verified": true,
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+       },
+       {
+        "what": "apply",
+        "quote": "You may apply for Financial Assistance using the application form that is available from Patient Financial Services, which is located at the Patient Access/Registration Departments at the Hospital, or by calling Patient Financial Services at 855-398-1633, or on the Sutter Health or Hospital website below.",
+        "verified": true,
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance"
+       }
+      ],
+      "tiers_verified": 2,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 2,
+     "tiers_rejected": 0,
+     "status": "ok",
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "is_current": 1
+    }
+   ],
+   "checks": [
+    {
+     "id": 6,
+     "hospital_id": "sutter-cpmc",
+     "checked_at": "2026-10-24T22:34:34+00:00",
+     "content_sha256": "256d542b4c32a00543f99fd79cfda5ef62d6b6487aef13408093e7c80b0a75db",
+     "changed": 0,
+     "version_id": 1,
+     "note": "unchanged",
+     "run_id": "recheck-20261024T223341-bdb2a7"
+    },
+    {
+     "id": 1,
+     "hospital_id": "sutter-cpmc",
+     "checked_at": "2026-10-24T22:30:51+00:00",
+     "content_sha256": "256d542b4c32a00543f99fd79cfda5ef62d6b6487aef13408093e7c80b0a75db",
+     "changed": 1,
+     "version_id": 1,
+     "note": "initial crawl: version 1",
+     "run_id": "crawl-20261024T223009-5a66f0"
+    }
+   ],
+   "crawl_log": [
+    {
+     "id": 1,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: California Pacific Medical Center San Francisco financial assistance policy",
+     "status": 200,
+     "bytes": 25091,
+     "latency_ms": 5737,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 2,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.sutterhealth.org/billing-insurance/financial-assistance \u2014 score 21.75: official domain sutterhealth.org; mentions 'financial assistance' (+4); mentions 'help paying' (+3); mentions 'financial-assistance' (+4); mentions 'billing' (+1); Google rank 1 (-0.25)"
+    },
+    {
+     "id": 3,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194 \u2014 score 10.25: regulator domain api.hdc.hcai.ca.gov; mentions 'financial assistance' (+4); mentions 'charity' (+2); mentions 'polic' (+2); Google rank 7 (-1.75)"
+    },
+    {
+     "id": 4,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.careroute.ai/hospital-financial-assistance/sutter-health"
+    },
+    {
+     "id": 5,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://coveredusa.org/en/blog/sutter-health-financial-assistance-california"
+    },
+    {
+     "id": 6,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://dollarfor.org/medical-debt-help-san-francisco-california-pacific-medical-center---st.-lukes-campus/"
+    },
+    {
+     "id": 7,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:15+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.sfserviceguide.org/services/6379"
+    },
+    {
+     "id": 8,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:18+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+     "status": 200,
+     "bytes": 47859,
+     "latency_ms": 2473,
+     "ok": 1,
+     "note": "text/html; charset=utf-8"
+    },
+    {
+     "id": 9,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:18+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.sutterhealth.org/billing-insurance/financial-assistance: 126 links, policy documents: https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3), English (+1), policy + application packet (-1)]; https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf [PDF (+2), says policy (+3), 'financial-assistance' (+3), English (+1), collections policy (-1)]"
+    },
+    {
+     "id": 10,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:22+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+     "status": 200,
+     "bytes": 1286168,
+     "latency_ms": 3935,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 11,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:42+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+     "status": 200,
+     "bytes": 563661,
+     "latency_ms": 18531,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 12,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:43+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194"
+    },
+    {
+     "id": 13,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).'"
+    },
+    {
+     "id": 14,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical'"
+    },
+    {
+     "id": 15,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'Standard Uninsured Discount is a 40% reduction of Billed Charges for inpatient services and 20% reduction of Billed Charges for outpatient services.'"
+    },
+    {
+     "id": 16,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'Patients who are covered by insurance but exhaust their benefits either before or during their stay at the hospital and have a family income at or below 400% of'"
+    },
+    {
+     "id": 17,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make'"
+    },
+    {
+     "id": 18,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'Hospital and Collection Agencies shall not pursue collection from a Patient who has submitted an application for Financial Assistance and shall return any amoun'"
+    },
+    {
+     "id": 19,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:30:51+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'You may apply for Financial Assistance using the application form that is available from Patient Financial Services, which is located at the Patient Access/Regi'"
+    },
+    {
+     "id": 80,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:34:14+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+     "status": 200,
+     "bytes": 47859,
+     "latency_ms": 3029,
+     "ok": 1,
+     "note": "text/html; charset=utf-8"
+    },
+    {
+     "id": 81,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:34:14+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.sutterhealth.org/billing-insurance/financial-assistance: 126 links, policy documents: https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3), English (+1), policy + application packet (-1)]; https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf [PDF (+2), says policy (+3), 'financial-assistance' (+3), English (+1), collections policy (-1)]"
+    },
+    {
+     "id": 82,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:34:17+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+     "status": 200,
+     "bytes": 1286168,
+     "latency_ms": 2352,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 83,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:34:33+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+     "status": 200,
+     "bytes": 563661,
+     "latency_ms": 14103,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 84,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-24T22:34:34+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194"
+    }
+   ]
+  },
+  {
+   "id": "ucsf-health",
+   "name": "UCSF Medical Center",
+   "system": "UCSF Health",
+   "city": "San Francisco",
+   "domains": [
+    "ucsfhealth.org"
+   ],
+   "aliases": [
+    "UCSF Health",
+    "UCSF",
+    "UCSF Helen Diller Medical Center"
+   ],
+   "query": "UCSF Medical Center charity care policy pdf",
+   "versions": [
+    {
+     "id": 2,
+     "hospital_id": "ucsf-health",
+     "version": 1,
+     "fetched_at": "2026-10-24T22:31:06+00:00",
+     "content_sha256": "b0484cafc39bca3b48120c0a6996ac1c876d6ef0e63336f49b5a7547b84422c3",
+     "source_urls": [
+      "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+      "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+      "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf"
+     ],
+     "documents": [
+      {
+       "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "9cfaeac215d7bff2743b430cf765b97fe750a19f82a86f7d587a549f98917120",
+       "nbytes": 21641,
+       "via": "unlocker",
+       "title": "Help Paying Your Bill",
+       "pages": null,
+       "artifacts": [
+        "raw/ucsf-health/page-9cfaeac215d7.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain ucsfhealth.org",
+        "mentions 'help paying' (+3)",
+        "mentions 'billing' (+1)",
+        "names the hospital (2 words)",
+        "Google rank 1 (-0.25)"
+       ],
+       "text_sha256": "8bbcd6ae9daa37c96ee66100d9990b5ca92cf1063eb9300b90d9ecf7aba58c10"
+      },
+      {
+       "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "db570fe1a4cea670d5fb2fcce981ca5d86745fece97eced42d5a61ba7d94f16c",
+       "nbytes": 268953,
+       "via": "unlocker",
+       "title": "Patient Financial Assistance Policy",
+       "pages": 12,
+       "artifacts": [
+        "raw/ucsf-health/pdf-db570fe1a4ce.pdf",
+        "raw/ucsf-health/pdf-db570fe1a4ce.txt"
+       ],
+       "found_on": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial assistance' (+3)"
+       ],
+       "text_sha256": "ab8d6b0666e0ce992b2ecd9cad2ff9084352fa9ae1503b8a55bbe9c0f420b81e"
+      },
+      {
+       "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "d20ade66a92b988c2041ad0b3c3575c7a31f0d1915fa09f4f678e278526e1c92",
+       "nbytes": 220902,
+       "via": "unlocker",
+       "title": "Self-Pay Discount Policy",
+       "pages": 5,
+       "artifacts": [
+        "raw/ucsf-health/pdf-d20ade66a92b.pdf",
+        "raw/ucsf-health/pdf-d20ade66a92b.txt"
+       ],
+       "found_on": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'discount' (+2)"
+       ],
+       "text_sha256": "28c50110acac9107a3ad561f802ebe91a89f3c1708d657a88a33fc4eaf7272ad"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "UCSF Medical Center charity care policy pdf"
+      ],
+      "serp_artifacts": [
+       "raw/ucsf-health/serp-8480f1be0b.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://syfphr.oshpd.ca.gov/SearchData.aspx?aid=16441&subtype=41&data=1",
+        "title": "Patient Financial Assistance and Charity Care",
+        "serp_rank": 2,
+        "kind": "regulator",
+        "score": 18.5,
+        "is_pdf": false,
+        "reasons": [
+         "regulator domain syfphr.oshpd.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'polic' (+2)",
+         "names the hospital (3 words)",
+         "Google rank 2 (-0.5)"
+        ]
+       },
+       {
+        "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 15.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain ucsfhealth.org",
+         "mentions 'help paying' (+3)",
+         "mentions 'billing' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=1559eb20-5c2f-4045-b19c-146bc5d63ae4",
+        "title": "Charity Care Eligibility",
+        "serp_rank": 7,
+        "kind": "regulator",
+        "score": 10.25,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'application' (-3)",
+         "names the hospital (1 words)",
+         "Google rank 7 (-1.75)"
+        ]
+       },
+       {
+        "url": "https://ucsfmychart.ucsfmedicalcenter.org/UCSFMyChart/es-US/docs/HelpCenter/FinancialAssistance.pdf",
+        "title": "Financial Assistance Module",
+        "serp_rank": 5,
+        "kind": "other",
+        "score": 7.75,
+        "is_pdf": true,
+        "reasons": [
+         "other domain ucsfmychart.ucsfmedicalcenter.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'mychart' (-3)",
+         "names the hospital (2 words)",
+         "Google rank 5 (-1.25)"
+        ]
+       },
+       {
+        "url": "https://studentmentalhealth.ucsf.edu/services/cmcaf",
+        "title": "Campus Medical Care Assistance Fund (CMCAF)",
+        "serp_rank": 4,
+        "kind": "other",
+        "score": 6.0,
+        "is_pdf": false,
+        "reasons": [
+         "other domain studentmentalhealth.ucsf.edu",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "names the hospital (1 words)",
+         "Google rank 4 (-1)"
+        ]
+       },
+       {
+        "url": "https://www.careroute.ai/hospital-financial-assistance/ucsf-health",
+        "title": "UCSF Health Financial Assistance 2026: Free Care and ...",
+        "serp_rank": 3,
+        "kind": "aggregator",
+        "score": 5.25,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain careroute.ai",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "names the hospital (1 words)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://media.api.sf.gov/documents/FINAL_2022-2024_Charity_Care_Report_March_2026.cleaned.pdf",
+        "title": "SAN FRANCISCO CHARITY CARE",
+        "serp_rank": 9,
+        "kind": "other",
+        "score": 4.75,
+        "is_pdf": true,
+        "reasons": [
+         "other domain media.api.sf.gov",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "names the hospital (1 words)",
+         "Google rank 9 (-2.25)"
+        ]
+       },
+       {
+        "url": "https://www.achaheart.org/your-heart/resources/patient-resource-directory/u-z/ucsf-financial-assistance/",
+        "title": "UCSF Financial Assistance - ACHA",
+        "serp_rank": 8,
+        "kind": "aggregator",
+        "score": -2.0,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain achaheart.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "names the hospital (2 words)",
+         "Google rank 8 (-2)"
+        ]
+       },
+       {
+        "url": "https://dollarfor.org/medical-debt-help-san-francisco-ucsf-medical-center-at-mission-bay/",
+        "title": "Medical Bill Help from Ucsf Medical Center At Mission Bay",
+        "serp_rank": 6,
+        "kind": "aggregator",
+        "score": -2.5,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dollarfor.org",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "names the hospital (3 words)",
+         "Google rank 6 (-1.5)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 15.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain ucsfhealth.org",
+         "mentions 'help paying' (+3)",
+         "mentions 'billing' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 1 (-0.25)"
+        ]
+       }
+      ],
+      "regulator_doc": {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=1559eb20-5c2f-4045-b19c-146bc5d63ae4",
+       "title": "Charity Care Eligibility",
+       "serp_rank": 7,
+       "kind": "regulator",
+       "score": 10.25,
+       "is_pdf": true,
+       "reasons": [
+        "regulator domain api.hdc.hcai.ca.gov",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity care' (+4)",
+        "mentions 'charity' (+2)",
+        "mentions 'application' (-3)",
+        "names the hospital (1 words)",
+        "Google rank 7 (-1.75)"
+       ]
+      }
+     },
+     "extracted": {
+      "tiers": [
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "uninsured",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "Is a Self-Pay Patient; and 2. Has Family Income at or below 400% of the Federal Poverty Level (FPL).",
+        "limit_quote": "",
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "insured",
+        "min_oop_pct_income": 10.0,
+        "doc": 2,
+        "quote": "Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family Income.",
+        "limit_quote": "Has Family Income at or below 400% of the Federal Poverty Level (FPL);",
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       }
+      ],
+      "other_relief": [
+       {
+        "what": "Uninsured self-pay patients who do not qualify for financial assistance get an automatic discount of 70% off facility charges and 50% off professional charges, with no application needed.",
+        "quote": "An application is not required for uninsured patients to receive a self-pay discount.",
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf",
+        "verified": true,
+        "applies_to": "uninsured",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": null
+       }
+      ],
+      "no_collections_while_pending": null,
+      "collections_quote": "If a patient is attempting to qualify for eligibility under the policy, and is attempting in good faith to settle the outstanding bill, the hospital shall not send the unpaid bill to any collection agency or other assignee unless that entity has agreed to comply with this policy.",
+      "collections_source": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+      "apply_how": "Complete a financial assistance application in UCSF MyChart, or download the application and mail it to the listed address, or call Patient Financial Services.",
+      "apply_quote": "If Patient Financial Services has advised you to apply for financial assistance, please complete an application in UCSF's MyChart.",
+      "notes": "Applies only to medically necessary services billed by UCSF Medical Center; separately billed physician fees and non-medically necessary services are excluded, and the high medical cost discount is granted on a one-time basis."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "tier",
+        "quote": "Is a Self-Pay Patient; and 2. Has Family Income at or below 400% of the Federal Poverty Level (FPL).",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "uninsured",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family Income.",
+        "limit_quote": "Has Family Income at or below 400% of the Federal Poverty Level (FPL);",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "insured",
+         "min_oop_pct_income": 10
+        }
+       },
+       {
+        "what": "other_relief",
+        "quote": "An application is not required for uninsured patients to receive a self-pay discount.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf",
+        "summary": "Uninsured self-pay patients who do not qualify for financial assistance get an automatic discount of 70% off facility charges and 50% off professional charges, with no application needed."
+       },
+       {
+        "what": "collections",
+        "quote": "If a patient is attempting to qualify for eligibility under the policy, and is attempting in good faith to settle the outstanding bill, the hospital shall not send the unpaid bill to any collection agency or other assignee unless that entity has agreed to comply with this policy.",
+        "verified": true,
+        "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf"
+       },
+       {
+        "what": "apply",
+        "quote": "If Patient Financial Services has advised you to apply for financial assistance, please complete an application in UCSF's MyChart.",
+        "verified": true,
+        "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill"
+       }
+      ],
+      "tiers_verified": 2,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 2,
+     "tiers_rejected": 0,
+     "status": "ok",
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "is_current": 1
+    }
+   ],
+   "checks": [
+    {
+     "id": 7,
+     "hospital_id": "ucsf-health",
+     "checked_at": "2026-10-24T22:35:16+00:00",
+     "content_sha256": "b0484cafc39bca3b48120c0a6996ac1c876d6ef0e63336f49b5a7547b84422c3",
+     "changed": 0,
+     "version_id": 2,
+     "note": "unchanged",
+     "run_id": "recheck-20261024T223341-bdb2a7"
+    },
+    {
+     "id": 2,
+     "hospital_id": "ucsf-health",
+     "checked_at": "2026-10-24T22:31:06+00:00",
+     "content_sha256": "b0484cafc39bca3b48120c0a6996ac1c876d6ef0e63336f49b5a7547b84422c3",
+     "changed": 1,
+     "version_id": 2,
+     "note": "initial crawl: version 1",
+     "run_id": "crawl-20261024T223009-5a66f0"
+    }
+   ],
+   "crawl_log": [
+    {
+     "id": 20,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:57+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: UCSF Medical Center charity care policy pdf",
+     "status": 200,
+     "bytes": 24027,
+     "latency_ms": 5719,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 21,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:57+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill \u2014 score 15.75: official domain ucsfhealth.org; mentions 'help paying' (+3); mentions 'billing' (+1); names the hospital (2 words); Google rank 1 (-0.25)"
+    },
+    {
+     "id": 22,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:57+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=1559eb20-5c2f-4045-b19c-146bc5d63ae4 \u2014 score 10.25: regulator domain api.hdc.hcai.ca.gov; mentions 'financial assistance' (+4); mentions 'charity care' (+4); mentions 'charity' (+2); mentions 'application' (-3); names the hospital (1 words); Google rank 7 (-1.75)"
+    },
+    {
+     "id": 23,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:57+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.careroute.ai/hospital-financial-assistance/ucsf-health"
+    },
+    {
+     "id": 24,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:57+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.achaheart.org/your-heart/resources/patient-resource-directory/u-z/ucsf-financial-assistance/"
+    },
+    {
+     "id": 25,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:57+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://dollarfor.org/medical-debt-help-san-francisco-ucsf-medical-center-at-mission-bay/"
+    },
+    {
+     "id": 26,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:59+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+     "status": 200,
+     "bytes": 21641,
+     "latency_ms": 1973,
+     "ok": 1,
+     "note": "text/html; charset=utf-8"
+    },
+    {
+     "id": 27,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:30:59+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill: 88 links, policy documents: https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3)]; https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf [PDF (+2), says policy (+3), 'discount' (+2)]"
+    },
+    {
+     "id": 28,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:00+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+     "status": 200,
+     "bytes": 268953,
+     "latency_ms": 866,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 29,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:01+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf",
+     "status": 200,
+     "bytes": 220902,
+     "latency_ms": 1042,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 30,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:02+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=1559eb20-5c2f-4045-b19c-146bc5d63ae4"
+    },
+    {
+     "id": 31,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:06+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf | 'Is a Self-Pay Patient; and 2. Has Family Income at or below 400% of the Federal Poverty Level (FPL).'"
+    },
+    {
+     "id": 32,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:06+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf | 'Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family '"
+    },
+    {
+     "id": 33,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:06+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf | 'An application is not required for uninsured patients to receive a self-pay discount.'"
+    },
+    {
+     "id": 34,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:06+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections VERIFIED in https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf | 'If a patient is attempting to qualify for eligibility under the policy, and is attempting in good faith to settle the outstanding bill, the hospital shall not s'"
+    },
+    {
+     "id": 35,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:31:06+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill | \"If Patient Financial Services has advised you to apply for financial assistance, please complete an application in UCSF's MyChart.\""
+    },
+    {
+     "id": 85,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:35:08+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+     "status": 200,
+     "bytes": 21641,
+     "latency_ms": 33852,
+     "ok": 1,
+     "note": "text/html; charset=utf-8"
+    },
+    {
+     "id": 86,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:35:08+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill: 88 links, policy documents: https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3)]; https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf [PDF (+2), says policy (+3), 'discount' (+2)]"
+    },
+    {
+     "id": 87,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:35:14+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+     "status": 200,
+     "bytes": 268953,
+     "latency_ms": 6644,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 88,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:35:16+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf",
+     "status": 200,
+     "bytes": 220902,
+     "latency_ms": 983,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 89,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "ucsf-health",
+     "ts": "2026-10-24T22:35:16+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=1559eb20-5c2f-4045-b19c-146bc5d63ae4"
+    }
+   ]
+  },
+  {
+   "id": "zsfg",
+   "name": "Zuckerberg San Francisco General Hospital",
+   "system": "San Francisco Health Network",
+   "city": "San Francisco",
+   "domains": [
+    "zuckerbergsanfranciscogeneral.org",
+    "sf.gov",
+    "sfdph.org"
+   ],
+   "aliases": [
+    "ZSFG",
+    "SF General",
+    "San Francisco General Hospital",
+    "Priscilla Chan and Mark Zuckerberg San Francisco General Hospital"
+   ],
+   "query": "Zuckerberg San Francisco General Hospital financial assistance charity care policy",
+   "versions": [
+    {
+     "id": 3,
+     "hospital_id": "zsfg",
+     "version": 1,
+     "fetched_at": "2026-10-24T22:31:32+00:00",
+     "content_sha256": "42b07c096fa5428164521e990f9d5e03608a4e3d5da0fa0daedb47af5b8cdbc3",
+     "source_urls": [
+      "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+      "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+      "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/"
+     ],
+     "documents": [
+      {
+       "url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "3dd45ec4b556092255ba0a203f7e2f3078ee1478ed60eb3c6e07f6d3b746591b",
+       "nbytes": 24478,
+       "via": "unlocker",
+       "title": "Help Paying Your Bill",
+       "pages": null,
+       "artifacts": [
+        "raw/zsfg/page-3dd45ec4b556.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain zuckerbergsanfranciscogeneral.org",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity care' (+4)",
+        "mentions 'help paying' (+3)",
+        "mentions 'charity' (+2)",
+        "mentions 'discount' (+1)",
+        "Google rank 2 (-0.5)"
+       ],
+       "text_sha256": "30996040c6d4a1505037ed3026bdc2bd2c6cdadb6cddf74685aa87e74f92a6df"
+      },
+      {
+       "url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "d9585349ea708a862c5726b7fed11a22f51f1489db1898811692dae2039c657a",
+       "nbytes": 29493,
+       "via": "unlocker",
+       "title": "Billing Assistance",
+       "pages": null,
+       "artifacts": [
+        "raw/zsfg/page-d9585349ea70.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain zuckerbergsanfranciscogeneral.org",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity care' (+4)",
+        "mentions 'charity' (+2)",
+        "mentions 'discount' (+1)",
+        "mentions 'billing' (+1)",
+        "Google rank 1 (-0.25)"
+       ],
+       "text_sha256": "5360a2148575aa61c4b5c94b62b1920786ee647f8708b3a4490f06ecc43af083"
+      },
+      {
+       "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "cfe380dcf7e5f1d59ef7b73fac85b453f83332a3cb22190165a57888ebc82553",
+       "nbytes": 22030,
+       "via": "unlocker",
+       "title": "Help Paying Your Bill - SF Health Network financial ...",
+       "pages": null,
+       "artifacts": [
+        "raw/zsfg/page-cfe380dcf7e5.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain zuckerbergsanfranciscogeneral.org",
+        "mentions 'charity care' (+4)",
+        "mentions 'help paying' (+3)",
+        "mentions 'charity' (+2)",
+        "mentions 'discount' (+1)",
+        "mentions 'polic' (+2)",
+        "mentions 'application' (-3)",
+        "names the hospital (4 words)",
+        "Google rank 8 (-2)"
+       ],
+       "text_sha256": "c90a221654a5a9fabfd3cf0401000ab16f99a9309ca12c8101ff7be54244c5eb"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "Zuckerberg San Francisco General Hospital financial assistance charity care policy"
+      ],
+      "serp_artifacts": [
+       "raw/zsfg/serp-7f4f4573b5.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 2,
+        "kind": "official",
+        "score": 23.5,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "Google rank 2 (-0.5)"
+        ]
+       },
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+        "title": "Billing Assistance",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 21.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'billing' (+1)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/",
+        "title": "Help Paying Your Bill - SF Health Network financial ...",
+        "serp_rank": 8,
+        "kind": "official",
+        "score": 21.0,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'charity care' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'polic' (+2)",
+         "mentions 'application' (-3)",
+         "names the hospital (4 words)",
+         "Google rank 8 (-2)"
+        ]
+       },
+       {
+        "url": "https://www.sf.gov/sites/default/files/2024-05/LHH%20CHARITY%20%26%20DISCOUNT%20ENG%20App_%205.22.24.pdf",
+        "title": "charity care and discount payment programs a ppl ica tion",
+        "serp_rank": 3,
+        "kind": "official",
+        "score": 20.25,
+        "is_pdf": true,
+        "reasons": [
+         "official domain sf.gov",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "names the hospital (4 words)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/services/sign-up-enrollment-and-insurance-assistance/",
+        "title": "Sign Up, Enrollment, and Insurance Assistance",
+        "serp_rank": 5,
+        "kind": "official",
+        "score": 19.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "Google rank 5 (-1.25)"
+        ]
+       },
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/charity-care-and-discount-payment-assistance-policies/",
+        "title": "Charity Care and Discount Payment Assistance Policies",
+        "serp_rank": 9,
+        "kind": "official",
+        "score": 18.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'polic' (+2)",
+         "names the hospital (2 words)",
+         "Google rank 9 (-2.25)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=5f87de5e-a09b-409b-8177-9c4e2ea60f79",
+        "title": "san francisco health network charity care and",
+        "serp_rank": 6,
+        "kind": "regulator",
+        "score": 15.5,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'polic' (+2)",
+         "names the hospital (1 words)",
+         "Google rank 6 (-1.5)"
+        ]
+       },
+       {
+        "url": "https://www.careroute.ai/hospital-financial-assistance/zuckerberg-sf-general",
+        "title": "Zuckerberg San Francisco General Financial Assistance",
+        "serp_rank": 4,
+        "kind": "aggregator",
+        "score": 8.0,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain careroute.ai",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "names the hospital (4 words)",
+         "Google rank 4 (-1)"
+        ]
+       },
+       {
+        "url": "https://dollarfor.org/medical-debt-help-san-francisco-priscilla-chan--mark-zuckerberg-san-francisco-general-hospital--trauma-center/",
+        "title": "Medical Bill Help from Priscilla Chan & Mark Zuckerberg ...",
+        "serp_rank": 7,
+        "kind": "aggregator",
+        "score": -6.75,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dollarfor.org",
+         "mentions 'discount' (+1)",
+         "names the hospital (4 words)",
+         "Google rank 7 (-1.75)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+        "title": "Help Paying Your Bill",
+        "serp_rank": 2,
+        "kind": "official",
+        "score": 23.5,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "Google rank 2 (-0.5)"
+        ]
+       },
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+        "title": "Billing Assistance",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 21.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'billing' (+1)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/",
+        "title": "Help Paying Your Bill - SF Health Network financial ...",
+        "serp_rank": 8,
+        "kind": "official",
+        "score": 21.0,
+        "is_pdf": false,
+        "reasons": [
+         "official domain zuckerbergsanfranciscogeneral.org",
+         "mentions 'charity care' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'polic' (+2)",
+         "mentions 'application' (-3)",
+         "names the hospital (4 words)",
+         "Google rank 8 (-2)"
+        ]
+       }
+      ],
+      "regulator_doc": {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=5f87de5e-a09b-409b-8177-9c4e2ea60f79",
+       "title": "san francisco health network charity care and",
+       "serp_rank": 6,
+       "kind": "regulator",
+       "score": 15.5,
+       "is_pdf": true,
+       "reasons": [
+        "regulator domain api.hdc.hcai.ca.gov",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity care' (+4)",
+        "mentions 'charity' (+2)",
+        "mentions 'polic' (+2)",
+        "names the hospital (1 words)",
+        "Google rank 6 (-1.5)"
+       ]
+      }
+     },
+     "extracted": {
+      "tiers": [],
+      "other_relief": [
+       {
+        "what": "Patients with family household income up to 138% of the federal poverty level may qualify for the Charity Care Program, but the documents do not state the discount percentage.",
+        "quote": "The patient\u2019s family household income may not exceed 138% of the federal poverty level",
+        "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+        "verified": true,
+        "applies_to": "all",
+        "max_fpl_pct": 138.0,
+        "min_oop_pct_income": null
+       },
+       {
+        "what": "Patients who do not qualify for Charity Care may qualify for the Discount Payment Program, where the discount amount depends on household federal poverty level, but no percentages are stated.",
+        "quote": "The patient\u2019s household federal poverty level determines the amount of the discount to be applied",
+        "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+        "verified": true,
+        "applies_to": "all",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": null
+       }
+      ],
+      "no_collections_while_pending": null,
+      "collections_quote": "",
+      "collections_source": null,
+      "apply_how": "Complete the single SFDPH application for both Charity Care and Discount Payment programs with required verification, and mail it to the Patient Financial Assistance Department or contact a financial counselor.",
+      "apply_quote": "SFDPH has a single application for both of the Charity Care and Discount Payment programs.",
+      "notes": "The documents give only the 138% FPL limit for Charity Care and no fixed discount percentages; the full policy is hosted on the HCAI website and was not included, and the policy also covers Laguna Honda Hospital and SF Health Network clinics."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "other_relief",
+        "quote": "The patient\u2019s family household income may not exceed 138% of the federal poverty level",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+        "summary": "Patients with family household income up to 138% of the federal poverty level may qualify for the Charity Care Program, but the documents do not state the discount percentage."
+       },
+       {
+        "what": "other_relief",
+        "quote": "The patient\u2019s household federal poverty level determines the amount of the discount to be applied",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+        "summary": "Patients who do not qualify for Charity Care may qualify for the Discount Payment Program, where the discount amount depends on household federal poverty level, but no percentages are stated."
+       },
+       {
+        "what": "collections",
+        "quote": "",
+        "verified": false,
+        "source_url": null
+       },
+       {
+        "what": "apply",
+        "quote": "SFDPH has a single application for both of the Charity Care and Discount Payment programs.",
+        "verified": true,
+        "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/"
+       }
+      ],
+      "tiers_verified": 0,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 0,
+     "tiers_rejected": 0,
+     "status": "no_tiers",
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "is_current": 1
+    }
+   ],
+   "checks": [
+    {
+     "id": 8,
+     "hospital_id": "zsfg",
+     "checked_at": "2026-10-24T22:35:35+00:00",
+     "content_sha256": "42b07c096fa5428164521e990f9d5e03608a4e3d5da0fa0daedb47af5b8cdbc3",
+     "changed": 0,
+     "version_id": 3,
+     "note": "unchanged",
+     "run_id": "recheck-20261024T223341-bdb2a7"
+    },
+    {
+     "id": 3,
+     "hospital_id": "zsfg",
+     "checked_at": "2026-10-24T22:31:32+00:00",
+     "content_sha256": "42b07c096fa5428164521e990f9d5e03608a4e3d5da0fa0daedb47af5b8cdbc3",
+     "changed": 1,
+     "version_id": 3,
+     "note": "initial crawl: version 1",
+     "run_id": "crawl-20261024T223009-5a66f0"
+    }
+   ],
+   "crawl_log": [
+    {
+     "id": 36,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: Zuckerberg San Francisco General Hospital financial assistance charity care policy",
+     "status": 200,
+     "bytes": 26741,
+     "latency_ms": 4467,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 37,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/ \u2014 score 23.5: official domain zuckerbergsanfranciscogeneral.org; mentions 'financial assistance' (+4); mentions 'charity care' (+4); mentions 'help paying' (+3); mentions 'charity' (+2); mentions 'discount' (+1); Google rank 2 (-0.5)"
+    },
+    {
+     "id": 38,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/ \u2014 score 21.75: official domain zuckerbergsanfranciscogeneral.org; mentions 'financial assistance' (+4); mentions 'charity care' (+4); mentions 'charity' (+2); mentions 'discount' (+1); mentions 'billing' (+1); Google rank 1 (-0.25)"
+    },
+    {
+     "id": 39,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/ \u2014 score 21.0: official domain zuckerbergsanfranciscogeneral.org; mentions 'charity care' (+4); mentions 'help paying' (+3); mentions 'charity' (+2); mentions 'discount' (+1); mentions 'polic' (+2); mentions 'application' (-3); names the hospital (4 words); Google rank 8 (-2)"
+    },
+    {
+     "id": 40,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=5f87de5e-a09b-409b-8177-9c4e2ea60f79 \u2014 score 15.5: regulator domain api.hdc.hcai.ca.gov; mentions 'financial assistance' (+4); mentions 'charity care' (+4); mentions 'charity' (+2); mentions 'polic' (+2); names the hospital (1 words); Google rank 6 (-1.5)"
+    },
+    {
+     "id": 41,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.careroute.ai/hospital-financial-assistance/zuckerberg-sf-general"
+    },
+    {
+     "id": 42,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:11+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://dollarfor.org/medical-debt-help-san-francisco-priscilla-chan--mark-zuckerberg-san-francisco-general-hospital--trauma-center/"
+    },
+    {
+     "id": 43,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:16+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+     "status": 200,
+     "bytes": 24478,
+     "latency_ms": 5040,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 44,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:16+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/: 99 links, policy documents: none"
+    },
+    {
+     "id": 45,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:17+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+     "status": 200,
+     "bytes": 29493,
+     "latency_ms": 1508,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 46,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:17+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/: 112 links, policy documents: none"
+    },
+    {
+     "id": 47,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:29+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/",
+     "status": 200,
+     "bytes": 22030,
+     "latency_ms": 11550,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 48,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:29+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/: 99 links, policy documents: none"
+    },
+    {
+     "id": 49,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:29+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=5f87de5e-a09b-409b-8177-9c4e2ea60f79"
+    },
+    {
+     "id": 50,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:32+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/ | 'The patient\u2019s family household income may not exceed 138% of the federal poverty level'"
+    },
+    {
+     "id": 51,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:32+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/ | 'The patient\u2019s household federal poverty level determines the amount of the discount to be applied'"
+    },
+    {
+     "id": 52,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:32+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections REJECTED: not found | ''"
+    },
+    {
+     "id": 53,
+     "run_id": "crawl-20261024T223009-5a66f0",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:31:32+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/ | 'SFDPH has a single application for both of the Charity Care and Discount Payment programs.'"
+    },
+    {
+     "id": 90,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:20+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+     "status": 200,
+     "bytes": 24478,
+     "latency_ms": 3980,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 91,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:20+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/: 99 links, policy documents: none"
+    },
+    {
+     "id": 92,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:24+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+     "status": 200,
+     "bytes": 29493,
+     "latency_ms": 3800,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 93,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:24+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/: 112 links, policy documents: none"
+    },
+    {
+     "id": 94,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:35+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/",
+     "status": 200,
+     "bytes": 22030,
+     "latency_ms": 11072,
+     "ok": 1,
+     "note": "text/html; charset=UTF-8"
+    },
+    {
+     "id": 95,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:35+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/: 99 links, policy documents: none"
+    },
+    {
+     "id": 96,
+     "run_id": "recheck-20261024T223341-bdb2a7",
+     "hospital_id": "zsfg",
+     "ts": "2026-10-24T22:35:35+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=5f87de5e-a09b-409b-8177-9c4e2ea60f79"
+    }
+   ]
+  }
+ ]
+}

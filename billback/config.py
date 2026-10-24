@@ -35,6 +35,15 @@ CARTESIA_TOOL_TOKEN = _secret("CARTESIA_TOOL_TOKEN")
 CARTESIA_VOICE_ID = os.getenv("CARTESIA_VOICE_ID", "6ccbfb76-1fc6-48f7-b71d-91ac6298247b")
 REP_PHONE_NUMBER = os.getenv("REP_PHONE_NUMBER", "")  # teammate playing hospital billing, +1XXXXXXXXXX
 
+# Own voice pipeline (billback/voice): Twilio telephony + Cartesia streaming STT/TTS + Claude call brain.
+TWILIO_ACCOUNT_SID = _secret("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = _secret("TWILIO_AUTH_TOKEN")          # also validates X-Twilio-Signature on webhooks
+TWILIO_FROM_NUMBER = _secret("TWILIO_FROM_NUMBER")        # a Twilio number you own, +1XXXXXXXXXX
+TWILIO_TWIML_APP_SID = _secret("TWILIO_TWIML_APP_SID")    # optional: enables the 3-way conference handoff
+PATIENT_PHONE_NUMBER = _secret("PATIENT_PHONE_NUMBER")    # demo patient's phone (teammate), for verbal consent
+CARTESIA_STT_MODEL = os.getenv("CARTESIA_STT_MODEL", "ink-2")
+CARTESIA_TTS_MODEL = os.getenv("CARTESIA_TTS_MODEL", "sonic-3.6")
+
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://localhost:8000")
 DATA_DIR = ROOT / "data"
 DEMO_DIR = ROOT / "demo"
@@ -48,4 +57,5 @@ def mode() -> dict:
         "nessie": bool(NESSIE_API_KEY),
         "brightdata": bool(BRIGHTDATA_API_KEY and BRIGHTDATA_UNLOCKER_ZONE),
         "cartesia": bool(CARTESIA_API_KEY),
+        "twilio": bool(TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER),
     }

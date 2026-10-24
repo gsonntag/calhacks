@@ -1,7 +1,9 @@
-"""FastAPI server: chat intake, case runner, live events, approvals, and the call-turn endpoint."""
+"""FastAPI server: chat intake, case runner, live events, approvals, the call-turn endpoint, and the
+case dashboard (persisted cases, follow-ups, "what's the status?", call again)."""
 import asyncio
 import hmac
 import json
+from contextlib import asynccontextmanager
 
 import anthropic
 
@@ -10,13 +12,22 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import config, llm, orchestrator
+from . import config, events, followups, llm, orchestrator
 from .agents import caller, intake
 from .integrations import cartesia
 from .events import bus
 from .harness import gate
 
-app = FastAPI(title="BillBack")
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    n = orchestrator.load_cases()
+    if n:
+        print(f"loaded {n} saved case(s) from {events.DATA_DIR / 'cases'}")
+    yield
+
+
+app = FastAPI(title="BillBack", lifespan=lifespan)
 WEB = config.ROOT / "web"
 _tasks: set[asyncio.Task] = set()
 
@@ -43,8 +54,8 @@ ALREADY = "I'm already on it. Follow along in your case."
 NUMERIC = {"bill": ("total_charges", "amount_due"), "eob": ("billed", "allowed", "plan_paid", "patient_responsibility")}
 
 
-def _launch(case: dict) -> dict:
-    t = asyncio.create_task(orchestrator.run_case(case))
+def _launch(case: dict, coro=None) -> dict:
+    t = asyncio.create_task(coro or orchestrator.run_case(case))
     _tasks.add(t)
     t.add_done_callback(_tasks.discard)
     return case
@@ -88,9 +99,16 @@ async def mode():
 @app.post("/api/chat")
 async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str = Form(""),
                files: list[UploadFile] = File(default=[])):
-    """history: JSON list of {role, content} (text only). Returns {reply, case_id?}."""
+    """history: JSON list of {role, content} (text only). Returns {reply, case_id?}.
+    Once a case exists, or when someone asks for an update, Billie answers from the case's stored history."""
     if case_id in orchestrator.cases:  # one chat, one case: never start a second pipeline
-        return {"reply": ALREADY, "case_id": case_id}
+        case = orchestrator.cases[case_id]
+        if not followups.is_status_question(message, in_case=True):
+            return {"reply": ALREADY, "case_id": case_id}
+        return {"reply": (await orchestrator.answer_status(case, message))["answer"], "case_id": case_id}
+    if followups.is_status_question(message) and orchestrator.cases:
+        case = max(orchestrator.cases.values(), key=lambda c: c.get("created_at") or 0)
+        return {"reply": (await orchestrator.answer_status(case, message))["answer"], "case_id": case["id"]}
     try:
         msgs = json.loads(history)
     except json.JSONDecodeError:
@@ -154,7 +172,65 @@ async def start_case(files: list[UploadFile] = File(default=[]), scenario: str =
 @app.get("/api/cases")
 async def list_cases():
     return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
-             "status": c["status"]} for c in orchestrator.cases.values()]
+             "status": c["status"], "case_number": orchestrator.summary(c)["case_number"],
+             "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
+
+
+@app.get("/api/dashboard")
+async def dashboard():
+    """Every case, newest first: balances, calls, follow-ups and the next action with its due date."""
+    rows = [orchestrator.summary(c) for c in orchestrator.cases.values()]
+    return sorted(rows, key=lambda r: r.get("created_at") or 0, reverse=True)
+
+
+def _case_or_404(case_id: str) -> dict | None:
+    return orchestrator.cases.get(case_id)
+
+
+@app.get("/api/cases/{case_id}/summary")
+async def case_summary(case_id: str):
+    case = _case_or_404(case_id)
+    return orchestrator.summary(case) if case else JSONResponse({"error": "not found"}, 404)
+
+
+class Question(BaseModel):
+    question: str = "What's the status?"
+
+
+@app.post("/api/cases/{case_id}/ask")
+async def ask(case_id: str, q: Question):
+    """"What's the status?" answered from the case's stored calls, promises, follow-ups and amounts."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    return await orchestrator.answer_status(case, q.question.strip()[:500] or "What's the status?")
+
+
+@app.post("/api/cases/{case_id}/call-again")
+async def call_again(case_id: str):
+    """Start a follow-up call; it waits on the patient's approval like the first call."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    if not orchestrator.can_call_again(case):
+        return JSONResponse({"error": f"can't call again while the case is {case['status']}"}, 409)
+    case["status"] = "awaiting_call_approval"  # claim it now so a double click can't start two calls
+    _launch(case, orchestrator.call_again(case))
+    return {"ok": True, "case_id": case_id}
+
+
+class Clock(BaseModel):
+    days: int | None = 1  # null resets the clock to today
+
+
+@app.post("/api/cases/{case_id}/clock")
+async def clock(case_id: str, c: Clock):
+    """Demo control: simulate days passing on this case so a follow-up comes due on stage."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    orchestrator.advance_clock(case, c.days)
+    return orchestrator.summary(case)
 
 
 @app.get("/api/cases/{case_id}")
@@ -302,8 +378,26 @@ async def cartesia_events(request: Request):
     return {"ok": True}
 
 
+class VoicePick(BaseModel):
+    voice_id: str
+
+
+@app.post("/api/cases/{case_id}/voice")
+async def pick_voice(case_id: str, v: VoicePick):
+    """The caller voice/accent for this case's calls (phone pipeline and desk-mode speech)."""
+    case = orchestrator.cases.get(case_id)
+    if not case:
+        return JSONResponse({"error": "no such case"}, 404)
+    case["voice_id"] = v.voice_id
+    if case.get("result", {}).get("brief") is not None:
+        case["result"]["brief"]["voice_id"] = v.voice_id
+    return {"ok": True}
+
+
 class Speak(BaseModel):
     text: str
+    voice_id: str | None = None
+    call_id: str | None = None
 
 
 @app.post("/api/tts")
@@ -311,7 +405,11 @@ async def speak(s: Speak):
     """Desk-mode voice: Cartesia Sonic if configured, else the browser speaks it."""
     if not config.CARTESIA_API_KEY:
         return JSONResponse({"error": "no cartesia key"}, 404)
-    return Response(await cartesia.tts(s.text), media_type="audio/wav")
+    voice_id = s.voice_id
+    if not voice_id and s.call_id:  # desk mode speaks in the voice picked for that case
+        voice_id = next((c.get("result", {}).get("brief", {}).get("voice_id") for c in orchestrator.cases.values()
+                         if c.get("call_id") == s.call_id), None)
+    return Response(await cartesia.tts(s.text, voice_id), media_type="audio/wav")
 
 
 @app.post("/api/reset")
@@ -323,13 +421,14 @@ async def reset():
     orchestrator.calls_by_cartesia_id.clear()
     _seen_webhooks.clear()
     bus.reset()
+    events.delete_cases()  # audit logs stay as the audit trail
     return {"ok": True}
 
 
 @app.get("/api/replay")
 async def replay(scenario: str = "default"):
     """Latest recorded run (data/), else the committed fallback recording (demo/)."""
-    for f in (config.DATA_DIR / f"replay_{scenario}.json", config.DEMO_DIR / f"replay_{scenario}.json"):
+    for f in (events.DATA_DIR / f"replay_{scenario}.json", config.DEMO_DIR / f"replay_{scenario}.json"):
         if f.exists():
             return Response(f.read_text(), media_type="application/json")
     return JSONResponse({"error": "no recording yet: finish one case first"}, 404)
@@ -338,6 +437,19 @@ async def replay(scenario: str = "default"):
 @app.get("/")
 async def index():
     return FileResponse(WEB / "index.html")
+
+
+# Routers from the policy (Bright Data) and voice agents; optional until both modules land.
+try:
+    from .policies.routes import router as policies_router
+    app.include_router(policies_router)
+except ImportError as e:
+    print("policies router not mounted:", e)
+try:
+    from .voice.routes import router as voice_router
+    app.include_router(voice_router)
+except ImportError as e:
+    print("voice router not mounted:", e)
 
 
 app.mount("/", StaticFiles(directory=WEB), name="web")

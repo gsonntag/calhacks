@@ -4,7 +4,12 @@ import pytest
 
 from billback import finance
 from billback.orchestrator import demo_case
-from billback.agents.policy import HIGH_COST_TIERS
+from billback.policies.store import PolicyStore
+
+
+def stored_tiers(hospital_id: str) -> list[dict]:
+    """Verified tiers from the committed policy DB (real Bright Data crawl)."""
+    return PolicyStore().current(hospital_id)["extracted"]["tiers"]
 
 DEMO_TODAY = date(2026, 10, 24)
 
@@ -44,10 +49,11 @@ def test_demo_income_fpl_and_discount(demo):
     assert elig["discount_pct"] == 100
     # her whole $2,600 share is written off, so the $500 she already paid comes back
     assert finance.settle(2600, 500, elig["discount_pct"]) == {"discounted_share": 0.0, "balance": 0.0, "refund": 500.0}
-    # same answer under the insured high-medical-cost rule (Sutter's): $2,600 is 11% of her income
-    sutter = finance.charity_discount(inc["annual"], 1, finance.clean_tiers(HIGH_COST_TIERS["tiers"]),
-                                      insured=True, out_of_pocket=2600)
-    assert sutter["discount_pct"] == 100
+    # her hospital's real policy (Sutter CPMC, from policydb/): insured, <= 400% FPL, out-of-pocket $2,600 is
+    # 11% of her income (> 10%) -> full write-off
+    assert demo["hospital"]["name"] == demo["bill"]["provider"] == "California Pacific Medical Center"
+    sutter = finance.charity_discount(inc["annual"], 1, stored_tiers("sutter-cpmc"), insured=True, out_of_pocket=2600)
+    assert sutter["discount_pct"] == 100 and sutter["tier"]["min_oop_pct_income"] == 10
 
 
 def test_settle_refund_when_overpaid():
@@ -71,9 +77,11 @@ def test_freecare_scenario():
     tx = [{"id": f"t{i}", "merchant": "", **t} for i, t in enumerate(c["transactions"])]
     rec = finance.reconcile(c["bill"], c["eob"], tx)
     inc = finance.income(tx, today=DEMO_TODAY)
-    elig = finance.charity_discount(inc["annual"], 3, finance.clean_tiers(HIGH_COST_TIERS["tiers"]),
+    assert c["hospital"]["name"] == c["bill"]["provider"] == "UCSF Medical Center"
+    elig = finance.charity_discount(inc["annual"], 3, stored_tiers("ucsf-health"),  # UCSF's real policy
                                     insured=True, out_of_pocket=c["eob"]["patient_responsibility"])
     assert rec["owed"] == 5600 and elig["discount_pct"] == 100
+    assert elig["fpl_pct"] == pytest.approx(174.0, abs=0.5) and elig["oop_pct_income"] == pytest.approx(12.1, abs=0.1)
     assert finance.settle(rec["patient_responsibility"], rec["paid"], 100)["balance"] == 0
 
 
@@ -117,6 +125,6 @@ def test_clean_tiers_coerces_and_drops():
 
 
 def test_reconcile_without_payments(demo):
-    txns = [t for t in demo["transactions"] if "Bayview" not in t.get("merchant", "")]
+    txns = [t for t in demo["transactions"] if "Pacific" not in t.get("merchant", "")]
     rec = finance.reconcile(demo["bill"], demo["eob"], txns)
     assert rec["paid"] == 0 and rec["owed"] == 2600

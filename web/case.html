@@ -18,6 +18,7 @@
     --line:#EEE7E7; --hair:#F1E6E6; --ease:cubic-bezier(.2,.8,.2,1);
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html,body{margin:0;background:#FFFFFF;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
   a{color:var(--ink)} a:hover{color:var(--accent)}
   button{font:inherit}
@@ -102,6 +103,9 @@
   .sum-list{margin:0;padding-top:6px;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:15px;line-height:1.5}
   .sum-list dt{color:var(--muted-2)} .sum-list dd{margin:0} .sum-list dd b{font-weight:600} .sum-list dd span{color:var(--muted-2)}
 
+  .voice-pick{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;font-size:15px;color:var(--muted)}
+  .voice-pick select{font:inherit;color:var(--ink);padding:8px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;max-width:100%}
+  .voice-pick button{min-height:0;padding:6px 12px;font-size:14px}
   .ask{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
   .ask li{display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.5;color:var(--ink-2)}
   .ask svg{flex:none;margin-top:4px}
@@ -136,7 +140,9 @@
   @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   @keyframes bar{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
   @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
-  .replay #deskLink, .replay #endCallBtn, .replay #newCase{display:none!important}
+  .follow{margin-top:14px;border:1.5px solid var(--green-line);background:#F7FBF7;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+  .follow p{margin:0;font-size:16px;line-height:1.5} .follow .small{font-size:14px}
+  .replay #deskLink, .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn{display:none!important}
 </style>
 </head>
 <body>
@@ -147,7 +153,7 @@
       <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
       <b>Bill<span>Back</span></b>
     </a>
-    <nav aria-label="Main"><a id="hoodLink" href="ops.html">Under the hood</a></nav>
+    <nav aria-label="Main"><a href="dashboard.html">All cases</a><a id="hoodLink" href="ops.html">Under the hood</a></nav>
   </div>
   <nav class="tabs" aria-label="Cases">
     <div id="tabList" style="display:contents"></div>
@@ -194,9 +200,13 @@
     <div class="body">
       <div class="head"><h2>Your approval</h2><span class="meta" id="approveMeta"></span></div>
       <div class="reveal full"><div><div class="inner">
-        <p style="margin:0;font-size:17px;line-height:1.6">Can BillBack call <strong id="approveProvider"></strong> billing for you? On the call we’ll:</p>
+        <p style="margin:0;font-size:17px;line-height:1.6">Can BillBack call <strong id="approveProvider"></strong> billing <span id="approveAgain">for you</span>? On the call we’ll:</p>
         <ul class="ask" id="askList"></ul>
         <p class="small" style="margin:0;font-size:14px;line-height:1.5">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
+        <label class="voice-pick" for="voiceSel"><span>Caller voice</span>
+          <select id="voiceSel"></select>
+          <button type="button" class="ghost secondary" id="voicePlay" aria-label="Hear this voice">▶ Hear it</button>
+        </label>
         <p class="meta" style="margin:0">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
         <div class="actions" style="gap:8px 16px">
           <button type="button" class="primary" id="approveBtn" style="padding:0 26px">Approve the call</button>
@@ -210,7 +220,7 @@
   <section class="step" data-step="3" aria-label="Step 4: Call">
     <div class="rail"><span class="marker"><svg class="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Done"><path d="M20 6 9 17l-5-5"/></svg><span class="num">4</span></span><span class="line"></span></div>
     <div class="body">
-      <div class="head"><h2>Call billing</h2><span class="meta" id="callMeta"></span></div>
+      <div class="head"><h2 id="callTitle">Call billing</h2><span class="meta" id="callMeta"></span></div>
       <div class="reveal full"><div><div class="inner" style="gap:20px">
         <div class="live-row">
           <div class="who">
@@ -253,6 +263,14 @@
           </div>
         </div>
         <span style="font-size:15px;color:var(--muted-2)" id="finalNote">We’ll check back once billing confirms your new balance.</span>
+        <div class="follow" id="followBox" hidden>
+          <p id="followText"></p>
+          <span class="small" id="followPromised"></span>
+          <div class="actions" style="gap:8px 16px">
+            <button type="button" class="primary" id="callAgainBtn">Call again</button>
+            <a class="link-btn" href="dashboard.html" style="display:inline-flex;align-items:center">See all cases</a>
+          </div>
+        </div>
       </div></div></div>
     </div>
   </section>
@@ -260,7 +278,7 @@
 
 <script>
 const STATUS = ['Upload', 'Reviewing', 'Needs approval', 'On call', 'Resolved'];
-const AGENT_STATUS = {created: 1, reviewing: 1, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4};
+const AGENT_STATUS = {created: 1, reviewing: 1, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const money = (n) => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -285,7 +303,7 @@ function blankModel() {
   return { bill: null, docs: [], steps: { auditor: [], policy: [] }, agent: {}, review: null, approvals: {},
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
-           warnings: [], quotes: [] };
+           warnings: [], quotes: [], calls: [], followup: null, round: 1 };
 }
 const state = { tabs: [], active: null, models: {}, drafts: {}, ws: null, now: Date.now() / 1000 };
 const model = (id) => (state.models[id] ||= blankModel());
@@ -321,6 +339,12 @@ function apply(m, e) {
     case 'call_ended': m.outcome = e.outcome || m.outcome; m.callEnded = e.ts; break;
     case 'plan_proposed': m.plan = { ...(m.plan || {}), ...e }; break;
     case 'case_done': m.done = e.summary; break;
+    case 'call_logged': m.calls.push(e.call); break;
+    case 'followup_scheduled': m.followup = e.followup; break;
+    case 'followup_started':  // "Call again": steps 3-5 run again for the follow-up call
+      Object.assign(m, { approvals: {}, asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {},
+                         callEnded: null, done: null, followup: null, round: e.n || 2 });
+      break;
     case 'error': m.error = e.text; break;
   }
 }
@@ -431,6 +455,8 @@ function render() {
   am.classList.toggle('attn', stage === 2);
   $('approveProvider').textContent = m.bill ? m.bill.provider : '';
   setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}${esc(q)}</li>`).join(''));
+  $('approveAgain').textContent = m.round > 1 ? 'again' : 'for you';
+  $('callTitle').textContent = m.round > 1 ? 'Follow-up call' : 'Call billing';
   setHTML($('approveSummary'), m.callDeclined ? 'You chose not to call yet'
     : `<span style="color:var(--green-ink);font-weight:600">Accepted</span> · you approved the call to ${esc(m.bill ? m.bill.provider : '')}`);
 
@@ -463,6 +489,14 @@ function render() {
   $('finalNote').innerHTML = refund
     ? `<b style="color:var(--green-ink,#2F5B34)">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
     : 'We’ll check back once billing confirms your new balance.';
+  const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
+  $('followBox').hidden = !(m.done && fu);
+  if (fu) {
+    const d = new Date(fu.due + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+    $('followText').innerHTML = `<b>Next:</b> I’ll check back by <b>${esc(d)}</b>. If ${esc(fu.condition)}, I’ll call ${esc(m.bill ? m.bill.provider : 'billing')} again.`;
+    $('followPromised').textContent = lastCall && lastCall.promised.length
+      ? `${lastCall.rep || 'Billing'} promised: ${lastCall.promised.join('; ')}${lastCall.timeframe_text ? ' (' + lastCall.timeframe_text + ')' : ''}.` : '';
+  }
   const pa = m.approvals.planner;
   const showPlan = m.plan && m.plan.months > 0;
   $('planBox').hidden = !showPlan;
@@ -532,11 +566,31 @@ drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove
 $('fileList').addEventListener('click', (e) => { const b = e.target.closest('[data-remove]'); const d = state.drafts[state.active]; if (b && d) { d.files.splice(+b.dataset.remove, 1); render(); } });
 $('sampleBtn').addEventListener('click', () => { if (!state.drafts[state.active]) newDraft(); startCase([]); });
 $('startBtn').addEventListener('click', () => { const d = state.drafts[state.active]; if (d && d.files.length) startCase(d.files); });
+// caller voice: Cartesia voices with different accents; the choice is saved on the case
+(async () => {
+  try {
+    const { voices, default: def } = await (await fetch('/api/voices')).json();
+    $('voiceSel').innerHTML = voices.map((v) => `<option value="${esc(v.id)}"${v.id === def ? ' selected' : ''}>${esc(v.name)} · ${esc(v.accent)}</option>`).join('');
+  } catch (e) { $('voiceSel').closest('label').hidden = true; }
+})();
+$('voiceSel').addEventListener('change', () => {
+  if (state.active && state.active !== 'replay') fetch(`/api/cases/${state.active}/voice`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ voice_id: $('voiceSel').value }) });
+});
+$('voicePlay').addEventListener('click', async () => {
+  const r = await fetch('/api/voices/sample', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: 'Hi, this is an automated assistant calling about claim C-2026-0815-44917 and an ondansetron charge of $440.', voice_id: $('voiceSel').value }) });
+  if (r.ok) new Audio(URL.createObjectURL(await r.blob())).play();
+});
 $('approveBtn').addEventListener('click', () => decide('caller', true));
 $('notYetBtn').addEventListener('click', () => decide('caller', false));
 $('planYes').addEventListener('click', () => decide('planner', true));
 $('planNo').addEventListener('click', () => decide('planner', false));
 $('endCallBtn').addEventListener('click', () => { if (state.active) fetch(`/api/cases/${state.active}/end-call`, { method: 'POST' }); });
+$('callAgainBtn').addEventListener('click', async () => {
+  if (!state.active || state.active === 'replay') return;
+  $('callAgainBtn').disabled = true;
+  try { await fetch(`/api/cases/${state.active}/call-again`, { method: 'POST' }); } finally { $('callAgainBtn').disabled = false; }
+});
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
 
 setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.active]; if (m && m.call && !m.callEnded) render(); }, 500);

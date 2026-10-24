@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BillBack voices</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
+<style>
+  /* Voice + pronunciation demo: pick the caller's voice (accent) and hear a billing line before/after
+     BillBack's pronunciation normalizer (billback/voice/pronounce.py). Uses /api/voices* from billback.voice. */
+  :root{--accent:#BE3337;--ink:#1A1A1E;--muted:#6B6B73;--line:#E4E4EA;--bg:#F6F6F8;--card:#fff;--navy:#22314A}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+  header{padding:14px 16px;background:var(--navy);color:#fff;font-weight:700}
+  header small{display:block;font-weight:500;opacity:.75}
+  main{max-width:820px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+  h2{margin:0 0 10px;font-size:16px}
+  .voices{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+  .v{border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:#fff;text-align:left;font:inherit}
+  .v b{display:block}.v span{color:var(--muted);font-size:13px}
+  .v.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+  textarea{width:100%;min-height:90px;font:inherit;font-size:15px;padding:12px;border:1px solid var(--line);border-radius:12px;resize:vertical}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  button.go{font:inherit;font-weight:700;border:0;border-radius:999px;padding:0 18px;min-height:44px;cursor:pointer}
+  #before{background:#F2F2F4;color:var(--ink)} #after{background:var(--accent);color:#fff}
+  pre{white-space:pre-wrap;word-break:break-word;background:var(--bg);border-radius:12px;padding:12px;margin:6px 0 0;font-size:13px}
+  .label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:10px}
+  #msg{color:var(--muted);font-size:13px;min-height:1em}
+</style>
+</head>
+<body>
+<header>BillBack · caller voice<small>Cartesia Sonic voices and how BillBack makes them say billing details correctly</small></header>
+<main>
+  <section class="card"><h2>Voice</h2><div class="voices" id="voices"></div></section>
+  <section class="card">
+    <h2>Line</h2>
+    <textarea id="text">Your statement shows $8,700 for the 2026-08-02 visit, but Golden State's EOB for claim C-2026-0815-44917 lists $2,600. That includes CPT 80053, a comprehensive metabolic panel, and HCPCS J2405, ondansetron. Account BCH-48213977.</textarea>
+    <div class="row">
+      <button class="go" id="before">▶ Before (raw text)</button>
+      <button class="go" id="after">▶ After (BillBack pronunciation)</button>
+    </div>
+    <div id="msg"></div>
+    <div class="label">What Sonic receives after normalization</div>
+    <pre id="spoken"></pre>
+  </section>
+</main>
+<script>
+const $ = (x) => document.getElementById(x);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let voice = null, audio = null;
+async function loadVoices() {
+  const r = await (await fetch('/api/voices')).json();
+  voice = r.default;
+  $('voices').innerHTML = r.voices.map((v) =>
+    `<button class="v${v.id === voice ? ' on' : ''}" data-id="${esc(v.id)}"><b>${esc(v.name)}</b><span>${esc(v.accent)} · ${esc(v.gender)}</span></button>`).join('');
+  $('voices').querySelectorAll('.v').forEach((b) => b.onclick = () => {
+    voice = b.dataset.id;
+    $('voices').querySelectorAll('.v').forEach((x) => x.classList.toggle('on', x === b));
+    showSpoken();
+  });
+  showSpoken();
+}
+async function showSpoken() {
+  const r = await (await fetch('/api/voices/normalize', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: $('text').value, voice_id: voice})})).json();
+  $('spoken').textContent = r.spoken;
+}
+async function play(pronounce) {
+  $('msg').textContent = 'Generating…';
+  try {
+    const r = await fetch('/api/voices/sample', {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text: $('text').value, voice_id: voice, pronounce})});
+    if (!r.ok) throw new Error(r.status === 404 ? 'Set CARTESIA_API_KEY to hear voices' : 'TTS failed (' + r.status + ')');
+    if (audio) audio.pause();
+    audio = new Audio(URL.createObjectURL(await r.blob()));
+    await audio.play();
+    $('msg').textContent = pronounce ? 'With BillBack pronunciation' : 'Raw text (Cartesia’s default normalizer only)';
+  } catch (e) { $('msg').textContent = e.message; }
+}
+$('before').onclick = () => play(false);
+$('after').onclick = () => play(true);
+let t = null;
+$('text').oninput = () => { clearTimeout(t); t = setTimeout(showSpoken, 250); };
+loadVoices();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "_note": "SYNTHETIC second demo case: insured patient on a high-deductible plan. Under a California-style policy (free care at or below 400% FPL when out-of-pocket costs exceed 10% of family income) the balance goes to $0.",
+  "_note": "SYNTHETIC second demo case: insured patient on a high-deductible plan (person, bill, EOB and bank history are fictional; NOT a real UCSF bill). UCSF's real policy (policydb/, crawled via Bright Data) gives full charity care to insured patients at or below 400% FPL whose out-of-pocket costs exceed 10% of family income, so the balance goes to $0.",
   "patient": {
     "first_name": "Marcus",
     "last_name": "Lee",
@@ -15,15 +15,15 @@
     }
   },
   "hospital": {
-    "name": "Eastshore Medical Center",
+    "name": "UCSF Medical Center",
+    "system": "UCSF Health",
+    "city": "San Francisco",
     "billing_phone_label": "Patient Financial Services",
-    "policy_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance", "policy_owner": "Sutter Health",
-    "policy_search_query": "Eastshore Medical Center financial assistance policy",
     "sample_policy": "policy_sample_high_cost.md"
   },
   "bill": {
-    "provider": "Eastshore Medical Center",
-    "account_number": "EMC-30772154",
+    "provider": "UCSF Medical Center",
+    "account_number": "UCSF-30772154",
     "statement_date": "2026-10-08",
     "notice": "PAST DUE - second notice. Please pay the balance below or call to arrange payment.",
     "due_date": "2026-11-07",
@@ -57,7 +57,7 @@
     "insurer": "Bay Area Choice HDHP",
     "member_id": "BAC-55120847",
     "claim_number": "C-2026-0731-90215",
-    "provider": "Eastshore Medical Center",
+    "provider": "UCSF Medical Center",
     "service_date": "2026-07-19",
     "billed": 12400.0,
     "allowed": 7300.0,

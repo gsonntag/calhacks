@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BillBack — Hospital policies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<!--
+  Hospital policy database (policydb/, built by real Bright Data crawls) and "same bill, different hospitals".
+  Data: GET /api/hospitals, GET /api/hospitals/{id}, GET /api/compare?scenario=, POST /api/hospitals/{id}/recheck
+  (billback/policies/routes.py).
+-->
+<style>
+  :root{
+    --accent:#BE3337; --tint:#FDECEC; --ink:#1A1A1E; --ink-2:#333338; --muted:#4D4D55; --muted-2:#6B6B73;
+    --green:#3F7A45; --green-ink:#2F5B34; --green-tint:#EEF5EE; --green-line:#B9D2BB; --amber:#8A4B08; --amber-tint:#FDF3E6;
+    --line:#EEE7E7; --hair:#F1E6E6; --card:#FFFFFF; --soft:#FBF8F8; --bg:#FFFFFF; --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+  a{color:var(--ink);overflow-wrap:anywhere} a:hover{color:var(--accent)}
+  button{font:inherit}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  header{border-bottom:1px solid var(--hair)}
+  .bar{max-width:1040px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+  .logo b{font-size:18px;font-weight:800;letter-spacing:-.02em} .logo b span{color:var(--accent)}
+  .bar nav a{padding:12px 8px;font-size:15px;font-weight:500;text-decoration:none}
+
+  main{max-width:1040px;margin:0 auto;padding:40px 16px 80px}
+  h1{margin:0 0 10px;font-size:32px;font-weight:800;letter-spacing:-.025em;line-height:1.15}
+  h2{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-.015em}
+  .lead{margin:0;max-width:720px;font-size:16px;line-height:1.6;color:var(--muted)}
+  .small{font-size:13px;color:var(--muted-2);line-height:1.5}
+  section{margin-top:48px}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--soft);
+    border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink-2)}
+  .pill.bd{background:var(--tint);border-color:#F3CFD0;color:#9E2A2E}
+
+  .seg{display:inline-flex;gap:4px;padding:4px;margin:14px 0 6px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
+  .seg button{border:0;background:transparent;padding:8px 14px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted)}
+  .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .facts{margin:6px 0 18px;font-size:14px;color:var(--muted);line-height:1.6}
+  .facts b{color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .card h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .card .sys{font-size:13px;color:var(--muted-2)}
+  .result{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .result .big{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .result .big.win{color:var(--green)}
+  .result .refund{font-size:14px;font-weight:700;color:var(--green-ink);background:var(--green-tint);padding:3px 10px;border-radius:999px}
+  .rule{font-size:14px;font-weight:600;color:var(--ink-2)}
+  .whynot{font-size:14px;color:var(--amber);background:var(--amber-tint);border-radius:12px;padding:8px 12px;line-height:1.45}
+  blockquote{margin:0;padding:10px 12px;border-left:3px solid var(--accent);background:var(--soft);border-radius:0 12px 12px 0;
+    font-size:14px;line-height:1.55;color:var(--ink-2)}
+  .badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .badge.ok{color:var(--green-ink);background:var(--green-tint)}
+  .badge.no{color:#9E2A2E;background:var(--tint)}
+  .src{font-size:12.5px;color:var(--muted-2);line-height:1.5}
+  .notes{font-size:13px;color:var(--muted);line-height:1.5}
+
+  .hosp{display:flex;flex-direction:column;gap:12px}
+  .hosp .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 16px;border-radius:999px;border:1.5px solid var(--accent);
+    background:var(--card);color:var(--accent);font-weight:700;font-size:14px;cursor:pointer}
+  .btn:hover{background:var(--tint)} .btn[disabled]{opacity:.45;cursor:not-allowed;background:var(--card)}
+  .tier{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-top:1px solid var(--hair)}
+  .kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;font-size:13px;color:var(--muted)}
+  .kv b{color:var(--ink-2);font-weight:600}
+  details{border-top:1px solid var(--hair);padding-top:10px}
+  summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2)}
+  .log{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
+  .log td,.log th{padding:5px 6px;border-bottom:1px solid var(--hair);text-align:left;vertical-align:top}
+  .log th{color:var(--muted-2);font-weight:600}
+  .log td.url{overflow-wrap:anywhere;max-width:420px}
+  .logwrap{overflow-x:auto}
+  .status{font-size:13px;font-weight:600;color:var(--muted)}
+  .status.flag{color:var(--amber)} .status.ok{color:var(--green-ink)}
+  code{font-size:12px;background:var(--soft);padding:1px 5px;border-radius:6px}
+  #err{margin-top:16px;padding:12px 16px;border-radius:14px;background:var(--tint);color:#9E2A2E;font-weight:600}
+
+  @media (max-width:520px){ h1{font-size:26px} .grid{grid-template-columns:1fr} .kv{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="logo" href="/"><b>Bill<span>Back</span></b></a>
+    <nav><a href="/case.html">Case</a><a href="/hospitals.html" aria-current="page">Hospital policies</a></nav>
+  </div>
+</header>
+<main>
+  <h1>Hospital policy database</h1>
+  <p class="lead">Every policy here was pulled from the hospital's own website through <b>Bright Data</b>
+    (SERP API to find it, Web Unlocker to fetch the page and its policy PDFs), read by Claude, and every quote
+    was checked word-for-word against the fetched text before any number was used. Raw crawl artifacts are
+    linked under each hospital.</p>
+  <div class="stats" id="stats"></div>
+  <div id="err" hidden></div>
+
+  <section>
+    <h2>Same bill, different hospitals</h2>
+    <p class="lead">One patient, one bill, one income. Only the hospital's own policy changes.</p>
+    <div class="seg" role="group" aria-label="Scenario">
+      <button data-s="default" aria-pressed="true">Rosa · $8,700 ER bill</button>
+      <button data-s="freecare" aria-pressed="false">Marcus · $5,600 HDHP</button>
+    </div>
+    <div class="facts" id="facts"></div>
+    <div class="grid" id="compare"></div>
+  </section>
+
+  <section>
+    <h2>Policies on record</h2>
+    <p class="lead">Policies rarely change, so they are stored and rechecked: a recheck refetches the same
+      documents, compares content hashes, and only re-reads the policy if something changed.</p>
+    <div class="hosp" id="hospitals" style="margin-top:18px"></div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const money = (n) => '$' + Number(n || 0).toLocaleString('en-US', {maximumFractionDigits: 0});
+const day = (s) => s ? new Date(s).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : '—';
+const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+const file = (u) => { try { return decodeURIComponent(new URL(u).pathname.split('/').pop()) || host(u); } catch { return u; } };
+const ruleText = (t) => `${t.applies_to === 'all' ? 'All' : t.applies_to[0].toUpperCase() + t.applies_to.slice(1)} patients ≤ ${t.max_fpl_pct}% FPL → ${t.discount_pct}% off` +
+  (t.min_oop_pct_income ? ` if out-of-pocket > ${t.min_oop_pct_income}% of income` : '');
+let canRecheck = false;
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.detail || `HTTP ${r.status}`);
+  return body;
+}
+
+function showErr(e) { $('err').hidden = false; $('err').textContent = e.message || String(e); }
+
+async function loadCompare(scenario) {
+  document.querySelectorAll('.seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === scenario)));
+  const c = await api(`/api/compare?scenario=${scenario}`);
+  const f = c.facts;
+  $('facts').innerHTML = `<b>${esc(c.patient)}</b> · household ${f.household_size} · ${money(f.annual_income)}/yr (${esc(f.income_source)}) · ` +
+    `${f.insured ? 'insured' : 'uninsured'} · insurance says they owe <b>${money(f.patient_responsibility)}</b>` +
+    (f.paid ? `, already paid <b>${money(f.paid)}</b>` : '') + ` · hospital billed <b>${money(f.billed_due)}</b> · their bill is from <b>${esc(c.bill_hospital)}</b>`;
+  $('compare').innerHTML = c.results.map((r) => {
+    const win = r.discount_pct > 0;
+    return `<article class="card">
+      <div><h3>${esc(r.hospital)}</h3><div class="sys">${esc(r.system)} · policy v${r.version} fetched ${day(r.fetched_at)}</div></div>
+      <div class="result"><span class="big ${win ? 'win' : ''}">${money(r.balance)}</span>
+        ${r.refund ? `<span class="refund">+ ${money(r.refund)} back</span>` : ''}
+        <span class="small">${win ? `${r.discount_pct}% written off` : 'no discount'} · ${r.fpl_pct}% FPL · out-of-pocket ${r.oop_pct_income}% of income</span></div>
+      ${r.rule ? `<div class="rule">${esc(r.rule)}</div>
+        <blockquote>“${esc(r.quote)}”</blockquote>${r.limit_quote ? `<blockquote>“${esc(r.limit_quote)}”</blockquote>` : ''}
+        <div class="src"><span class="badge ok">✓ quote verified</span> in <a href="${esc(r.quote_source)}" target="_blank" rel="noopener">${esc(file(r.quote_source))}</a> (${esc(host(r.quote_source))})</div>`
+        : `<div class="whynot">${esc(r.why_not || 'No verified tier applies')}</div>`}
+      ${(r.discount_pct < 100 ? r.other_relief || [] : []).map((o) => `<div class="whynot"><b>May also qualify (not a fixed %, so not in the math):</b> ${esc(o.what)}
+        <blockquote style="margin-top:6px">“${esc(o.quote)}”</blockquote><span class="badge ok">✓ quote verified</span></div>`).join('')}
+      ${r.notes ? `<details><summary>Limits of this policy</summary><div class="notes" style="margin-top:6px">${esc(r.notes)}</div></details>` : ''}
+    </article>`;
+  }).join('') || '<p class="small">No hospitals crawled yet.</p>';
+}
+
+function artifactLinks(id, doc) {
+  return (doc.artifacts || []).map((a) => {
+    const name = a.split('/').pop();
+    return `<a href="/api/hospitals/${encodeURIComponent(id)}/artifacts/${encodeURIComponent(name)}" target="_blank" rel="noopener">${esc(name)}</a>`;
+  }).join(' · ');
+}
+
+function hospitalCard(h) {
+  const cur = h.current;
+  if (!cur) return `<article class="card"><h3>${esc(h.name)}</h3><p class="small">Not crawled yet.</p></article>`;
+  const pol = cur.extracted, ver = cur.verification;
+  const tierChecks = ver.checks.filter((c) => c.what === 'tier');
+  const tiers = tierChecks.map((c) => `<div class="tier">
+      <div class="rule">${esc(ruleText(c.tier))} ${c.verified ? '<span class="badge ok">✓ verified</span>' : `<span class="badge no">✗ rejected: ${esc(c.reason)}</span>`}</div>
+      <blockquote>“${esc(c.quote)}”</blockquote>
+      ${c.limit_quote ? `<blockquote>“${esc(c.limit_quote)}”</blockquote>` : ''}
+      ${c.source_url ? `<div class="src">found in <a href="${esc(c.source_url)}" target="_blank" rel="noopener">${esc(file(c.source_url))}</a></div>` : ''}
+    </div>`).join('') || '<p class="small">No income tiers found in the fetched documents.</p>';
+  const label = {collections: 'Collections while an application is pending', apply: 'How to apply', other_relief: 'Other relief (not a fixed %)'};
+  const other = ver.checks.filter((c) => c.what !== 'tier').map((c) => `<div class="tier">
+      <div class="rule">${label[c.what] || esc(c.what)}${c.summary ? `: <span style="font-weight:500">${esc(c.summary)}</span>` : ''}
+        ${c.verified ? '<span class="badge ok">✓ verified</span>' : '<span class="badge no">no verified quote</span>'}</div>
+      ${c.what === 'apply' && pol.apply_how ? `<div class="small">${esc(pol.apply_how)}</div>` : ''}
+      ${c.quote && c.verified ? `<blockquote>“${esc(c.quote)}”</blockquote>` : ''}
+    </div>`).join('');
+  const docs = cur.documents.map((d) => `<div class="src"><b>${esc(d.role.replace('_', ' '))}</b>
+      <a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.kind === 'pdf' ? file(d.url) : d.url)}</a>
+      · ${Math.round(d.nbytes / 1024)} KB${d.pages ? ` · ${d.pages} pages` : ''} · sha256 <code>${esc(d.sha256.slice(0, 12))}</code>
+      · raw: ${artifactLinks(h.id, d)}</div>`).join('');
+  const disc = cur.discovery || {};
+  const chosen = (disc.pages || []).map((c) => `<li><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a> — score ${c.score}: ${esc(c.reasons.join('; '))}</li>`).join('');
+  const reg = disc.regulator_doc ? `<p class="small">State-filed copy (California HCAI): <a href="${esc(disc.regulator_doc.url)}" target="_blank" rel="noopener">${esc(host(disc.regulator_doc.url))}</a> — recorded, not fetched (Bright Data blocks government domains).</p>` : '';
+  const serp = (disc.serp_artifacts || []).map((a) => {
+    const n = a.split('/').pop();
+    return `<a href="/api/hospitals/${encodeURIComponent(h.id)}/artifacts/${encodeURIComponent(n)}" target="_blank" rel="noopener">${esc(n)}</a>`;
+  }).join(' · ');
+  const log = h.crawl_log.filter((l) => l.product).map((l) => `<tr><td>${esc(l.ts.slice(0, 16).replace('T', ' '))}</td><td>${esc(l.stage)}</td>
+      <td><b>${esc(l.product)}</b></td><td>${l.ok ? esc(l.status) : `<span class="badge no">${esc(l.status || 'ERR')}</span>`}</td>
+      <td>${l.bytes ? Math.round(l.bytes / 1024) + ' KB' : '—'}</td><td>${l.latency_ms ? (l.latency_ms / 1000).toFixed(1) + 's' : '—'}</td>
+      <td class="url">${esc(l.url)}${l.ok ? '' : `<div class="small">${esc(l.note)}</div>`}</td></tr>`).join('');
+  const decisions = h.crawl_log.filter((l) => !l.product).map((l) => `<li>${esc(l.stage)}: ${esc(l.note)}</li>`).join('');
+  const checks = h.checks.map((c) => `<li>${day(c.checked_at)} ${esc(c.checked_at.slice(11, 16))} UTC — ${c.changed ? '<b>changed</b>' : 'unchanged'}: ${esc(c.note)} <code>${esc((c.content_sha256 || '').slice(0, 12))}</code></li>`).join('');
+  const versions = h.versions.map((v) => `<li>v${v.version} · ${day(v.fetched_at)} · ${esc(v.status)} · ${v.tiers_verified} verified / ${v.tiers_rejected} rejected · <code>${esc(v.content_sha256.slice(0, 12))}</code></li>`).join('');
+  return `<article class="card" id="h-${esc(h.id)}">
+    <div class="top">
+      <div><h3>${esc(h.name)}</h3><div class="sys">${esc(h.system)} · ${esc(h.city)} · version ${cur.version} · fetched ${day(cur.fetched_at)}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <button class="btn" data-recheck="${esc(h.id)}" ${canRecheck ? '' : 'disabled title="Bright Data keys not configured on this server"'}>Recheck now</button>
+        <span class="status" id="st-${esc(h.id)}"></span>
+      </div>
+    </div>
+    <div class="kv"><b>Content sha256</b><span><code>${esc(cur.content_sha256.slice(0, 16))}…</code></span>
+      <b>Quotes</b><span>${ver.tiers_verified} tier quotes verified, ${ver.tiers_rejected} rejected</span></div>
+    <div>${tiers}${other}</div>
+    ${pol.notes ? `<div class="notes"><b>Limits:</b> ${esc(pol.notes)}</div>` : ''}
+    <div>${docs}</div>
+    <details><summary>How it was found (SERP ranking)</summary>
+      <p class="small">Google queries via Bright Data SERP API: ${(disc.queries || []).map((q) => `<code>${esc(q)}</code>`).join(', ')} · raw results: ${serp}</p>
+      <ul class="small">${chosen}</ul>${reg}</details>
+    <details><summary>Bright Data request log (${h.crawl_log.filter((l) => l.product).length})</summary>
+      <div class="logwrap"><table class="log"><thead><tr><th>time</th><th>stage</th><th>product</th><th>status</th><th>size</th><th>latency</th><th>url</th></tr></thead><tbody>${log}</tbody></table></div>
+      <ul class="small">${decisions}</ul></details>
+    <details><summary>Versions (${h.versions.length}) and checks (${h.checks.length})</summary>
+      <ul class="small">${versions}</ul><ul class="small">${checks}</ul></details>
+  </article>`;
+}
+
+async function loadHospitals() {
+  const list = await api('/api/hospitals');
+  canRecheck = list.can_recheck;
+  const n = list.bright_data_requests || {};
+  $('stats').innerHTML = `<span class="pill">${list.hospitals.length} hospitals</span>` +
+    `<span class="pill bd">Bright Data SERP API · ${n.serp || 0} requests</span><span class="pill bd">Bright Data Web Unlocker · ${n.unlocker || 0} requests</span>` +
+    `<span class="pill">${list.hospitals.reduce((a, h) => a + (h.current ? h.current.tiers_verified : 0), 0)} verified policy quotes</span>`;
+  const full = await Promise.all(list.hospitals.map((h) => api(`/api/hospitals/${encodeURIComponent(h.id)}`)));
+  $('hospitals').innerHTML = full.map(hospitalCard).join('');
+}
+
+document.addEventListener('click', async (e) => {
+  const seg = e.target.closest('.seg button');
+  if (seg) return loadCompare(seg.dataset.s).catch(showErr);
+  const btn = e.target.closest('[data-recheck]');
+  if (!btn || btn.disabled) return;
+  const id = btn.dataset.recheck, st = $(`st-${id}`);
+  btn.disabled = true; st.className = 'status'; st.textContent = 'Refetching via Bright Data…';
+  try {
+    const r = await api(`/api/hospitals/${encodeURIComponent(id)}/recheck`, {method: 'POST'});
+    await loadHospitals();
+    const st2 = $(`st-${id}`);
+    st2.className = 'status ' + (r.changed ? 'flag' : 'ok');
+    st2.textContent = r.changed ? `Changed → v${r.version}: ${r.diff}` : `Unchanged (${r.requests} requests)`;
+    loadCompare(document.querySelector('.seg [aria-pressed="true"]').dataset.s).catch(showErr);
+  } catch (err) { st.className = 'status flag'; st.textContent = err.message; btn.disabled = false; }
+});
+
+loadCompare('default').catch(showErr);
+loadHospitals().catch(showErr);
+</script>
+</body>
+</html>

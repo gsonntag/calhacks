@@ -40,7 +40,7 @@ function add(cls, text) { $('log').insertAdjacentHTML('beforeend', `<div class="
 let audio = null;
 async function speakOnce(text) {
   try {
-    const r = await fetch('/api/tts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text})});
+    const r = await fetch('/api/tts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text, call_id: callId})});
     if (r.ok) { audio = new Audio(URL.createObjectURL(await r.blob())); await audio.play(); await new Promise((res) => { audio.onended = res; audio.onerror = res; }); return; }
   } catch (e) {}
   await new Promise((res) => { const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = res; u.onerror = res; speechSynthesis.speak(u); });

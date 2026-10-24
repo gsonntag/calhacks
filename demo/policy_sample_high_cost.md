@@ -1,4 +1,4 @@
-SAMPLE POLICY (offline fallback; NOT a real hospital's policy, shown labelled "sample" on the dashboard).
+OFFLINE TEST FIXTURE - SAMPLE POLICY, NOT A REAL HOSPITAL. Used only when Bright Data is not configured (tests, offline dev). Real policies: policydb/ (crawled via Bright Data).
 Modeled on common California nonprofit-hospital policies.
 
 Eastshore Medical Center - Financial Assistance Policy (Charity Care)

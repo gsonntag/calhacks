@@ -1,70 +1,136 @@
-"""Bright Data: find and fetch the hospital's public financial-assistance policy.
+"""Bright Data client: the two products BillBack uses, behind one request function.
 
-Live path: SERP API to find the policy page (if no URL is configured), Web Unlocker to fetch it.
-Offline path: demo/policy_sample.md, labelled as a sample on the dashboard.
+- SERP API (zone BRIGHTDATA_SERP_ZONE): Google results as parsed JSON, to discover a hospital's policy page.
+- Web Unlocker (zone BRIGHTDATA_UNLOCKER_ZONE): fetches hospital pages (as markdown) and policy PDFs (raw bytes)
+  that block or throttle plain HTTP clients.
+
+Both go through POST https://api.brightdata.com/request. Every call returns a BDResponse with status, size and
+latency so billback/policies can write it to the crawl log. The policy pipeline is in billback/policies/.
 """
+import asyncio
 import json
-import re
-from urllib.parse import quote_plus, unquote
+import time
+from dataclasses import dataclass
+from urllib.parse import quote_plus
 
 import httpx
 
 from .. import config
 
 REQUEST_URL = "https://api.brightdata.com/request"
+SERP, UNLOCKER = "serp", "unlocker"
+RETRY_STATUS = {429, 500, 502, 503, 504}
+
+
+class BrightDataError(RuntimeError):
+    def __init__(self, product: str, url: str, msg: str, status: int = 0, latency_ms: int = 0):
+        super().__init__(f"Bright Data {product} failed for {url}: {msg}")
+        self.product, self.url, self.status, self.latency_ms = product, url, status, latency_ms
+
+
+@dataclass
+class BDResponse:
+    product: str        # "serp" | "unlocker"
+    url: str            # the target URL Bright Data fetched for us
+    status: int
+    body: bytes
+    content_type: str
+    latency_ms: int
+
+    @property
+    def text(self) -> str:
+        return self.body.decode("utf-8", "replace")
+
+    @property
+    def is_pdf(self) -> bool:
+        return self.body[:5] == b"%PDF-" or "pdf" in self.content_type
 
 
 def live() -> bool:
     return bool(config.BRIGHTDATA_API_KEY and config.BRIGHTDATA_UNLOCKER_ZONE)
 
 
-async def _request(zone: str, url: str, fmt: str = "raw", timeout: float = 25, markdown: bool = False,
-                   data_format: str | None = None) -> str:
-    body = {"zone": zone, "url": url, "format": fmt, "country": "us"}
-    if markdown or data_format:
-        body["data_format"] = data_format or "markdown"
-    async with httpx.AsyncClient(timeout=timeout) as c:
-        r = await c.post(REQUEST_URL, headers={"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}"}, json=body)
-    r.raise_for_status()
-    return r.text
+def serp_live() -> bool:
+    return bool(config.BRIGHTDATA_API_KEY and config.BRIGHTDATA_SERP_ZONE)
+
+
+def _zone(product: str) -> str:
+    zone = config.BRIGHTDATA_SERP_ZONE if product == SERP else config.BRIGHTDATA_UNLOCKER_ZONE
+    if not (config.BRIGHTDATA_API_KEY and zone):
+        raise BrightDataError(product, "-", f"not configured (BRIGHTDATA_API_KEY / {product} zone missing)")
+    return zone
+
+
+async def request(product: str, url: str, *, fmt: str = "raw", data_format: str | None = None,
+                  timeout: float = 60, attempts: int = 2) -> BDResponse:
+    """One Bright Data request. Request body: {zone, url, format, country, data_format?}.
+    Retries timeouts and 429/5xx once; raises BrightDataError with status and latency on failure."""
+    body = {"zone": _zone(product), "url": url, "format": fmt, "country": "us"}
+    if data_format:
+        body["data_format"] = data_format
+    headers = {"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}"}
+    err = BrightDataError(product, url, "no attempt made")
+    for attempt in range(attempts):
+        t0 = time.monotonic()
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as c:
+                r = await c.post(REQUEST_URL, headers=headers, json=body)
+        except httpx.HTTPError as e:
+            err = BrightDataError(product, url, f"{type(e).__name__}", 0, int((time.monotonic() - t0) * 1000))
+        else:
+            ms = int((time.monotonic() - t0) * 1000)
+            # Bright Data answers 200 even when the target failed; the target's status is in x-brd-status-code.
+            status = int(r.headers.get("x-brd-status-code") or r.status_code)
+            if r.status_code < 400 and status < 400 and not r.headers.get("x-brd-error"):
+                return BDResponse(product, url, status, r.content, r.headers.get("content-type", ""), ms)
+            msg = r.headers.get("x-brd-error") or r.text[:200]
+            err = BrightDataError(product, url, f"HTTP {status}: {msg}", status, ms)
+            if status not in RETRY_STATUS or "blocked" in msg.lower() or "access denied" in msg.lower():
+                raise err
+        if attempt + 1 < attempts:
+            await asyncio.sleep(2 * (attempt + 1))
+    raise err
+
+
+async def serp(query: str, attempts: int = 2) -> tuple[list[dict], BDResponse]:
+    """Google via the SERP API, parsed: returns ([{title, link, description, rank}], raw response).
+    With format=json the reply is {status_code, headers, body}; a failed Google fetch shows up as
+    status_code >= 400 inside a 200 reply, so that is checked (and retried) here."""
+    url = f"https://www.google.com/search?q={quote_plus(query)}&hl=en&gl=us"
+    for attempt in range(attempts):
+        resp = await request(SERP, url, fmt="json", data_format="parsed", timeout=60)
+        try:
+            wrapper = json.loads(resp.text)
+            inner = int(wrapper.get("status_code") or 200) if isinstance(wrapper, dict) else 200
+            if inner < 400:
+                return parse_serp(resp.text), resp
+            msg = f"Google returned {inner}: {str(wrapper.get('body'))[:120]}"
+        except (ValueError, AttributeError) as e:
+            inner, msg = 0, f"unparseable SERP payload ({e})"
+        if attempt + 1 == attempts:
+            raise BrightDataError(SERP, url, msg, inner, resp.latency_ms)
+        await asyncio.sleep(16 if inner == 429 else 2)  # Google's 429 says "retry after 15 seconds"
+
+
+def parse_serp(raw: str) -> list[dict]:
+    data = json.loads(raw)
+    if "body" in data and "organic" not in data:  # format=json wraps the page: {status_code, headers, body}
+        data = json.loads(data["body"])
+    return [{"title": o.get("title", ""), "link": o.get("link", ""), "description": o.get("description", ""),
+             "rank": o.get("rank", i + 1)} for i, o in enumerate(data.get("organic") or []) if o.get("link")]
+
+
+async def page(url: str) -> BDResponse:
+    """A web page through Web Unlocker, converted to markdown by Bright Data (links kept as [text](url))."""
+    return await request(UNLOCKER, url, data_format="markdown")
+
+
+async def document(url: str) -> BDResponse:
+    """A file (policy PDF) through Web Unlocker, raw bytes."""
+    return await request(UNLOCKER, url, timeout=90)
 
 
 async def search(query: str) -> list[dict]:
-    """Google results via the SERP zone. Returns [{title, link}]."""
-    if not config.BRIGHTDATA_SERP_ZONE:
-        raise RuntimeError("BRIGHTDATA_SERP_ZONE not set (Google search needs a SERP zone, not the Unlocker zone)")
-    raw = await _request(config.BRIGHTDATA_SERP_ZONE, f"https://www.google.com/search?q={quote_plus(query)}",
-                         fmt="json", data_format="parsed")
-    try:
-        data = json.loads(raw)
-        if "body" in data and "organic" not in data:  # format=json wraps the payload
-            data = json.loads(data["body"])
-        return [{"title": o.get("title", ""), "link": o.get("link", "")} for o in data.get("organic", [])][:8]
-    except json.JSONDecodeError:  # zone returned HTML; pull links out crudely
-        links = [unquote(u) for u in re.findall(r'/url\?q=(https?://[^&"]+)', raw)]
-        links += re.findall(r'href="(https?://[^"]+)"', raw)
-        return [{"title": "", "link": u} for u in dict.fromkeys(links) if "google" not in u][:8]
-
-
-def html_to_text(html: str) -> str:
-    html = re.sub(r"(?is)<(script|style|noscript).*?</\1>", " ", html)
-    text = re.sub(r"(?s)<[^>]+>", " ", html)
-    text = re.sub(r"&nbsp;|&#160;", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
-async def fetch_text(url: str, attempts: int = 2) -> str:
-    last: Exception | None = None
-    for _ in range(attempts):
-        try:
-            raw = await _request(config.BRIGHTDATA_UNLOCKER_ZONE, url, markdown=True)
-            if raw.lstrip().startswith("%PDF"):
-                raise RuntimeError("got a PDF, not a web page")
-            return html_to_text(raw) if "<" in raw[:500] else raw
-        except Exception as e:
-            last = e
-    raise RuntimeError(f"Bright Data fetch failed for {url}: {last}")
-
-
-def sample_policy(name: str = "policy_sample.md") -> str:
-    return (config.DEMO_DIR / name).read_text()
+    """Back-compat helper: [{title, link}] for a Google query."""
+    results, _ = await serp(query)
+    return results[:8]
