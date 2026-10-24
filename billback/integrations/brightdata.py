@@ -18,10 +18,11 @@ def live() -> bool:
     return bool(config.BRIGHTDATA_API_KEY and config.BRIGHTDATA_UNLOCKER_ZONE)
 
 
-async def _request(zone: str, url: str, fmt: str = "raw", timeout: float = 25, markdown: bool = False) -> str:
+async def _request(zone: str, url: str, fmt: str = "raw", timeout: float = 25, markdown: bool = False,
+                   data_format: str | None = None) -> str:
     body = {"zone": zone, "url": url, "format": fmt, "country": "us"}
-    if markdown:
-        body["data_format"] = "markdown"
+    if markdown or data_format:
+        body["data_format"] = data_format or "markdown"
     async with httpx.AsyncClient(timeout=timeout) as c:
         r = await c.post(REQUEST_URL, headers={"Authorization": f"Bearer {config.BRIGHTDATA_API_KEY}"}, json=body)
     r.raise_for_status()
@@ -32,7 +33,8 @@ async def search(query: str) -> list[dict]:
     """Google results via the SERP zone. Returns [{title, link}]."""
     if not config.BRIGHTDATA_SERP_ZONE:
         raise RuntimeError("BRIGHTDATA_SERP_ZONE not set (Google search needs a SERP zone, not the Unlocker zone)")
-    raw = await _request(config.BRIGHTDATA_SERP_ZONE, f"https://www.google.com/search?q={quote_plus(query)}&brd_json=1")
+    raw = await _request(config.BRIGHTDATA_SERP_ZONE, f"https://www.google.com/search?q={quote_plus(query)}",
+                         fmt="json", data_format="parsed")
     try:
         data = json.loads(raw)
         if "body" in data and "organic" not in data:  # format=json wraps the payload
