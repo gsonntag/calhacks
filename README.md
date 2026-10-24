@@ -1,82 +1,91 @@
 # BillBack
 
 **An AI agent that fights your hospital bill.** Upload the bill and your insurance statement. BillBack
-works out what you actually owe from your bank records, finds the discount the hospital's own policy
-requires it to give you, calls billing to get it fixed, and sets up an affordable plan — nothing is paid
-without your approval.
+works out what you actually owe from your bank records, finds the discount the hospital's own published
+policy requires it to give you, calls billing to get it fixed, and follows up until the corrected bill
+arrives. Nothing is said or paid on your behalf without your approval.
 
-Demo arc: **$8,700 final notice → $2,100 actually owed → $150 under the hospital's own charity-care policy
-→ account on hold, case number, interest-free plan approved on your phone.**
+Demo arc (synthetic patient, real hospital policy): **$8,700 final notice from California Pacific Medical
+Center → $2,100 actually owed → $0 under Sutter Health's own financial-assistance policy, plus the $500 she
+already paid back → case number, account on hold, follow-up scheduled.**
 
 ## How it works
 
 ```
- chat (web/index.html) ──► Orchestrator (our harness) ──► audit log + live dashboard (web/case.html)
-                              │
-   ┌──────────────┬───────────┼──────────────┬──────────────────┐
-   ▼              ▼           ▼              ▼                  ▼
- Intake        Auditor      Policy         Caller             Planner
- Claude vision Nessie txns  Bright Data    Cartesia agent     Nessie recurring bill
- bill + EOB    payments,    hospital's     live phone call    ── APPROVAL GATE ──
-               duplicates,  financial-     argues with the    (patient's phone,
-               income       assistance     evidence           web/approve.html)
-                            policy + Claude
-                            quote extraction
+ chat / drop-and-go ──► Orchestrator (our harness) ──► audit log + live timeline (web/case.html)
+                              │                         dashboard + follow-ups (web/dashboard.html)
+   ┌──────────────┬───────────┼────────────────┬────────────────────┬──────────────────┐
+   ▼              ▼           ▼                ▼                    ▼                  ▼
+ Intake        Auditor      Policy           Caller               Follow-up          Planner
+ Claude vision Nessie txns  policy DB ◄──    Twilio ↔ Cartesia    remembers calls,   Nessie recurring
+ bill + EOB    payments,    Bright Data      STT/TTS ↔ Claude     dates from what    bill (only if
+               duplicates,  pipeline:        call brain; patient  billing promised,  something is owed)
+               income       SERP → Unlocker  authorization        calls back         ── APPROVAL GATE ──
+                            → PDFs → verified handoff
+                            quotes
 ```
 
-**Harness** (`billback/harness.py`): tools have permission tiers — `read` runs freely, `act` is announced,
+**Harness** (`billback/harness.py`): tools have permission tiers: `read` runs freely, `act` is announced,
 `consequential` blocks on the patient's approval. Every tool call/result/approval is an event streamed to
-the dashboard and appended to `data/<case>.audit.jsonl`.
+the UI and appended to `data/<case>.audit.jsonl`.
 
 **Money is computed, not generated** (`billback/finance.py`): reconciliation, duplicate detection, income
-annualisation, % of the federal poverty line, discount tier, payment plan. Claude extracts policy text with
-verbatim quotes and does the talking; it never invents a number.
+annualisation from payroll deposits, % of the federal poverty line, discount tiers (including the insured
+high-medical-cost rule), refunds, payment plan. Claude extracts policy text with verbatim quotes, which the
+code verifies against the fetched document, and does the talking; it never invents a number.
 
-## Sponsors
-| Sponsor | Where |
-|---|---|
-| **Cartesia** | Managed Agent places the real outbound call (Claude Haiku on Cartesia), webhook tool reports outcome, call events stream the transcript. Sonic TTS for desk mode. |
-| **Capital One Nessie** | Patient's account: payroll deposits (income), the $500 payment, duplicate urgent-care copay (separate from the hospital bill), the hospital bill, and the approved recurring payment plan. |
-| **Bright Data** | SERP API finds the hospital's financial-assistance policy; Web Unlocker fetches it live. |
-| **Anthropic Claude** | Chat intake, bill/EOB vision extraction, policy extraction with quotes, the call brain (desk mode). |
+## Sponsor map (where to look)
+| Sponsor | What it does here | Code | Docs |
+|---|---|---|---|
+| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts tiers whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 4 San Francisco hospitals; same bill → different answers. | `billback/policies/`, `billback/integrations/brightdata.py`, `scripts/crawl_policies.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
+| **Cartesia** | Our own voice pipeline: Twilio Media Streams ↔ Cartesia Ink streaming STT + Sonic TTS ↔ Claude call brain, barge-in, voice/accent picker (American, British, Indian English, Spanish), pronunciation normalizer for money, IDs, CPT codes and medical terms. Managed Agents path kept as an alternative. | `billback/voice/`, `billback/integrations/cartesia.py`, `scripts/sim_twilio_stream.py` | [`docs/voice.md`](docs/voice.md); voice demo at `/voice.html` |
+| **Capital One Nessie** | The patient's bank: payroll deposits → income, the $500 payment the hospital missed, a duplicate charge, and a payment plan written back as a recurring bill when something is still owed. | `billback/integrations/nessie.py`, `billback/agents/auditor.py`, `scripts/seed_nessie.py` | [`docs/feasibility.md`](docs/feasibility.md) (how real bank data is obtained) |
+| **Anthropic Claude** | Intake (vision on bill/EOB), policy extraction with quotes, the call brain, outcome/follow-up extraction, status answers. | `billback/agents/`, `billback/followups.py` | |
+
+Also: [`docs/competitors.md`](docs/competitors.md), [`docs/judge-qa.md`](docs/judge-qa.md),
+[`docs/DEMO.md`](docs/DEMO.md), pitch deck at `/pitch.html`.
 
 ## Run
 
 ```bash
 uv sync
-cp .env.example .env            # fill what you have; blanks run in demo mode
-uv run uvicorn billback.app:app --reload --port 8000
-# open http://localhost:8000
+cp .env.example .env            # fill what you have; blanks run in a labelled offline mode
+uv run uvicorn billback.app:app --port 8000
+# open http://localhost:8000   (or /flows/ for the intake designs, /dashboard.html, /hospitals.html)
+uv run pytest -q                # 116 tests, fully offline
 ```
 
-Phone calls need a public HTTPS URL for Cartesia webhooks:
+Setup scripts (once):
 ```bash
-cloudflared tunnel --url http://localhost:8000     # copy the https URL into PUBLIC_BASE_URL
-uv run python scripts/seed_nessie.py               # once, after NESSIE_API_KEY is set
-uv run python scripts/setup_cartesia.py            # once; paste printed ids into .env
+uv run python scripts/seed_nessie.py [freecare]    # synthetic patient's bank in Nessie
+uv run python scripts/crawl_policies.py crawl      # (re)build the hospital policy DB via Bright Data
+uv run python scripts/crawl_policies.py recheck    # detect policy changes
 ```
 
-Demo screens: laptop = `case.html` (dashboard), patient's phone = `approve.html?case=<id>` (link on the
-dashboard), teammate's phone = receives the Cartesia call as "hospital billing".
-
-**Backup call mode:** if `CARTESIA_AGENT_ID`/`REP_PHONE_NUMBER` aren't set, the call runs in *desk mode*:
-the dashboard links a rep console (`rep.html`) where a teammate plays billing by voice (Chrome) or typing,
-and BillBack answers through Cartesia TTS (or the browser voice). With no Anthropic key it falls back to a
-scripted caller so the whole flow still runs offline.
+Real phone calls need Twilio credentials and a public HTTPS URL (Twilio must reach `/voice/twilio/*`):
+`cloudflared tunnel --url http://localhost:8000`, then set `PUBLIC_BASE_URL` (see `docs/voice.md`).
+Without them, calls run in **desk mode**: the case page links a rep console (`rep.html`) where a teammate
+plays billing, and BillBack answers out loud through Cartesia TTS. With no Anthropic key it falls back to a
+scripted caller so the whole flow still runs offline. `case.html?replay=1` replays the last finished run.
 
 ## Real vs simulated (say this to judges)
-- **Real:** Nessie API records, Bright Data live fetch of a real hospital policy page, Cartesia phone call,
-  Claude reasoning, the approval gate and audit log.
-- **Simulated:** the patient, bill, EOB and bank history are synthetic; "hospital billing" is a teammate;
-  the Gmail button loads a demo inbox. The dashboard header shows live/demo per integration.
-- BillBack discloses it's an automated assistant on every call and never agrees to pay on a call.
+- **Real:** Bright Data crawls of real hospital policies (committed in `policydb/`), Nessie API records,
+  Claude reasoning, Cartesia STT/TTS, the approval gate and audit log.
+- **Simulated:** the patient, bill, EOB and bank history are synthetic (PDFs are watermarked SAMPLE);
+  "hospital billing" is a teammate; the Gmail button loads a demo inbox.
+- BillBack says it's an automated assistant and that the call is transcribed, never agrees to pay on a
+  call, and gets the patient's verbal authorization (HIPAA 45 CFR 164.510(b)); see `docs/feasibility.md`.
 
 ## Layout
 ```
-billback/  app.py  orchestrator.py  harness.py  events.py  finance.py  llm.py  config.py
-           agents/  intake auditor policy caller planner
-           integrations/  nessie brightdata cartesia
-web/       index.html (chat)  case.html (dashboard)  approve.html (phone)  rep.html (desk-mode call)
-demo/      case.json (synthetic patient)  policy_sample.md (offline policy)
-scripts/   seed_nessie.py  setup_cartesia.py
+billback/  app.py orchestrator.py harness.py events.py finance.py followups.py llm.py config.py
+           agents/        intake auditor policy caller planner
+           policies/      registry discover fetch extract store monitor pipeline crawl compare routes
+           voice/         calls media cartesia_ws pronounce voices authorization audio routes
+           integrations/  nessie brightdata cartesia twilio
+web/       index.html (chat)  flows/ (12 intake designs)  case.html (timeline)  dashboard.html
+           hospitals.html (policy DB)  voice.html  approve.html (phone)  rep.html (desk-mode billing)  pitch.html
+demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, offline test fixtures, replays
+policydb/  policies.sqlite3, policies.json, raw/ (real Bright Data crawl artifacts)
+scripts/   seed_nessie  crawl_policies  setup_cartesia  sim_twilio_stream  make_demo_docs
 ```

@@ -45,7 +45,8 @@ Rules:
 - NEVER agree to pay anything, set up a payment plan, or give card or bank details on the call. If the rep
   asks for payment, say the patient will review any payment arrangement and you'll follow up.
 - When the rep gives a case/reference number, call record_outcome. When the goals are done or the rep
-  ends it, call end_call and say a short goodbye.
+  ends it, call end_call and say a short goodbye. If the rep says goodbye or wants to end the call, never push
+  another request: record what you have, thank them, say goodbye and call end_call.
 - When you use a tool you may say a brief sentence first; never include XML tags in what you say.
 """
 

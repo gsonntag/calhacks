@@ -201,7 +201,7 @@ patient has a phone number:
 1. Dial the patient into conference `billback-<case>` (participant label `patient`).
 2. When they answer (status callback `in-progress`), add BillBack (`app:AP…?token=…`, label `billback`).
    The stream starts with `AuthorizationBrain`: "Hi Rosa, this is BillBack… This call is transcribed…
-   do I have your permission to discuss your account with Bayview billing?" The answer goes to the audit log.
+   do I have your permission to discuss your account with the hospital's billing office?" The answer goes to the audit log.
 3. On "yes", BillBack tells the patient to stay on the line, then dials the hospital into the same
    conference (`EndConferenceOnExit=true`). When billing answers, the same media session switches brains
    (`MediaSession.set_brain`) to the Claude `CallSession`. If the rep wants to hear it from the patient,

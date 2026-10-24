@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="base.css">
-<!-- MOCK, mobile-first: photo of bill -> photo of EOB -> the big number falls $8,700 -> $2,100 -> $150. -->
+<!-- MOCK, mobile-first: photo of bill -> photo of EOB -> the big number falls $8,700 -> $2,100 -> $0. -->
 <style>
   .scr{position:absolute;inset:0;top:48px;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .4s}
   .scr.on{opacity:1;pointer-events:auto}
@@ -103,7 +103,7 @@
           <div><span class="ic"></span>Reading your bill</div>
           <div><span class="ic"></span>Matching your insurance</div>
           <div><span class="ic"></span>Checking your bank for payments</div>
-          <div><span class="ic"></span>Finding Bayview's charity care</div>
+          <div><span class="ic"></span>Finding Sutter's assistance policy</div>
         </div>
         <div class="big">
           <div class="was" id="was">They're asking for</div>
@@ -112,8 +112,8 @@
         </div>
         <div class="bar"><i id="barI"></i></div>
         <div class="plan" id="plan">
-          <div class="row"><span>Payment plan</span><b>3 × $50 / month</b></div>
-          <div class="row"><span>Charity-care case</span><b>FA-20931</b></div>
+          <div class="row"><span>Back to you</span><b>$500 refund</b></div>
+          <div class="row"><span>Assistance case</span><b>FA 20931</b></div>
           <button class="btn lg" type="button" id="approve">Looks good, go</button>
         </div>
       </div>
@@ -167,14 +167,14 @@ async function result() {
   $('barI').style.width = (2100 / 8700 * 100) + '%';
   await count($('num'), 8700, 2100, 1600);
   await wait(900);
-  $('was').textContent = 'With Bayview charity care';
-  $('why').textContent = '75% off your $2,600 share (216% of poverty line), minus the $500 you paid.';
-  $('barI').style.width = (150 / 8700 * 100) + '%'; $('barI').style.background = 'var(--green)';
-  await count($('num'), 2100, 150, 1200);
+  $('was').textContent = 'With Sutter financial assistance';
+  $('why').textContent = 'Your $2,600 share is 11% of your income (150% of poverty line). Sutter writes it off, and your $500 comes back.';
+  $('barI').style.width = '0%'; $('barI').style.background = 'var(--green)';
+  await count($('num'), 2100, 0, 1200);
   $('num').classList.add('green');
   await wait(300); $('plan').classList.add('in');
 }
-$('approve').onclick = () => { $('approve').textContent = 'Done. We\'ll call Bayview for you'; $('approve').classList.add('green'); };
+$('approve').onclick = () => { $('approve').textContent = 'Done. We\'ll call CPMC for you'; $('approve').classList.add('green'); };
 frame();
 </script>
 </body>

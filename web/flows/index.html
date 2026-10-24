@@ -72,14 +72,14 @@
 <script>
 const FLOWS = [
   { id: 'drop-go',    name: 'Drop & Go',       live: true,  desc: 'Drag your bill + insurance statement, press Go. No chat, no questions.',
-    note: 'Second live scenario: POST /api/cases?scenario=freecare (Marcus Lee, Eastshore Medical Center, $5,600 → $0 free care: out-of-pocket is 12% of income). Try it from the link under Go.' },
+    note: 'Second live scenario: POST /api/cases?scenario=freecare (Marcus Lee, UCSF Medical Center, $5,600 → $0 free care: out-of-pocket is 12% of income). Try it from the link under Go.' },
   { id: 'chat',       name: 'Chat with Billie', desc: 'A warm conversational intake that ends with “Open my case”.' },
   { id: 'inbox',      name: 'Connect inbox',   desc: 'One click: we scan your inbox and find the bill and the EOB ourselves.' },
-  { id: 'snap',       name: 'Snap it',         desc: 'Mobile: photograph the bill, photograph the EOB, watch $8,700 fall to $150.' },
+  { id: 'snap',       name: 'Snap it',         desc: 'Mobile: photograph the bill, photograph the EOB, watch $8,700 fall to $0.' },
   { id: 'talk',       name: 'Just talk',       desc: 'Hold the mic and tell us what happened. We turn it into a case.' },
   { id: 'forward',    name: 'Forward it',      desc: 'Forward the bill email to bills@billback.ai. The case starts itself.' },
   { id: 'one-screen', name: 'One screen',      desc: 'Everything happens in place: the number counts down while agents work.' },
-  { id: 'receipt',    name: 'Receipt',         desc: 'The outcome as a shareable receipt: you owe $150, you saved $8,550.' },
+  { id: 'receipt',    name: 'Receipt',         desc: 'The outcome as a shareable receipt: you owe $0, and $500 comes back.' },
   { id: 'sms',        name: 'Text it',         desc: 'No app: text a photo to BillBack, get updates and approve by SMS.' },
   { id: 'caregiver',  name: 'For a parent',    desc: 'Built for caregivers handling a parent’s bill, with consent in one tap.' },
   { id: 'split',      name: 'Before / After',  desc: 'Drag the divider across the bill to see what you were charged vs. what you owe.' },

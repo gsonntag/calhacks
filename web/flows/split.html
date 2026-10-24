@@ -48,11 +48,11 @@
     <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
     <b>Bill<span>Back</span></b>
   </a>
-  <span class="aside">Case FA-20931</span>
+  <span class="aside">Case FA 20931</span>
 </header>
 <main>
   <h1 class="title" style="font-size:36px">Same bill. <span>Drag to see the truth.</span></h1>
-  <div class="labels"><span class="l">← What Bayview sent</span><span class="r">What you actually owe →</span></div>
+  <div class="labels"><span class="l">← What CPMC sent</span><span class="r">What you actually owe →</span></div>
   <div class="cmp" id="cmp" style="--x:50%">
     <!-- AFTER (underneath, full) -->
     <div class="doc" id="after"></div>
@@ -61,25 +61,25 @@
     <div class="handle"><span class="knob"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span></div>
   </div>
   <input class="range" id="range" type="range" min="0" max="100" value="50" aria-label="Compare before and after">
-  <div class="saved"><span class="chip green">You saved</span><b>$8,550</b><a class="btn" href="receipt.html">See the receipt</a></div>
+  <div class="saved"><span class="chip green">You saved</span><b>$8,700 · $500 back</b><a class="btn" href="receipt.html">See the receipt</a></div>
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
 const ITEMS = [['99284', 'Emergency dept visit, high severity', '3,150.00'], ['74177', 'CT abdomen and pelvis w/ contrast', '3,890.00'],
   ['80053', 'Comprehensive metabolic panel', '420.00'], ['85025', 'Complete blood count', '190.00'], ['96374', 'IV push, single drug', '610.00'], ['J2405', 'Ondansetron injection', '440.00']];
-const head = (stamp, cls) => `<div class="dh"><div><div class="h">BAYVIEW COMMUNITY HOSPITAL</div><div class="s">Patient: Rosa Martinez · Acct BCH-48213977<br>Service date Aug 2, 2026 · Statement Oct 10</div></div><span class="stamp ${cls}">${stamp}</span></div>`;
+const head = (stamp, cls) => `<div class="dh"><div><div class="h">CALIFORNIA PACIFIC MEDICAL CENTER</div><div class="s">Patient: Rosa Martinez · Acct CPMC-48213977<br>Service date Aug 2, 2026 · Statement Oct 10</div></div><span class="stamp ${cls}">${stamp}</span></div>`;
 const items = ITEMS.map(([c, d, a]) => `<tr><td><span class="code">${c}</span>${d}</td><td>$${a}</td></tr>`).join('');
 const ADJ = [
   ['Insurance adjustment', '—', '−$6,100.00', 'Allowed $4,760, plan paid $2,160 · claim C-2026-0815-44917'],
   ['Payments received', '$0.00', '−$500.00', 'Found in your Capital One account, Sep 14'],
-  ['Financial assistance', 'Not applied', '−$1,950.00', '75% of your $2,600 share · FA-20931'],
+  ['Financial assistance', 'Not applied', '−$2,600.00', '100% of your share, Sutter policy · FA 20931'],
 ];
 $('before').innerHTML = head('FINAL NOTICE', 'red') + `<table><tr class="sec"><td>CHARGES</td><td></td></tr>${items}<tr class="sec"><td>CREDITS</td><td></td></tr>` +
   ADJ.map(([k, b, , n]) => `<tr><td>${k}<span class="note" style="visibility:hidden">${n}</span></td><td class="muted">${b}</td></tr>`).join('') +
   `</table><div class="due red"><span>AMOUNT DUE</span><b>$8,700.00</b></div>`;
 $('after').innerHTML = head('CORRECTED', 'green') + `<table><tr class="sec"><td>CHARGES</td><td></td></tr>${items}<tr class="sec"><td>CREDITS</td><td></td></tr>` +
   ADJ.map(([k, , a, n]) => `<tr class="fix"><td>${k}<span class="note">${n}</span></td><td>${a}</td></tr>`).join('') +
-  `</table><div class="due green"><span>YOU OWE</span><b>$150.00</b></div>`;
+  `</table><div class="due green"><span>YOU OWE · $500 REFUND DUE</span><b>$0.00</b></div>`;
 
 const cmp = $('cmp'), range = $('range');
 let dragging = false, auto = true;

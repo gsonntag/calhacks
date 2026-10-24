@@ -63,15 +63,15 @@
     <div class="facts" id="facts"></div>
     <div class="go-row">
       <a class="btn lg" href="one-screen.html#auto">Start the case</a>
-      <span class="sub" style="font-size:14px">Add the bill later, or we'll request it from Bayview.</span>
+      <span class="sub" style="font-size:14px">Add the bill later, or we'll request it from CPMC.</span>
     </div>
   </section>
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
-const TEXT = "My mom got an [$8,700] bill from the ER at [Bayview]. She went in back in [August] for stomach pain. Now it says [final notice] and they'll send it to collections in November. She has [Golden State] insurance and she already paid them [$500]. She can't afford this.";
+const TEXT = "My mom got an [$8,700] bill from the ER at [CPMC]. She went in back in [August] for stomach pain. Now it says [final notice] and they'll send it to collections in November. She has [Golden State] insurance and she already paid them [$500]. She can't afford this.";
 const WORDS = TEXT.split(' ');
-const FACTS = ['For: Mom', 'Bayview Community Hospital', '$8,700 billed', 'ER visit · August', 'Final notice · Nov 3', 'Insurance: Golden State', 'Already paid $500'];
+const FACTS = ['For: Mom', 'California Pacific Medical Center', '$8,700 billed', 'ER visit · August', 'Final notice · Nov 3', 'Insurance: Golden State', 'Already paid $500'];
 let i = 0, holding = false, timer = null, done = false;
 
 const wave = $('wave');

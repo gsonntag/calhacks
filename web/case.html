@@ -476,7 +476,7 @@ function render() {
     return `<p${fresh(tk, i)}><b class="${them ? 'them' : ''}">${them ? 'Billing' : 'BillBack'}</b>&nbsp; <span>${esc(l.text)}</span></p>`;
   }).join(''));
   seen[tk] = m.lines.length;
-  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}" target="_blank">open the billing-rep console</a>` : '');
+  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}&hospital=${encodeURIComponent(m.bill ? m.bill.provider : '')}" target="_blank">open the billing-rep console</a>` : '');
   $('endCallBtn').hidden = !(m.call && !m.callEnded && !m.done);
   $('callSummary').textContent = m.callDeclined ? 'No call made' : outcomeText(m);
 

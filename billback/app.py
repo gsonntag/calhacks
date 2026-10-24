@@ -439,17 +439,12 @@ async def index():
     return FileResponse(WEB / "index.html")
 
 
-# Routers from the policy (Bright Data) and voice agents; optional until both modules land.
-try:
-    from .policies.routes import router as policies_router
-    app.include_router(policies_router)
-except ImportError as e:
-    print("policies router not mounted:", e)
-try:
-    from .voice.routes import router as voice_router
-    app.include_router(voice_router)
-except ImportError as e:
-    print("voice router not mounted:", e)
+# Routers: hospital policy database (Bright Data) and the Twilio/Cartesia voice pipeline.
+from .policies.routes import router as policies_router  # noqa: E402
+from .voice.routes import router as voice_router  # noqa: E402
+
+app.include_router(policies_router)
+app.include_router(voice_router)
 
 
-app.mount("/", StaticFiles(directory=WEB), name="web")
+app.mount("/", StaticFiles(directory=WEB, html=True), name="web")
