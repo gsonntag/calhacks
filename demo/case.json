@@ -51,9 +51,9 @@
     {"type": "deposit", "date": "2026-09-25", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
     {"type": "deposit", "date": "2026-10-09", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
     {"type": "deposit", "date": "2026-10-23", "amount": 1160.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "purchase", "date": "2026-08-02", "amount": 42.18, "merchant": "Walgreens #3321", "description": "Rx pickup"},
-    {"type": "purchase", "date": "2026-08-03", "amount": 42.18, "merchant": "Walgreens #3321", "description": "Rx pickup"},
-    {"type": "purchase", "date": "2026-08-20", "amount": 64.30, "merchant": "Berkeley Bowl", "description": "Groceries"},
+    {"type": "purchase", "date": "2026-08-02", "amount": 75.00, "merchant": "Berkeley Urgent Care", "description": "Follow-up visit copay"},
+    {"type": "purchase", "date": "2026-08-03", "amount": 75.00, "merchant": "Berkeley Urgent Care", "description": "Follow-up visit copay"},
+    {"type": "purchase", "date": "2026-08-20", "amount": 64.00, "merchant": "Berkeley Bowl", "description": "Groceries"},
     {"type": "purchase", "date": "2026-09-01", "amount": 1450.00, "merchant": "Sacramento St Apts", "description": "Rent"},
     {"type": "purchase", "date": "2026-09-14", "amount": 500.00, "merchant": "Bayview Community Hospital", "description": "Payment acct BCH-48213977"},
     {"type": "purchase", "date": "2026-10-01", "amount": 1450.00, "merchant": "Sacramento St Apts", "description": "Rent"}
