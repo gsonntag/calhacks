@@ -1,4 +1,5 @@
-"""Policy agent: the hospital's own financial-assistance policy -> the patient's discount.
+"""Bright Data agent (the Policy agent): the hospital's own financial-assistance policy -> the patient's
+discount and payment-plan terms. Reports in the shared format (report.py).
 
 Where the policy comes from, in order:
   1. the policy database (policydb/, built by real Bright Data crawls: billback/policies/) - instant;
@@ -11,11 +12,12 @@ finance.py, not the model."""
 import asyncio
 from urllib.parse import urlparse
 
-from .. import config, finance, llm
-from ..events import bus, step
+from .. import billcheck, config, finance, llm
+from ..events import bus
 from ..integrations import brightdata
 from ..policies import pipeline, registry
 from ..policies.store import PolicyStore
+from .report import Report
 
 LIVE_CRAWL_TIMEOUT = 300  # seconds; SERP + page + PDFs + extraction. Slow is fine, it's shown step by step.
 
@@ -60,6 +62,12 @@ def _site(row: dict) -> str:
     return urlparse(pages[0]).netloc.removeprefix("www.") if pages else ""
 
 
+def _doc_name(url: str) -> str:
+    """A proof line for a policy source; the link itself goes next to it."""
+    last = urlparse(url).path.rstrip("/").rsplit("/", 1)[-1]
+    return f"Policy PDF: {last}" if last.lower().endswith(".pdf") else "Policy page"
+
+
 def _primary_source(row: dict) -> str:
     docs = row["documents"]
     doc = next((d for d in docs if d["role"] == "policy_doc"), docs[0] if docs else None)
@@ -76,7 +84,7 @@ def _lookup(db: PolicyStore, name: str) -> tuple[registry.Hospital | None, dict 
     return h, (db.current(h.id) if h else None)
 
 
-async def _live_crawl(cid: str, db: PolicyStore, hosp: dict) -> dict | None:
+async def _live_crawl(cid: str, r: Report, db: PolicyStore, hosp: dict) -> dict | None:
     """Crawl a hospital that isn't in the database yet, streaming each stage to the dashboard."""
     h = registry.match(hosp["name"], list(registry.SEED)) or registry.Hospital(
         registry.slug(hosp["name"]), hosp["name"], city=hosp.get("city", ""))
@@ -87,7 +95,7 @@ async def _live_crawl(cid: str, db: PolicyStore, hosp: dict) -> dict | None:
                      status=e["status"], bytes=e["bytes"], latency_ms=e["latency_ms"], ok=bool(e["ok"]))
         elif kind == "crawl_stage" and e["stage"] in CRAWL_STEPS:
             key, label = CRAWL_STEPS[e["stage"]]
-            step(cid, "policy", key, label, e["status"], e["text"])
+            r.step(key, label, e["status"], e["text"])
 
     try:
         row = await asyncio.wait_for(pipeline.crawl_hospital(db, h, on_event=on_event), LIVE_CRAWL_TIMEOUT)
@@ -117,8 +125,8 @@ async def _fixture(cid: str, hosp: dict) -> dict:
             "fetched_at": None, "version": None, "sources": []}
 
 
-async def find_policy(cid: str, hosp: dict) -> dict:
-    step(cid, "policy", "find", "Find assistance policy", "running", f"Looking up {hosp['name']} in the policy database")
+async def find_policy(cid: str, r: Report, hosp: dict) -> dict:
+    r.step("find", "Find assistance policy", "running", f"Looking up {hosp['name']} in the policy database")
     db = store()
     h, row = _lookup(db, hosp["name"])
     if row:  # status "no_tiers" counts too: a crawl found no fixed-percent rule, re-crawling won't change that
@@ -126,85 +134,98 @@ async def find_policy(cid: str, hosp: dict) -> dict:
         bus.emit(cid, "policy_source", "policy", origin="policy_db", hospital=h.name, hospital_id=h.id,
                  version=row["version"], fetched_at=row["fetched_at"], sources=row["source_urls"],
                  content_sha256=row["content_sha256"], tiers_verified=row["tiers_verified"])
-        step(cid, "policy", "find", "Find assistance policy", "ok",
-             f"From policy DB: fetched {row['fetched_at'][:10]} from {_site(row)} via Bright Data, "
-             f"{row['tiers_verified']} verified quotes")
+        r.step("find", "Find assistance policy", "ok",
+               f"From policy DB: fetched {row['fetched_at'][:10]} from {_site(row)} via Bright Data, "
+               f"{row['tiers_verified']} verified quotes",
+               [(_doc_name(u), u) for u in row["source_urls"][:3]])
         return got
     if brightdata.live() and brightdata.serp_live() and llm.available():
-        step(cid, "policy", "find", "Find assistance policy", "running",
-             f"{hosp['name']} isn't in the policy database yet: crawling live with Bright Data")
-        got = await _live_crawl(cid, db, hosp)
+        r.step("find", "Find assistance policy", "running",
+               f"{hosp['name']} isn't in the policy database yet: crawling live with Bright Data")
+        got = await _live_crawl(cid, r, db, hosp)
         if got:
             bus.emit(cid, "policy_source", "policy", origin="live_crawl", hospital=hosp["name"],
                      version=got["version"], fetched_at=got["fetched_at"], sources=got["sources"])
-            step(cid, "policy", "find", "Find assistance policy", "ok" if got["found"]["tiers"] else "clear",
-                 f"Crawled live via Bright Data and saved to the policy DB · {urlparse(got['source']).netloc}")
+            r.step("find", "Find assistance policy", "ok" if got["found"]["tiers"] else "clear",
+                   f"Crawled live via Bright Data and saved to the policy DB · {urlparse(got['source']).netloc}",
+                   [(_doc_name(u), u) for u in got["sources"][:3]])
             return got
-        step(cid, "policy", "find", "Find assistance policy", "flag", "Live crawl failed: no verified policy")
+        r.step("find", "Find assistance policy", "flag", "Live crawl failed: no verified policy")
         return {"found": {"tiers": []}, "source": "live crawl failed", "live": False, "origin": "failed",
                 "fetched_at": None, "version": None, "sources": []}
     got = await _fixture(cid, hosp)
     bus.emit(cid, "policy_source", "policy", origin="offline_fixture", hospital=hosp["name"], sources=[])
-    step(cid, "policy", "find", "Find assistance policy", "ok",
-         "Bright Data not configured: using the OFFLINE TEST FIXTURE (sample policy, not a real hospital)")
+    r.step("find", "Find assistance policy", "ok",
+           "Bright Data not configured: using the OFFLINE TEST FIXTURE (sample policy, not a real hospital)")
     return got
+
+
+def report(case_id: str) -> Report:
+    return Report(case_id, "policy", "Bright Data agent", "Public rules: the hospital’s own financial-assistance and billing policy")
 
 
 async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future) -> dict:
     cid = case["id"]
     hosp = case["hospital"]
-    bus.emit(cid, "agent_started", "policy", text=f"Checking {hosp['name']}'s financial-assistance policy")
+    r = report(cid)
+    r.start(f"Checking {hosp['name']}'s financial-assistance policy")
 
-    got = await find_policy(cid, hosp)
+    got = await find_policy(cid, r, hosp)
     found, source, live = got["found"], got["source"], got["live"]
     tiers = found["tiers"]
     if not tiers:
-        step(cid, "policy", "find", "Find assistance policy", "clear", "No verified income-based discount rules")
+        r.step("find", "Find assistance policy", "clear", "No verified income-based discount rules")
+    src = lambda t: t.get("source_url") or source  # noqa: E731
 
-    step(cid, "policy", "income", "Estimate income", "running")
+    r.step("income", "Estimate your income from payroll deposits", "running")
     txns = await txns_ready
     inc = finance.income(txns, today=finance._d(case["today"]))
-    eob = case.get("eob") or {}
+    insured = billcheck.insured(case)  # explicit: an empty or missing insurance statement means self-pay
+    oop = float((case.get("eob") or {}).get("patient_responsibility") or 0) if insured else 0.0
     elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], tiers,
-                                    insured=bool(eob), out_of_pocket=float(eob.get("patient_responsibility") or 0))
-    step(cid, "policy", "income", "Estimate income", "ok",
-         f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr from payroll deposits)")
+                                    insured=insured, out_of_pocket=oop)
+    r.step("income", "Estimate your income from payroll deposits", "ok",
+           f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr, household of {elig['household_size']})",
+           [(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}") for t in inc["deposits"][-3:]])
     bus.emit(cid, "evidence", "policy", label="Income vs poverty line",
              value=f"{elig['fpl_pct']}% of FPL (household {elig['household_size']}, {elig['fpl_year']} guidelines)",
              source=inc["source"])
 
     free = [t for t in tiers if t.get("discount_pct") == 100]
-    step(cid, "policy", "free", "Check free care", "running")
+    r.step("free", "Check free care", "running")
     if elig["discount_pct"] == 100:
         why = (f" (your out-of-pocket is {elig['oop_pct_income']:.0f}% of income)"
                if elig["tier"].get("min_oop_pct_income") is not None else "")
-        step(cid, "policy", "free", "Check free care", "win", f"You qualify for free care{why}")
+        r.step("free", "Check free care", "win", f"You qualify for free care{why}",
+               [(elig["tier"].get("quote", ""), src(elig["tier"]))])
     elif free:
-        step(cid, "policy", "free", "Check free care", "clear", _why_not_free(elig, free))
+        r.step("free", "Check free care", "clear", _why_not_free(elig, free),
+               [(t.get("quote", ""), src(t)) for t in free[:1] if t.get("quote")])
     else:
-        step(cid, "policy", "free", "Check free care", "clear", "This policy has no free-care tier")
+        r.step("free", "Check free care", "clear", "This policy has no free-care tier")
 
     if elig["discount_pct"] != 100:
-        step(cid, "policy", "tiers", "Check discount tiers", "running")
-        step(cid, "policy", "tiers", "Check discount tiers", "win" if elig["discount_pct"] else "clear",
-             f"You qualify for {elig['discount_pct']:.0f}% off" if elig["discount_pct"] else "No discount tier matched")
+        r.step("tiers", "Check discount tiers", "running")
+        r.step("tiers", "Check discount tiers", "win" if elig["discount_pct"] else "clear",
+               f"You qualify for {elig['discount_pct']:.0f}% off" if elig["discount_pct"] else "No discount tier matched",
+               [(elig["tier"].get("quote", ""), src(elig["tier"]))] if elig["discount_pct"] and elig["tier"].get("quote") else None)
 
     for t in tiers:
-        bus.emit(cid, "policy_quote", "policy", quote=t.get("quote", ""), source=t.get("source_url") or source, live=live,
+        bus.emit(cid, "policy_quote", "policy", quote=t.get("quote", ""), source=src(t), live=live,
                  verified=bool(t.get("verified")), origin=got["origin"],
                  matched=elig["tier"] is not None and t is elig["tier"])
 
     if not owed_ready.done():
-        step(cid, "policy", "wait", "Wait for Auditor", "wait", "Waiting for the Auditor's balance")
+        r.step("wait", "Wait for the Nessie agent", "wait", "Waiting for its balance")
     paid_info = await owed_ready
     owed = paid_info["owed"]
-    step(cid, "policy", "wait", "Wait for Auditor", "ok", f"Got it: ${owed:,.0f} owed")
+    r.step("wait", "Wait for the Nessie agent", "ok", f"Got it: ${owed:,.0f} owed")
 
     d = elig["discount_pct"]
     st = finance.settle(paid_info["responsibility"], paid_info["paid"], d)
     target = st["balance"]
     label = "Apply free care" if d == 100 else "Apply discount"
-    step(cid, "policy", "apply", label, "running")
+    r.step("apply", label, "running")
     paid = f" − ${paid_info['paid']:,.0f} paid" if paid_info["paid"] else ""
     end = f"you're owed ${st['refund']:,.0f} back" if st["refund"] else f"${target:,.0f}"
     if d == 100 and not paid_info["paid"]:
@@ -213,22 +234,33 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
         text = f"${paid_info['responsibility']:,.0f} share − {d:.0f}% = ${st['discounted_share']:,.0f}{paid} = {end}"
     else:
         text = f"No write-off: ${owed:,.0f} stays"
-    step(cid, "policy", "apply", label, "ok" if d else "clear", text)
+    r.step("apply", label, "ok" if d else "clear", text)
+    if d:
+        saved = owed - target + st["refund"]
+        r.finding("discount", "Free care under their policy" if d == 100 else f"{d:.0f}% discount under their policy", saved,
+                  [f"Your income is {elig['fpl_pct']:.0f}% of the poverty line ({inc['source']}).",
+                   *([f"“{elig['tier']['quote']}”"] if elig["tier"].get("quote") else []),
+                   *([f"You already paid ${paid_info['paid']:,.0f}, so they owe you ${st['refund']:,.0f} back."] if st["refund"] else [])],
+                  src(elig["tier"]))
 
     terms = found.get("payment_plan") or {}
     plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"))
     if plan["months"]:
-        step(cid, "policy", "plan", "Payment plan terms", "running")
-        rules = [r for r in ("interest-free" if terms.get("interest_free") else "",
+        r.step("plan", "Payment plan terms", "running")
+        rules = [x for x in ("interest-free" if terms.get("interest_free") else "",
                              f"max {terms['max_pct_monthly_income']:g}% of monthly income"
-                             if terms.get("max_pct_monthly_income") else "") if r]
-        step(cid, "policy", "plan", "Payment plan terms", "win" if rules else "ok",
-             (f"Their policy: {', '.join(rules)} → " if rules else "")
-             + f"${target:,.0f} as {plan['months']} × ${plan['monthly']:,.0f}/mo, no interest")
-        for q, src in ((terms.get("quote"), terms.get("source_url")), (terms.get("cap_quote"), terms.get("cap_source_url"))):
-            if q:
-                bus.emit(cid, "policy_quote", "policy", quote=q, source=src or source, live=live, verified=True,
-                         origin=got["origin"], matched=True, topic="payment_plan")
+                             if terms.get("max_pct_monthly_income") else "") if x]
+        quotes = [(q, qs or source) for q, qs in ((terms.get("quote"), terms.get("source_url")),
+                                                   (terms.get("cap_quote"), terms.get("cap_source_url"))) if q]
+        r.step("plan", "Payment plan terms", "win" if rules else "ok",
+               (f"Their policy: {', '.join(rules)} → " if rules else "")
+               + f"${target:,.0f} as {plan['months']} × ${plan['monthly']:,.0f}/mo, no interest", quotes)
+        for q, qs in quotes:
+            bus.emit(cid, "policy_quote", "policy", quote=q, source=qs, live=live, verified=True,
+                     origin=got["origin"], matched=True, topic="payment_plan")
+        r.finding("plan", "Interest-free payment plan", 0,
+                  [f"“{q}”" for q, _ in quotes] or ["Their billing policy allows an interest-free plan."],
+                  quotes[0][1] if quotes else source, value=f"{plan['months']} × ${plan['monthly']:,.0f}/mo")
 
     result = ((f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}") if d else "No discount")
     if st["refund"]:
@@ -236,7 +268,7 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     if not d and plan["months"]:
         result = f"${target:,.0f}, interest-free plan"
     note = "charity-care discount" if d else _why_not_free(elig, free) if free else "no discount tier matched"
-    bus.emit(cid, "agent_finished", "policy", summary=result, note=note)
+    r.finish(result, note)
     return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live,
             "origin": got["origin"], "fetched_at": got["fetched_at"], "sources": got["sources"],
             "target": target, "refund": st["refund"], "discounted_share": st["discounted_share"],

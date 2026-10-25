@@ -5,7 +5,11 @@ policy. Those policies are public, but they sit on hospital websites as HTML pag
 behind CDNs and bot protection, and Google often returns aggregators rather than the hospital. BillBack uses
 Bright Data to find and fetch them, Claude to read them, and plain code to check every quote against the fetched
 text before any number reaches the money math. The results go into a policy database that is committed to
-this repo (`policydb/`) as evidence of the crawls.
+this repo (`policydb/`) as evidence of the crawls. The database covers 12 Bay Area hospitals (4 in San
+Francisco, 8 across the East Bay, Peninsula, South Bay and Marin).
+
+It also holds **real price tables** (`policydb/prices/`): for each hospital, about 67 common ER/outpatient
+codes taken from the hospital's own CMS price-transparency file (see [Real price tables](#real-price-tables)).
 
 ## Architecture
 
@@ -140,7 +144,9 @@ re-extract and re-verify, store a new version, write a `policy changed: added ..
 `policy_changed` event. The hash is over normalized text with link targets removed, because some pages embed
 per-request tokens (UCSF's Cloudflare email links changed on every fetch).
 
-## Seeded hospitals (San Francisco), from the committed crawl
+## Seeded hospitals, from the committed crawl
+
+### San Francisco (first seed)
 
 | Hospital | Sources fetched via Web Unlocker | Verified tiers |
 |---|---|---|
@@ -149,12 +155,134 @@ per-request tokens (UCSF's Cloudflare email links changed on every fetch).
 | Chinese Hospital | chinesehospital-sf.org financial-assistance page; Financial Assistance Policy PDF (11 pp, dated 9-26-26) | self-pay <= 200% FPL: 100%. 200-400% FPL and high-medical-cost help are capped at Medicare rates (stored as verified "other relief", not a fixed %) |
 | Zuckerberg San Francisco General | three zuckerbergsanfranciscogeneral.org pages | none: the site gives a 138% FPL limit for charity care and says discounts "depend on FPL" without percentages; the full policy is only on HCAI (see limitations) |
 
-Same bill, different hospitals (`GET /api/compare`, `web/hospitals.html`, which defaults to Marcus): Marcus
-(insured, 174% FPL, out-of-pocket 12.1% of income, $5,600 share) gets $0 under CPMC's and UCSF's policies, and
-owes $5,600 under Chinese Hospital's (its free-care tier is self-pay only; a Medicare-rate cap may apply but
-isn't a fixed percent) and ZSFG's (no fixed-percent tier published). Rosa (insured, 233% FPL, out-of-pocket 3%
-of income, $1,100 share, $500 paid) owes $600 at every hospital: none of the high-medical-cost rules apply
-below 10% of income. At CPMC, Sutter's billing policy then gives her an interest-free plan: 6 × $100/month.
+### Wider Bay Area (second seed, 8 hospitals)
+
+Picked for a mix of systems and cities: Sutter (East Bay), Stanford (Peninsula), a county system (Alameda
+Health System), Kaiser, two district/independent hospitals (MarinHealth, El Camino), John Muir, and Saint
+Francis Memorial (now UCSF Health). Status as `scripts/crawl_policies.py show` prints it.
+
+| Hospital | Sources fetched via Web Unlocker | Verified tiers / status |
+|---|---|---|
+| Alta Bates Summit Medical Center, Oakland (Sutter Health) | same Sutter page + 2 PDFs as CPMC (identical content hash: one system-wide policy) | same as CPMC: uninsured <= 400% FPL: 100%; insured with out-of-pocket > 10% of income: 100% |
+| Highland Hospital, Oakland (Alameda Health System) | Hospital Financial Assistance and Charity Care PDF (alamedahealthsystem.org, uploaded 2021), found directly by Google | uninsured <= 350% FPL: 100%; payment-plan terms and 3 other-relief items verified |
+| John Muir Medical Center, Walnut Creek | Patient Financial Assistance Policy PDF (3rd crawl, see below) | uninsured <= 400% FPL: 100%; underinsured <= 400% FPL with out-of-pocket > 10% of income: 100% |
+| Kaiser Permanente Oakland Medical Center | kp.org "help paying your bill" + Medical Financial Assistance pages; MFA application PDF (Northern California, 2024) | all patients <= 200% FPG: 100% award; 201-400% FPG: 50% award. Source is the MFA program application, not a formal policy document |
+| MarinHealth Medical Center, Greenbrae | help-paying-your-bill + community-benefit pages; Financial Assistance Policy PDF; 2024 program letter PDF | "all patients" <= 400% FPL: 100% (see limitations); insured high medical cost <= 400% FPL: 100% |
+| El Camino Hospital, Mountain View | Financial assistance eligibility/procedures PDF (uploaded 2022-04), found directly by Google | <= 400% FPL: 100% ("full charity care to patients whose Family Income is at or below 400%") |
+| Stanford Health Care, Palo Alto | stanfordhealthcare.org health-insurance-plans page only | **no tiers.** First crawl failed on a Google 429 ("This query recently failed"). The retry's results had no Stanford Health Care policy: the top hit was Stanford Children's policy (a different hospital, correctly not treated as official), so only an insurance page was fetched |
+| UCSF Health Saint Francis Hospital, San Francisco | a Spanish St. Mary's financial-assistance application PDF | **no tiers.** First crawled as "Saint Francis Memorial Hospital (Dignity Health)": no official page, because Dignity sold the hospital to UCSF Health in 2024 and neither dignityhealth.org nor CommonSpirit's price index lists it any more. Re-crawled under UCSF's name: Google's only official hit was the Spanish application form, which the old ranking didn't demote |
+
+Crawls in this round: 12 (the cap), 8 first crawls plus 4 re-runs: Stanford (after the 429), Saint Francis
+(after the rename), John Muir twice. John Muir's first crawl picked `johnmuirhealth.com/secure.html` (a
+login page, no tiers); the second picked a one-page program flyer PDF above the actual policy and stopped
+there (no tiers extracted). That led to a ranking fix in `discover.score`: other-language documents (-20) and
+flyers/notices (-3) are now demoted, as `fetch.py` already did for linked documents. The third crawl then
+took the Patient Financial Assistance Policy PDF and verified both tiers. Saint Francis and Stanford were not
+re-crawled again (cap reached); with the fix, Saint Francis's Spanish form would now be skipped, but Google
+offered no English policy in its results either.
+
+Same bill, different hospitals (`GET /api/compare`, `web/hospitals.html`, which defaults to Marcus), across
+all 12: Marcus (insured, 170% FPL, out-of-pocket 12.1% of income, $5,600 share) gets $0 at 7 hospitals (CPMC,
+Alta Bates Summit, UCSF, John Muir via their high-medical-cost rules; Kaiser, MarinHealth, El Camino via
+all-patient tiers) and owes $5,600 at the other 5: Chinese Hospital (free-care tier is self-pay only; a
+Medicare-rate cap may apply but isn't a fixed percent), Highland (uninsured-only tier), and ZSFG, Stanford and
+Saint Francis (no verified tier). Rosa (insured, 228% FPL, out-of-pocket 3% of income, $1,100 share, $500 paid)
+owes $600 at 9 hospitals, $50 at Kaiser (50% award for 201-400% FPG) and $0 at MarinHealth and El Camino, whose
+<= 400% tiers Claude read as applying to all patients (see limitations). At CPMC, Sutter's billing policy
+gives her an interest-free plan: 6 × $100/month.
+
+## Real price tables
+
+Every US hospital must publish a machine-readable file of its standard charges (45 CFR 180.50) and point to it
+from `https://<its domain>/cms-hpt.txt`. These files are **public and mostly reachable with plain HTTPS**;
+Bright Data is not technically required to read them. We route the requests through Web Unlocker first so
+they are logged with the policy crawls (`crawl_log`, stage `prices`), and because some hosts do refuse plain
+clients from our server: alamedahealthsystem.org times out entirely and John Muir's file host answers 403.
+When the Unlocker can't return the file we fall back to plain HTTPS and log that too, with no Bright Data
+product (`note: plain HTTPS (not Bright Data)`).
+
+```
+registry id ──► price_sources.SOURCES (cms-hpt.txt URL + campus regex)
+   cms-hpt.txt via Web Unlocker ──► parse blocks (UTF-8 or UTF-16) ──► pick campus ──► mrf-url
+   file via Web Unlocker; if refused / timed out / cut off ──► plain HTTPS ──► data/price_files/<id>.csv|json
+                                                              (+ <id>.meta.json: URLs, via, fetched_at, sha256)
+   prices.build_table: stream the file, keep ~67 curated codes ──► policydb/prices/<id>.json (committed)
+```
+
+| File | What it does |
+|---|---|
+| `billback/price_sources.py` | `SOURCES` (per hospital: cms-hpt.txt URL, campus regex), `parse_hpt`, `choose`, `get` (Unlocker then HTTPS), `truncated` check, zip handling, `fetch` |
+| `billback/prices.py` | `CODES` (curated list), parsers for the three CMS layouts (CSV tall, CSV wide, JSON v2/v3), compaction, and the read API: `load(id)`, `lookup(id, code)`, `hospitals()` |
+| `scripts/build_price_tables.py` | `[ids] [--fetch] [--list]`: rebuilds tables from `data/price_files/` (reproducible), fetching only what's missing or with `--fetch` |
+| `tests/test_prices.py` | Offline: fixtures for each layout in `tests/fixtures/prices/`, cms-hpt parsing (UTF-16, campuses), truncation check, lookup API, committed tables |
+
+**What each entry keeps** (per code): description, gross charge, discounted cash price, min/max negotiated
+(from the file's `standard_charge|min/max`, else computed from the listed payer dollar amounts, with
+`min_max_source` saying which), median of the payer dollar rates, number of payer rates, up to 6 named payer
+rates (one per family: Aetna, Anthem Blue Cross, Blue Shield, Cigna, UnitedHealthcare, Health Net, Kaiser,
+Medi-Cal, Medicare; a commercial payer's Medicare Advantage or Medi-Cal plan is labelled as such), setting,
+billing class, modifiers, drug unit, notes where it's ambiguous, and up to 3 other line items with the same
+code. Selection rules: CPT/HCPCS-typed codes only (a chargemaster number that happens to equal `99285` is not
+matched); outpatient before "both" before inpatient; facility before professional; no modifiers; most payer
+rates. Sutter lists the gross charge on a chargemaster line and the payer rates on a separate HCPCS/APC line
+for the same code, so the charge line and the rate line are chosen independently and the note says so.
+
+Each table records the source: `cms_hpt_url`, `hpt_location_name`, `file_url`, `via` (`brightdata-unlocker`
+or `https`), `fetched_at`, `sha256` and size of the file parsed, plus the file's own `hospital_name`,
+`location_name`, `last_updated_on` and CMS `template_version`.
+
+### What was built (from the committed tables)
+
+67 codes requested per hospital. "With rates" = codes that have payer-specific negotiated rates at CPT/HCPCS
+level.
+
+| Hospital | File (campus as the file names it) | Layout | File updated | Size, fetched via | Codes | With rates | Missing |
+|---|---|---|---|---|---|---|---|
+| sutter-cpmc | CPMC Van Ness Campus | CSV tall v3.0.0 | 2026-04-01 | 17 MB, Web Unlocker | 67 | 19 | - |
+| sutter-alta-bates | Alta Bates Summit, Summit Campus | CSV tall v3.0.0 | 2026-04-01 | 17 MB, Web Unlocker | 67 | 67 | - |
+| ucsf-health | one file for Parnassus, Mt Zion, Mission Bay | JSON v3.0.0 | 2026-04-01 | 91 MB, HTTPS | 67 | 67 | - |
+| ucsf-saint-francis | Saint Francis Memorial Hospital | JSON v3.0.0 | 2026-02-28 | 100 MB, HTTPS | 63 | 63 | 4 X-ray codes (73030, 73110, 73610, 73630) |
+| zsfg | SF General | CSV tall v3.0.0 | 3/19/2026 | 4 MB, Web Unlocker | 59 | 59 | 36415 and all 7 drug codes |
+| chinese-hospital | Chinese Hospital | CSV tall v3.0.0 | 2026-07-22 | 46 MB, Web Unlocker | 66 | 66 | J7030 |
+| stanford-health | Stanford Health Care (main) | JSON v3.0.0 | 2026-04-01 | 155 MB, HTTPS | 67 | 65 | - |
+| john-muir-wc | Walnut Creek Medical Center | CSV tall v3.0.0 (zip) | 2026-03-23 | 343 MB unzipped, Web Unlocker | 67 | 67 | - |
+| kaiser-oakland | Oakland Medical Center | CSV wide v3.0.1 | 4/1/2026 | 216 MB, HTTPS | 67 | 67 | - |
+| marinhealth | MarinHealth Medical Center | CSV wide v3.0.0 | 3/26/2026 | 127 MB, HTTPS | 67 | 67 | - |
+| el-camino | one file for Mountain View and Los Gatos | JSON v3.0.0 | 2026-04-01 | 58 MB, HTTPS | 63 | 0 | 81025, 12001, 10060, 29125 |
+| highland-ahs | **not built** | | | | | | |
+
+Notes on the data:
+- **Highland has no table.** Its `cms-hpt.txt` came through Web Unlocker (35 s), but the 1 file it points to
+  timed out in Web Unlocker 3 times (130-166 s, "Request timeout" / 502), and alamedahealthsystem.org refuses
+  plain connections from our server. Nothing was faked.
+- **Where rates are missing it's the file, not the parser.** CPMC Van Ness puts payer rates for most ER, lab
+  and infusion codes on APC lines, not CPT lines (74177 has them: Aetna $4,717, Blue Shield $6,302). El Camino
+  lists negotiated rates only by MS-DRG and APC (1,049 such items, no CPT-level rates). Stanford's facility
+  ED/imaging lines have only a Health Net Medicare plan rate at CPT level; its commercial rates sit on
+  professional-fee lines, which we skip for a facility bill.
+- Sutter and Saint Francis list the discounted cash price equal to the gross charge; UCSF's cash price is 30%
+  of gross, Stanford's 40%, El Camino's 25%, Kaiser's about 56%.
+- Payers that pay a percent of charges show a `percentage` and an `algorithm` text instead of a dollar amount
+  (e.g. John Muir: Aetna HMO 69.1% of billed). Drug lines are per package or per HCPCS unit depending on the
+  hospital, and the table says which when the file does (`drug_unit`, notes).
+- The `last_updated_on` format is the hospital's own (ISO or M/D/YYYY).
+
+### Bright Data use for prices, honestly
+
+All 12 `cms-hpt.txt` indexes were fetched through Web Unlocker (every one succeeded; 3 tries for Highland).
+For the files themselves, Web Unlocker worked for 5 (Sutter x2, SF General, Chinese Hospital, and John Muir's
+343 MB zip, where plain HTTPS gets a 403). It failed for the rest, and plain HTTPS was used:
+- Box downloads (UCSF, Saint Francis): HTTP 402 "Residential Failed (bad_endpoint)".
+- Very large files: 502 timeouts (Stanford 155 MB after 32 s, Kaiser 216 MB "Navigation timeout" after 88 s,
+  Highland), "CDP disconnected" (MarinHealth), 502 Bad Gateway (El Camino).
+- **Silent truncation:** the first MarinHealth fetch returned HTTP 200 with 2.2 MB of a 127 MB CSV, cut
+  mid-row after 64 s. `price_sources.truncated()` now rejects files that don't end cleanly (CSV newline, JSON
+  `}`, valid zip directory) and falls back.
+
+Price-file requests logged (stage `prices`): 30 Web Unlocker (21 returned a body, 9 errors) and 9 plain
+HTTPS (6 OK, 3 Highland connect failures, logged with no Bright Data product). We verified that the CPMC and
+Chinese Hospital files fetched through Bright Data are byte-identical (same sha256) to the copies downloaded
+earlier with plain HTTPS.
 
 ## Reproduce
 
@@ -165,13 +293,19 @@ uv run python scripts/crawl_policies.py recheck              # change detection
 uv run python scripts/crawl_policies.py show                 # tiers + verified quotes + sources
 uv run python scripts/crawl_policies.py compare freecare     # same bill through every policy
 uv run pytest -q tests/test_policies.py                      # offline, uses the committed artifacts
+uv run python scripts/build_price_tables.py --fetch          # download price files (cms-hpt.txt -> file)
+uv run python scripts/build_price_tables.py                  # rebuild policydb/prices/ offline, reproducibly
+uv run python scripts/build_price_tables.py --list           # coverage per hospital
+uv run pytest -q tests/test_prices.py                        # offline, small fixtures
 ```
-Each crawl costs about 4 Bright Data requests per hospital (1 SERP + 1 page + 2 PDFs); a recheck about 3.
+Each crawl costs about 4 Bright Data requests per hospital (1 SERP + 1 page + 2 PDFs); a recheck about 3; a
+price fetch 2 Web Unlocker requests (index + file).
 
 ## Evidence (`policydb/`)
 
 - `policies.sqlite3`: the database. `crawl_log` has one row per Bright Data request (and per decision note).
 - `policies.json`: the same data as readable JSON (runs, versions, verification checks, request log).
+- `prices/<hospital>.json`: the compact price tables (raw price files stay in gitignored `data/price_files/`).
 - `raw/<hospital>/`: SERP JSON, page markdown, policy PDFs and their extracted text, named by sha256. The stored
   `content_sha256` of each version can be recomputed from these files (`pipeline.load_documents` +
   `pipeline.content_hash`); `tests/test_policies.py` does exactly that, and re-verifies every stored quote.
@@ -179,7 +313,15 @@ Each crawl costs about 4 Bright Data requests per hospital (1 SERP + 1 page + 2 
 Committed run history: one 4-hospital crawl (Chinese Hospital failed in it, both Google results pages had only
 redirect links, so it was re-crawled after adding its domain), one recheck of all four (all unchanged).
 Requests logged in the DB: 6 SERP API, 22 Web Unlocker. Development of the pipeline used roughly 50 more
-requests that are not in the committed DB (the DB was reset before the final seed crawl).
+requests that are not in the committed DB (the DB was reset before the final seed crawl). A later CPMC
+re-crawl brought the totals to 7 SERP / 25 Unlocker.
+
+Bay Area round (8 hospitals, 12 crawls) plus price files: **16 SERP API + 18 Web Unlocker** for the policy
+crawls, **30 Web Unlocker** for the price indexes and files, so the DB now logs **23 SERP / 73 Web Unlocker**
+in total (`crawl_policies.py show` prints the totals). Saint Francis's first crawl ran under the id
+`dignity-saint-francis`; its log rows were re-pointed to `ucsf-saint-francis` when the entry was renamed (the
+query text in them still shows the Dignity search), and its SERP artifacts stay in
+`policydb/raw/dignity-saint-francis/`.
 
 ## Honest limitations
 
@@ -204,3 +346,15 @@ requests that are not in the committed DB (the DB was reset before the final see
 - **Rechecks are on demand** (CLI, API, button), not scheduled; a cron entry running `crawl_policies.py recheck`
   is all that's needed.
 - Income is compared to the 2025 HHS poverty guidelines (`finance.FPL_*`).
+- **"All patients" readings to check.** MarinHealth ("Full charity care (no payment) is for all patients at
+  400% or less of the FPL") and El Camino ("full charity care to patients whose Family Income is at or below
+  400%") were stored as tiers for all patients, so an insured patient like Rosa gets 100% off there. The quotes
+  are verified, but California policies usually mean uninsured patients or those with high medical costs; the
+  surrounding text should be read before relying on these two.
+- **Old or secondary documents.** Highland's policy PDF was uploaded in 2021 and El Camino's in 2022; Kaiser's
+  tiers come from its 2024 MFA application, not a formal policy document. They are what Google and the
+  hospitals' sites returned.
+- **Price tables are a curated subset.** About 67 codes, one representative line per code (outpatient,
+  facility, no modifiers); other lines with the same code are counted and up to 3 are listed. Negotiated rates
+  are what the file states for that line; a real allowed amount also depends on the plan, bundling and units.
+  The tables aren't wired into the bill check yet (`billback/prices.py` is ready for it).

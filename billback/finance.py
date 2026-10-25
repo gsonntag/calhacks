@@ -7,11 +7,14 @@ import math
 import re
 from datetime import date, datetime, timedelta
 
-# HHS poverty guidelines, 48 contiguous states. 2025 values; update when the
-# 2026 guidelines are confirmed.
-FPL_BASE = 15_650
-FPL_PER_EXTRA = 5_500
-FPL_YEAR = 2025
+from . import billcheck
+
+# HHS poverty guidelines, 48 contiguous states and D.C., 2026 (91 FR 1797, Jan 15 2026):
+# https://www.govinfo.gov/content/pkg/FR-2026-01-15/html/2026-00755.htm
+# https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines
+FPL_BASE = 15_960
+FPL_PER_EXTRA = 5_680
+FPL_YEAR = 2026
 
 
 def fpl(household_size: int) -> int:
@@ -26,28 +29,49 @@ def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9 ]", "", (s or "").lower())
 
 
-def _matches_payee(txn: dict, payee: str) -> bool:
-    words = [w for w in _norm(payee).split() if len(w) > 3]
-    hay = _norm(f"{txn.get('merchant', '')} {txn.get('description', '')}")
-    return any(w in hay for w in words)
+def _matches_payee(txn: dict, payee: str, account: str | None = None) -> bool:
+    """A payment to this hospital: its own name or a registry alias as a whole phrase, or the bill's account
+    number. Generic words a payee shares with other merchants ("Pacific", "Medical", "Center") never count."""
+    return billcheck.is_payment_to(txn, payee, account)
 
 
-def reconcile(bill: dict, eob: dict, txns: list[dict]) -> dict:
+def reconcile(bill: dict, eob: dict, txns: list[dict], corrections: list[dict] | None = None) -> dict:
+    """eob {} (or None) = self-pay: the patient's share is the bill's own charges, less any `corrections`
+    (bill-line errors from billcheck.line_corrections). Insured: the EOB's patient responsibility.
+    `payments` are all bank payments to the hospital since the date of service (they all count toward `paid`);
+    `uncredited_payments` are the ones the bill doesn't already show."""
+    eob = eob or {}
     payee = bill["provider"]
-    payments = [t for t in txns if t["type"] in ("purchase", "withdrawal", "transfer") and _matches_payee(t, payee)]
-    paid = round(sum(t["amount"] for t in payments), 2)
-    responsibility = float(eob["patient_responsibility"])
-    owed = round(max(0.0, responsibility - paid), 2)
+    payments = [t for t in txns if t["type"] in ("purchase", "withdrawal", "transfer")
+                and billcheck.on_or_after_service(t, bill, eob)
+                and _matches_payee(t, payee, bill.get("account_number"))]
+    credited, uncredited = billcheck.split_credited(bill, payments)
+    not_on_bill = round(sum(t["not_on_bill"] for t in uncredited), 2)
+    bill_credits = billcheck.bill_credits(bill)
+    bank_paid = round(sum(t["amount"] for t in payments), 2)
+    # payments the bill credits that the bank history doesn't show (cash, another card) still count as paid
+    paid = round(bank_paid + max(0.0, bill_credits - (bank_paid - not_on_bill)), 2)
+    insured = eob.get("patient_responsibility") not in (None, "")
+    fixes = [] if insured else list(corrections or [])
     billed_due = float(bill["amount_due"])
-    insurance_adj = round(float(bill.get("total_charges", billed_due)) - responsibility, 2)
+    charges = float(bill.get("total_charges", billed_due))
+    if insured:
+        responsibility = float(eob["patient_responsibility"])
+    else:
+        responsibility = round(charges - float(bill.get("insurance_adjustments") or 0)
+                               - sum(float(c["amount"]) for c in fixes), 2)
+    owed = round(max(0.0, responsibility - paid), 2)
+    insurance_adj = round(charges - responsibility, 2)
 
-    lines = [
-        {"label": "Hospital says you owe", "amount": billed_due, "source": f"bill · acct {bill.get('account_number', '?')}"},
-        {"label": "Insurance adjustment not applied", "amount": -round(billed_due - responsibility, 2),
-         "source": f"EOB · claim {eob.get('claim_number', '?')} · patient responsibility ${responsibility:,.2f}"},
-    ]
-    for t in payments:
-        lines.append({"label": f"Payment already made {t['date'][:10]}", "amount": -t["amount"],
+    lines = [{"label": "Hospital says you owe", "amount": billed_due, "source": f"bill · acct {bill.get('account_number', '?')}"}]
+    if insured:
+        lines.append({"label": "Insurance adjustment not applied", "amount": -round(billed_due + bill_credits - responsibility, 2) or 0.0,
+                      "source": f"EOB · claim {eob.get('claim_number', '?')} · patient responsibility ${responsibility:,.2f}"})
+    for c in fixes:
+        lines.append({"label": c.get("label", "Bill error"), "amount": -round(float(c["amount"]), 2),
+                      "source": c.get("source", "bill")})
+    for t in uncredited:
+        lines.append({"label": f"Payment already made {t['date'][:10]}", "amount": -t["not_on_bill"],
                       "source": f"Nessie txn {t['id']}"})
     lines.append({"label": "Actually owed", "amount": owed, "source": "computed", "total": True})
 
@@ -55,7 +79,13 @@ def reconcile(bill: dict, eob: dict, txns: list[dict]) -> dict:
         "billed_due": billed_due,
         "patient_responsibility": responsibility,
         "insurance_adjustment": insurance_adj,
+        "insured": insured,
+        "corrections": fixes,
         "payments": payments,
+        "credited_payments": credited,
+        "uncredited_payments": uncredited,
+        "credited_on_bill": bill_credits,
+        "uncredited_paid": not_on_bill,
         "paid": paid,
         "owed": owed,
         "overbilled_by": round(billed_due - owed, 2),
@@ -172,17 +202,25 @@ def apply_discount(owed: float, discount_pct: float) -> float:
 
 
 def payment_plan(balance: float, monthly_income: float, max_share: float = 0.04,
-                 policy_cap_pct: float | None = None) -> dict:
+                 policy_cap_pct: float | None = None, max_monthly: float | None = None) -> dict:
     """Shortest interest-free plan whose payment stays under max_share of monthly income (and under the
-    hospital policy's own cap, when its policy states one)."""
+    hospital policy's own cap, when its policy states one). max_monthly: what the patient says they can pay;
+    it replaces both caps (the policy's cap limits what the hospital can ask, not what the patient offers)."""
     if balance <= 0:
         return {"months": 0, "monthly": 0.0, "reason": "nothing owed"}
     share = min(max_share, policy_cap_pct / 100) if policy_cap_pct else max_share
     cap = max(10.0, monthly_income * share)
-    policy = f"; the hospital's policy caps it at {policy_cap_pct:g}%" if policy_cap_pct else ""
+    if max_monthly:
+        cap = max_monthly
+    # the share is BillBack's own default unless the hospital policy's cap is the lower one
+    ours = not (policy_cap_pct and policy_cap_pct / 100 < max_share)
+    policy = (f"; the hospital's policy allows up to {policy_cap_pct:g}%" if policy_cap_pct and ours
+              else f"; the hospital's policy caps it at {policy_cap_pct:g}%" if policy_cap_pct else "")
+    default = ": BillBack's default, not the hospital's rule" if ours else ""
     for months in (1, 3, 6, 12, 18, 24, 36):
         pay = math.ceil(balance / months)
         if pay <= cap:
-            return {"months": months, "monthly": float(pay),
-                    "reason": f"${pay}/mo stays under {share * 100:g}% of monthly income (${monthly_income:,.0f}){policy}"}
+            why = (f"${pay}/mo is within the ${max_monthly:,.0f}/mo you said you can pay" if max_monthly
+                   else f"${pay}/mo stays under {share * 100:g}% of monthly income (${monthly_income:,.0f})")
+            return {"months": months, "monthly": float(pay), "reason": why + ("" if max_monthly else default + policy)}
     return {"months": 36, "monthly": float(math.ceil(balance / 36)), "reason": "longest standard plan"}

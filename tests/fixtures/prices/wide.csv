@@ -1,0 +1,6 @@
+hospital_name,last_updated_on,version,location_name,hospital_address,license_number|CA,attester_name,,,
+Wide Test Hospital,3/26/2026,3.0.0,Wide Test Hospital|Wide Test Hospital,"250 Bon Air Rd,Greenbrae,CA,94904",110000361,Someone,,,
+description,code|1,code|1|type,code|2,code|2|type,modifiers,setting,drug_unit_of_measurement,drug_type_of_measurement,standard_charge|gross,standard_charge|discounted_cash,standard_charge|Aetna|Commercial|negotiated_dollar,standard_charge|Aetna|Commercial|negotiated_percentage,standard_charge|Aetna|Commercial|negotiated_algorithm,median_amount|Aetna|Commercial,standard_charge|Aetna|Commercial|methodology,standard_charge|Blue Shield|PPO|negotiated_dollar,standard_charge|Blue Shield|PPO|negotiated_percentage,standard_charge|Blue Shield|PPO|negotiated_algorithm,standard_charge|Blue Shield|PPO|methodology,standard_charge|min,standard_charge|max,additional_generic_notes
+ED VISIT LEVEL 5,4500005,CDM,99285,CPT,,outpatient,,,"$7,410.00",4446,3705,,,3500,fee schedule,,62.5,,percent of total billed charges,3705,4631.25,
+CBC W/AUTO DIFF,3000025,CDM,85025,CPT,,outpatient,,,219,131.4,,,Percent of Medicare 100,,other,46.59,,,fee schedule,,,No services performed during 15-month lookback period
+DRG 999,999,MS-DRG,,,,inpatient,,,,,3070,,,,case rate,,,,,,,

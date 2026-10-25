@@ -5,6 +5,7 @@ Twilio-facing (PUBLIC_BASE_URL must be the public https URL Twilio reaches):
   POST /voice/twilio/agent    Voice URL of the TwiML App that dials BillBack into a conference (checked)
   WS   /voice/twilio/stream   bidirectional Media Stream; accepted only with a live per-call token
 UI-facing:
+  POST /api/calls/{id}/turn/stream  desk mode: BillBack's reply streamed as text + audio (NDJSON, voice/desk.py)
   GET  /api/voices            voice catalog (accents) for the per-case picker
   POST /api/voices/sample     speak a line in a voice, with or without the pronunciation normalizer (WAV)
   POST /api/voices/normalize  the spoken form of a line, to show what the normalizer changed
@@ -15,7 +16,7 @@ from pydantic import BaseModel
 
 from .. import config
 from ..integrations import cartesia, twilio
-from . import calls, pronounce, voices
+from . import calls, desk, pronounce, voices
 from .media import MediaSession
 
 router = APIRouter()
@@ -76,3 +77,12 @@ async def sample(line: Line):
 async def normalize(line: Line):
     v = voices.resolve(line.voice_id)
     return {"text": line.text, "spoken": pronounce.normalize(line.text, v.language), "voice": v.name}
+
+
+class DeskTurn(BaseModel):
+    rep_said: str | None = None
+
+
+@router.post("/api/calls/{call_id}/turn/stream")
+async def desk_turn_stream(call_id: str, t: DeskTurn):
+    return await desk.turn_stream(call_id, t.rep_said)

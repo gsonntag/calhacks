@@ -24,7 +24,6 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); flex: none; }
   .dot.live { background: var(--st-warn); animation: m3-pulse 1.4s var(--md-ease) infinite; }
   .dot.amber { background: var(--st-warn); } .dot.green { background: var(--st-success); }
-  .new-case { flex: none; }
 
   main.m3-page { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; }
   #caseError { margin: 0; }
@@ -39,6 +38,8 @@
   .attn-card { border: 2px solid var(--md-primary); background: var(--md-surface-container-low); display: flex; flex-direction: column; gap: 16px; }
   .attn-head { display: flex; align-items: center; gap: 8px; color: var(--md-primary); }
   .attn-card p { margin: 0; }
+  .attn-card h2 { margin: 0; overflow-wrap: anywhere; }
+  .attn-card .actions { margin-top: 4px; }
   .ask { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
   .ask li { display: flex; align-items: flex-start; gap: 12px; }
   .ask .material-symbols-rounded { color: var(--md-primary); font-size: 20px; margin-top: 2px; }
@@ -46,19 +47,6 @@
   .voice-pick .m3-select { width: auto; max-width: 100%; min-width: 0; flex: 0 1 auto; }
   .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .m3-btn.text.muted-btn { color: var(--md-on-surface-variant); }
-
-  /* upload (new case) */
-  .drop { position: relative; border: 1.5px dashed var(--md-outline); background: var(--md-surface-container-lowest); border-radius: var(--md-shape-l);
-    padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; cursor: pointer; transition: background var(--md-dur-s) var(--md-ease); }
-  .drop:hover { background: var(--md-surface-container-low); }
-  .drop.dragging { background: var(--md-primary-container); border-color: var(--md-primary); }
-  .drop:focus-within { outline: 3px solid var(--md-primary); outline-offset: 2px; }
-  .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-  .drop .material-symbols-rounded { color: var(--md-primary); font-size: 32px; }
-  .drop .t span { color: var(--md-primary); text-decoration: underline; }
-  .files { margin: 0; padding: 0; list-style: none; }
-  .files li { display: flex; align-items: center; gap: 12px; min-height: 48px; border-bottom: 1px solid var(--md-outline-variant); }
-  .files li > span:not(.material-symbols-rounded) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 
   /* Steps card */
   .steps-card { padding: 16px 24px 8px; }
@@ -84,27 +72,56 @@
   .row-detail p { margin: 0; }
   .sub-h { margin: 0; color: var(--md-on-surface-variant); }
 
-  /* Review details */
-  .agents { display: flex; flex-wrap: wrap; gap: 24px 32px; }
-  .agent { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-  .agent-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
-  .agent ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .agent li { display: flex; align-items: flex-start; gap: 10px; }
-  .agent li .ic { width: 20px; height: 22px; flex: none; display: flex; align-items: center; justify-content: center; }
-  .agent li .ic .material-symbols-rounded { font-size: 20px; }
-  .agent li .ic .m3-spinner { width: 16px; height: 16px; border-width: 2px; }
-  .agent li .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-  .agent li .lb { font: 400 15px/22px var(--md-font); }
-  .agent li .rs { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); overflow-wrap: anywhere; }
-  .rs.flag { color: var(--md-error) !important; font-weight: 500 !important; }
-  .rs.win { color: var(--st-success) !important; font-weight: 500 !important; }
-  .rs.wait { color: var(--st-warn) !important; }
-  .ic-ok, .ic-win { color: var(--st-success); } .ic-flag { color: var(--md-error); } .ic-wait { color: var(--st-warn); } .ic-clear { color: var(--md-on-surface-variant); }
-  .sum-list { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
-  .sum-list dt { color: var(--md-on-surface-variant); } .sum-list dd { margin: 0; min-width: 0; overflow-wrap: anywhere; } .sum-list dd span { color: var(--md-on-surface-variant); }
-  .ev-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .ev-list li { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); min-width: 0; }
-  .ev-src { overflow-wrap: anywhere; color: var(--md-on-surface-variant); }
+  /* Review: one live terminal per app agent (dark in both themes) */
+  .terms { --t-bg: #191b18; --t-line: #2c2f2a; --t-fg: #e4e6de; --t-dim: #9da396; --t-ok: #8fd17a; --t-flag: #ff8f85; --t-win: #f2c04d; --t-wait: #e8b860;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; align-items: start; }
+  /* each agent's column: its terminal, then what it found (biggest saving first) */
+  .agent-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .agent-col .sub-h { margin: 8px 4px 0; }
+  .agent-col .finds { padding: 0 4px; }
+  .term { background: var(--t-bg); color: var(--t-fg); border-radius: var(--md-shape-l); overflow: hidden; min-width: 0; border: 1px solid var(--t-line); }
+  .t-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px 2px; }
+  .t-head b { flex: 1; min-width: 0; font: 600 15px/22px var(--md-font); letter-spacing: .1px; }
+  .t-state { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/16px var(--md-font); color: var(--t-dim); }
+  .t-state i { width: 8px; height: 8px; border-radius: 50%; background: var(--t-dim); }
+  .t-state.working i { background: var(--t-wait); animation: nowdot 1.2s ease-in-out infinite; } .t-state.working { color: var(--t-wait); }
+  .t-state.done i { background: var(--t-ok); } .t-state.done { color: var(--t-ok); }
+  .t-state.stopped i { background: var(--t-flag); } .t-state.stopped { color: var(--t-flag); }
+  .t-covers { padding: 0 16px 10px; font: 400 12px/18px var(--md-font); color: var(--t-dim); border-bottom: 1px solid var(--t-line); }
+  .t-body { margin: 0; padding: 10px 16px 14px; list-style: none; display: flex; flex-direction: column; gap: 10px;
+    font: 400 13px/19px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  .t-line { display: flex; gap: 10px; align-items: flex-start; }
+  .t-ic { width: 16px; height: 19px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .t-ic .material-symbols-rounded { font-size: 16px; }
+  .t-ic .m3-spinner { width: 12px; height: 12px; border-width: 2px; border-color: var(--t-wait); border-right-color: transparent; }
+  .t-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .t-lb { color: var(--t-fg); }
+  .t-line.ok .t-lb, .t-line.clear .t-lb { color: var(--t-dim); }
+  .t-rs { color: var(--t-fg); }
+  .t-line.clear .t-rs { color: var(--t-dim); }
+  .t-line.flag .t-rs { color: var(--t-flag); font-weight: 600; } .t-line.win .t-rs { color: var(--t-win); font-weight: 600; } .t-line.wait .t-rs { color: var(--t-wait); }
+  .t-line.ok .t-ic { color: var(--t-ok); } .t-line.flag .t-ic { color: var(--t-flag); } .t-line.win .t-ic { color: var(--t-win); }
+  .t-line.clear .t-ic, .t-line.wait .t-ic { color: var(--t-dim); }
+  .caret { display: inline-block; width: 7px; height: 14px; margin-left: 4px; vertical-align: -2px; background: var(--t-wait); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .t-proof { margin: 4px 0 0; padding: 0 0 0 10px; list-style: none; border-left: 2px solid var(--t-line); display: flex; flex-direction: column; gap: 3px; }
+  .t-proof li { color: var(--t-fg); opacity: .9; }
+  .t-src { display: block; color: var(--t-dim); font-size: 12px; line-height: 16px; }
+  .t-src a { color: inherit; }
+  .t-idle { color: var(--t-dim); }
+  .t-done { padding: 10px 16px; border-top: 1px solid var(--t-line); font: 500 13px/19px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--t-ok); overflow-wrap: anywhere; }
+  .t-done span { color: var(--t-dim); font-weight: 400; }
+  .t-line.re { animation: reline .6s var(--md-ease); }
+  .t-line.has-proof { cursor: pointer; border-radius: 6px; margin: -2px -6px; padding: 2px 6px; }
+  .t-line.has-proof:hover { background: rgba(255, 255, 255, .05); }
+  .t-line.has-proof:focus-visible { outline: 2px solid var(--t-dim); }
+  .t-more { color: var(--t-dim); font-size: 12px; line-height: 16px; }
+  .t-toggle { width: 100%; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; padding: 12px 16px 2px; }
+  .t-toggle:hover { background: rgba(255, 255, 255, .04); }
+  .term.folded .t-toggle { padding-bottom: 4px; }
+  .t-chev { color: var(--t-dim); font: 400 12px/16px var(--md-font); white-space: nowrap; }
+  @keyframes reline { from { background: rgba(255, 255, 255, .08); } to { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) { .caret, .t-state.working i, .t-line.re { animation: none; } }
   .quote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--md-primary); display: flex; flex-direction: column; gap: 8px; }
   .quote q { quotes: "“" "”"; }
   .quote .m3-row { gap: 8px; }
@@ -148,14 +165,136 @@
   @media (max-width: 640px) {
     .m3-top-app-bar { padding: 8px 12px; }
     main.m3-page { padding-top: 20px; gap: 20px; }
-    .hero h1 { font-size: 26px; line-height: 32px; }
+    .now h1, .hero h1 { font-size: 26px; line-height: 32px; }
     .steps-card { padding: 12px 16px 4px; }
     .row-btn { width: calc(100% + 16px); margin: 0 -8px; padding: 12px 8px; gap: 8px; }
     .m3-card { padding: 16px; }
   }
   @media (pointer: coarse), (max-width: 640px) { .case-tabs button, .case-tabs a { min-height: 44px; } }
-  #jumpCall { position: fixed; right: 24px; bottom: 24px; z-index: 20; }
-  @media (max-width: 640px) { #jumpCall { right: 16px; bottom: 16px; } }
+  /* Header: which step, what is happening right now, the money, progress */
+  .now { display: flex; flex-direction: column; gap: 10px; }
+  .now h1 { margin: 0; overflow-wrap: anywhere; }
+  .now-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 40px; }
+  .now-step { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .01em; color: var(--md-on-surface-variant); }
+  .now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); }
+  .now-dot.off { display: none; }
+  .now-dot.warn { background: var(--st-warn, #b26a00); }
+  .now-dot.success { background: var(--st-money, var(--md-primary)); }
+  .now-dot.error { background: var(--md-error); }
+  .now-dot.live { animation: nowdot 1.4s ease-in-out infinite; }
+  @keyframes nowdot { 50% { opacity: .35; } }
+  .now-text { margin: 0; color: var(--md-on-surface-variant); min-height: 1.5em; overflow-wrap: anywhere; }
+  .now-money { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; }
+  .now-money s { font-size: 20px; color: var(--md-on-surface-variant); }
+  .now-money .material-symbols-rounded { font-size: 20px; color: var(--md-on-surface-variant); align-self: center; }
+  .now-money b { font-size: 36px; line-height: 44px; font-weight: 600; color: var(--st-money, var(--md-primary)); }
+  .now-money b.pending { font-size: 20px; font-weight: 400; color: var(--md-on-surface-variant); }
+  .now-track { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+  .now-track li { display: flex; flex-direction: column; gap: 6px; font-size: 12px; line-height: 16px; color: var(--md-on-surface-variant); min-width: 0; }
+  .now-track li::before { content: ""; height: 4px; border-radius: 2px; background: var(--md-outline-variant); transition: background var(--md-dur-m) var(--md-ease); }
+  .now-track li.done::before { background: var(--md-primary); }
+  .now-track li.active { color: var(--md-on-surface); font-weight: 500; }
+  .now-track li.active::before { background: linear-gradient(90deg, var(--md-primary) 0 40%, var(--md-outline-variant) 40%); background-size: 250% 100%; animation: nowpulse 1.6s linear infinite; }
+  @keyframes nowpulse { from { background-position: 100% 0; } to { background-position: 0 0; } }
+  @media (prefers-reduced-motion: reduce) { .now-track li.active::before, .now-dot.live { animation: none; } .now-track li.active::before { background: var(--md-primary); opacity: .6; } }
+  .now-ctl { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .now-ctl .m3-btn { min-height: 32px; padding: 0 12px; white-space: nowrap; }
+  .now-ctl .m3-select { width: auto; max-width: 120px; min-width: 0; min-height: 32px; padding-top: 0; padding-bottom: 0; }
+  .replay .case-tabs { display: none; }
+  .finds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .finds li + li { border-top: 1px solid var(--md-outline-variant); }
+  .finds summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; }
+  .finds summary::-webkit-details-marker { display: none; }
+  .finds summary::after { content: "expand_more"; font-family: "Material Symbols Rounded"; font-size: 20px; color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
+  .finds details[open] summary::after { transform: rotate(180deg); }
+  .finds .fl { flex: 1; min-width: 0; font: 500 16px/24px var(--md-font); display: flex; flex-direction: column; }
+  .finds .fl small { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .finds .src { color: var(--md-on-surface-variant); }
+  .finds b { font: 600 18px/24px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .finds b.plain { font-weight: 500; font-size: 16px; color: var(--md-on-surface); }
+  .finds .fd { display: flex; flex-direction: column; gap: 6px; padding: 0 0 14px; overflow-wrap: anywhere; }
+  .finds .fd p { margin: 0; }
+  .more summary { cursor: pointer; color: var(--md-primary); font-weight: 500; padding: 4px 0; }
+  .more[open] summary { margin-bottom: 12px; }
+  .more > div + div { margin-top: 16px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 640px) { .now-track li span { display: none; } .now-track li.active span { display: inline; } .now-money b { font-size: 30px; line-height: 36px; } }
+
+  /* Step 3: the plan. Vertical: the Decide agent on top (big while it works, then a slim bar), the plan below */
+  .slim-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 16px; border-radius: var(--md-shape-l);
+    background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); }
+  .slim-bar .who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .slim-bar .who small { color: var(--md-on-surface-variant); font: 400 12px/16px var(--md-font); }
+  .slim-bar .m3-btn { min-height: 36px; }
+  .filling { display: flex; flex-direction: column; gap: 10px; padding: 8px 0; color: var(--md-on-surface-variant); }
+  .filling i { display: block; height: 14px; border-radius: 7px; background: var(--md-surface-container-high, var(--md-outline-variant)); animation: nowdot 1.4s ease-in-out infinite; }
+  .plan-card { display: flex; flex-direction: column; gap: 16px; }
+  .plan-vers { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .plan-vers .m3-chip { min-height: 32px; height: auto; }
+  .plan-vers .lbl { color: var(--md-on-surface-variant); font: 500 12px/16px var(--md-font); margin-right: 4px; }
+  .plan-banner { margin: 0; padding: 10px 14px; border-radius: var(--md-shape-m); background: var(--st-info-container); color: var(--st-on-info-container); display: flex; flex-direction: column; gap: 6px; }
+  .plan-banner ul { margin: 0; padding-left: 18px; }
+  .plan-banner .actions .m3-btn { min-height: 32px; }
+  .plan-money { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
+  .plan-money s { color: var(--md-on-surface-variant); font-size: 20px; }
+  .plan-money b { font: 600 32px/40px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; }
+  .plan-money span { color: var(--md-on-surface-variant); }
+  .plan-who { margin: 0; display: flex; gap: 10px; align-items: flex-start; }
+  .plan-who .material-symbols-rounded { color: var(--md-primary); }
+  .plan-asks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .plan-asks li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 8px; margin: 0 -8px; border-radius: var(--md-shape-m); }
+  .plan-asks li + li { border-top: 1px solid var(--md-outline-variant); }
+  .plan-asks .n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--md-secondary-container, var(--md-surface-container-high)); color: var(--md-on-secondary-container, inherit);
+    font: 600 13px/24px var(--md-font); text-align: center; }
+  .plan-asks .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .plan-asks .why { align-self: flex-start; border: 0; background: none; padding: 0; color: var(--md-primary); font: 500 13px/18px var(--md-font); cursor: pointer; }
+  .plan-asks .basis { color: var(--md-on-surface-variant); font: 400 13px/18px var(--md-font); }
+  .plan-asks b { flex: none; font: 600 16px/24px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .plan-asks b.plain { color: var(--md-on-surface); font-weight: 500; }
+  .plan-asks li.differs { background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .plan-asks .last { align-self: flex-start; }
+  /* step 5: what the call got, then the plan for what's left */
+  .score-card { display: flex; flex-direction: column; gap: 4px; }
+  .score { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .score li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; }
+  .score li + li { border-top: 1px solid var(--md-outline-variant); }
+  .score .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .score .ev { color: var(--md-on-surface-variant); font: 400 13px/18px var(--md-font); }
+  .score .m3-status, .plan-asks .m3-status { flex: none; white-space: nowrap; }
+  .plan-done { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; color: var(--md-on-surface-variant); }
+  .plan-done li { display: flex; gap: 8px; align-items: flex-start; }
+  .next-area { display: flex; flex-direction: column; gap: 16px; }
+  .flash { animation: flash 4s var(--md-ease); }
+  @keyframes flash { 0%, 60% { background: var(--st-warn-container); } 100% { background: transparent; } }
+  .plan-skipped { margin: 0; color: var(--md-on-surface-variant); }
+  .plan-skipped li { margin-top: 2px; }
+  .how { display: flex; flex-direction: column; gap: 12px; }
+  .how h4 { margin: 0 0 4px; font: 500 14px/20px var(--md-font); }
+  .how ul { margin: 0; padding-left: 18px; }
+  .how .agent-lbl { display: inline-block; font: 500 11px/16px var(--md-font); padding: 0 8px; border-radius: 8px; background: var(--md-surface-container-high, var(--md-outline-variant)); color: var(--md-on-surface-variant); margin-left: 6px; vertical-align: 1px; }
+  .plan-actions { display: flex; flex-direction: column; gap: 8px; }
+  .planner { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px; border-radius: var(--md-shape-l); background: var(--md-surface-container-low); }
+  .planner-log { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; }
+  .planner-log:empty::before { content: "Ask why the plan is what it is, or tell me what to change. I can’t change facts: for that, use “This is wrong” on a finding in Review."; color: var(--md-on-surface-variant); font: 400 14px/20px var(--md-font); }
+  .planner-form { display: flex; gap: 8px; }
+  .planner-form .m3-input { flex: 1; min-width: 0; }
+  .made-v { border: 0; background: none; padding: 0 8px; color: var(--md-primary); font: 500 12px/16px var(--md-font); cursor: pointer; align-self: flex-start; }
+  /* findings: Ask / This is wrong, in place */
+  .find-acts { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+  .find-acts .m3-btn { min-height: 32px; padding: 0 12px; }
+  .finds summary .find-ask { min-height: 32px; padding: 0 12px; }
+  .find-ask[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
+  .find-box { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); }
+  .find-box form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .find-box .m3-input { flex: 1; min-width: 180px; }
+  .qa { display: flex; flex-direction: column; gap: 2px; }
+  .qa .q { font-weight: 500; }
+  .qa .lbl { font: 500 11px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .wrong-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--st-warn); font: 500 12px/16px var(--md-font); }
+  .finds li.is-wrong .fl { text-decoration: line-through; text-decoration-color: var(--md-on-surface-variant); }
+  .finds li.flash { border-radius: var(--md-shape-m); }
+  .replay .find-acts, .replay .find-ask, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
+  @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
 </head>
 <body>
@@ -166,77 +305,46 @@
     <span class="m3-brand-name">BillBack</span>
   </a>
   <nav class="m3-tabs" aria-label="Main">
-    <a class="m3-tab" href="/">New case</a>
-    <a class="m3-tab" href="dashboard.html" aria-current="page">Cases</a>
+    <a class="m3-tab" href="/" aria-current="page">Cases</a>
     <a class="m3-tab" href="hospitals.html">Hospitals</a>
     <a class="m3-tab" id="hoodLink" href="ops.html">Under the hood</a>
   </nav>
 </header>
 <nav class="case-tabs" aria-label="Cases">
   <div id="tabList" style="display:contents"></div>
-  <button type="button" class="m3-chip new-case" id="newCase"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</button>
+  <a class="m3-chip new-case" id="newCase" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
 </nav>
 
-<button class="m3-fab" id="jumpCall" type="button" hidden><span class="material-symbols-rounded" aria-hidden="true">skip_next</span>Jump to the call</button>
-<main class="m3-page narrow">
+<main class="m3-page">
   <div id="caseError" class="m3-card error" role="alert" hidden></div>
   <div id="caseWarnings" class="body-m" aria-live="polite"></div>
 
-  <!-- TOP: what's happening, the money, what needs you -->
-  <section class="hero" aria-live="polite">
+  <!-- TOP: which step, what is happening, the money -->
+  <section class="now" id="nowCard" aria-live="polite">
+    <div class="now-top">
+      <span class="now-step"><i class="now-dot" id="nowDot"></i><span id="nowStep"></span></span>
+      <span class="now-ctl" id="nowCtl" hidden>
+        <span class="body-s muted" id="nowReplayNote">Replay</span>
+        <button class="m3-btn text" id="jumpCall" type="button" hidden>Skip to the call</button>
+        <button type="button" class="m3-icon-btn" id="nowPause" aria-label="Pause"><span class="material-symbols-rounded" aria-hidden="true">pause</span></button>
+        <select class="m3-select compact" id="nowSpeed" aria-label="Replay speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="0">Real time</option></select>
+      </span>
+    </div>
     <h1 class="headline-l" id="caseTitle">Loading your case…</h1>
-    <p class="body-l muted" id="caseSub"></p>
+    <p class="body-l now-text" id="nowText"></p>
+    <div class="now-money" id="nowMoney" hidden><s id="nowWas"></s><span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span><b id="nowOwe"></b><span class="body-m muted" id="nowSave"></span></div>
+    <ol class="now-track" id="nowTrack" aria-label="Progress">
+      <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Plan</span></li><li><span>Call</span></li><li><span>Resolved</span></li>
+    </ol>
+    <!-- kept for the render code; the line above replaces them -->
+    <div hidden><p id="caseSub"></p><span id="statOrig"></span><span id="statOwe"></span><span id="statOweSupport"></span></div>
   </section>
 
-  <div class="m3-grid-2" id="stats">
-    <div class="m3-card m3-stat">
-      <span class="stat-label">Hospital says</span>
-      <span class="stat-value" id="statOrig">—</span>
-      <span class="stat-support">Original statement</span>
-    </div>
-    <div class="m3-card success m3-stat">
-      <span class="stat-label">You actually owe</span>
-      <span class="stat-value" id="statOwe">—</span>
-      <span class="stat-support" id="statOweSupport">Checking…</span>
-    </div>
-  </div>
-
-  <!-- new case: upload -->
-  <section class="m3-card m3-stack" id="uploadPanel" hidden aria-label="Upload your bill">
-    <label class="drop" id="drop">
-      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Upload your bill and insurance statement">
-      <span class="material-symbols-rounded" aria-hidden="true">upload_file</span>
-      <span class="title-m t">Drag files here, or <span>browse</span></span>
-      <span class="body-m muted">PDF, JPG or PNG</span>
-    </label>
-    <ul class="files" id="fileList"></ul>
-    <div class="actions">
-      <button type="button" class="m3-btn filled" id="startBtn" disabled>Start review</button>
-      <button type="button" class="m3-btn text" id="sampleBtn">Try a sample bill</button>
-    </div>
-  </section>
-
-  <!-- needs you: call approval -->
-  <section class="m3-card attn-card" id="approvalCard" hidden aria-labelledby="approvalHead">
-    <div class="attn-head"><span class="material-symbols-rounded" aria-hidden="true">front_hand</span><span class="title-m" id="approvalHead">Needs your OK</span></div>
-    <p class="body-l">Can BillBack call <strong id="approveProvider"></strong> billing <span id="approveAgain">for you</span>? On the call we’ll:</p>
-    <ul class="ask" id="askList"></ul>
-    <p class="body-m muted">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
-    <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
-      <select id="voiceSel" class="m3-select compact"></select>
-      <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
-    </label>
-    <p class="body-m muted">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
-    <div class="actions">
-      <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call billing</button>
-      <button type="button" class="m3-btn outlined" id="notYetBtn">Not now</button>
-    </div>
-  </section>
   <div id="planSlotTop"></div>
 
   <!-- Steps -->
   <section class="m3-card steps-card" aria-labelledby="stepsHead">
-    <h2 class="title-l" id="stepsHead">Steps</h2>
+    <h2 class="sr-only" id="stepsHead">Steps</h2>
     <ol class="steps">
       <li class="step" data-step="0">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail0">
@@ -249,28 +357,55 @@
 
       <li class="step" data-step="1">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail1">
-          <span class="row-text"><span class="row-title">Review <span class="muted" style="font-weight:400">(Auditor + Policy)</span></span><span class="row-sum" id="reviewLine"></span></span>
+          <span class="row-text"><span class="row-title">Review</span><span class="row-sum" id="reviewLine"></span></span>
           <span class="row-status" id="status1"></span>
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail1" hidden>
-          <span class="body-m muted" id="reviewMeta"></span>
-          <div class="agents" id="agents"></div>
-          <dl class="sum-list body-m" id="reviewSummary"></dl>
-          <div class="m3-stack" id="evidenceBox" hidden><h3 class="title-s sub-h">Evidence</h3><ul class="ev-list" id="evidenceList"></ul></div>
-          <div class="m3-stack" id="quoteBox" hidden><h3 class="title-s sub-h">From the hospital’s own policy</h3><div class="m3-stack" id="quoteList"></div></div>
+          <div class="terms" id="agents"></div>
+          <details class="more" id="quoteBox" hidden><summary class="body-m">The hospital’s own policy, word for word</summary>
+            <div class="m3-stack" id="quoteList"></div>
+          </details>
         </div>
       </li>
 
       <li class="step" data-step="2">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail2">
-          <span class="row-text"><span class="row-title">Your approval</span><span class="row-sum" id="approveMeta"></span></span>
+          <span class="row-text"><span class="row-title">The plan</span><span class="row-sum" id="approveMeta"></span></span>
           <span class="row-status" id="status2"></span>
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail2" hidden>
-          <p class="body-m" id="approveSummary"></p>
-          <ul class="ask body-m" id="askDone"></ul>
+          <!-- the Decide agent: big while it works, then a slim bar that opens the planner chat -->
+          <div id="decideBox"></div>
+          <div id="plannerSlotPlan">
+          <section class="planner" id="plannerBox" hidden aria-label="Talk to the planner">
+            <div class="planner-log" id="plannerLog" aria-live="polite"></div>
+            <form class="planner-form" id="plannerForm">
+              <input class="m3-input" id="plannerInput" autocomplete="off" maxlength="1000"
+                     placeholder="Ask why, or tell me what to change (“refund first”, “I can do $150/mo”)" aria-label="Message the planner">
+              <button type="submit" class="m3-btn filled" id="plannerSend">Send</button>
+            </form>
+          </section>
+          </div>
+          <div id="planArea"></div>
+          <div class="plan-actions" id="planActions" hidden>
+            <div class="actions">
+              <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call now</button>
+              <button type="button" class="m3-btn text" id="notYetBtn">Not now</button>
+            </div>
+            <details class="more" id="callSettings"><summary class="body-s">Call settings</summary>
+              <div class="m3-stack">
+                <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
+                  <select id="voiceSel" class="m3-select compact"></select>
+                  <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
+                </label>
+                <p class="body-m muted">Always: it says it’s an automated assistant calling for you, and it never agrees to pay anything or gives card details. Any payment comes back to you first.</p>
+                <p class="body-m muted">Approve from your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
+              </div>
+            </details>
+          </div>
+          <p class="body-m muted" id="approveSummary"></p>
         </div>
       </li>
 
@@ -310,24 +445,36 @@
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail4" hidden>
-          <div class="final"><b class="money-xl" id="finalAmt"></b><s id="finalWas"></s></div>
-          <span class="title-m" id="finalOutcome"></span>
+          <div hidden><b id="finalAmt"></b><s id="finalWas"></s><span id="finalOutcome"></span></div>
           <div id="planSlotFinal">
             <div class="m3-card plan" id="planBox" hidden>
               <p class="body-l" id="planText"></p>
               <div class="actions">
-                <button type="button" class="m3-btn filled" id="planYes">Set up the plan</button>
-                <button type="button" class="m3-btn outlined" id="planNo">No thanks</button>
+                <button type="button" class="m3-btn filled" id="planYes">Yes</button>
+                <button type="button" class="m3-btn text" id="planNo">No</button>
               </div>
             </div>
           </div>
           <span class="body-m muted" id="finalNote">We’ll check back once billing confirms your new balance.</span>
+          <div class="next-area" id="nextWrap" hidden>
+            <div id="scoreBox"></div>
+            <div id="nextDecideBox"></div>
+            <div id="plannerSlotNext"></div>
+            <div id="nextArea"></div>
+            <div class="plan-actions" id="nextActions" hidden>
+              <div class="actions">
+                <button type="button" class="m3-btn filled" id="nextCallBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call now</button>
+                <a class="m3-btn text" href="/">See all cases</a>
+              </div>
+            </div>
+            <p class="body-m" id="nextErr" style="color:var(--md-error);margin:0" hidden></p>
+          </div>
           <div class="m3-card follow" id="followBox" hidden>
             <p class="body-l" id="followText"></p>
             <span class="body-m muted" id="followPromised"></span>
             <div class="actions">
               <button type="button" class="m3-btn filled" id="callAgainBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call again</button>
-              <a class="m3-btn text" href="dashboard.html">See all cases</a>
+              <a class="m3-btn text" href="/">See all cases</a>
             </div>
           </div>
         </div>
@@ -336,7 +483,7 @@
   </section>
 
   <!-- BillBack Assistant -->
-  <section class="m3-assistant assistant" aria-labelledby="asstHead">
+  <section class="m3-assistant assistant" aria-labelledby="asstHead" hidden>
     <div class="m3-assistant-head" id="asstHead"><span class="m3-wave" id="asstWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>BillBack Assistant</div>
     <p class="m3-quote" id="asstQuote" aria-live="polite"></p>
     <span class="m3-status" id="asstChip">Voice agent ready</span>
@@ -344,8 +491,8 @@
 </main>
 
 <script>
-const STATUS = ['Upload', 'Reviewing', 'Needs approval', 'On call', 'Resolved'];
-const AGENT_STATUS = {created: 1, reviewing: 1, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
+const STATUS = ['Upload', 'Reviewing', 'Your plan', 'On call', 'Resolved'];
+const AGENT_STATUS = {created: 1, reviewing: 1, deciding: 2, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const money = (n) => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -357,13 +504,11 @@ const fresh = (key, i) => (i >= (seen[key] || 0) ? ' class="in"' : '');
 const sym = (name, label, cls = '') => `<span class="material-symbols-rounded ${cls}"${label ? ` role="img" aria-label="${label}"` : ' aria-hidden="true"'}>${name}</span>`;
 const ICON = {
   running: '<span class="m3-spinner" role="img" aria-label="In progress"></span>',
-  wait: sym('pause_circle', 'Waiting', 'ic-wait'),
+  wait: sym('hourglass_top', 'Waiting', 'ic-wait'),
   ok: sym('check_circle', 'Done', 'ic-ok'),
   flag: sym('error', 'Issue found', 'ic-flag'),
   clear: sym('remove', 'Nothing found', 'ic-clear'),
   win: sym('star', 'Qualifies', 'ic-win icon-fill'),
-  file: sym('description', '', 'muted'),
-  x: sym('close'),
   check: sym('check')
 };
 const DONE_ICON = sym('check_circle', 'Done', 'm3-check icon-fill');
@@ -371,26 +516,40 @@ const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } 
 
 // ---------- case model, built from the event stream ----------
 function blankModel() {
-  return { bill: null, docs: [], steps: { auditor: [], policy: [] }, agent: {}, review: null, approvals: {},
+  return { bill: null, docs: [], steps: {}, agent: {}, order: [], findings: [], review: null, approvals: {},
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
-           warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1 };
+           warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1,
+           plans: [], chat: [], corrections: {}, qa: {}, approvedV: null, flash: null, scorecards: [] };
 }
-const state = { tabs: [], active: null, models: {}, drafts: {}, ws: null, now: Date.now() / 1000, ui: {} };
+const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
 
 function apply(m, e) {
   switch (e.kind) {
     case 'case_started': m.bill = e.bill; m.docs = e.documents || m.docs; m.mode = e.modes; break;
-    case 'agent_started': (m.agent[e.agent] ||= {}).started = true; break;
+    case 'review_started':
+      for (const a of e.agents || []) { Object.assign((m.agent[a.agent] ||= {}), { name: a.name, covers: a.covers }); if (!m.order.includes(a.agent)) m.order.push(a.agent); }
+      break;
+    case 'agent_started': {
+      const a = (m.agent[e.agent] ||= {}); a.started = true;
+      if (e.covers) { Object.assign(a, { name: e.name, covers: e.covers }); if (!m.order.includes(e.agent)) m.order.push(e.agent); }
+      break;
+    }
     case 'agent_finished': Object.assign((m.agent[e.agent] ||= {}), { done: true, summary: e.summary, note: e.note }); break;
     case 'step': {
-      const list = m.steps[e.agent]; if (!list) break;
+      const list = (m.steps[e.agent] ||= []);
       const i = list.findIndex((s) => s.key === e.key);
-      const s = { key: e.key, label: e.label, status: e.status, result: e.result };
+      const s = { key: e.key, label: e.label, status: e.status, result: e.result, proof: e.proof || [] };
       if (i < 0) list.push(s); else list[i] = s;
       break;
     }
+    case 'finding': {
+      const i = m.findings.findIndex((f) => f.key === e.key);
+      if (i < 0) m.findings.push(e); else m.findings[i] = e;
+      break;
+    }
+    case 'reconciliation': m.rec = e; break;
     case 'review_done': m.review = { auditor: e.auditor, policy: e.policy }; break;
     case 'balance': m.balances.push(e.amount); break;
     case 'approval_requested': m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; if (e.agent === 'planner') m.plan = { ...(m.plan || {}), ...e.detail }; break;
@@ -415,9 +574,25 @@ function apply(m, e) {
     case 'followup_scheduled': m.followup = e.followup; break;
     case 'followup_started':  // "Call again": steps 3-5 run again for the follow-up call
       Object.assign(m, { approvals: {}, asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {},
-                         callEnded: null, done: null, followup: null, round: e.n || 2 });
+                         callEnded: null, done: null, followup: null, round: e.n || 2, approvedV: null });
       break;
     case 'error': m.error = e.text; break;
+    // step 3 (agents/decide.py, docs/plan-format.md)
+    case 'plan_version':
+      m.plans.push(e.plan);
+      // changed lines flash when a new version arrives, not when you open the page later
+      if (e.plan.v > 1 && e.ts > Date.now() / 1000 - 10) m.flash = { v: e.plan.v, ids: e.plan.changed || [], until: Date.now() + 4000 };
+      break;
+    case 'plan_approved':
+      m.approvedV = e.v;
+      if (!m.approvedAt) m.approvedAt = 'Approved at ' + new Date(e.ts * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      break;
+    case 'scorecard': m.scorecards.push(e); break;  // step 5: each ask's mark after a call (agents/scorecard.py)
+    case 'plan_approval_reset': m.approvedV = null; break;
+    case 'planner_message': m.chat.push(e); break;
+    case 'correction': m.corrections[e.correction.finding] = { ...e.correction, v: e.v }; break;
+    case 'correction_undone': delete m.corrections[e.finding]; break;
+    case 'finding_qa': (m.qa[e.finding] ||= []).push(e); break;
   }
 }
 
@@ -427,39 +602,75 @@ function stageOf(m) {
   if (m.done || m.callEnded || m.callDeclined || m.approvals.planner) return 4;
   if (m.call) return 3;
   if (m.approvals.caller && m.approvals.caller.resolved === true) return 3;  // approved, dialing
+  if (m.round > 1 && m.approvedV) return 3;  // "Call now" on step 5's plan: approved, dialing
   if (m.approvals.caller && m.approvals.caller.resolved === undefined) return 2;
+  if (m.agent.decide && m.agent.decide.started) return 2;  // the Decide agent is building the plan
   return 1;
 }
 
 // which Steps row is "current" (0 Read bill · 1 Review · 2 Approval · 3 Call · 4 Resolved)
-function rowStage(m, draft) {
-  if (draft) return 0;
+function rowStage(m) {
   if (!m.bill) return 0;
   if (m.error) return !m.review ? 1 : !m.call && !m.callDeclined ? 2 : m.call && !m.callEnded ? 3 : 4;
   return stageOf(m);
 }
 
 // ---------- rendering ----------
-function renderAgent(key, name, role, m) {
-  const steps = m.steps[key], a = m.agent[key] || {};
-  const waiting = steps.some((s) => s.status === 'wait');
+// Every app agent that reports in the shared format (billback/agents/report.py) gets a live panel, in the
+// order they started. Recordings made before agents named themselves fall back to these two.
+const LEGACY_AGENTS = { auditor: ['Nessie agent', 'Your own records: bank, the bill, your insurance statement'],
+                        policy: ['Bright Data agent', 'Public rules: the hospital’s own financial-assistance policy'] };
+function reviewAgents(m) {
+  const order = m.order.filter((k) => !k.startsWith('decide'));  // the Decide agent lives in steps 3 and 5
+  if (order.length) return order;
+  const legacy = Object.keys(LEGACY_AGENTS).filter((k) => (m.steps[k] || []).length);
+  return legacy.length ? legacy : Object.keys(LEGACY_AGENTS);  // not started yet: show where they'll run
+}
+const agentName = (m, k) => (m.agent[k] && m.agent[k].name) || (LEGACY_AGENTS[k] || [k])[0];
+function srcHTML(src) {
+  if (!/^https?:/.test(src || '')) return esc(src || '');
+  let short = src; try { const u = new URL(src); short = u.hostname.replace(/^www\./, '') + (u.pathname.length > 1 ? u.pathname : ''); } catch (e) {}
+  return `<a href="${esc(src)}" target="_blank" rel="noopener">${esc(short.length > 60 ? short.slice(0, 57) + '…' : short)}</a>`;
+}
+// An agent panel stays quiet: one line per check (what it checked, what it found). Click a check to see its
+// proof (the exact data it looked at and where it came from). A finished agent folds to one summary line;
+// click it to open the whole checklist again. forceOpen: show the checklist even when finished.
+function renderAgent(key, m, forceOpen = false) {
+  const steps = m.steps[key] || [], a = m.agent[key] || {}, ui = uiOf(state.active || '_');
+  const covers = a.covers || (LEGACY_AGENTS[key] || [])[1] || '';
   const stopped = m.error && !a.done;
-  const status = a.done ? 'Done' : stopped ? 'Stopped' : waiting ? 'Waiting' : a.started ? 'Working…' : 'Queued';
-  const cls = a.done ? 'success' : stopped ? '' : waiting ? 'warn' : a.started ? 'warn live' : '';
+  const [status, cls] = a.done ? ['Done', 'done'] : stopped ? ['Stopped', 'stopped'] : steps.some((s) => s.status === 'wait') ? ['Waiting', 'working']
+    : a.started ? ['Working', 'working'] : ['Queued', ''];
+  const open = forceOpen || (ui.agentOpen[key] ?? !a.done);
   const sk = state.active + '-' + key;
-  const items = steps.map((s, i) => {
-    const res = s.status === 'running' ? '' : `<span class="rs ${['flag', 'win', 'wait'].includes(s.status) ? s.status : ''}">${esc(s.result)}</span>`;
-    return `<li${fresh(sk, i)}><span class="ic">${(stopped && s.status === 'running') ? ICON.clear : (ICON[s.status] || ICON.ok)}</span><div class="tx"><span class="lb">${esc(s.label)}</span>${res}</div></li>`;
+  const lines = steps.map((s) => {
+    // a line is "re-written" when its check resolves: flash it once so the eye catches the change
+    const was = seen[sk + s.key], cls = was === undefined ? ' in' : was !== s.status ? ' re' : '';
+    seen[sk + s.key] = s.status;
+    const running = s.status === 'running' && !stopped;
+    const ic = stopped && s.status === 'running' ? ICON.clear : ICON[s.status] || ICON.ok;
+    const hasProof = !running && s.proof.length, showProof = hasProof && ui.lineOpen.has(s.key);
+    const proof = showProof ? `<ul class="t-proof">${s.proof.map((p) =>
+      `<li>${esc(p.text)}${p.source ? `<span class="t-src">${srcHTML(p.source)}</span>` : ''}</li>`).join('')}</ul>` : '';
+    const more = hasProof ? `<span class="t-more">${showProof ? 'hide proof ▴' : `proof (${s.proof.length}) ▾`}</span>` : '';
+    const attrs = hasProof ? ` data-act="line" data-key="${esc(s.key)}" role="button" tabindex="0" aria-expanded="${showProof}"` : '';
+    return `<li class="t-line ${s.status}${cls}${hasProof ? ' has-proof' : ''}"${attrs}><span class="t-ic">${ic}</span><div class="t-tx">
+      <span class="t-lb">${esc(s.label)}${running ? '<i class="caret"></i>' : ''}</span>${!running && s.result ? `<span class="t-rs">${esc(s.result)}</span>` : ''}${more}${proof}</div></li>`;
   }).join('');
-  seen[sk] = steps.length;
-  return `<div class="agent"><div style="display:flex;flex-direction:column;gap:2px">
-      <div class="agent-head"><b class="title-m">${name}</b><span class="m3-status ${cls}">${a.done ? sym('check', '') : ''}${status}</span></div>
-      <span class="body-m muted">${role}</span></div><ol>${items}</ol></div>`;
+  const done = a.done ? `<div class="t-done">✓ ${esc(a.summary || 'Done')}${a.note ? ` <span>· ${esc(a.note)}</span>` : ''}</div>` : '';
+  const head = a.done && !forceOpen
+    ? `<button type="button" class="t-head t-toggle" data-act="agent" data-key="${esc(key)}" aria-expanded="${open}"><b>${esc(agentName(m, key))}</b>
+        <span class="t-state ${cls}"><i></i>${status}</span><span class="t-chev">${open ? 'hide checklist ▴' : `${steps.length} checks ▾`}</span></button>`
+    : `<div class="t-head"><b>${esc(agentName(m, key))}</b><span class="t-state ${cls}"><i></i>${status}</span></div>`;
+  if (!open) return `<section class="term folded" aria-label="${esc(agentName(m, key))}">${head}${done}</section>`;
+  return `<section class="term" aria-label="${esc(agentName(m, key))}">${head}
+      <div class="t-covers">${esc(covers)}</div>
+      <ol class="t-body">${lines || `<li class="t-idle">${m.error ? 'Did not start' : 'Waiting to start…'}</li>`}</ol>${done}</section>`;
 }
 
 function renderTabs() {
   const tabs = state.tabs.map((t) => {
-    const stage = t.draft ? 0 : (state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1);
+    const stage = state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1;
     const dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
     return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
       <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${STATUS[stage]}</span></button>`;
@@ -504,20 +715,44 @@ function planOf(m) {
   return m.plan && m.plan.months > 0 ? m.plan : null;
 }
 
-function rowStatusHTML(i, ds, m, draft) {
+// what the agents found, biggest saving first (things that aren't money off the bill, like a plan, go last)
+function findingsOf(m) {
+  const list = m.findings.length ? m.findings : m.review ? legacyFindings(m) : [];
+  return [...list].sort((a, b) => b.saved - a.saved);
+}
+// Recordings made before agents reported findings (demo/replay_*.json): rebuilt from the reconciliation and
+// the policy result. Drop once the recordings are re-made.
+function legacyFindings(m) {
+  const out = [], pol = (m.review && m.review.policy) || {};
+  for (const l of (m.rec && m.rec.lines) || []) {
+    if (l.total || !(l.amount < 0)) continue;
+    const title = /^insurance/i.test(l.label) ? 'Insurance wasn’t applied' : /^payment already made/i.test(l.label) ? 'A payment you made was missed' : l.label;
+    out.push({ key: l.label, agent: 'auditor', title, saved: -l.amount, value: '−' + money(-l.amount), proof: [], source: l.source || '' });
+  }
+  const owed = m.rec ? m.rec.owed : null, now = correctedBalance(m);
+  if (owed != null && now != null && now < owed)
+    out.push({ key: 'discount', agent: 'policy', title: now === 0 ? 'Free care under their policy' : 'Discount under their policy',
+               saved: owed - now, value: '−' + money(owed - now), proof: pol.note ? [cap(pol.note)] : [], source: '' });
+  const pm = /(\d+)\s*×\s*\$([\d,]+)\/mo/.exec(pol.result || '');
+  if (pm) out.push({ key: 'plan', agent: 'policy', title: 'Interest-free payment plan', saved: 0, value: `${pm[1]} × $${pm[2]}/mo`, proof: [], source: '' });
+  return out;
+}
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+
+function rowStatusHTML(i, ds, m) {
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
   const chip = (cls, text, extra = '') => `<span class="m3-status ${cls}">${extra}${text}</span>`;
   const spin = '<span class="m3-spinner" aria-hidden="true"></span>';
-  if (m.callDeclined && !draft) {
+  if (m.callDeclined) {
     if (i === 2) return '<span class="muted-status">Not approved</span>';
     if (i === 3) return '<span class="muted-status">Skipped</span>';
   }
   if (i < ds) return DONE_ICON;
   if (i === ds) {
     if (m.error) return chip('error', 'Stopped');
-    if (i === 0) return draft ? chip('warn', 'Waiting for files') : chip('warn', 'Working…', spin);
+    if (i === 0) return chip('warn', 'Working…', spin);
     if (i === 1) return chip('warn live', 'Investigating');
-    if (i === 2) return chip('warn live', 'Waiting for you');
+    if (i === 2) return deciding(m) ? chip('warn', 'Building…', spin) : chip('warn live', 'Waiting for you');
     if (i === 3) return chip('warn live', m.call ? 'On the call' : 'Dialing…');
     if (m.done) return DONE_ICON;
     if (planPending) return chip('warn live', 'Waiting for you');
@@ -528,21 +763,20 @@ function rowStatusHTML(i, ds, m, draft) {
   return '';
 }
 
-function assistantLine(m, ds, draft, tab) {
-  const prov = m.bill ? m.bill.provider : (tab && !draft ? tab.name : 'the hospital');
+function assistantLine(m, ds, tab) {
+  const prov = m.bill ? m.bill.provider : (tab ? tab.name : 'the hospital');
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
-  if (draft) return { text: 'Add your bill and insurance statement, and I’ll check what you actually owe.', chip: 'Voice agent ready' };
   if (!tab) return { text: '', chip: 'Voice agent ready' };
   if (m.error) return { text: 'I hit a problem: ' + m.error, chip: 'Stopped', cls: 'error' };
   if (ds === 0) return { text: 'I’m reading your documents.', chip: 'Reviewing', cls: 'warn' };
   if (ds === 1) {
-    const run = [...m.steps.auditor, ...m.steps.policy].filter((s) => s.status === 'running').pop();
+    const run = Object.values(m.steps).flat().filter((s) => s.status === 'running').pop();
     return { text: run ? `I’m checking your ${prov} bill: ${run.label.toLowerCase()}…` : `I’m checking your ${prov} bill.`, chip: 'Reviewing', cls: 'warn' };
   }
   const saved = orig != null && now != null ? orig - now : 0;
   const found = saved > 0 ? `I found ${money(saved)} ${prov} shouldn’t be charging you.` : '';
-  const ra = (m.review && m.review.auditor) || {}, rp = (m.review && m.review.policy) || {};
-  const reviewed = [ra.result && `Auditor: ${ra.result}`, rp.result && `Policy: ${rp.result}`].filter(Boolean).join('; ');
+  const reviewed = reviewAgents(m).map((k) => { const r = (m.review && m.review[k]) || {}; return r.result && `${agentName(m, k)}: ${r.result}`; })
+    .filter(Boolean).join('; ');
   if (ds === 2) return { text: (found || (reviewed ? `I checked your bill. ${reviewed}.` : '')) + ` Want me to call ${prov} billing?`, chip: 'Voice agent ready' };
   if (ds === 3) {
     const mine = m.lines.filter((l) => l.who !== 'rep').pop();
@@ -561,14 +795,14 @@ function assistantLine(m, ds, draft, tab) {
   return { text: bits.join(' '), chip: 'Done', cls: 'success' };
 }
 
-function headline(m, ds, draft, tab) {
-  const prov = m.bill ? m.bill.provider : (tab && !draft ? tab.name : '');
-  if (draft) return ['Start a new case', 'Add your hospital bill and your insurance statement (EOB). Photos are fine.'];
+function headline(m, ds, tab) {
+  const prov = m.bill ? m.bill.provider : (tab ? tab.name : '');
   if (!tab) return ['Loading your case…', ''];
   if (m.error) return ['Something went wrong', prov];
   if (ds === 0) return ['Reading your bill', prov];
   if (ds === 1) return [`Reviewing your ${prov} bill`, 'Two agents are checking what you actually owe.'];
-  if (ds === 2) return ['Waiting for your OK', `BillBack is ready to call ${prov} billing${m.round > 1 ? ' again' : ''}.`];
+  if (ds === 2 && deciding(m)) return ['Building your plan', 'The Decide agent is turning what we found into a call plan.'];
+  if (ds === 2) return ['Your plan is ready', `Check it, then I’ll call ${prov} billing${m.round > 1 ? ' again' : ''}.`];
   if (ds === 3) return [`Calling ${prov}`, m.call ? phaseText(m) : 'Dialing…'];
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
   if (m.done) return ['Resolved', prov + (m.done.case_number ? ` · case ${m.done.case_number}` : '')];
@@ -580,24 +814,23 @@ function headline(m, ds, draft, tab) {
 function render() {
   renderTabs();
   const tab = state.tabs.find((t) => t.id === state.active);
-  const draft = tab && tab.draft ? state.drafts[tab.id] : null;
-  const m = draft ? blankModel() : model(state.active || '_');
-  const ds = rowStage(m, draft);
+  const m = model(state.active || '_');
+  const ds = rowStage(m);
   const prov = m.bill ? m.bill.provider : '';
   const pa = m.approvals.planner;
   const planPending = !!(pa && pa.resolved === undefined);
-  $('hoodLink').href = tab && !draft ? `ops.html?id=${tab.id}` : 'ops.html';
+  $('hoodLink').href = tab ? `ops.html?id=${tab.id}` : 'ops.html';
   $('caseError').hidden = !m.error;
   $('caseError').textContent = m.error ? 'Something went wrong: ' + m.error : '';
   setHTML($('caseWarnings'), m.warnings.map((w) => `<span>${sym('warning', '')}${esc(w)}</span>`).join(''));
-  const phoneUrl = tab && !draft ? `${location.origin}/approve.html?case=${tab.id}` : '';
+  const phoneUrl = tab ? `${location.origin}/approve.html?case=${tab.id}` : '';
   $('phoneApprove').href = phoneUrl || '#'; $('phoneApprove').textContent = phoneUrl;
 
   // ---- TOP: headline, stats, what needs you ----
-  const [h, sub] = headline(m, ds, draft, tab);
+  const [h, sub] = headline(m, ds, tab);
   setText($('caseTitle'), h); setText($('caseSub'), sub);
-  $('stats').hidden = !!draft;
-  $('uploadPanel').hidden = !draft;
+  const asking = !!tab && !m.error && planPending;
+  $('caseTitle').hidden = asking;
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   setText($('statOrig'), orig != null ? money(orig) : '—');
   setText($('statOwe'), now != null ? money(now) : '—');
@@ -611,14 +844,14 @@ function render() {
     support = parts.join(' · ');
   } else if (m.error) support = '';
   setText($('statOweSupport'), support);
-  $('approvalCard').hidden = !(tab && !draft && ds === 2 && !m.error);
 
   // ---- Steps card: classes, statuses, expand state ----
   const key = state.active || '_';
-  const ui = (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1 });
+  const ui = uiOf(key);
   if (ds !== ui.last) {
-    if (ui.last >= 0 && !ui.touched.has(ui.last)) ui.open.delete(ui.last);
-    if (!draft && ds !== 2 && !(ds === 0 && !m.bill)) ui.open.add(ds);   // approval lives in the top card
+    // open the current row (rows you opened or closed yourself stay as you left them)
+    ui.open = new Set([...ui.open].filter((i) => ui.touched.has(i)));
+    if (!(ds === 0 && !m.bill)) ui.open.add(ds);
     ui.last = ds;
   }
   document.querySelectorAll('.step').forEach((el) => {
@@ -626,50 +859,41 @@ function render() {
     el.classList.toggle('is-active', i === ds);
     el.classList.toggle('is-done', i < ds);
     el.classList.toggle('is-up', i > ds);
-    setHTML($('status' + i), rowStatusHTML(i, ds, m, draft));
+    setHTML($('status' + i), rowStatusHTML(i, ds, m));
     const open = ui.open.has(i);
     const btn = el.querySelector('.row-btn');
     if (btn.getAttribute('aria-expanded') !== String(open)) btn.setAttribute('aria-expanded', String(open));
     $('detail' + i).hidden = !open;
   });
 
-  // 1 · Read your bill (upload)
-  const files = draft ? draft.files : [];
-  setHTML($('fileList'), files.map((f, i) =>
-    `<li class="in">${ICON.file}<span>${esc(f.name)}</span><button type="button" class="m3-icon-btn" data-remove="${i}" aria-label="Remove file">${ICON.x}</button></li>`).join(''));
-  $('startBtn').disabled = !files.length || (draft && draft.sending);
+  // 1 · Read your bill
   setText($('uploadLine'), m.bill ? `${prov} · ${money(m.bill.amount_due)} · ${(m.docs || []).length} document${(m.docs || []).length === 1 ? '' : 's'}`
-    : draft ? 'Add your bill and insurance statement' : tab ? 'Reading your documents…' : '');
+    : tab ? 'Reading your documents…' : '');
   setHTML($('uploadSummary'), m.bill
     ? `<p><strong>${esc(prov)}, ${money(m.bill.amount_due)}</strong>${m.bill.notice ? ' · ' + esc(m.bill.notice) : ''}</p><p class="muted">${esc((m.docs || []).join(', '))}</p>`
     : '<p class="muted">Waiting for your documents.</p>');
 
-  // 2 · Review
-  $('reviewMeta').textContent = ds === 1 && !m.error ? 'Two agents are on it' : '';
-  setHTML($('agents'), renderAgent('auditor', 'Auditor', 'Finds what you actually owe', m) +
-                       renderAgent('policy', 'Policy', 'Checks the charity-care policy', m));
-  const ra = (m.review && m.review.auditor) || m.agent.auditor || {}, rp = (m.review && m.review.policy) || m.agent.policy || {};
-  const ares = ra.result || ra.summary, pres = rp.result || rp.summary;
-  setText($('reviewLine'), (ares || pres) ? `Auditor: ${ares || 'working…'} · Policy: ${pres || 'working…'}`
-    : ds >= 1 && m.bill ? 'Auditor and Policy are checking your bill' : 'Two agents check what you owe and the hospital’s policy');
-  $('reviewSummary').hidden = !(ares || pres);
-  setHTML($('reviewSummary'),
-    `<dt>Auditor</dt><dd><b>${esc(ares || '')}</b>${ra.note ? ` <span>· ${esc(ra.note)}</span>` : ''}</dd>` +
-    `<dt>Policy</dt><dd><b>${esc(pres || '')}</b>${rp.note ? ` <span>· ${esc(rp.note)}</span>` : ''}</dd>`);
-  $('evidenceBox').hidden = !m.evidence.length;
-  setHTML($('evidenceList'), m.evidence.map((e) =>
-    `<li><span class="title-s">${esc(e.label)}</span><span class="body-l">${esc(e.value)}</span><span class="body-s ev-src">${esc(e.source || '')}</span></li>`).join(''));
+  // 2 · Review: a column per app agent: its live panel, then what it found
+  const panels = reviewAgents(m), finds = findingsOf(m), fk = state.active + '-finds';
+  const acts = { live: state.active !== 'replay', ask: !!m.plans.length, correct: canCorrect(m) };
+  setHTMLKeep($('agents'), panels.map((k) => {
+    const mine = finds.filter((f) => f.agent === k).map((f) => {
+      const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
+      return findingHTML(f, m, ui, isNew, acts);
+    }).join('');
+    const found = mine ? `<h3 class="title-s sub-h">What it found</h3><ul class="finds">${mine}</ul>`
+      : (m.agent[k] || {}).done ? '<p class="body-m muted sub-h">Nothing to correct here.</p>' : '';
+    return `<div class="agent-col">${renderAgent(k, m)}${found}</div>`;
+  }).join(''));
+  const sums = panels.map((k) => [agentName(m, k), ((m.review && m.review[k]) || {}).result || (m.agent[k] || {}).summary]);
+  setText($('reviewLine'), sums.some(([, r]) => r) ? sums.map(([n, r]) => `${n}: ${r || 'working…'}`).join(' · ')
+    : ds >= 1 && m.bill ? `${sums.map(([n]) => n).join(' and ')} are checking your bill` : 'Two agents check your records and the hospital’s own rules');
   const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
   $('quoteBox').hidden = !quotes.some((q) => q.quote);
   setHTML($('quoteList'), quotes.map(quoteHTML).join(''));
 
-  // 3 · Approval
-  setText($('approveMeta'), ds > 2 || m.callDeclined ? (m.callDeclined ? 'You chose not to call yet' : `Accepted · ${m.approvedAt}`)
-    : ds === 2 ? 'Waiting on you · see above' : 'You decide before BillBack calls');
-  $('approveProvider').textContent = prov;
-  setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
-  setHTML($('askDone'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
-  $('approveAgain').textContent = m.round > 1 ? 'again' : 'for you';
+  // 3 · The plan
+  renderPlan(m, ds, ui);
   $('callTitle').textContent = m.round > 1 ? 'Follow-up call' : 'Call billing';
   setHTML($('approveSummary'), m.callDeclined ? 'You chose not to call yet'
     : ds > 2 ? `<span class="text-success" style="font-weight:500">Accepted</span> · you approved the call to ${esc(prov)}${m.asks.length ? '. On the call we asked to:' : ''}`
@@ -706,77 +930,423 @@ function render() {
   $('finalAmt').textContent = final != null ? money(final) : '';
   $('finalWas').textContent = m.bill ? money(m.bill.amount_due) : '';
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
-  $('finalTitle').textContent = m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
-  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${outcomeText(m)}` : planPending ? 'Payment plan waiting on you · see above'
+  const nextV = latestPlan(m, m.round + 1), sc = m.scorecards.filter((x) => x.n === m.round).pop();
+  $('finalTitle').textContent = nextV && nextV.next && nextV.next.kind !== 'done' ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
+  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund;
+  $('finalNote').hidden = !refund;
   $('finalNote').innerHTML = refund
     ? `<b class="text-success">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
     : 'We’ll check back once billing confirms your new balance.';
   const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
   $('followBox').hidden = !(m.done && fu);
+  $('callAgainBtn').parentNode.hidden = !!nextV;  // step 5's plan has its own "Call now"
   if (fu) {
     const d = new Date(fu.due + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
     $('followText').innerHTML = `<b>Next:</b> I’ll check back by <b>${esc(d)}</b>. If ${esc(fu.condition)}, I’ll call ${esc(m.bill ? m.bill.provider : 'billing')} again.`;
     $('followPromised').textContent = lastCall && lastCall.promised.length
       ? `${lastCall.rep || 'Billing'} promised: ${lastCall.promised.join('; ')}${lastCall.timeframe_text ? ' (' + lastCall.timeframe_text + ')' : ''}.` : '';
   }
-  const showPlan = m.plan && m.plan.months > 0;
+  const showPlan = m.plan && m.plan.months > 0 && planPending;
   $('planBox').hidden = !showPlan;
   const slot = planPending ? $('planSlotTop') : $('planSlotFinal');
   if ($('planBox').parentNode !== slot) slot.appendChild($('planBox'));
   $('planBox').classList.toggle('attn-card', planPending);
   if (showPlan) {
     const p = m.plan;
-    $('planText').innerHTML = m.planDecided === true
-      ? (!m.planResult ? 'Saving the plan to your bank…'
-        : m.planResult.error ? `Couldn't save the plan to your bank. You can set up <b>${p.months} × ${money(p.monthly)}/mo</b> yourself.`
-        : `✓ Plan saved: <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free. ${esc(p.reason || '')}`)
-      : m.planDecided === false ? 'No plan set up. You can pay the balance whenever you’re ready.'
-      : `Pay what's left as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free? ${esc(p.reason || '')}`;
+    $('planText').innerHTML = `Pay the ${money(p.months * p.monthly)} as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free?`;
     $('planYes').hidden = $('planNo').hidden = $('planYes').parentNode.hidden = !(pa && pa.resolved === undefined);
   }
 
   // ---- BillBack Assistant ----
-  const a = assistantLine(m, ds, draft, tab);
+  const a = assistantLine(m, ds, tab);
   setText($('asstQuote'), a.text);
   setText($('asstChip'), a.chip);
   $('asstChip').className = 'm3-status' + (a.cls ? ' ' + a.cls : '') + (a.live ? ' live' : '');
   $('asstWave').classList.toggle('live', !!a.live);
+  renderNow(m, ds, tab, a);
+}
+
+// ---------- step 3: the plan (agents/decide.py; format: docs/plan-format.md) ----------
+function uiOf(key) {
+  return (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1, finds: new Set(), box: {}, drafts: {}, busy: {}, err: {},
+                              planV: null, nextV: null, planChatOpen: false, nextChatOpen: false, planTermOpen: false, nextTermOpen: false,
+                              showAll: false, howOpen: false,
+                              agentOpen: {}, lineOpen: new Set() });
+}
+// Plans are per call: round 1 is the first call's plan (step 3); after call n, the Decide agent makes round n+1
+// (step 5), which becomes step 3's plan when that follow-up call starts. Its panel is "decide" / "decide:<round>".
+const roundOf = (x) => x.round || 1;
+const decKey = (r) => (r === 1 ? 'decide' : 'decide:' + r);
+const plansOf = (m, r) => m.plans.filter((p) => roundOf(p) === r);
+const latestPlan = (m, r = m.round) => { const vs = plansOf(m, r); return vs[vs.length - 1] || null; };
+const deciding = (m, r = m.round) => { const a = m.agent[decKey(r)]; return !!(a && a.started && !a.done && !m.error); };
+const secRound = (m, sec) => (sec === 'next' ? m.round + 1 : m.round);
+const callStarted = (m) => !!(m.approvals.caller && m.approvals.caller.resolved !== undefined) || (m.round > 1 && !!m.approvedV);
+// step 5's plan can change (chat, go back) once the call is done and until the next call starts
+const canChangeNext = (m) => !!m.done && !m.error && state.active !== 'replay';
+// where the planner chat is: step 5 once there's a plan for the next call
+const chatSec = (m) => (m.done && latestPlan(m, m.round + 1) ? 'next' : 'plan');
+const SCORE_CLS = { got: 'success', refused: 'error', later: 'warn', unclear: 'info', not_needed: '' };
+// "This is wrong" is allowed until the call starts
+const canCorrect = (m) => !!m.plans.length && state.active !== 'replay' && !!m.approvals.caller && !callStarted(m);
+
+// Rebuilding a list must not throw away what you're typing: put the focus and cursor back afterwards.
+function setHTMLKeep(el, html) {
+  const a = document.activeElement, key = a && el.contains(a) && a.dataset.draft, pos = key ? a.selectionStart : 0;
+  setHTML(el, html);
+  if (!key) return;
+  const n = el.querySelector(`[data-draft="${CSS.escape(key)}"]`);
+  if (n && n !== a) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+}
+
+function findingHTML(f, m, ui, isNew, acts) {
+  const k = esc(f.key), c = m.corrections[f.key], qa = m.qa[f.key] || [], box = ui.box[f.key];
+  const open = ui.finds.has(f.key) || !!box;
+  const flash = ui.flashFind === f.key && Date.now() < ui.flashUntil ? ' flash' : '';
+  const err = ui.err[f.key] ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.err[f.key])}</p>` : '';
+  // Ask sits on the row once the finding's agent is done; it needs the saved plan facts, so it waits for the plan
+  const askBtn = !acts.live || !(m.agent[f.agent] || {}).done ? ''
+    : `<button type="button" class="m3-btn text find-ask" data-act="ask" data-key="${k}"${acts.ask ? '' : ' aria-disabled="true" title="Available once the plan is ready"'}>${sym('chat_bubble')}Ask</button>`;
+  const buttons = !acts.ask ? '' : `<div class="find-acts">
+      ${c ? (acts.correct ? `<button type="button" class="m3-btn text" data-act="undo" data-id="${esc(c.id)}">${sym('undo')}Undo “This is wrong”</button>` : '')
+          : acts.correct ? `<button type="button" class="m3-btn text" data-act="wrong" data-key="${k}">${sym('flag')}This is wrong</button>` : ''}</div>`;
+  const answers = qa.map((x) => `<div class="qa"><span class="q">${esc(x.question)}</span><span>${esc(x.answer)}</span>
+      <span class="lbl">${esc(agentName(m, x.agent))}${(x.sources || []).length ? ' · ' + srcHTML(x.sources[0]) : ''}</span></div>`).join('');
+  const busy = ui.busy['ask:' + f.key];
+  const askForm = box === 'ask' ? `<form data-form="ask" data-key="${k}"><input class="m3-input" data-draft="ask:${k}" maxlength="500"
+      value="${esc(ui.drafts['ask:' + f.key] || '')}" placeholder="Ask the agent that found this" aria-label="Your question"${busy ? ' disabled' : ''}>
+      <button type="submit" class="m3-btn filled"${busy ? ' disabled' : ''}>${busy ? 'Asking…' : 'Ask'}</button></form>` : '';
+  const askBox = answers || askForm ? `<div class="find-box">${answers}${askForm}${box === 'ask' ? err : ''}</div>` : '';
+  const wrongBox = box === 'wrong' && !c ? `<div class="find-box"><p class="body-m" style="margin:0">What’s wrong? (optional) I’ll leave this finding out and redo the plan.</p>
+      <form data-form="wrong" data-key="${k}"><input class="m3-input" data-draft="wrong:${k}" maxlength="500" value="${esc(ui.drafts['wrong:' + f.key] || '')}"
+      placeholder="e.g. that payment was to my dentist" aria-label="What’s wrong">
+      <button type="submit" class="m3-btn filled"${ui.busy['wrong:' + f.key] ? ' disabled' : ''}>Save</button>
+      <button type="button" class="m3-btn text" data-act="cancel" data-key="${k}">Cancel</button></form>${err}</div>` : '';
+  const tag = c ? `<p class="wrong-tag">${sym('flag')}You said this is wrong${c.note ? ': “' + esc(c.note) + '”' : ''}${c.v ? ` · <button type="button" class="made-v" data-act="goplan">plan v${c.v}</button>` : ''}</p>` : '';
+  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b>${askBtn}</summary>
+    <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}${askBox}</div></details></li>`;
+}
+
+// what an older version has that the latest doesn't (for "tap an older version to compare")
+function compareWith(old, cur) {
+  const out = [], oa = Object.fromEntries(old.asks.map((a) => [a.id, a])), ca = Object.fromEntries(cur.asks.map((a) => [a.id, a]));
+  if (old.money.target !== cur.money.target) out.push(`You owe ${money(old.money.target)} here, ${money(cur.money.target)} in the latest`);
+  for (const a of old.asks) if (!ca[a.id]) out.push(`Only here: ${a.text}`);
+  for (const a of cur.asks) if (!oa[a.id]) out.push(`Only in the latest: ${a.text}`);
+  for (const a of old.asks) if (ca[a.id] && ca[a.id].text !== a.text) out.push(`Here: ${a.text}`);
+  return out;
+}
+const sameAsk = (a, cur) => cur.asks.some((b) => b.id === a.id && b.text === a.text);
+
+function planHTML(m, ui, sec = 'plan') {
+  const vs = plansOf(m, secRound(m, sec)), cur = vs[vs.length - 1], v = vs.find((x) => x.v === ui[sec + 'V']) || cur, old = v !== cur;
+  const editable = sec === 'next' ? canChangeNext(m) : canCorrect(m), ds = `data-sec="${sec}"`;
+  const vers = vs.length > 1 ? `<div class="plan-vers"><span class="lbl">Versions</span>${vs.map((x) =>
+    `<button type="button" class="m3-chip${x === v ? ' selected' : ''}" data-act="ver" ${ds} data-v="${x.v}" aria-pressed="${x === v}">v${x.v}${x === cur ? ' · latest' : ''}${m.approvedV === x.v ? ' · approved' : ''}</button>`).join('')}</div>` : '';
+  let banner = '';
+  if (old) {
+    const diffs = compareWith(v, cur);
+    banner = `<div class="plan-banner"><b>You’re looking at v${v.v}: ${esc(v.reason.text)}</b>${diffs.length ? `<ul>${diffs.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : '<span>Same as the latest.</span>'}
+      <div class="actions">${editable ? `<button type="button" class="m3-btn filled" data-act="restore" ${ds} data-v="${v.v}">Go back to this version</button>` : ''}
+      <button type="button" class="m3-btn text" data-act="ver" ${ds} data-v="${cur.v}">See the latest (v${cur.v})</button></div></div>`;
+  } else if (v.changes && v.changes.length) {
+    banner = `<div class="plan-banner"><b>What changed in v${v.v}</b><span>${esc(v.reason.text)}</span><ul>${v.changes.map((d) => `<li>${esc(d)}</li>`).join('')}</ul></div>`;
+  }
+  const mo = v.money, extra = mo.refund ? `+ ${money(mo.refund)} back to you` : mo.saved > 0 ? `saves ${money(mo.saved)}` : 'same as the bill';
+  const flashOn = m.flash && m.flash.v === v.v && Date.now() < m.flash.until;
+  const shown = ui.showAll || v.asks.length <= 4 ? v.asks : v.asks.slice(0, 4);  // the top 4, then "Show N more"
+  const asks = shown.map((a, i) => {
+    const cls = (flashOn && m.flash.ids.includes(a.id) ? ' flash' : '') + (old && !sameAsk(a, cur) ? ' differs' : '');
+    const why = a.findings.length ? `<button type="button" class="why" data-act="why" data-key="${esc(a.findings[0])}">why ▸</button>`
+      : `<span class="basis">${a.basis === 'standard' ? 'Standard on every call' : a.basis === 'you asked' ? 'You asked for this' : cap(a.basis)}</span>`;
+    const last = a.last ? `<span class="m3-status ${SCORE_CLS[a.last.status] || ''} last">Last call: ${esc(a.last.label.toLowerCase())}</span>` : '';
+    return `<li class="${cls.trim()}"><span class="n">${i + 1}</span><span class="tx"><span>${esc(a.text)}</span>${last}${why}</span>${a.value ? `<b class="${a.money ? '' : 'plain'}">${esc(a.value)}</b>` : ''}</li>`;
+  }).join('');
+  const more = v.asks.length > shown.length ? `<button type="button" class="m3-btn text" data-act="more">Show ${v.asks.length - shown.length} more ▾</button>`
+    : ui.showAll && v.asks.length > 4 ? `<button type="button" class="m3-btn text" data-act="more">Show fewer ▴</button>` : '';
+  // after a call: what happens next, and what's already done
+  const nxt = v.next ? `<div class="plan-banner"><b>What’s next</b><span>${esc(v.next.text)}</span>${(v.next.options || []).length
+    ? `<span>Other routes:</span><ul>${v.next.options.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>` : ''}</div>` : '';
+  const done = (v.done || []).length ? `<div><h3 class="title-s sub-h" style="margin-bottom:6px">Already done</h3><ul class="plan-done body-m">${v.done.map((d) =>
+    `<li>${ICON.ok}<span>${esc(d.text)} <span class="body-s">· call ${d.call}</span></span></li>`).join('')}</ul></div>` : '';
+  const asksHead = v.next ? (v.asks.length > 1 ? 'What I’ll ask on the next call' : 'On the next call') : 'What I’ll ask for · biggest money first';
+  const skipped = v.skipped.length ? `<ul class="plan-skipped body-s">${v.skipped.map((x) => `<li>Left off: ${esc(x.text)} (${esc(x.why)})</li>`).join('')}</ul>` : '';
+  const d = v.decided, list = (xs) => `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  const how = `<details class="more" data-ui="how"${ui.howOpen ? ' open' : ''}><summary class="body-m">How I decided</summary><div class="how body-m">
+      <p style="margin:0">${esc(d.explanation)}</p>
+      <div><h4>From your records<span class="agent-lbl">Nessie agent</span></h4>${list(d.nessie)}</div>
+      <div><h4>From public rules<span class="agent-lbl">Bright Data agent</span></h4>${list(d.brightdata)}</div>
+      ${d.last_call ? `<div><h4>The last call</h4>${list(d.last_call)}</div>` : ''}
+      <div><h4>The math</h4>${list(d.math)}</div>
+      <div><h4>The path</h4><p style="margin:0">${esc(d.path)}</p></div>
+      <div><h4>Who to call</h4><p style="margin:0">${esc(d.call)}</p></div>
+      <div><h4>If billing says no</h4><p style="margin:0">${esc(d.fallback)}</p></div></div></details>`;
+  return `<div class="plan-card"${sec === 'plan' ? ' id="planCard"' : ''}>${vers}${banner}${nxt}
+    <div class="plan-money"><s>${money(mo.billed)}</s>${sym('arrow_forward')}<b>${money(mo.target)}</b><span class="body-m">${esc(extra)}</span></div>
+    <p class="plan-who body-m">${sym('call')}<span><b>Who we’ll call:</b> ${esc(v.call.department)} · ${v.call.phone ? esc(v.call.phone) : 'the number on your bill'}<br><span class="muted body-s">${esc(v.call.why)}</span></span></p>
+    <div><h3 class="title-s sub-h" style="margin-bottom:4px">${asksHead}</h3><ol class="plan-asks">${asks}</ol>${more}${skipped}</div>
+    ${done}${how}</div>`;
+}
+
+// Recordings made before step 3 existed (demo/replay_*.json): the asks from the approval, no versions or chat.
+function legacyPlanHTML(m) {
+  const billed = m.bill ? m.bill.amount_due : null, owe = correctedBalance(m);
+  return `<div class="plan-card">${billed != null && owe != null ? `<div class="plan-money"><s>${money(billed)}</s>${sym('arrow_forward')}<b>${money(owe)}</b></div>` : ''}
+    <div><h3 class="title-s sub-h" style="margin-bottom:4px">What I’ll ask for</h3><ol class="plan-asks">${m.asks.map((q, i) =>
+      `<li><span class="n">${i + 1}</span><span class="tx"><span>${esc(q)}</span></span></li>`).join('')}</ol></div></div>`;
+}
+
+// The Decide agent's panel for a round: big while it works; then a slim bar ("Talk to the planner ▸")
+function decideHTML(m, ui, sec) {
+  const r = secRound(m, sec), key = decKey(r), cur = latestPlan(m, r), busy = deciding(m, r), replay = state.active === 'replay';
+  if (!m.agent[key]) return '';
+  const termOpen = ui[sec + 'TermOpen'], chatOpen = ui[sec + 'ChatOpen'];
+  const term = `<div class="terms">${renderAgent(key, m, busy || termOpen)}</div>`;
+  if (busy || !cur) return term;  // the plan below says "filling in…" until it's done
+  const n = plansOf(m, r).length, chatOk = !replay || m.chat.some((c) => (c.round || 1) === r);
+  return `<div class="slim-bar"><span class="who"><b>Decide agent</b><small>Done · plan v${cur.v}${n > 1 ? ` (${n} versions)` : ''}</small></span>
+      <button type="button" class="m3-btn text" data-act="term" data-sec="${sec}">${termOpen ? 'Hide' : 'Show'} its checklist</button>
+      ${chatOk ? `<button type="button" class="m3-btn tonal" data-act="chat" data-sec="${sec}" aria-expanded="${!!chatOpen}">Talk to the planner ${chatOpen ? '▾' : '▸'}</button>` : ''}</div>`
+    + (termOpen ? term : '');
+}
+
+// The planner chat sits under the slim bar of the plan it changes: step 3's, or step 5's once that exists
+function renderChat(m, ui) {
+  const sec = chatSec(m), r = secRound(m, sec), cur = latestPlan(m, r);
+  const slot = $(sec === 'next' ? 'plannerSlotNext' : 'plannerSlotPlan');
+  if ($('plannerBox').parentNode !== slot) slot.appendChild($('plannerBox'));
+  if (state.active === 'replay' && m.chat.length) ui.planChatOpen = true;  // the replay plays the recorded chat back
+  $('plannerBox').hidden = !(cur && ui[sec + 'ChatOpen']);
+  const log = m.chat.filter((c) => (c.round || 1) === r).map((c) => {
+    const me = c.role === 'user';
+    return `<div class="bubble-wrap ${me ? 'me' : 'them'}"><span class="bubble-who">${me ? 'You' : 'Decide agent'}</span><span class="m3-bubble ${me ? 'me' : 'them'}">${esc(c.text)}</span>
+      ${c.v ? `<button type="button" class="made-v" data-act="ver" data-sec="${sec}" data-v="${c.v}">→ plan v${c.v}</button>` : ''}</div>`;
+  }).join('') + (ui.chatBusy ? '<div class="bubble-wrap them"><span class="bubble-who">Decide agent</span><span class="m3-bubble them">…</span></div>' : '')
+    + (ui.chatErr ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.chatErr)}</p>` : '');
+  const n = log.length;
+  const grew = $('plannerLog')._n !== n;
+  setHTML($('plannerLog'), log);
+  if (grew) { $('plannerLog')._n = n; $('plannerLog').scrollTop = 1e6; }
+  $('plannerInput').disabled = $('plannerSend').disabled = !!ui.chatBusy;
+}
+
+function renderPlan(m, ds, ui) {
+  const cur = latestPlan(m), busy = deciding(m);
+  setHTML($('decideBox'), decideHTML(m, ui, 'plan'));
+  renderChat(m, ui);
+
+  // the plan
+  if (cur && !busy) setHTML($('planArea'), planHTML(m, ui, 'plan'));
+  else if (m.asks.length && !busy) setHTML($('planArea'), legacyPlanHTML(m));
+  else if (busy) setHTML($('planArea'), '<div class="filling body-m">Filling in…<i style="width:55%"></i><i style="width:85%"></i><i style="width:70%"></i><i style="width:40%"></i></div>');
+  else setHTML($('planArea'), ds < 2 ? '<p class="body-m muted" style="margin:0">After the Review, the Decide agent turns the findings into a call plan for you to check.</p>' : '');
+  if (m.flash && Date.now() < m.flash.until && !m.flash.timer) m.flash.timer = setTimeout(render, m.flash.until - Date.now() + 50);
+
+  const viewing = cur && ui.planV && ui.planV !== cur.v;
+  const pending = m.approvals.caller && m.approvals.caller.resolved === undefined;
+  renderNext(m, ds, ui);
+  $('planActions').hidden = !(pending && !viewing && !m.error && (cur || m.asks.length));
+  $('approveBtn').innerHTML = `${sym('call')}Call now${cur && m.plans.length > 1 ? ` (v${cur.v})` : ''}`;
+  const approvedV = m.approvedV || (cur && cur.v);
+  setText($('approveSummary'), ui.planErr ? ui.planErr : m.callDeclined ? 'You chose not to call yet.'
+    : callStarted(m) ? `Approved${cur ? ` v${approvedV}` : ''} · ${m.approvedAt}. Every version stays here.` : '');
+  setText($('approveMeta'), m.callDeclined ? 'You chose not to call yet'
+    : callStarted(m) ? `Approved${cur ? ` v${approvedV}` : ''} · ${m.approvedAt}`
+    : busy ? 'Building your plan…'
+    : cur ? `v${cur.v} · ${money(cur.money.billed)} → ${money(cur.money.target)} · ${cur.asks.length} asks`
+    : pending ? 'Waiting for your OK' : 'The Decide agent turns the findings into a call plan');
+}
+
+// ---------- step 5: what the call got, and the Decide agent's plan for what's left (agents/scorecard.py) ----------
+function scoreHTML(sc, m) {
+  const call = m.calls.find((c) => c.n === sc.n) || {};
+  const who = [call.rep, call.case_number && `case ${call.case_number}`].filter(Boolean).join(' · ');
+  return `<div class="score-card"><h3 class="title-s sub-h" style="margin:0">What the call got</h3>
+    <span class="body-s muted">Call ${sc.n}${who ? ' · ' + esc(who) : ''} · ${esc(sc.summary)}</span>
+    <ul class="score">${sc.marks.map((x) => `<li><span class="m3-status ${SCORE_CLS[x.status] || ''}">${esc(x.label)}</span>
+      <span class="tx"><span class="body-m">${esc(x.text)}</span><span class="ev">${x.source === 'rep said' ? `${esc(call.rep || 'Billing')}: “${esc(x.evidence)}”` : esc(x.evidence)}</span></span></li>`).join('')}</ul></div>`;
+}
+function renderNext(m, ds, ui) {
+  const r = m.round + 1, cur = latestPlan(m, r), busy = deciding(m, r);
+  const sc = m.scorecards.filter((x) => x.n === m.round).pop();
+  const show = ds === 4 && !!(sc || m.agent[decKey(r)]);
+  $('nextWrap').hidden = !show;
+  if (!show) return;
+  setHTML($('scoreBox'), sc ? scoreHTML(sc, m) : '');
+  setHTML($('nextDecideBox'), decideHTML(m, ui, 'next'));
+  setHTML($('nextArea'), cur && !busy ? planHTML(m, ui, 'next')
+    : busy ? '<div class="filling body-m">Working out what’s next…<i style="width:55%"></i><i style="width:85%"></i><i style="width:40%"></i></div>' : '');
+  const viewing = cur && ui.nextV && ui.nextV !== cur.v;
+  $('nextActions').hidden = !(cur && !busy && !viewing && canChangeNext(m));
+  if (cur) $('nextCallBtn').innerHTML = `${sym('call')}${cur.next && cur.next.kind === 'done' ? 'Call anyway' : 'Call now'} (v${cur.v})`;
+  $('nextErr').hidden = !ui.nextErr; setText($('nextErr'), ui.nextErr || '');
+}
+
+function scrollToEl(el) {
+  if (!el) return;
+  const bar = document.querySelector('.m3-top-app-bar');
+  scrollTo({ top: el.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 16, behavior: 'smooth' });
+}
+// "why ▸": open the Review step at the finding behind an ask, and flash it
+function openFinding(key) {
+  const ui = uiOf(state.active);
+  ui.open.add(1); ui.touched.add(1); ui.finds.add(key);
+  ui.flashFind = key; ui.flashUntil = Date.now() + 4000;
+  render(); setTimeout(render, 4100);
+  scrollToEl(document.querySelector(`[data-find="${CSS.escape(key)}"]`));
+}
+function showPlan(sec = 'plan') {
+  const ui = uiOf(state.active);
+  ui[sec + 'V'] = null; ui.open.add(sec === 'next' ? 4 : 2); render();
+  setTimeout(() => scrollToEl($(sec === 'next' ? 'nextArea' : 'planArea')), 50);
+}
+async function post(url, body, method = 'POST') {
+  const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || `Something went wrong (${r.status})`);
+  return j;
+}
+
+// "Now" panel: the current step (1-5), what is happening inside it, and its state
+const STEP_NAMES = ['Read your bill', 'Review', 'The plan', 'Call billing', 'Resolved'];
+function nowText(m, ds, a) {
+  const prov = m.bill ? m.bill.provider : 'the hospital';
+  if (m.error) return a.text;
+  if (ds === 0) return 'Claude is reading your bill and insurance statement…';
+  if (ds === 1) {
+    const doing = reviewAgents(m).map((k) => {
+      const st = m.steps[k] || [], who = agentName(m, k);
+      const run = st.filter((x) => x.status === 'running' || x.status === 'wait').pop();
+      if (run) return `${who}: ${run.label}…`;
+      return m.agent[k] && m.agent[k].done ? `${who}: done` : st.length ? `${who}: ${st[st.length - 1].label}` : `${who}: starting…`;
+    });
+    return doing.join(' · ');
+  }
+  if (ds === 2 && deciding(m)) {
+    const st = m.steps[decKey(m.round)] || [], run = st.filter((x) => x.status === 'running').pop() || st[st.length - 1];
+    return run ? `Decide agent: ${run.label}…` : 'Decide agent: starting…';
+  }
+  if (ds === 2) return `Check the plan, then tap Call now and I’ll call ${prov} billing.`;
+  if (ds === 3) {
+    const l = m.lines[m.lines.length - 1];
+    return l ? `${l.who === 'rep' ? 'Billing' : 'BillBack'}: “${l.text.length > 160 ? l.text.slice(0, 157).trimEnd() + '…' : l.text}”` : `Dialing ${prov} billing…`;
+  }
+  return a.text;
+}
+function renderNow(m, ds, tab, a) {
+  const live = !!tab;
+  $('nowTrack').hidden = !live;
+  $('nowText').hidden = !live;
+  setText($('nowStep'), !live ? '' : m.done && !m.error ? 'Done' : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
+  $('nowDot').className = 'now-dot ' + (!live ? 'off' : m.error ? 'error' : m.done ? 'success' : a.cls === 'success' || a.live ? 'success live' : 'warn live');
+  $('nowText').hidden = !live || $('caseTitle').hidden || !!(m.done && !m.error);  // done: the Next box says it
+  if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
+  const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
+  $('nowMoney').hidden = !live || orig == null;
+  setText($('nowWas'), orig != null ? money(orig) : '');
+  setText($('nowOwe'), now != null && (m.review || ds > 1) ? money(now) : 'checking…');
+  $('nowOwe').classList.toggle('pending', !(now != null && (m.review || ds > 1)));
+  setText($('nowSave'), $('statOweSupport').textContent === 'Checking…' ? '' : $('statOweSupport').textContent);
+  [...$('nowTrack').children].forEach((li, i) => {
+    li.classList.toggle('done', !!m.done || i < ds);
+    li.classList.toggle('active', !m.done && i === ds);
+  });
+}
+
+// ---------- watch pacing ----------
+// Each event waits at least long enough to be seen: a running step spins ~1.5s before it resolves, findings
+// land one at a time, a transcript line stays up long enough to read. Used by the replay and by live cases.
+const words = (t) => String(t || '').split(/\s+/).filter(Boolean).length;
+function minGap(e, prev, live) {
+  switch (e.kind) {
+    case 'agent_finished': return e.agent === 'intake' ? 2.5 : 1.0;
+    case 'case_started': return 0.6;
+    case 'balance': return 1.2;
+    case 'agent_started': return 0.6;
+    case 'step': return e.status === 'running' ? 0.35 : (e.agent || '').startsWith('decide') ? 0.9 : 1.5;
+    case 'review_started': return 0.6;
+    case 'finding': return 1.0;
+    case 'evidence': case 'policy_quote': return live ? 0.2 : 0.7;   // live: they don't show in the panels
+    case 'review_done': return 1.2;
+    case 'approval_requested': return 1.0;
+    case 'approval_resolved': return live ? 0 : 3.0;                 // replay: time to read what you are approving
+    case 'call_ready': return 1.2;
+    case 'transcript': return prev && prev.kind === 'transcript' ? Math.min(Math.max(1.4, words(prev.text) / 3.2), 6) : 1.6;
+    case 'call_ended': return 1.5;
+    case 'plan_proposed': return 1.5;
+    case 'tool_result': return 1.5;
+    case 'case_done': return 1.2;
+    case 'plan_version': return 1.0;
+    case 'correction': case 'correction_undone': return live ? 0 : 1.5;
+    case 'planner_message': return live ? 0 : e.role === 'user' ? 1.5 : Math.min(Math.max(2, words(e.text) / 3.2), 7);
+    case 'finding_qa': return live ? 0 : Math.min(Math.max(2, words(e.answer) / 3.2), 7);
+    default: return 0.3;
+  }
+}
+// The Review's agents run in parallel, so each gets its own track: its steps and findings are paced against
+// its own previous event and the terminals move together. Everything else (the review result, the approval
+// card, the call) waits until every track has played. Returns when each event should show, given when it
+// arrived (both in seconds on the caller's clock).
+function scheduler(live) {
+  const lanes = new Set(Object.keys(LEGACY_AGENTS)), last = {}, prevOf = {};
+  let all = 0, floor = 0, prev = null;
+  return (e, arrival) => {
+    if (e.kind === 'review_started') (e.agents || []).forEach((a) => lanes.add(a.agent));
+    let t;
+    if (lanes.has(e.agent)) {
+      t = Math.max(arrival, (last[e.agent] ?? floor) + minGap(e, prevOf[e.agent], live));
+      last[e.agent] = t; prevOf[e.agent] = e;
+    } else {
+      t = Math.max(arrival, all + minGap(e, prev, live));
+      floor = t; for (const k in last) last[k] = t;
+    }
+    all = Math.max(all, t); prev = e;
+    return t;
+  };
+}
+// A live case can finish its whole Review in ~3s. When you open it as it starts (straight from the chat),
+// its events play at watch pacing until the approval card is up; from then on they apply as they arrive
+// (the call is real time anyway). Older history, and a reconnect, apply at once.
+function liveFeed(id) {
+  const m = state.models[id], pending = [], at = scheduler(true), t0 = performance.now() / 1000;
+  let timer = null, startTs = null, pacing = !state.watched[id];
+  const now = () => performance.now() / 1000 - t0;
+  function flush() {
+    timer = null;
+    let changed = false;
+    while (pending.length && pending[0].t <= now()) { apply(m, pending.shift().e); changed = true; }
+    if (changed && state.models[id] === m) render();
+    if (pending.length) timer = setTimeout(flush, (pending[0].t - now()) * 1000);
+  }
+  return (e) => {
+    if (startTs == null) startTs = e.ts;
+    if (pacing && startTs < Date.now() / 1000 - 120) pacing = false;
+    const t = pacing ? at(e, now()) : Math.max(now(), ...pending.map((x) => x.t));
+    if (pacing && e.kind === 'approval_requested') { pacing = false; state.watched[id] = true; }
+    pending.push({ e, t }); pending.sort((a, b) => a.t - b.t);  // stable: same time keeps arrival order
+    clearTimeout(timer); flush();
+  };
 }
 
 // ---------- data ----------
 async function loadTabs() {
   const list = await (await fetch('/api/cases')).json();
-  const drafts = state.tabs.filter((t) => t.draft);
-  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status })).concat(drafts);
+  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status }));
 }
 function openCase(id) {
   state.active = id;
   history.replaceState(null, '', `case.html?id=${id}`);
   if (state.ws) { state.ws.onclose = null; state.ws.close(); }
+  if (state.models[id]) state.watched[id] = true;  // seen it on this page already: no second slow play
   state.models[id] = blankModel();
+  const feed = liveFeed(id);
   const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}`);
-  ws.onmessage = (msg) => { apply(model(id), JSON.parse(msg.data)); render(); };
-  ws.onclose = () => setTimeout(() => state.active === id && openCase(id), 1500);
+  ws.onmessage = (msg) => feed(JSON.parse(msg.data));
+  ws.onclose = () => { state.watched[id] = true; setTimeout(() => state.active === id && openCase(id), 1500); };
   state.ws = ws;
   render();
-}
-function newDraft() {
-  const id = 'draft-' + Date.now();
-  state.drafts[id] = { files: [] };
-  state.tabs.push({ id, name: 'New case', draft: true });
-  state.active = id;
-  if (state.ws) { state.ws.onclose = null; state.ws.close(); state.ws = null; }
-  render();
-}
-async function startCase(files) {
-  const tab = state.tabs.find((t) => t.id === state.active);
-  const d = state.drafts[tab.id]; if (d) d.sending = true; render();
-  const fd = new FormData(); (files || []).forEach((f) => fd.append('files', f));
-  const r = await (await fetch('/api/cases', { method: 'POST', body: fd })).json();
-  state.tabs = state.tabs.filter((t) => t.id !== tab.id); delete state.drafts[tab.id];
-  await loadTabs(); openCase(r.case_id);
 }
 async function decide(agent, ok) {
   const a = model(state.active).approvals[agent]; if (!a) return;
@@ -786,27 +1356,16 @@ async function decide(agent, ok) {
 // ---------- events ----------
 $('tabList').addEventListener('click', (e) => {
   const b = e.target.closest('[data-tab]'); if (!b || b.dataset.tab === state.active) return;
-  const t = state.tabs.find((x) => x.id === b.dataset.tab);
-  if (t.draft) { state.active = t.id; if (state.ws) { state.ws.onclose = null; state.ws.close(); state.ws = null; } render(); } else openCase(t.id);
+  openCase(b.dataset.tab);
 });
 document.querySelector('.steps').addEventListener('click', (e) => {
   const b = e.target.closest('.row-btn'); if (!b) return;
   const i = +b.closest('.step').dataset.step;
-  const ui = (state.ui[state.active || '_'] ||= { open: new Set(), touched: new Set(), last: -1 });
+  const ui = uiOf(state.active || '_');
   ui.touched.add(i);
   if (ui.open.has(i)) ui.open.delete(i); else ui.open.add(i);
   render();
 });
-$('newCase').addEventListener('click', newDraft);
-const addFiles = (list) => { const d = state.drafts[state.active]; if (d) { d.files = d.files.concat([...(list || [])]); render(); } };
-$('fileInput').addEventListener('change', (e) => { addFiles(e.target.files); e.target.value = ''; });
-const drop = $('drop');
-drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragging'); });
-drop.addEventListener('dragleave', () => drop.classList.remove('dragging'));
-drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('dragging'); addFiles(e.dataTransfer.files); });
-$('fileList').addEventListener('click', (e) => { const b = e.target.closest('[data-remove]'); const d = state.drafts[state.active]; if (b && d) { d.files.splice(+b.dataset.remove, 1); render(); } });
-$('sampleBtn').addEventListener('click', () => { if (!state.drafts[state.active]) newDraft(); startCase([]); });
-$('startBtn').addEventListener('click', () => { const d = state.drafts[state.active]; if (d && d.files.length) startCase(d.files); });
 // caller voice: Cartesia voices with different accents; the choice is saved on the case
 (async () => {
   try {
@@ -823,8 +1382,90 @@ $('voicePlay').addEventListener('click', async (e) => {
     body: JSON.stringify({ text: 'Hi, this is an automated assistant calling about claim C-2026-0815-44917 and an ondansetron charge of $440.', voice_id: $('voiceSel').value }) });
   if (r.ok) new Audio(URL.createObjectURL(await r.blob())).play();
 });
-$('approveBtn').addEventListener('click', () => decide('caller', true));
-$('notYetBtn').addEventListener('click', () => decide('caller', false));
+// step 3: "Call now" approves the version on screen (the latest); recordings from before step 3 use the old approval
+async function planDecision(ok) {
+  const m = model(state.active), cur = latestPlan(m), ui = uiOf(state.active);
+  if (state.active === 'replay' || !cur) return decide('caller', ok);
+  ui.planErr = '';
+  try { await post(`/api/cases/${state.active}/plan/${ok ? 'approve' : 'decline'}`, ok ? { v: cur.v } : null); }
+  catch (e) { ui.planErr = e.message; render(); }
+}
+$('approveBtn').addEventListener('click', () => planDecision(true));
+$('notYetBtn').addEventListener('click', () => planDecision(false));
+document.querySelector('main').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b || !state.active) return;
+  const ui = uiOf(state.active), key = b.dataset.key, act = b.dataset.act;
+  if (b.closest('summary')) e.preventDefault();  // a button on a finding row must not also fold the row
+  if (b.getAttribute('aria-disabled') === 'true') return;
+  if (act === 'ask' || act === 'wrong') {
+    ui.box[key] = ui.box[key] === act ? undefined : act; ui.finds.add(key); delete ui.err[key]; render();
+    const n = document.querySelector(`[data-draft="${CSS.escape(act + ':' + key)}"]`); if (n) n.focus();
+  } else if (act === 'cancel') { delete ui.box[key]; render(); }
+  else if (act === 'undo') {
+    if (state.active === 'replay') return;
+    try { await post(`/api/cases/${state.active}/corrections/${encodeURIComponent(b.dataset.id)}`, null, 'DELETE'); } catch (err) { alert(err.message); }
+  } else if (act === 'why') openFinding(key);
+  else if (act === 'goplan') showPlan();
+  else if (act === 'term') { const k = (b.dataset.sec || 'plan') + 'TermOpen'; ui[k] = !ui[k]; render(); }
+  else if (act === 'agent') { const a = model(state.active).agent[key] || {}; ui.agentOpen[key] = !(ui.agentOpen[key] ?? !a.done); render(); }
+  else if (act === 'line') {
+    if (e.target.closest('a')) return;  // a source link inside the proof opens the source
+    if (ui.lineOpen.has(key)) ui.lineOpen.delete(key); else ui.lineOpen.add(key);
+    render();
+  }
+  else if (act === 'chat') { const k = (b.dataset.sec || 'plan') + 'ChatOpen'; ui[k] = !ui[k]; render(); if (ui[k]) $('plannerInput').focus(); }
+  else if (act === 'ver') {
+    const sec = b.dataset.sec || 'plan', m = model(state.active), cur = latestPlan(m, secRound(m, sec)), v = +b.dataset.v;
+    ui[sec + 'V'] = cur && v === cur.v ? null : v;
+    if (b.closest('#plannerLog')) showPlan(sec); else render();
+  } else if (act === 'more') { ui.showAll = !ui.showAll; render(); }
+  else if (act === 'restore') {
+    if (state.active === 'replay') return;
+    b.disabled = true;
+    try { await post(`/api/cases/${state.active}/plan/restore`, { v: +b.dataset.v }); showPlan(b.dataset.sec || 'plan'); }
+    catch (err) { ui.planErr = err.message; render(); }
+  }
+});
+document.querySelector('main').addEventListener('keydown', (e) => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-act="line"]')) { e.preventDefault(); e.target.click(); }
+});
+document.querySelector('main').addEventListener('input', (e) => {
+  const k = e.target.dataset && e.target.dataset.draft; if (k && state.active) uiOf(state.active).drafts[k] = e.target.value;
+});
+// remember which findings / "How I decided" you opened, so a re-render doesn't close them
+document.querySelector('main').addEventListener('toggle', (e) => {
+  const d = e.target; if (!state.active || !(d instanceof HTMLDetailsElement)) return;
+  const ui = uiOf(state.active);
+  if (d.dataset.ui === 'how') ui.howOpen = d.open;
+  else if (d.dataset.key) { if (d.open) ui.finds.add(d.dataset.key); else ui.finds.delete(d.dataset.key); }
+}, true);
+document.querySelector('main').addEventListener('submit', async (e) => {
+  const f = e.target.closest('form[data-form]'); if (!f || !state.active) return;
+  e.preventDefault();
+  if (state.active === 'replay') return;
+  const ui = uiOf(state.active), key = f.dataset.key, kind = f.dataset.form, dk = kind + ':' + key;
+  const text = (ui.drafts[dk] || '').trim();
+  if (kind === 'ask' && !text) return;
+  ui.busy[dk] = true; delete ui.err[key]; render();
+  try {
+    if (kind === 'ask') await post(`/api/cases/${state.active}/ask`, { question: text, finding: key });
+    else { await post(`/api/cases/${state.active}/corrections`, { finding: key, note: text }); delete ui.box[key]; }
+    ui.drafts[dk] = '';
+  } catch (err) { ui.err[key] = err.message; }
+  finally { delete ui.busy[dk]; render(); }
+});
+$('plannerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('plannerInput').value.trim(), id = state.active;
+  if (!msg || !id || id === 'replay') return;
+  const ui = uiOf(id);
+  ui.chatBusy = true; ui.chatErr = ''; $('plannerInput').value = ''; render();
+  try {
+    const r = await post(`/api/cases/${id}/planner`, { message: msg });
+    if (r.v) { ui.chatBusy = false; showPlan(chatSec(model(id))); }  // a new version: scroll to the plan, its changed lines flash
+  } catch (err) { ui.chatErr = err.message; $('plannerInput').value = msg; }
+  finally { ui.chatBusy = false; render(); $('plannerInput').focus(); }
+});
 $('planYes').addEventListener('click', () => decide('planner', true));
 $('planNo').addEventListener('click', () => decide('planner', false));
 $('endCallBtn').addEventListener('click', () => { if (state.active) fetch(`/api/cases/${state.active}/end-call`, { method: 'POST' }); });
@@ -833,6 +1474,15 @@ $('callAgainBtn').addEventListener('click', async () => {
   $('callAgainBtn').disabled = true;
   try { await fetch(`/api/cases/${state.active}/call-again`, { method: 'POST' }); } finally { $('callAgainBtn').disabled = false; }
 });
+// step 5: "Call now" approves the plan on screen (the latest for the next call) and starts the follow-up call
+$('nextCallBtn').addEventListener('click', async () => {
+  const id = state.active, m = model(id), cur = latestPlan(m, m.round + 1), ui = uiOf(id);
+  if (!cur || id === 'replay') return;
+  $('nextCallBtn').disabled = true; ui.nextErr = '';
+  try { await post(`/api/cases/${id}/call-again`, { v: cur.v }); }
+  catch (err) { ui.nextErr = err.message; }
+  finally { $('nextCallBtn').disabled = false; render(); }
+});
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
 window.addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
@@ -840,14 +1490,14 @@ setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.
 setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);
 
 // ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5][&jump=call] ----------
-// Plays a recorded run with its original timing, entirely in the browser. Approvals are shown and then
+// Plays a recorded run entirely in the browser, paced so each step can be watched (&speed=0 for recorded timing). Approvals are shown and then
 // resolved by the recording itself, so the demo works with no network beyond loading the page.
 // "Jump to the call" (or &jump=call) applies everything before the call instantly and plays on from there.
 async function startReplay(params) {
   const scenario = params.get('scenario') || 'default', speed = +(params.get('speed') || 1);
   let events;
   try { events = await (await fetch(`/api/replay?scenario=${scenario}`)).json(); } catch (e) { events = null; }
-  if (!Array.isArray(events) || !events.length) { newDraft(); return; }
+  if (!Array.isArray(events) || !events.length) { $('caseTitle').textContent = 'No recording to replay yet: finish one case first.'; return; }
   const id = 'replay';
   state.tabs = [{ id, name: (events.find((e) => e.bill) || {}).bill?.provider || 'Replay', status: 'reviewing' }];
   state.active = id; state.models[id] = blankModel();
@@ -855,39 +1505,54 @@ async function startReplay(params) {
   document.body.classList.add('replay');
   const callIdx = events.findIndex((e) => e.kind === 'call_ready');
   const jumpBtn = $('jumpCall');
-  let timers = [], next = 0;
+  let next = 0;
   const show = (e, at) => { apply(model(id), { ...e, ts: at }); state.now = Date.now() / 1000; };
-  // play events[from..] from now, compressing long human pauses (approvals, the rep thinking)
-  function play(from) {
-    const start = Date.now() / 1000;
-    let clock = 0, prev = events[from].ts;
-    for (let i = from; i < events.length; i++) {
-      const e = events[i];
-      clock += Math.min(e.ts - prev, 4) / speed; prev = e.ts;
-      const at = clock;
-      timers.push(setTimeout(() => {
-        next = i + 1; show(e, start + at); render();
-        if (callIdx >= 0 && i >= callIdx) jumpBtn.hidden = true;
-      }, at * 1000));
-    }
+  // virtual seconds at which events[i] fires: as recorded (gaps capped at 4s) / at watch pacing
+  const rec = [0];
+  for (let i = 1; i < events.length; i++) rec[i] = rec[i - 1] + Math.min(Math.max(0, events[i].ts - events[i - 1].ts), 4);
+  const pace = scheduler(false), sched = events.map((e, i) => pace(e, rec[i]));
+  const seq = events.map((_, i) => i).sort((a, b) => sched[a] - sched[b]);  // the agents' tracks interleave
+  const callPos = seq.indexOf(callIdx);
+  let rate = speed || 1, realtime = speed === 0, paused = false, vclock = 0, last = performance.now();
+  const at = (i) => (realtime ? rec : sched)[i];
+  function tick() {
+    const t = performance.now();
+    if (!paused) vclock += ((t - last) / 1000) * rate;
+    last = t;
+    let changed = false;
+    while (next < seq.length && at(seq[next]) <= vclock) { show(events[seq[next]], Date.now() / 1000); next++; changed = true; }
+    if (changed) { render(); if (callIdx >= 0 && next > callPos) jumpBtn.hidden = true; }
+    if (next < seq.length) setTimeout(tick, 50);
+    else { $('nowPause').hidden = true; setText($('nowReplayNote'), 'Replay finished'); }
   }
+  $('nowCtl').hidden = false;
+  if (speed !== 1) { const o = [...$('nowSpeed').options].find((x) => +x.value === speed); if (o) o.selected = true; }
+  if (realtime) setText($('nowReplayNote'), 'Replay · recorded timing');
+  $('nowSpeed').onchange = () => {
+    const v = +$('nowSpeed').value, was = at(seq[Math.max(next - 1, 0)]);
+    realtime = v === 0; rate = realtime ? 1 : v;
+    vclock = Math.max(vclock - was, 0) + at(seq[Math.max(next - 1, 0)]);  // keep our place in the new timeline
+    setText($('nowReplayNote'), realtime ? 'Replay · recorded timing' : 'Replay');
+  };
+  $('nowPause').onclick = () => {
+    paused = !paused;
+    $('nowPause').innerHTML = `<span class="material-symbols-rounded" aria-hidden="true">${paused ? 'play_arrow' : 'pause'}</span>`;
+    $('nowPause').setAttribute('aria-label', paused ? 'Resume' : 'Pause');
+  };
   function jumpToCall() {
-    if (callIdx < 0 || next > callIdx) return;
-    timers.forEach(clearTimeout); timers = [];
-    const now = Date.now() / 1000;
-    for (let i = next; i < callIdx; i++) show(events[i], now - (events[callIdx].ts - events[i].ts));
-    next = callIdx; jumpBtn.hidden = true; render();
-    play(callIdx);
+    if (callIdx < 0 || next > callPos) return;
+    vclock = at(callIdx);  // the next tick applies everything up to and including the call
+    jumpBtn.hidden = true;
     setTimeout(() => {  // bring the call step (and its transcript) into view
       const row = [...document.querySelectorAll('[aria-expanded]')].find((x) => /Call billing/.test(x.textContent));
-      const bar = document.querySelector('.m3-top-app-bar');
-      if (row) scrollTo({ top: row.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 12, behavior: 'smooth' });
+      const bar = document.querySelector('.m3-top-app-bar'), now = $('nowCard');
+      if (row) scrollTo({ top: row.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 20, behavior: 'smooth' });
     }, 400);
   }
   jumpBtn.hidden = callIdx < 0;
   jumpBtn.onclick = jumpToCall;
-  play(0);
   render();
+  tick();
   if (params.get('jump') === 'call') jumpToCall();
 }
 
@@ -898,7 +1563,7 @@ async function startReplay(params) {
   const want = new URLSearchParams(location.search).get('id');
   if (want && state.tabs.some((t) => t.id === want)) openCase(want);
   else if (state.tabs.length) openCase(state.tabs[0].id);
-  else newDraft();
+  else location.replace('new.html');  // no cases yet: start one in the chat
 })();
 </script>
 </body>

@@ -1,0 +1,41 @@
+{
+ "hospital_id": "stanford-health",
+ "hospital": "Stanford Health Care",
+ "built_at": "2026-10-25T05:26:14+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://stanfordhealthcare.org/for-patients-visitors/health-insurance-plans.html",
+   "artifact": "raw/stanford-health/page-2caf08580e0f.md"
+  },
+  {
+   "url": "https://stanfordhealthcare.org/for-patients-visitors/billing.html",
+   "artifact": "raw/stanford-health/contact-page-edab4579f2d3.md"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "financial_assistance",
+   "label": "Financial Counselor",
+   "phone": "844-498-2900",
+   "dial": "+18444982900",
+   "hours": "Monday – Friday, 9:00 a.m. – 5:00 p.m.",
+   "source_url": "https://stanfordhealthcare.org/for-patients-visitors/health-insurance-plans.html",
+   "artifact": "raw/stanford-health/page-2caf08580e0f.md",
+   "quote": "Reach a financial counselor at **844-498-2900** from Monday – Friday, 9:00 a.m. – 5:00 p.m."
+  },
+  {
+   "department": "billing",
+   "label": "Patient Billing Customer Service Office",
+   "phone": "1-800-549-3720",
+   "dial": "+18005493720",
+   "hours": "Monday – Friday, 9 a.m. – 5 p.m.",
+   "source_url": "https://stanfordhealthcare.org/for-patients-visitors/billing.html",
+   "artifact": "raw/stanford-health/contact-page-edab4579f2d3.md",
+   "quote": "Patient Billing Customer Service Office **1-800-549-3720** Monday – Friday, 9 a.m. – 5 p.m."
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}

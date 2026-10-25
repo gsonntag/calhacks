@@ -41,7 +41,8 @@ class ApprovalGate:
         approval_id = uuid.uuid4().hex[:8]
         fut: asyncio.Future = asyncio.get_running_loop().create_future()
         self._pending[approval_id] = fut
-        self._requests[approval_id] = {"approval_id": approval_id, "case_id": case_id, "title": title, "detail": detail}
+        self._requests[approval_id] = {"approval_id": approval_id, "case_id": case_id, "agent": agent, "title": title,
+                                       "detail": detail}
         bus.emit(case_id, "approval_requested", agent, approval_id=approval_id, title=title, detail=detail)
         try:
             approved = await asyncio.wait_for(fut, timeout)

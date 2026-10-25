@@ -8,9 +8,13 @@ SYSTEM = """You extract data from a hospital bill and/or an insurance Explanatio
 Return JSON: {"patient": {"first_name", "last_name", "dob", "address": {"street_number", "street_name", "city",
 "state", "zip"}} | null,
 "bill": {"provider", "account_number", "statement_date", "notice", "due_date", "service_date",
-"total_charges", "amount_due", "line_items": [{"code", "description", "amount"}]} | null,
+"total_charges", "amount_due", "billing_phone", "billing_phone_label", "collection_agency", "collection_phone",
+"line_items": [{"code", "description", "amount"}]} | null,
 "eob": {"insurer", "member_id", "claim_number", "provider", "service_date", "billed", "allowed", "plan_paid",
 "patient_responsibility", "status"} | null}
+billing_phone: the phone number the bill gives for billing questions (e.g. "Questions? Call ..."), copied exactly
+as printed; billing_phone_label: the office it names (e.g. "Patient Financial Services"). Never guess a number.
+collection_agency / collection_phone: only if the bill says the account is with a collection agency.
 Numbers as plain numbers. Dates as YYYY-MM-DD. Use null for anything not shown."""
 
 MEDIA = {"pdf": "application/pdf", "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "webp": "image/webp"}

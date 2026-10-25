@@ -28,7 +28,7 @@ import httpx  # noqa: E402
 import uvicorn  # noqa: E402
 from websockets.asyncio.client import connect  # noqa: E402
 
-from billback import config, finance, orchestrator  # noqa: E402
+from billback import billcheck, config, finance, orchestrator  # noqa: E402
 from billback.agents import caller  # noqa: E402
 from billback.agents.policy import SAMPLE_TIERS  # noqa: E402
 from billback.app import app  # noqa: E402
@@ -55,7 +55,7 @@ def demo_brief(case: dict) -> dict:
     rec = finance.reconcile(case["bill"], case["eob"], txns)
     inc = finance.income(txns, today=finance._d(case["today"]))
     elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], SAMPLE_TIERS["tiers"],
-                                    insured=True, out_of_pocket=float(case["eob"]["patient_responsibility"]))
+                                    insured=billcheck.insured(case), out_of_pocket=float(case["eob"]["patient_responsibility"]))
     st = finance.settle(rec["patient_responsibility"], rec["paid"], elig["discount_pct"])
     pol = {"policy": SAMPLE_TIERS, "eligibility": elig, "income": inc, "source": "sample policy",
            "target": st["balance"], "refund": st["refund"]}
@@ -143,7 +143,8 @@ class FakeTwilio:
             await self.send({"event": "mark", "streamSid": self.sid, "mark": {"name": name}})
         except Exception:
             pass
-        self.agent_idle.set()
+        if time.monotonic() >= self.play_until - 0.05:  # idle only once everything queued has played
+            self.agent_idle.set()
 
 
 async def main() -> None:
@@ -196,12 +197,13 @@ async def main() -> None:
                 break
             if args.barge_in and i == 2:  # interrupt 1.5 s into the agent's reply
                 await asyncio.wait_for(tw.agent_started.wait(), 30)
+                tw.agent_started.clear()
                 await asyncio.sleep(1.5)
                 tw.outq.put_nowait(audio.silence(1) + clip)
             else:
+                tw.agent_started.clear()  # before the line: a fast (speculative) reply can start as the rep finishes
                 tw.outq.put_nowait(clip)
             await asyncio.sleep(audio.seconds(len(clip)) + 0.2)
-            tw.agent_started.clear()
             try:  # wait for the agent to answer and finish speaking
                 await asyncio.wait_for(tw.agent_started.wait(), 15)
                 while not tw.closed.is_set():
@@ -235,7 +237,8 @@ async def main() -> None:
     print(f"\noutcome: {session.outcome}")
     print(f"turns {s['turns']}  barge-ins {s['barge_ins']} (Twilio clears {tw.clears})")
     print(f"response latency ms (rep turn.end -> first agent audio): {s['latency_ms']}")
-    print(f"  of which Claude turn ms: {s['llm_ms']}   Sonic first-chunk ms: {s['tts_first_ms']}")
+    print(f"  brain turn start -> first sentence ms: {s['llm_ms']}   first sentence -> Sonic first chunk ms: "
+          f"{s['tts_first_ms']}   speculative drafts (eager_end): {s['drafts']}")
     print(f"audio: STT streamed {s['audio_in_s']:.1f}s, agent TTS {s['audio_out_s']:.1f}s, "
           f"rep TTS generated {rep_tts_s:.1f}s (cached after first run); call {elapsed:.1f}s")
     print(f"recordings + transcript: {out}")

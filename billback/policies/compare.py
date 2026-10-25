@@ -3,7 +3,7 @@ All money math is finance.py (the same functions the case flow uses)."""
 import json
 from datetime import timedelta
 
-from .. import config, finance
+from .. import billcheck, config, finance
 from .store import PolicyStore
 
 SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
@@ -20,10 +20,11 @@ def patient_facts(case: dict) -> dict:
     txns = case["transactions"]
     today = max(finance._d(t["date"]) for t in txns) + timedelta(days=1)
     inc = finance.income(txns, today=today)
-    rec = finance.reconcile(case["bill"], case["eob"], txns)
-    eob = case.get("eob") or {}
+    insured = billcheck.insured(case)
+    rec = finance.reconcile(case["bill"], case["eob"] if insured else {}, txns,
+                            corrections=None if insured else billcheck.line_corrections(case["bill"], case["hospital"]["name"]))
     return {"annual_income": inc["annual"], "income_source": inc["source"], "household_size": case["patient"]["household_size"],
-            "insured": bool(eob), "patient_responsibility": rec["patient_responsibility"], "paid": rec["paid"],
+            "insured": insured, "patient_responsibility": rec["patient_responsibility"], "paid": rec["paid"],
             "owed_before_policy": rec["owed"], "billed_due": rec["billed_due"]}
 
 

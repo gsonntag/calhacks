@@ -155,7 +155,7 @@ async def test_follow_up_then_call_again_end_to_end(client):
     assert "overdue" in ans["answer"]
     # the landing chat answers status questions about the latest case
     r = (await c.post("/api/chat", data={"history": "[]", "message": "what's the status of my bill?"})).json()
-    assert r["case_id"] == cid and "Diane" in r["reply"]
+    assert r["case_id"] == cid and "Diane" in r["reply"] and "started" not in r  # an answer, not a new case
 
     n = len(bus.history(cid))
     assert (await c.post(f"/api/cases/{cid}/call-again")).json()["ok"] is True

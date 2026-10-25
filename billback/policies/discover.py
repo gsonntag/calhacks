@@ -7,6 +7,7 @@ import re
 from dataclasses import asdict, dataclass, field
 from urllib.parse import urlparse
 
+from .fetch import LANGS
 from .registry import Hospital, norm
 
 AGGREGATORS = ("careroute.ai", "dollarfor.org", "coveredusa.org", "sfserviceguide.org", "achaheart.org",
@@ -18,6 +19,9 @@ REGULATOR_DOCS = ("api.hdc.hcai.ca.gov",)
 REGULATOR_PAGES = ("syfphr.hcai.ca.gov", "syfphr.oshpd.ca.gov", "hcai.ca.gov")
 TOPIC = (("financial assistance", 4), ("charity care", 4), ("help paying", 3), ("financial-assistance", 4),
          ("charity", 2), ("discount", 1), ("billing", 1), ("polic", 2))
+# Google can return a translated application or a one-page flyer above the policy itself (seen for UCSF Saint
+# Francis and John Muir); the fetch stage already scores linked documents this way.
+NOT_POLICY = ("flyer", "brochure", "poster", "wall-posting", "notice")
 OFF_TOPIC = ("application", "job", "career", "volunteer", "price transparency", "estimate", "mychart")
 
 
@@ -78,6 +82,13 @@ def score(result: dict, hospital: Hospital) -> Candidate:
         if kw in text:
             s -= 3
             reasons.append(f"mentions '{kw}' (-3)")
+    path = urlparse(url).path.lower()
+    if any(re.search(rf"\b{lang}\b", path) for lang in LANGS):
+        s -= 20
+        reasons.append("other-language document (-20)")
+    if any(w in path for w in NOT_POLICY):
+        s -= 3
+        reasons.append("flyer/notice, not the policy (-3)")
     if hospital_words := [w for w in norm(hospital.name).split() if len(w) > 3]:
         hits = sum(w in norm(text) for w in hospital_words)
         if hits:

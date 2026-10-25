@@ -9,24 +9,21 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
 <!--
-  Case dashboard: every saved case (data/cases/), its balance, calls, the follow-up BillBack scheduled and
+  Cases (home, served at /): every saved case (data/cases/), its balance, calls, the follow-up BillBack scheduled and
   when it's due. Polls /api/dashboard. Per-case actions: Ask BillBack (/ask), Call again (/call-again, which
   waits on the patient's approval on the case page), and a demo clock (/clock) to make a follow-up come due.
+  "+ New case" opens the chat intake (new.html); with no cases yet the page goes straight there.
 -->
 <style>
   /* shared top app bar layout (wraps the tabs under the brand on phones) */
   .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
   @media (max-width: 720px) { .m3-top-app-bar .m3-tabs { order: 2; flex-basis: 100%; margin: 0 -16px; padding: 0 8px; gap: 0; } .m3-top-app-bar .m3-tab { padding: 0 10px; } }
 
+  .hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; }
+  .hero > div { flex: 1 1 320px; min-width: 0; }
   .hero h1 { margin: 8px 0 4px; }
   .hero p { margin: 0; }
-  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-  @media (max-width: 760px) { .stats { grid-template-columns: 1fr; gap: 12px; } .stats .m3-card { padding: 14px 20px; } .stats .stat-value { font-size: 28px; line-height: 36px; } }
   .section-title { margin: 16px 0 0; }
-
-  .attn .m3-card-title { font-size: 18px; line-height: 24px; }
-  .attn-row { width: calc(100% + 32px); background: none; border: 0; text-align: left; font: inherit; color: inherit; }
-  .attn-row .li-trailing .material-symbols-rounded { font-size: 20px; }
 
   #cases { display: flex; flex-direction: column; gap: 12px; }
   .case { padding: 0; overflow: hidden; }
@@ -35,6 +32,15 @@
     width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; text-align: left;
     background: none; border: 0; color: inherit; font: inherit; cursor: pointer; border-radius: 0;
   }
+  .case-head { padding: 14px 20px; gap: 0; }
+  .ch-top { align-items: center; }
+  .ch-saved { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+  .ch-saved b { font: 700 22px/28px var(--md-font); color: var(--st-money); letter-spacing: -.2px; }
+  .ch-saved span { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .ch-saved.zero span { font-size: 14px; line-height: 20px; }
+  .ch-who .m3-status { vertical-align: middle; }
+  .sum { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; }
+  .ch-meta { display: flex; align-items: center; gap: 8px; font: 400 14px/20px var(--md-font); }
   .case-head:focus-visible { outline-offset: -3px; border-radius: var(--md-shape-l); }
   .ch-top { display: flex; align-items: flex-start; gap: 12px; }
   .ch-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -87,9 +93,6 @@
   @media (min-width: 720px) { .clock .lbl { flex-basis: auto; margin-right: 4px; } }
   .clock .m3-chip { height: 40px; }
 
-  .empty { text-align: center; padding: 40px 24px; }
-  .empty .material-symbols-rounded { font-size: 40px; color: var(--md-primary); }
-  .empty p { margin: 8px 0 16px; color: var(--md-on-surface-variant); }
   @media (max-width: 560px) {
     .case-head { padding: 16px; } .case-body { padding: 4px 16px 16px; }
     .facts { grid-template-columns: 1fr; gap: 0; } .facts dt { margin-top: 6px; }
@@ -100,17 +103,18 @@
 <body>
 <header class="m3-top-app-bar">
   <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
-  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">New case</a><a class="m3-tab" href="dashboard.html" aria-current="page">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/" aria-current="page">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 
 <main class="m3-page m3-stack">
   <div class="hero">
-    <h1 class="headline-l">Your billing, handled.</h1>
-    <p class="body-l muted">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+    <div>
+      <h1 class="headline-l">Your billing, handled.</h1>
+      <p class="body-l muted">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+    </div>
+    <a class="m3-btn filled" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
   </div>
-  <div class="stats" id="stats" hidden></div>
-  <section class="m3-card attn" id="attention" aria-labelledby="attnTitle" hidden></section>
-  <h2 class="title-l section-title" id="casesTitle" hidden>All cases</h2>
+  <h2 class="title-l section-title" id="casesTitle" hidden>All cases <span class="body-m muted">· most saved first</span></h2>
   <div id="cases" aria-live="polite"></div>
 </main>
 
@@ -142,23 +146,31 @@ function when(n) {
   return `<span>${day(n.due)}</span>`;
 }
 
+/* needs the patient: a call or payment plan waiting for approval, or a follow-up past due; returns the quiet chip */
 function needsYou(c) {
-  const n = c.next || {};
   if (c.status === 'awaiting_call_approval') return ['Approve the call', 'warn'];
-  if (n.overdue) return ['Overdue', 'warn'];
-  if (n.due_today) return ['Due today', 'info'];
-  if (c.status === 'error') return ['Error', 'error'];
+  if (c.needs_plan_ok) return ['Approve the plan', 'warn'];
+  if (c.next && c.next.overdue) return ['Overdue', 'warn'];
   return null;
 }
 
-/* collapsed row: hospital and patient, status, billed -> now, next action with its due date */
+const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0)) + (c.refund || 0);
+
+/* collapsed row: hospital and patient on the left, money saved on the right; everything else is one click away */
 function headHTML(c) {
+  const saved = savedOf(c), flag = needsYou(c);
+  return `<span class="ch-top">
+      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}${flag ? ` · <span class="m3-status ${flag[1]}">${esc(flag[0])}</span>` : ''}</span></span>
+      <span class="ch-saved ${saved ? '' : 'zero'}">${saved ? `<b>${money(saved)}</b><span>saved</span>` : '<span>Nothing saved yet</span>'}</span>
+      ${icon('expand_more', 'chev')}
+    </span>`;
+}
+
+/* first thing in the expanded card: status, billed -> now, and the next action */
+function sumHTML(c) {
   const n = c.next || {};
   const down = c.current_balance < c.original;
-  return `<span class="ch-top">
-      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)} · opened ${day(c.created)}</span></span>
-      <span class="ch-right">${statusChip(c)}${icon('expand_more', 'chev')}</span>
-    </span>
+  return `<div class="ch-meta">${statusChip(c)}<span class="muted">opened ${day(c.created)}</span></div>
     <span class="ch-money">${c.current_balance !== c.original
         ? `<span class="from">${money(c.original)} billed</span>${icon('arrow_forward', 'arrow')}<span class="now ${down ? 'down' : ''}">${money(c.current_balance)}</span>`
         : `<span class="now">${money(c.current_balance)}</span><span class="from">billed</span>`}
@@ -226,6 +238,7 @@ function ensureCard(c) {
   el.className = 'm3-card case card'; el.id = 'case-' + c.id;
   el.innerHTML = `<button type="button" class="case-head" aria-expanded="false" aria-controls="body-${c.id}"><span class="main"></span></button>
     <div class="case-body" id="body-${c.id}" hidden>
+      <div class="sum"></div>
       <div class="acts"></div>
       <div class="tl"></div>
       <div class="ask">
@@ -245,41 +258,14 @@ function setOpen(el, open) {
   el.querySelector('.case-body').hidden = !open;
 }
 
-function summaryHTML(list) {
-  const billed = list.reduce((a, c) => a + (c.original || 0), 0);
-  const now = list.reduce((a, c) => a + (c.current_balance || 0), 0);
-  const back = list.reduce((a, c) => a + (c.refund || 0), 0);
-  const saved = Math.max(0, billed - now);
-  const resolved = list.filter((c) => c.status === 'done').length;
-  return `<div class="m3-card m3-stat"><span class="stat-label">Total billed</span><span class="stat-value">${money(billed)}</span><span class="stat-support">Across ${list.length} case${list.length === 1 ? '' : 's'}</span></div>
-    <div class="m3-card m3-stat"><span class="stat-label">Now owed</span><span class="stat-value">${money(now)}</span><span class="stat-support">${resolved} resolved</span></div>
-    <div class="m3-card success m3-stat"><span class="stat-label">Saved</span><span class="stat-value">${money(saved)}</span><span class="stat-support">${back ? `Including ${money(back)} back to you` : 'Off the original bills'}</span></div>`;
-}
-
-function attentionHTML(list) {
-  const rows = list.map((c) => [c, needsYou(c)]).filter(([, w]) => w);
-  let body;
-  if (rows.length) {
-    body = rows.map(([c, [label, cls]]) => `<li><button type="button" class="m3-list-item interactive attn-row" data-goto="${c.id}">
-        <span class="li-text"><span class="li-headline" style="display:block">${esc(c.provider)} · ${esc(c.patient)}</span><span class="li-support" style="display:block">${esc((c.next || {}).action || '')}</span></span>
-        <span class="li-trailing"><span class="m3-status ${cls}">${esc(label)}</span>${icon('chevron_right')}</span></button></li>`).join('');
-  } else {
-    const soon = list.filter((c) => c.next && c.next.due).sort((a, b) => a.next.due.localeCompare(b.next.due))[0];
-    body = `<li class="m3-list-item"><span class="li-text"><span class="li-headline" style="display:block">Nothing needs you right now</span><span class="li-support" style="display:block">BillBack will flag it here when a follow-up comes due.</span></span><span class="li-trailing">${icon('check_circle', 'm3-check icon-fill')}</span></li>` +
-      (soon ? `<li><button type="button" class="m3-list-item interactive attn-row" data-goto="${soon.id}"><span class="li-text"><span class="li-headline" style="display:block">Next check-back: ${day(soon.next.due)}</span><span class="li-support" style="display:block">${esc(soon.provider)} · ${esc(soon.next.action)}</span></span><span class="li-trailing"><span class="m3-status info">Next step</span>${icon('chevron_right')}</span></button></li>` : '');
-  }
-  return `<h2 class="m3-card-title" id="attnTitle">${rows.length ? `Needs you (${rows.length})` : 'Needs you'}</h2><ul class="m3-list">${body}</ul>`;
-}
-
 function render(list) {
   const has = list.length > 0;
-  $('stats').hidden = $('attention').hidden = $('casesTitle').hidden = !has;
-  if (!has) { Object.keys(cards).forEach((id) => delete cards[id]); setHTML($('cases'), `<div class="m3-card empty">${icon('receipt_long')}<p>No cases yet. Start one and BillBack will keep track of every call and follow-up here.</p><a class="m3-btn filled" href="/">Start a case</a></div>`); return; }
-  if ($('cases').querySelector('.empty')) { $('cases').innerHTML = ''; $('cases')._html = null; }
-  setHTML($('stats'), summaryHTML(list));
-  setHTML($('attention'), attentionHTML(list));
+  $('casesTitle').hidden = !has;
+  if (!has) { location.replace('new.html'); return; }  // nothing to list yet: start with the chat
   const ids = new Set(list.map((c) => c.id));
   Object.keys(cards).forEach((id) => { if (!ids.has(id)) { cards[id].remove(); delete cards[id]; } });
+  // cases that need the patient first, then biggest savings (stable, so equal savings keep the newest-first order)
+  list = [...list].sort((a, b) => !needsYou(b) - !needsYou(a) || savedOf(b) - savedOf(a));
   list.forEach((c, i) => {
     const fresh = !cards[c.id];
     const el = ensureCard(c);
@@ -289,6 +275,7 @@ function render(list) {
     // open what needs attention, unless the user has already toggled this case
     if (!el._touched && (fresh || needsYou(c))) setOpen(el, !!needsYou(c));
     setHTML(el.querySelector('.main'), headHTML(c));
+    setHTML(el.querySelector('.sum'), sumHTML(c));
     setHTML(el.querySelector('.acts'), actsHTML(c));
     setHTML(el.querySelector('.tl'), detailHTML(c));
     setHTML(el.querySelector('.clock'), clockHTML(c));
@@ -319,13 +306,6 @@ document.addEventListener('submit', (e) => {
 document.addEventListener('click', async (e) => {
   const head = e.target.closest('.case-head');
   if (head) { const el = head.closest('.case'); el._touched = true; setOpen(el, head.getAttribute('aria-expanded') !== 'true'); return; }
-  const go = e.target.closest('[data-goto]');
-  if (go) {
-    const el = cards[go.dataset.goto]; if (!el) return;
-    el._touched = true; setOpen(el, true);
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.querySelector('.case-head').focus({ preventScroll: true });
-    return;
-  }
   const chip = e.target.closest('[data-q]');
   if (chip) return ask(chip.closest('.card').id.slice(5), chip.dataset.q);
   const call = e.target.closest('[data-call]');

@@ -1,0 +1,79 @@
+{
+ "name": "partial",
+ "about": "Insurance and the payment are fixed; free care is refused; the refund depends on it.",
+ "plan": {
+  "asks": [
+   {
+    "id": "insurance",
+    "kind": "insurance",
+    "text": "Apply your insurance: the statement says you owe $1,100, not $8,700"
+   },
+   {
+    "id": "payment",
+    "kind": "payment",
+    "text": "Show the $500 you already paid, bringing it to $600"
+   },
+   {
+    "id": "discount",
+    "kind": "discount",
+    "text": "Ask for free care under their own policy, bringing the bill to $0"
+   },
+   {
+    "id": "refund",
+    "kind": "refund",
+    "text": "Get the $500 you overpaid refunded"
+   },
+   {
+    "id": "hold",
+    "kind": "hold",
+    "text": "Pause collections while it's corrected"
+   },
+   {
+    "id": "case_number",
+    "kind": "case_number",
+    "text": "Get a case number and the rep's name"
+   }
+  ],
+  "money": {
+   "billed": 8700,
+   "owed": 600,
+   "target": 0,
+   "refund": 500,
+   "saved": 9200
+  }
+ },
+ "rep_lines": [
+  "Billing, this is Marco.",
+  "Yes, the adjustment is on there now.",
+  "And the $500 payment was applied.",
+  "I can't approve free care on this account, it's above our limit.",
+  "I'll note the account. It's on hold for 30 days.",
+  "Reference 77120."
+ ],
+ "outcome": {
+  "case_number": "77120",
+  "rep_name": "Marco",
+  "account_on_hold": true
+ },
+ "info": {
+  "promised_actions": [],
+  "asks": {
+   "discount": {
+    "status": "refused",
+    "quote": "I can't approve free care on this account"
+   },
+   "refund": {
+    "status": "refused",
+    "quote": "I can't approve free care on this account"
+   }
+  }
+ },
+ "expect": {
+  "insurance": "got",
+  "payment": "got",
+  "discount": "refused",
+  "refund": "refused",
+  "hold": "got",
+  "case_number": "got"
+ }
+}

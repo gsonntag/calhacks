@@ -1,0 +1,67 @@
+{
+ "hospital_id": "sutter-cpmc",
+ "hospital": "California Pacific Medical Center",
+ "built_at": "2026-10-25T05:25:18+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+   "artifact": "raw/sutter-cpmc/page-53cf44b77138.md"
+  },
+  {
+   "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+   "artifact": "raw/sutter-cpmc/pdf-de8f2a9a21a4.txt"
+  },
+  {
+   "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+   "artifact": "raw/sutter-cpmc/pdf-9a00bfd6ccfd.txt"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "financial_assistance",
+   "label": "Patient Financial Services",
+   "phone": "855-398-1633",
+   "dial": "+18553981633",
+   "hours": "Our telephone hours are 8:00 A.M. to 5:00 P.M., Monday through Friday.",
+   "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+   "artifact": "raw/sutter-cpmc/pdf-de8f2a9a21a4.txt",
+   "quote": "The telephone number is 855-398-1633."
+  },
+  {
+   "department": "billing",
+   "label": "Patient Financial Services",
+   "phone": "855-398-1633",
+   "dial": "+18553981633",
+   "hours": "Our telephone hours are 8:00 A.M. to 5:00 P.M., Monday through Friday.",
+   "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+   "artifact": "raw/sutter-cpmc/pdf-de8f2a9a21a4.txt",
+   "quote": "please call 855-398-1633 or visit the Patient Financial Services office at the hospital."
+  },
+  {
+   "department": "advocate",
+   "label": "Health Consumer Alliance",
+   "phone": "888-804-3536",
+   "dial": "+18888043536",
+   "hours": null,
+   "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+   "artifact": "raw/sutter-cpmc/page-53cf44b77138.md",
+   "quote": "You may call the Health Consumer Alliance at 888-804-3536 or go to https://healthconsumer.org for more information."
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": [
+  {
+   "department": "financial_assistance",
+   "label": "Patient Financial Services",
+   "phone": "855-398-1633",
+   "dial": "+18553981633",
+   "hours": null,
+   "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+   "artifact": "raw/sutter-cpmc/pdf-9a00bfd6ccfd.txt",
+   "quote": "that is the subject of this bill, please contact Patient Financial Services at 855-398-1633",
+   "reason": "quote not found in the source"
+  }
+ ]
+}

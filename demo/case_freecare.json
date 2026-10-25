@@ -30,6 +30,9 @@
     "service_date": "2026-07-19",
     "total_charges": 12400.0,
     "amount_due": 5600.0,
+    "billing_phone": "",
+    "collection_agency": "",
+    "collection_phone": "",
     "line_items": [
       {
         "code": "99285",

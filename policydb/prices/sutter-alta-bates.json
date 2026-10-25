@@ -1,0 +1,3520 @@
+{
+ "hospital_id": "sutter-alta-bates",
+ "hospital_name": "Alta Bates Summit Medical Center",
+ "location_name": "Alta Bates Summit Medical Center",
+ "hospital_address": "350 Hawthorne Avenue, Oakland, CA 94609",
+ "last_updated_on": "2026-04-01",
+ "template_version": "3.0.0",
+ "layout": "csv-tall",
+ "source": {
+  "cms_hpt_url": "https://www.sutterhealth.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "ALTA BATES SUMMIT MEDICAL CENTER SUMMIT CAMPUS",
+  "source_page_url": "https://www.sutterhealth.org/billing-insurance/costs-and-charges/cost-transparency/",
+  "file_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/costs-and-charges/940562680-1295181477_alta-bates-summit-medical-center-summit-campus_standardcharges.csv",
+  "via": "brightdata-unlocker",
+  "fetched_at": "2026-10-25T03:55:12+00:00",
+  "sha256": "779a137da57a4ba272d959c890b1069884ba9f5049dc0e2dd8d712f98b8455c9",
+  "bytes": 17061637
+ },
+ "codes_requested": 67,
+ "codes_found": 67,
+ "missing_codes": [],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "HCHG ED LEVEL 1",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 603.0,
+   "discounted_cash": 603.0,
+   "negotiated_min": 119.9,
+   "negotiated_max": 119.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 119.9,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 119.9,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG ED LEVEL 1'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG ED LEVEL 1 W/PROC",
+     "setting": "outpatient",
+     "gross": 603.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "HCHG ED LEVEL 1",
+     "setting": "inpatient",
+     "gross": 603.0
+    },
+    {
+     "description": "HCHG ED LEVEL 1 W/PROC",
+     "setting": "inpatient",
+     "gross": 603.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "HCHG ED LEVEL 2",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1527.0,
+   "discounted_cash": 1527.0,
+   "negotiated_min": 218.32,
+   "negotiated_max": 218.32,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 218.32,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 218.32,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG ED LEVEL 2'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG ED LEVEL 2 W/PROC",
+     "setting": "outpatient",
+     "gross": 1527.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "HCHG ED LEVEL 2",
+     "setting": "inpatient",
+     "gross": 1527.0
+    },
+    {
+     "description": "HCHG ED LEVEL 2 W/PROC",
+     "setting": "inpatient",
+     "gross": 1527.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "HCHG ED LEVEL 3",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 3093.0,
+   "discounted_cash": 3093.0,
+   "negotiated_min": 388.14,
+   "negotiated_max": 388.14,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 388.14,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 388.14,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG ED LEVEL 3'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG ED LEVEL 3 W/PROC",
+     "setting": "outpatient",
+     "gross": 3093.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "HCHG ED LEVEL 3",
+     "setting": "inpatient",
+     "gross": 3093.0
+    },
+    {
+     "description": "HCHG ED LEVEL 3 W/PROC",
+     "setting": "inpatient",
+     "gross": 3093.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "HCHG ED LEVEL 4",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5214.0,
+   "discounted_cash": 5214.0,
+   "negotiated_min": 593.3,
+   "negotiated_max": 593.3,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 593.3,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 593.3,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG ED LEVEL 4'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG ED LEVEL 4 W/PROC",
+     "setting": "outpatient",
+     "gross": 5214.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "HCHG ED LEVEL 4",
+     "setting": "inpatient",
+     "gross": 5214.0
+    },
+    {
+     "description": "HCHG ED LEVEL 4 W/PROC",
+     "setting": "inpatient",
+     "gross": 5214.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "HCHG ED LEVEL 5",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8003.0,
+   "discounted_cash": 8003.0,
+   "negotiated_min": 846.78,
+   "negotiated_max": 846.78,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 846.78,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 846.78,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG ED LEVEL 5'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG ED LEVEL 5 W/PROC",
+     "setting": "outpatient",
+     "gross": 8003.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "HCHG ED LEVEL 5",
+     "setting": "inpatient",
+     "gross": 8003.0
+    },
+    {
+     "description": "HCHG ED LEVEL 5 W/PROC",
+     "setting": "inpatient",
+     "gross": 8003.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "HCHG ED CRIT CARE 1ST 30-74 MN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 9840.0,
+   "discounted_cash": 9840.0,
+   "negotiated_min": 1174.52,
+   "negotiated_max": 1174.52,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1174.52,
+   "rates_line": "Critical care first hour",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 1174.52,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG ED CRIT CARE 1ST 30-74 MN'; payer rates are from line 'Critical care first hour' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG APC CC 1ST 30-74 MIN",
+     "setting": "outpatient",
+     "gross": 876.0
+    },
+    {
+     "description": "HCHG ED CC 1ST 30-74 MN W/PROC",
+     "setting": "outpatient",
+     "gross": 9840.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "HCHG ED CRIT CARE 1ST 30-74 MN",
+     "setting": "inpatient",
+     "gross": 9840.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "HCHG XR CHEST FRONTAL 1 VIEW",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 738.0,
+   "discounted_cash": 738.0,
+   "negotiated_min": 123.74,
+   "negotiated_max": 123.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 123.74,
+   "rates_line": "X-ray exam chest 1 view",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 123.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR CHEST FRONTAL 1 VIEW'; payer rates are from line 'X-ray exam chest 1 view' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG XR CHEST FRONTAL 1 VIEW",
+     "setting": "inpatient",
+     "gross": 738.0
+    }
+   ]
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "HCHG XR CHEST FRONTAL AND LATERAL 2 VIEW",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 804.0,
+   "discounted_cash": 804.0,
+   "negotiated_min": 123.74,
+   "negotiated_max": 123.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 123.74,
+   "rates_line": "X-ray exam chest 2 views",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 123.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR CHEST FRONTAL AND LATERAL 2 VIEW'; payer rates are from line 'X-ray exam chest 2 views' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG XR CHEST SPECIAL VIEWS 2 VIEW",
+     "setting": "outpatient",
+     "gross": 804.0
+    },
+    {
+     "description": "HCHG XR CHEST FRONTAL AND LATERAL 2 VIEW",
+     "setting": "inpatient",
+     "gross": 804.0
+    },
+    {
+     "description": "HCHG XR CHEST SPECIAL VIEWS 2 VIEW",
+     "setting": "inpatient",
+     "gross": 804.0
+    }
+   ]
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "HCHG CT BRAIN WO CONTR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4312.0,
+   "discounted_cash": 4312.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 1410.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1085.0,
+   "rates_line": "Ct head/brain w/o dye",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1097.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem",
+     "plan": "Hmo/Ppo",
+     "dollar": 1236.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1068.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1103.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Hmo/Ppo",
+     "dollar": 1410.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT BRAIN WO CONTR'; payer rates are from line 'Ct head/brain w/o dye' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CT BRAIN WO CONTR",
+     "setting": "inpatient",
+     "gross": 4312.0
+    }
+   ]
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "HCHG CT SPINE CERV WO CONTR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5058.0,
+   "discounted_cash": 5058.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 1807.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1391.0,
+   "rates_line": "Ct neck spine w/o dye",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1410.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem",
+     "plan": "Hmo/Ppo",
+     "dollar": 1584.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1374.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1414.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Hmo/Ppo",
+     "dollar": 1807.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT SPINE CERV WO CONTR'; payer rates are from line 'Ct neck spine w/o dye' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CT SPINE CERV WO CONTR",
+     "setting": "inpatient",
+     "gross": 5058.0
+    }
+   ]
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "HCHG CT THORAX DX W/O CNTRST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4097.0,
+   "discounted_cash": 4097.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 1804.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1389.0,
+   "rates_line": "Ct thorax w/o dye",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1408.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem",
+     "plan": "Hmo/Ppo",
+     "dollar": 1582.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1369.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1413.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Hmo/Ppo",
+     "dollar": 1804.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT THORAX DX W/O CNTRST'; payer rates are from line 'Ct thorax w/o dye' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG CT LUNG SCREENING LTD",
+     "setting": "outpatient",
+     "gross": 4097.0,
+     "modifiers": "52"
+    },
+    {
+     "description": "HCHG CT THORAX DX W/O CNTRST",
+     "setting": "inpatient",
+     "gross": 4097.0
+    },
+    {
+     "description": "HCHG CT LUNG SCREENING LTD",
+     "setting": "inpatient",
+     "gross": 4097.0,
+     "modifiers": "52"
+    }
+   ]
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "HCHG CT THORAX DX W/CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5153.0,
+   "discounted_cash": 5153.0,
+   "negotiated_min": 249.4,
+   "negotiated_max": 2207.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1699.0,
+   "rates_line": "Ct thorax w/dye",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1722.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem",
+     "plan": "Hmo/Ppo",
+     "dollar": 1936.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1673.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 1726.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Hmo/Ppo",
+     "dollar": 2207.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT THORAX DX W/CONTRAST'; payer rates are from line 'Ct thorax w/dye' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CT THORAX DX W/CONTRAST",
+     "setting": "inpatient",
+     "gross": 5153.0
+    }
+   ]
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "HCHG CTA CHEST W AND WO CONTR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6885.0,
+   "discounted_cash": 6885.0,
+   "negotiated_min": 249.4,
+   "negotiated_max": 5259.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4408.0,
+   "rates_line": "Ct angiography chest",
+   "payer_rates": 6,
+   "payer_dollar_rates": 6,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 3938.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 249.4,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 5259.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 4687.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CTA CHEST W AND WO CONTR'; payer rates are from line 'Ct angiography chest' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CTA CHEST W AND WO CONTR",
+     "setting": "inpatient",
+     "gross": 6885.0
+    }
+   ]
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "HCHG CT ABD & PELVIS W/O CON",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6374.0,
+   "discounted_cash": 6374.0,
+   "negotiated_min": 339.26,
+   "negotiated_max": 5196.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4352.5,
+   "rates_line": "Ct abd & pelvis w/o contrast",
+   "payer_rates": 6,
+   "payer_dollar_rates": 6,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 3889.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 339.26,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 5196.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 4629.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT ABD & PELVIS W/O CON'; payer rates are from line 'Ct abd & pelvis w/o contrast' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CT ABD & PELVIS W/O CON",
+     "setting": "inpatient",
+     "gross": 6374.0
+    }
+   ]
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "HCHG CT ABD & PELVIS W/CON",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8287.0,
+   "discounted_cash": 8287.0,
+   "negotiated_min": 496.06,
+   "negotiated_max": 6335.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5307.0,
+   "rates_line": "Ct abd & pelv w/contrast",
+   "payer_rates": 6,
+   "payer_dollar_rates": 6,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 4741.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 496.06,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 6335.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 5642.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT ABD & PELVIS W/CON'; payer rates are from line 'Ct abd & pelv w/contrast' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CT ABD & PELVIS W/CON",
+     "setting": "inpatient",
+     "gross": 8287.0
+    }
+   ]
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "HCHG CT ABD & PELVIS 1+ REGION W/WO CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8994.0,
+   "discounted_cash": 8994.0,
+   "negotiated_min": 496.06,
+   "negotiated_max": 6743.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5651.5,
+   "rates_line": "Ct abd & pelv 1/> regns",
+   "payer_rates": 6,
+   "payer_dollar_rates": 6,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 5049.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 496.06,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 6743.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 6009.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CT ABD & PELVIS 1+ REGION W/WO CONTRAST'; payer rates are from line 'Ct abd & pelv 1/> regns' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CT ABD & PELVIS 1+ REGION W/WO CONTRAST",
+     "setting": "inpatient",
+     "gross": 8994.0
+    }
+   ]
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "HCHG MRI BRAIN W STEM WO CONTR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5481.0,
+   "discounted_cash": 5481.0,
+   "negotiated_min": 339.26,
+   "negotiated_max": 3788.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2909.0,
+   "rates_line": "Mri brain stem w/o dye",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 2948.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem",
+     "plan": "Hmo/Ppo",
+     "dollar": 3322.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 2867.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 2959.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Hmo/Ppo",
+     "dollar": 3788.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG MRI BRAIN W STEM WO CONTR'; payer rates are from line 'Mri brain stem w/o dye' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG MRI BRAIN W STEM WO CONTR",
+     "setting": "inpatient",
+     "gross": 5481.0
+    }
+   ]
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "HCHG MRI SPINE LUMB WO CONTR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5217.0,
+   "discounted_cash": 5217.0,
+   "negotiated_min": 339.26,
+   "negotiated_max": 3676.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2828.0,
+   "rates_line": "Mri lumbar spine w/o dye",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Hmo/Ppo",
+     "dollar": 2864.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem",
+     "plan": "Hmo/Ppo",
+     "dollar": 3227.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 2785.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Hmo/Ppo",
+     "dollar": 2876.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Hmo/Ppo",
+     "dollar": 3676.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG MRI SPINE LUMB WO CONTR'; payer rates are from line 'Mri lumbar spine w/o dye' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG MRI SPINE LUMB WO CONTR",
+     "setting": "inpatient",
+     "gross": 5217.0
+    }
+   ]
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "HCHG XR SPINE LUMB 2 OR 3 VIEW",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 966.0,
+   "discounted_cash": 966.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 148.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 148.65,
+   "rates_line": "X-ray exam l-s spine 2/3 vws",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 148.65,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR SPINE LUMB 2 OR 3 VIEW'; payer rates are from line 'X-ray exam l-s spine 2/3 vws' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG XR SPINE LUMB 2 OR 3 VIEW",
+     "setting": "inpatient",
+     "gross": 966.0
+    }
+   ]
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "HCHG XR SHOULDER 2 VIEW OR MORE BIL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1335.0,
+   "discounted_cash": 1335.0,
+   "negotiated_min": 123.74,
+   "negotiated_max": 123.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 123.74,
+   "rates_line": "X-ray exam of shoulder",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 123.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "modifiers": "50",
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR SHOULDER 2 VIEW OR MORE BIL'; payer rates are from line 'X-ray exam of shoulder' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard | The modified price is presented in the standard charge value. | Modifier 50: Bilateral Procedure"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG XR SHOULDER 2 VIEW OR MORE LT",
+     "setting": "outpatient",
+     "gross": 890.0,
+     "modifiers": "LT"
+    },
+    {
+     "description": "HCHG XR SHOULDER 2 VIEW OR MORE RT",
+     "setting": "outpatient",
+     "gross": 890.0,
+     "modifiers": "RT"
+    },
+    {
+     "description": "HCHG XR SHOULDER 2 VIEW OR MORE BIL",
+     "setting": "inpatient",
+     "gross": 1335.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "HCHG XR WRIST 3 VIEW OR MORE BIL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1294.0,
+   "discounted_cash": 1294.0,
+   "negotiated_min": 123.74,
+   "negotiated_max": 123.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 123.74,
+   "rates_line": "X-ray exam of wrist",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 123.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "modifiers": "50",
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR WRIST 3 VIEW OR MORE BIL'; payer rates are from line 'X-ray exam of wrist' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard | The modified price is presented in the standard charge value. | Modifier 50: Bilateral Procedure"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG XR WRIST 3 VIEW OR MORE LT",
+     "setting": "outpatient",
+     "gross": 862.0,
+     "modifiers": "LT"
+    },
+    {
+     "description": "HCHG XR WRIST 3 VIEW OR MORE RT",
+     "setting": "outpatient",
+     "gross": 862.0,
+     "modifiers": "RT"
+    },
+    {
+     "description": "HCHG XR WRIST 3 VIEW OR MORE BIL",
+     "setting": "inpatient",
+     "gross": 1294.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "HCHG XR ANKLE 3 VIEW OR MORE BIL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1300.0,
+   "discounted_cash": 1300.0,
+   "negotiated_min": 123.74,
+   "negotiated_max": 123.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 123.74,
+   "rates_line": "X-ray exam of ankle",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 123.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "modifiers": "50",
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR ANKLE 3 VIEW OR MORE BIL'; payer rates are from line 'X-ray exam of ankle' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard | The modified price is presented in the standard charge value. | Modifier 50: Bilateral Procedure"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG XR ANKLE 3 VIEW OR MORE LT",
+     "setting": "outpatient",
+     "gross": 866.0,
+     "modifiers": "LT"
+    },
+    {
+     "description": "HCHG XR ANKLE 3 VIEW OR MORE RT",
+     "setting": "outpatient",
+     "gross": 866.0,
+     "modifiers": "RT"
+    },
+    {
+     "description": "HCHG XR ANKLE 3 VIEW OR MORE BIL",
+     "setting": "inpatient",
+     "gross": 1300.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "HCHG XR FOOT 3 VIEW OR MORE BIL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1377.0,
+   "discounted_cash": 1377.0,
+   "negotiated_min": 123.74,
+   "negotiated_max": 123.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 123.74,
+   "rates_line": "X-ray exam of foot",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 123.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "modifiers": "50",
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG XR FOOT 3 VIEW OR MORE BIL'; payer rates are from line 'X-ray exam of foot' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard | The modified price is presented in the standard charge value. | Modifier 50: Bilateral Procedure"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG XR FOOT 3 VIEW OR MORE LT",
+     "setting": "outpatient",
+     "gross": 918.0,
+     "modifiers": "LT"
+    },
+    {
+     "description": "HCHG XR FOOT 3 VIEW OR MORE RT",
+     "setting": "outpatient",
+     "gross": 918.0,
+     "modifiers": "RT"
+    },
+    {
+     "description": "HCHG XR FOOT 3 VIEW OR MORE BIL",
+     "setting": "inpatient",
+     "gross": 1377.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "HCHG US ABD COMPLETE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1887.0,
+   "discounted_cash": 1887.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 148.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 148.65,
+   "rates_line": "Us exam abdom complete",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 148.65,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG US ABD COMPLETE'; payer rates are from line 'Us exam abdom complete' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG US ABD COMPLETE",
+     "setting": "inpatient",
+     "gross": 1887.0
+    }
+   ]
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "HCHG US ABD LTD",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1656.0,
+   "discounted_cash": 1656.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 148.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 148.65,
+   "rates_line": "Echo exam of abdomen",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 148.65,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG US ABD LTD'; payer rates are from line 'Echo exam of abdomen' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG US ABD LTD",
+     "setting": "inpatient",
+     "gross": 1656.0
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "HCHG US PELVIC COMPLETE NON-OB",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1596.0,
+   "discounted_cash": 1596.0,
+   "negotiated_min": 148.65,
+   "negotiated_max": 148.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 148.65,
+   "rates_line": "Us exam pelvic complete",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 148.65,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG US PELVIC COMPLETE NON-OB'; payer rates are from line 'Us exam pelvic complete' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG US PELVIC COMPLETE NON-OB",
+     "setting": "inpatient",
+     "gross": 1596.0
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "HCHG EKG 12 LEAD TRACING ONLY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 614.0,
+   "discounted_cash": 614.0,
+   "negotiated_min": 83.88,
+   "negotiated_max": 83.88,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 83.88,
+   "rates_line": "Electrocardiogram tracing",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 83.88,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG EKG 12 LEAD TRACING ONLY'; payer rates are from line 'Electrocardiogram tracing' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG EKG 12 LEAD TRACING ONLY",
+     "setting": "inpatient",
+     "gross": 614.0
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "HCHG CA TTE W/DOPPLER COMPLETE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4223.0,
+   "discounted_cash": 4223.0,
+   "negotiated_min": 776.94,
+   "negotiated_max": 776.94,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 776.94,
+   "rates_line": "Tte w/doppler complete",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 776.94,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CA TTE W/DOPPLER COMPLETE'; payer rates are from line 'Tte w/doppler complete' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG CA TTE W/DOPPLER COMPLETE",
+     "setting": "inpatient",
+     "gross": 4223.0
+    }
+   ]
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "HCHG VENIPUNCTURE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 50.0,
+   "discounted_cash": 50.0,
+   "negotiated_min": 9.34,
+   "negotiated_max": 9.34,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.34,
+   "rates_line": "Routine venipuncture",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 9.34,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG VENIPUNCTURE'; payer rates are from line 'Routine venipuncture' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG OBS VENIPUNCTURE",
+     "setting": "outpatient",
+     "gross": 50.0
+    },
+    {
+     "description": "HCHG VENIPUNCTURE CDPH PRENATAL",
+     "setting": "outpatient",
+     "gross": 6.0
+    },
+    {
+     "description": "HCHG VENIPUNCTURE",
+     "setting": "inpatient",
+     "gross": 50.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "HCHG CORE BASIC METBLC PNL TOTAL CA",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 383.0,
+   "discounted_cash": 383.0,
+   "negotiated_min": 8.46,
+   "negotiated_max": 8.46,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.46,
+   "rates_line": "Metabolic panel total ca",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 8.46,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE BASIC METBLC PNL TOTAL CA'; payer rates are from line 'Metabolic panel total ca' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG BASIC METABOLIC PANEL",
+     "setting": "outpatient",
+     "gross": 383.0
+    },
+    {
+     "description": "HCHG CORE BASIC METBLC PNL TOTAL CA",
+     "setting": "inpatient",
+     "gross": 383.0
+    },
+    {
+     "description": "HCHG BASIC METABOLIC PANEL",
+     "setting": "inpatient",
+     "gross": 383.0
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "HCHG CORE COMPR MET PNL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 471.0,
+   "discounted_cash": 471.0,
+   "negotiated_min": 10.56,
+   "negotiated_max": 10.56,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.56,
+   "rates_line": "Comprehen metabolic panel",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 10.56,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE COMPR MET PNL'; payer rates are from line 'Comprehen metabolic panel' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG COMPREHENSIVE METABOLIC PANEL",
+     "setting": "outpatient",
+     "gross": 471.0
+    },
+    {
+     "description": "HCHG CORE COMPR MET PNL",
+     "setting": "inpatient",
+     "gross": 471.0
+    },
+    {
+     "description": "HCHG COMPREHENSIVE METABOLIC PANEL",
+     "setting": "inpatient",
+     "gross": 471.0
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "HCHG CORE LIPID PNL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 343.0,
+   "discounted_cash": 343.0,
+   "negotiated_min": 13.39,
+   "negotiated_max": 13.39,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.39,
+   "rates_line": "Lipid panel",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 13.39,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE LIPID PNL'; payer rates are from line 'Lipid panel' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG LIPID PANEL",
+     "setting": "outpatient",
+     "gross": 343.0
+    },
+    {
+     "description": "HCHG CORE LIPID PNL",
+     "setting": "inpatient",
+     "gross": 343.0
+    },
+    {
+     "description": "HCHG LIPID PANEL",
+     "setting": "inpatient",
+     "gross": 343.0
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "HCHG CORE CBC AUTO W AUTO DIFF WBC",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 217.0,
+   "discounted_cash": 217.0,
+   "negotiated_min": 7.77,
+   "negotiated_max": 7.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.77,
+   "rates_line": "Complete cbc w/auto diff wbc",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 7.77,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE CBC AUTO W AUTO DIFF WBC'; payer rates are from line 'Complete cbc w/auto diff wbc' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG CBC AUTOMATED W/ AUTOMATED DIFFERENTIAL",
+     "setting": "outpatient",
+     "gross": 217.0
+    },
+    {
+     "description": "HCHG CORE CBC AUTO W AUTO DIFF WBC",
+     "setting": "inpatient",
+     "gross": 217.0
+    },
+    {
+     "description": "HCHG CBC AUTOMATED W/ AUTOMATED DIFFERENTIAL",
+     "setting": "inpatient",
+     "gross": 217.0
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "HCHG CORE CBC AUTO",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 189.0,
+   "discounted_cash": 189.0,
+   "negotiated_min": 6.47,
+   "negotiated_max": 6.47,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.47,
+   "rates_line": "Complete cbc automated",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 6.47,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE CBC AUTO'; payer rates are from line 'Complete cbc automated' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG CBC AUTOMATED",
+     "setting": "outpatient",
+     "gross": 189.0
+    },
+    {
+     "description": "HCHG CORE CBC AUTO",
+     "setting": "inpatient",
+     "gross": 189.0
+    },
+    {
+     "description": "HCHG CBC AUTOMATED",
+     "setting": "inpatient",
+     "gross": 189.0
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "HCHG CORE PROTHROMBIN TIME",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 158.0,
+   "discounted_cash": 158.0,
+   "negotiated_min": 4.29,
+   "negotiated_max": 4.29,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4.29,
+   "rates_line": "Prothrombin time",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 4.29,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE PROTHROMBIN TIME'; payer rates are from line 'Prothrombin time' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG PROTHROMBIN TIME",
+     "setting": "outpatient",
+     "gross": 158.0
+    },
+    {
+     "description": "HCHG CORE PROTHROMBIN TIME",
+     "setting": "inpatient",
+     "gross": 158.0
+    },
+    {
+     "description": "HCHG PROTHROMBIN TIME",
+     "setting": "inpatient",
+     "gross": 158.0
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "HCHG CORE PTT PLAS OR WB",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 236.0,
+   "discounted_cash": 236.0,
+   "negotiated_min": 6.01,
+   "negotiated_max": 6.01,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.01,
+   "rates_line": "Thromboplastin time partial",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 6.01,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE PTT PLAS OR WB'; payer rates are from line 'Thromboplastin time partial' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG PTT PLASMA OR WHOLE BLOOD",
+     "setting": "outpatient",
+     "gross": 236.0
+    },
+    {
+     "description": "HCHG CORE PTT PLAS OR WB",
+     "setting": "inpatient",
+     "gross": 236.0
+    },
+    {
+     "description": "HCHG PTT PLASMA OR WHOLE BLOOD",
+     "setting": "inpatient",
+     "gross": 236.0
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "HCHG CORE ASSAY OF TROPONIN QUANT",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 492.0,
+   "discounted_cash": 492.0,
+   "negotiated_min": 12.47,
+   "negotiated_max": 12.47,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.47,
+   "rates_line": "Assay of troponin quant",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 12.47,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE ASSAY OF TROPONIN QUANT'; payer rates are from line 'Assay of troponin quant' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG ASSAY OF TROPONIN QUANT",
+     "setting": "outpatient",
+     "gross": 492.0
+    },
+    {
+     "description": "HCHG CORE ASSAY OF TROPONIN QUANT",
+     "setting": "inpatient",
+     "gross": 492.0
+    },
+    {
+     "description": "HCHG ASSAY OF TROPONIN QUANT",
+     "setting": "inpatient",
+     "gross": 492.0
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "HCHG CORE LIPASE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 275.0,
+   "discounted_cash": 275.0,
+   "negotiated_min": 6.89,
+   "negotiated_max": 6.89,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.89,
+   "rates_line": "Assay of lipase",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 6.89,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE LIPASE'; payer rates are from line 'Assay of lipase' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG LIPASE",
+     "setting": "outpatient",
+     "gross": 275.0
+    },
+    {
+     "description": "HCHG CORE LIPASE",
+     "setting": "inpatient",
+     "gross": 275.0
+    },
+    {
+     "description": "HCHG LIPASE",
+     "setting": "inpatient",
+     "gross": 275.0
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "HCHG CORE NATRIURETIC PEPTIDE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 601.0,
+   "discounted_cash": 601.0,
+   "negotiated_min": 39.26,
+   "negotiated_max": 39.26,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 39.26,
+   "rates_line": "Assay of natriuretic peptide",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 39.26,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE NATRIURETIC PEPTIDE'; payer rates are from line 'Assay of natriuretic peptide' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG NATRIURETIC PEPTIDE",
+     "setting": "outpatient",
+     "gross": 601.0
+    },
+    {
+     "description": "HCHG CORE NATRIURETIC PEPTIDE",
+     "setting": "inpatient",
+     "gross": 601.0
+    },
+    {
+     "description": "HCHG NATRIURETIC PEPTIDE",
+     "setting": "inpatient",
+     "gross": 601.0
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "HCHG CORE CK TOTAL",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 243.0,
+   "discounted_cash": 243.0,
+   "negotiated_min": 6.51,
+   "negotiated_max": 6.51,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.51,
+   "rates_line": "Assay of ck (cpk)",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 6.51,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE CK TOTAL'; payer rates are from line 'Assay of ck (cpk)' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG CK TOTAL",
+     "setting": "outpatient",
+     "gross": 243.0
+    },
+    {
+     "description": "HCHG CORE CK TOTAL",
+     "setting": "inpatient",
+     "gross": 243.0
+    },
+    {
+     "description": "HCHG CK TOTAL",
+     "setting": "inpatient",
+     "gross": 243.0
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "HCHG CORE TSH",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 313.0,
+   "discounted_cash": 313.0,
+   "negotiated_min": 16.8,
+   "negotiated_max": 16.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.8,
+   "rates_line": "Assay thyroid stim hormone",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 16.8,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE TSH'; payer rates are from line 'Assay thyroid stim hormone' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG TSH",
+     "setting": "outpatient",
+     "gross": 313.0
+    },
+    {
+     "description": "HCHG CORE TSH",
+     "setting": "inpatient",
+     "gross": 313.0
+    },
+    {
+     "description": "HCHG TSH",
+     "setting": "inpatient",
+     "gross": 313.0
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HCHG CORE HEMOGLOBIN GLYCOSYLTD A1C",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 203.0,
+   "discounted_cash": 203.0,
+   "negotiated_min": 9.71,
+   "negotiated_max": 9.71,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.71,
+   "rates_line": "Glycosylated hemoglobin test",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 9.71,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE HEMOGLOBIN GLYCOSYLTD A1C'; payer rates are from line 'Glycosylated hemoglobin test' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG HEMOGLOBIN GLYCOSYLATED A1C",
+     "setting": "outpatient",
+     "gross": 203.0
+    },
+    {
+     "description": "HCHG CORE HEMOGLOBIN GLYCOSYLTD A1C",
+     "setting": "inpatient",
+     "gross": 203.0
+    },
+    {
+     "description": "HCHG HEMOGLOBIN GLYCOSYLATED A1C",
+     "setting": "inpatient",
+     "gross": 203.0
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "HCHG CORE URNALYSIS AUTO W/ MICRO",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 141.0,
+   "discounted_cash": 141.0,
+   "negotiated_min": 3.17,
+   "negotiated_max": 3.17,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.17,
+   "rates_line": "Urinalysis auto w/scope",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 3.17,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE URNALYSIS AUTO W/ MICRO'; payer rates are from line 'Urinalysis auto w/scope' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG URINALYSIS AUTOMATED W/ MICROSCOPIC EXAM",
+     "setting": "outpatient",
+     "gross": 141.0
+    },
+    {
+     "description": "HCHG CORE URNALYSIS AUTO W/ MICRO",
+     "setting": "inpatient",
+     "gross": 141.0
+    },
+    {
+     "description": "HCHG URINALYSIS AUTOMATED W/ MICROSCOPIC EXAM",
+     "setting": "inpatient",
+     "gross": 141.0
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "HCHG CORE URNALYSIS AUTO W/O MICRO",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 102.0,
+   "discounted_cash": 102.0,
+   "negotiated_min": 2.25,
+   "negotiated_max": 2.25,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.25,
+   "rates_line": "Urinalysis auto w/o scope",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 2.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE URNALYSIS AUTO W/O MICRO'; payer rates are from line 'Urinalysis auto w/o scope' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG POCT URINALYSIS AUTO W/O MICRO",
+     "setting": "outpatient",
+     "gross": 102.0
+    },
+    {
+     "description": "HCHG URINALYSIS AUTOMATED W/OUT MICROSCOPIC EXAM",
+     "setting": "outpatient",
+     "gross": 102.0
+    },
+    {
+     "description": "HCHG CORE URNALYSIS AUTO W/O MICRO",
+     "setting": "inpatient",
+     "gross": 102.0
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "HCHG POCT PREGNANCY SCREEN URINE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 190.0,
+   "discounted_cash": 190.0,
+   "negotiated_min": 8.61,
+   "negotiated_max": 8.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.61,
+   "rates_line": "Urine pregnancy test",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 8.61,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG POCT PREGNANCY SCREEN URINE'; payer rates are from line 'Urine pregnancy test' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG PREGNANCY SCREEN URINE",
+     "setting": "outpatient",
+     "gross": 190.0
+    },
+    {
+     "description": "HCHG POCT PREGNANCY SCREEN URINE",
+     "setting": "inpatient",
+     "gross": 190.0
+    },
+    {
+     "description": "HCHG PREGNANCY SCREEN URINE",
+     "setting": "inpatient",
+     "gross": 190.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "HCHG CORE CULT UR COLONY CT ONLY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 237.0,
+   "discounted_cash": 237.0,
+   "negotiated_min": 8.07,
+   "negotiated_max": 8.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.07,
+   "rates_line": "Urine culture/colony count",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 8.07,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE CULT UR COLONY CT ONLY'; payer rates are from line 'Urine culture/colony count' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG CULTURE URINE COLONY COUNT ONLY",
+     "setting": "outpatient",
+     "gross": 237.0
+    },
+    {
+     "description": "HCHG CORE CULT UR COLONY CT ONLY",
+     "setting": "inpatient",
+     "gross": 237.0
+    },
+    {
+     "description": "HCHG CULTURE URINE COLONY COUNT ONLY",
+     "setting": "inpatient",
+     "gross": 237.0
+    }
+   ]
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "HCHG CORE CULT BLD BACTERIA",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 469.0,
+   "discounted_cash": 469.0,
+   "negotiated_min": 10.32,
+   "negotiated_max": 10.32,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.32,
+   "rates_line": "Blood culture for bacteria",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 10.32,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE CULT BLD BACTERIA'; payer rates are from line 'Blood culture for bacteria' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG CULTURE BLOOD",
+     "setting": "outpatient",
+     "gross": 469.0
+    },
+    {
+     "description": "HCHG CORE CULT BLD BACTERIA",
+     "setting": "inpatient",
+     "gross": 469.0
+    },
+    {
+     "description": "HCHG CULTURE BLOOD",
+     "setting": "inpatient",
+     "gross": 469.0
+    }
+   ]
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "HCHG CORE IADNA SARS-COV-2 COVID-19 AMP PROBE TQ",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 382.0,
+   "discounted_cash": 382.0,
+   "negotiated_min": 51.31,
+   "negotiated_max": 51.31,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 51.31,
+   "rates_line": "Sars-cov-2 covid-19 amp prb",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 51.31,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG CORE IADNA SARS-COV-2 COVID-19 AMP PROBE TQ'; payer rates are from line 'Sars-cov-2 covid-19 amp prb' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "HCHG IADNA SARS-COV-2 COVID-19 AMP PROBE TQ",
+     "setting": "outpatient",
+     "gross": 382.0
+    },
+    {
+     "description": "HCHG POCT IADNA SARS-COV-2 COVID-19 AMP PROBE TQ",
+     "setting": "outpatient",
+     "gross": 382.0,
+     "modifiers": "QW"
+    },
+    {
+     "description": "HCHG CORE IADNA SARS-COV-2 COVID-19 AMP PROBE TQ",
+     "setting": "inpatient",
+     "gross": 382.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "HCHG INFUSION HYDRATION INITIAL UP TO 1 HR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1160.0,
+   "discounted_cash": 1160.0,
+   "negotiated_min": 302.44,
+   "negotiated_max": 622.95,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 462.7,
+   "rates_line": "Hydration iv infusion init",
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 302.44,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG INFUSION HYDRATION INITIAL UP TO 1 HR'; payer rates are from line 'Hydration iv infusion init' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG INFUSION HYDRATION INITIAL UP TO 1 HR",
+     "setting": "inpatient",
+     "gross": 1160.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "HCHG INFUSION HYDRATION EA ADDL HR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 490.0,
+   "discounted_cash": 490.0,
+   "negotiated_min": 66.58,
+   "negotiated_max": 129.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 97.89,
+   "rates_line": "Hydrate iv infusion add-on",
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 66.58,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG INFUSION HYDRATION EA ADDL HR'; payer rates are from line 'Hydrate iv infusion add-on' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG INFUSION HYDRATION EA ADDL HR",
+     "setting": "inpatient",
+     "gross": 490.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "HCHG INFUSION INITIAL W/MED UP TO 1 HR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1214.0,
+   "discounted_cash": 1214.0,
+   "negotiated_min": 302.44,
+   "negotiated_max": 302.44,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 302.44,
+   "rates_line": "Ther/proph/diag iv inf init",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 302.44,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG INFUSION INITIAL W/MED UP TO 1 HR'; payer rates are from line 'Ther/proph/diag iv inf init' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG INFUSION INITIAL W/MED UP TO 1 HR",
+     "setting": "inpatient",
+     "gross": 1214.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "HCHG INFUSION W/MED EA ADDL HR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 589.0,
+   "discounted_cash": 589.0,
+   "negotiated_min": 66.58,
+   "negotiated_max": 66.58,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 66.58,
+   "rates_line": "Ther/proph/diag iv inf addon",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 66.58,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG INFUSION W/MED EA ADDL HR'; payer rates are from line 'Ther/proph/diag iv inf addon' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG INFUSION W/MED EA ADDL HR",
+     "setting": "inpatient",
+     "gross": 589.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "HCHG INJECTION IM/SQ EA",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 345.0,
+   "discounted_cash": 345.0,
+   "negotiated_min": 102.38,
+   "negotiated_max": 102.38,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 102.38,
+   "rates_line": "Ther/proph/diag inj sc/im",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 102.38,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG INJECTION IM/SQ EA'; payer rates are from line 'Ther/proph/diag inj sc/im' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG INJECTION IM/SQ EA",
+     "setting": "inpatient",
+     "gross": 345.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "HCHG IV PUSH INITIAL DRUG",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 647.0,
+   "discounted_cash": 647.0,
+   "negotiated_min": 302.44,
+   "negotiated_max": 302.44,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 302.44,
+   "rates_line": "Ther/proph/diag inj iv push",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 302.44,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG IV PUSH INITIAL DRUG'; payer rates are from line 'Ther/proph/diag inj iv push' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG IV PUSH INITIAL DRUG",
+     "setting": "inpatient",
+     "gross": 647.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "HCHG INJECTION IVP ADDL SEQ NEW DRG",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 484.0,
+   "discounted_cash": 484.0,
+   "negotiated_min": 66.58,
+   "negotiated_max": 66.58,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 66.58,
+   "rates_line": "Tx/pro/dx inj new drug addon",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 66.58,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG INJECTION IVP ADDL SEQ NEW DRG'; payer rates are from line 'Tx/pro/dx inj new drug addon' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HCHG INJECTION IVP ADDL SEQ NEW DRG",
+     "setting": "inpatient",
+     "gross": 484.0
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "ONDANSETRON HCL 40 MG/20ML IJ SOLN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4.84,
+   "discounted_cash": 4.84,
+   "negotiated_min": 0.2,
+   "negotiated_max": 0.32,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.2,
+   "rates_line": "Ondansetron hcl injection",
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 0.2,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'ONDANSETRON HCL 40 MG/20ML IJ SOLN'; payer rates are from line 'Ondansetron hcl injection' (the file lists them separately).",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 0.507759 ML"
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "ONDANSETRON HCL 40 MG/20ML IJ SOLN",
+     "setting": "outpatient",
+     "gross": 4.75,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ONDANSETRON HCL 4 MG/2ML IJ SOLN",
+     "setting": "outpatient",
+     "gross": 13.83,
+     "modifiers": "JZ",
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ONDANSETRON HCL 4 MG/2ML IJ SOLN",
+     "setting": "outpatient",
+     "gross": 9.38,
+     "modifiers": "JZ",
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "KETOROLAC TROMETHAMINE 30 MG/ML IJ SOLN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 75.0,
+   "discounted_cash": 75.0,
+   "negotiated_min": 0.3,
+   "negotiated_max": 1.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.15,
+   "rates_line": "Ketorolac tromethamine inj",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 0.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1.15,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ketorolac (Toradol) injection, per 15 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'KETOROLAC TROMETHAMINE 30 MG/ML IJ SOLN'; payer rates are from line 'Ketorolac tromethamine inj' (the file lists them separately).",
+    "13 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 0.5 ML"
+   ],
+   "line_items": 13,
+   "variants": [
+    {
+     "description": "KETOROLAC VARIABLE DOSE INJ",
+     "setting": "outpatient",
+     "gross": 71.2,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "KETOROLAC TROMETHAMINE 30 MG/ML IJ SOLN",
+     "setting": "outpatient",
+     "gross": 46.56,
+     "modifiers": "JZ",
+     "drug_unit": 1.0
+    },
+    {
+     "description": "KETOROLAC TROMETHAMINE 60 MG/2ML IM SOLN",
+     "setting": "outpatient",
+     "gross": 18.75,
+     "modifiers": "JZ",
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "DEXAMETHASONE SOD PHOS 4 MG/ML IJ SOLN - CONSOLIDATED",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 7.85,
+   "discounted_cash": 7.85,
+   "negotiated_min": 0.21,
+   "negotiated_max": 0.47,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.21,
+   "rates_line": "Dexamethasone sodium phos",
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 0.21,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Dexamethasone injection, per 1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'DEXAMETHASONE SOD PHOS 4 MG/ML IJ SOLN - CONSOLIDATED'; payer rates are from line 'Dexamethasone sodium phos' (the file lists them separately).",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 0.25 ML"
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "DEXAMETHASONE SOD PHOS 4 MG/ML IJ SOLN - CONSOLIDATED",
+     "setting": "outpatient",
+     "gross": 7.21,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "DEXAMETHASONE SOD PHOS 4 MG/ML IJ SOLN - CONSOLIDATED",
+     "setting": "outpatient",
+     "gross": 13.12,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "DEXAMETHASONE SOD PHOS 4 MG/ML IJ SOLN - CONSOLIDATED",
+     "setting": "outpatient",
+     "gross": 7.5,
+     "modifiers": "JZ",
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "MORPHINE SULFATE 4 MG/ML IV SOLN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 90.0,
+   "discounted_cash": 90.0,
+   "negotiated_min": 10.65,
+   "negotiated_max": 12.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.65,
+   "rates_line": "Morphine sulfate injection",
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 10.65,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'MORPHINE SULFATE 4 MG/ML IV SOLN'; payer rates are from line 'Morphine sulfate injection' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 0.770833 ML"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "MORPHINE VARIABLE DOSE INJ",
+     "setting": "outpatient",
+     "gross": 90.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "MORPHINE SULFATE 4 MG/ML IV SOLN",
+     "setting": "inpatient",
+     "gross": 90.0,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "FENTANYL CITRATE 50MCG/ML IJ SOLN - CONSOLIDATED",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 90.0,
+   "discounted_cash": 90.0,
+   "negotiated_min": 1.93,
+   "negotiated_max": 2.67,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.93,
+   "rates_line": "Fentanyl citrate injeciton",
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1.93,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Fentanyl injection, per 0.1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'FENTANYL CITRATE 50MCG/ML IJ SOLN - CONSOLIDATED'; payer rates are from line 'Fentanyl citrate injeciton' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 2.5 ML"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "FENTANYL CITRATE 50MCG/ML IJ SOLN - CONSOLIDATED",
+     "setting": "outpatient",
+     "gross": 88.38,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "FENTANYL CITRATE 50MCG/ML IJ SOLN - CONSOLIDATED",
+     "setting": "outpatient",
+     "gross": 90.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "FENTANYL CITRATE 50MCG/ML IJ SOLN - CONSOLIDATED",
+     "setting": "inpatient",
+     "gross": 90.0,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "CEFTRIAXONE (ROCEPHIN) 1000 MG/50ML NS (MINIBAG)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 18.75,
+   "discounted_cash": 18.75,
+   "negotiated_min": 1.13,
+   "negotiated_max": 1.79,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.13,
+   "rates_line": "Ceftriaxone sodium injection",
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 1.13,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ceftriaxone injection, per 250 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'CEFTRIAXONE (ROCEPHIN) 1000 MG/50ML NS (MINIBAG)'; payer rates are from line 'Ceftriaxone sodium injection' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 0.25 UNITS"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "CEFTRIAXONE (ROCEPHIN) 2000 MG/100ML NS (MINIBAG)",
+     "setting": "outpatient",
+     "gross": 9.38,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CEFTRIAXONE SODIUM 500 MG IJ SOLR",
+     "setting": "outpatient",
+     "gross": 34.9,
+     "modifiers": "JZ",
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CEFTRIAXONE (ROCEPHIN) 1000 MG/50ML NS (MINIBAG)",
+     "setting": "inpatient",
+     "gross": 18.75,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "CPT",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "NACL 0.9% IV SOLN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 10.0,
+   "discounted_cash": 10.0,
+   "negotiated_min": 5.68,
+   "negotiated_max": 8.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.68,
+   "rates_line": "Normal saline solution infus",
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Ppo",
+     "dollar": 5.68,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Normal saline infusion, 1000 cc).",
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'NACL 0.9% IV SOLN'; payer rates are from line 'Normal saline solution infus' (the file lists them separately).",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Pharmacy | NDC EA = 2000 ML"
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "NACL 0.9% IV SOLN",
+     "setting": "outpatient",
+     "gross": 10.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "NACL 0.9% IV SOLN",
+     "setting": "outpatient",
+     "gross": 9.6,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "NACL 0.9% IV SOLN",
+     "setting": "outpatient",
+     "gross": 10.0,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "HCHG SIMPLE REPAIR WOUND 2.5CM OR LESS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1194.0,
+   "discounted_cash": 1194.0,
+   "negotiated_min": 285.28,
+   "negotiated_max": 285.28,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 285.28,
+   "rates_line": "Rpr s/n/ax/gen/trnk 2.5cm/<",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 285.28,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG SIMPLE REPAIR WOUND 2.5CM OR LESS'; payer rates are from line 'Rpr s/n/ax/gen/trnk 2.5cm/<' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG LAC SMPL 2.5CM/LESS",
+     "setting": "outpatient",
+     "gross": 1194.0
+    },
+    {
+     "description": "HCHG SIMPLE REPAIR WOUND 2.5CM OR LESS",
+     "setting": "inpatient",
+     "gross": 1194.0
+    },
+    {
+     "description": "HCHG LAC SMPL 2.5CM/LESS",
+     "setting": "inpatient",
+     "gross": 1194.0
+    }
+   ]
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "HCHG DRAINAGE ABSCESS SIMPLE/SINGLE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1241.0,
+   "discounted_cash": 1241.0,
+   "negotiated_min": 285.28,
+   "negotiated_max": 285.28,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 285.28,
+   "rates_line": "Drainage of skin abscess",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 285.28,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG DRAINAGE ABSCESS SIMPLE/SINGLE'; payer rates are from line 'Drainage of skin abscess' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG DRAINAGE ABSCESS SIMPLE/SINGLE",
+     "setting": "outpatient",
+     "gross": 1241.0
+    },
+    {
+     "description": "HCHG DRAINAGE ABSCESS SIMPLE/SINGLE",
+     "setting": "inpatient",
+     "gross": 1268.0
+    },
+    {
+     "description": "HCHG DRAINAGE ABSCESS SIMPLE/SINGLE",
+     "setting": "inpatient",
+     "gross": 1268.0
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "Apply forearm splint",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "negotiated_min": 189.18,
+   "negotiated_max": 189.18,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 189.18,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 189.18,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "File note: APC"
+   ],
+   "line_items": 1
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "HCHG IPV TREATMENT SUBSEQUENT",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 685.0,
+   "discounted_cash": 685.0,
+   "negotiated_min": 311.36,
+   "negotiated_max": 311.36,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 311.36,
+   "rates_line": "Airway inhalation treatment",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 311.36,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG IPV TREATMENT SUBSEQUENT'; payer rates are from line 'Airway inhalation treatment' (the file lists them separately).",
+    "17 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 17,
+   "variants": [
+    {
+     "description": "HCHG AIRWAY INHALATION TREATMENT",
+     "setting": "outpatient",
+     "gross": 685.0
+    },
+    {
+     "description": "HCHG AEROSOL TREATMENT SUBSEQUENT",
+     "setting": "outpatient",
+     "gross": 685.0
+    },
+    {
+     "description": "HCHG MDI/NEBULIZER TREATMENT SUBSEQUENT",
+     "setting": "outpatient",
+     "gross": 685.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "HCHG OBS INSERTION FOLEY CATHETER",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 768.0,
+   "discounted_cash": 768.0,
+   "negotiated_min": 189.18,
+   "negotiated_max": 189.18,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 189.18,
+   "rates_line": "Insert temp bladder cath",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "Anthem",
+     "plan": "Medicare Adv_ Hmo / Ppo",
+     "dollar": 189.18,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "Gross charge is from line 'HCHG OBS INSERTION FOLEY CATHETER'; payer rates are from line 'Insert temp bladder cath' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "HCHG INSERT CATH TEMP INDWLLNG",
+     "setting": "outpatient",
+     "gross": 768.0
+    },
+    {
+     "description": "HCHG OBS INSERTION FOLEY CATHETER",
+     "setting": "inpatient",
+     "gross": 768.0
+    },
+    {
+     "description": "HCHG INSERT CATH TEMP INDWLLNG",
+     "setting": "inpatient",
+     "gross": 768.0
+    }
+   ]
+  }
+ }
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BillBack</title>
+<title>BillBack — New case</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
@@ -88,8 +88,7 @@
       <span class="m3-brand-name">BillBack</span>
     </a>
     <nav class="m3-tabs" aria-label="Main">
-      <a class="m3-tab" href="/" aria-current="page">New case</a>
-      <a class="m3-tab" href="dashboard.html">Cases</a>
+      <a class="m3-tab" href="/" aria-current="page">Cases</a>
       <a class="m3-tab" href="hospitals.html">Hospitals</a>
       <a class="m3-tab" href="ops.html">Under the hood</a>
     </nav>
@@ -178,6 +177,7 @@ async function sendText(override) {
     state.history.push({ role: 'user', content: (text || '(sent files)') + note });
     if (r.reply) state.history.push({ role: 'assistant', content: r.reply });
     if (r.case_id) state.caseId = r.case_id;
+    if (r.started) { location.href = `case.html?id=${r.case_id}`; return; }  // watch the review from its first step
     done(); addBot(r.reply);
   } catch (e) { done(); addBot("Sorry, I couldn't reach the server. Try again in a moment."); }
 }

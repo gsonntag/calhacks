@@ -52,7 +52,7 @@ Rules:
 - When the rep gives a case/reference number, call record_outcome. When the goals are done or the rep
   ends it, call end_call and say a short goodbye. If the rep says goodbye or wants to end the call, never push
   another request: record what you have, thank them, say goodbye and call end_call.
-- When you use a tool you may say a brief sentence first; never include XML tags in what you say.
+- When you use a tool, say your spoken sentence first, then call the tool; never include XML tags in what you say.
 """
 
 
@@ -82,17 +82,20 @@ def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
     return goals
 
 
-def build_brief(case: dict, audit: dict, policy: dict) -> dict:
+def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None) -> dict:
+    """plan: the approved plan version (agents/decide.py). Its asks are the goals, in its order, and its money
+    replaces the Review's (corrections and strategy changes are already applied)."""
     rec, elig = audit["reconciliation"], policy["eligibility"]
-    return {
+    eob = case.get("eob") or {}  # empty for uninsured patients
+    brief = {
         "goals": call_goals(rec, elig, policy),
         "patient": f"{case['patient']['first_name']} {case['patient']['last_name']}",
         "hospital": case["hospital"]["name"],
         "account_number": case["bill"]["account_number"],
         "service_date": case["bill"]["service_date"],
         "hospital_says_due": rec["billed_due"],
-        "insurer": case["eob"]["insurer"],
-        "claim_number": case["eob"]["claim_number"],
+        "insurer": eob.get("insurer"),
+        "claim_number": eob.get("claim_number"),
         "eob_patient_responsibility": rec["patient_responsibility"],
         # short reference: a full transaction UUID is unreadable on a phone call
         "payments_made": [{"date": p["date"][:10], "amount": p["amount"], "reference": str(p["id"])[:8].upper()}
@@ -108,10 +111,18 @@ def build_brief(case: dict, audit: dict, policy: dict) -> dict:
         "balance_after_assistance": policy["target"],
         "refund_due_after_assistance": policy.get("refund", 0),
         "patient_date_of_birth": case["patient"].get("dob"),
-        "insurance_member_id": case["eob"].get("member_id"),
+        "insurance_member_id": eob.get("member_id"),
         "deadline_on_notice": case["bill"]["due_date"],
         **({"voice_id": case["voice_id"]} if case.get("voice_id") else {}),
     }
+    if plan:
+        m, plan_ask = plan["money"], next((a for a in plan["asks"] if a["kind"] == "plan"), None)
+        kept = {k.removeprefix("auditor:paid-") for a in plan["asks"] for k in a["findings"] if k.startswith("auditor:paid-")}
+        brief.update({"goals": [a["goal"] for a in plan["asks"]], "plan_version": plan["v"], "correct_balance": m["owed"],
+                      "balance_after_assistance": m["target"], "refund_due_after_assistance": m["refund"],
+                      "proposed_payment_plan": plan_ask["plan"] if plan_ask else None,
+                      "payments_made": [p for p, raw in zip(brief["payments_made"], rec["payments"]) if str(raw["id"]) in kept]})
+    return brief
 
 
 def _case_number(said: str) -> str:
@@ -149,6 +160,7 @@ class CallSession:
         self.messages: list[dict] = []
         self.outcome: dict = {}
         self.ended = False
+        self.last_say = ""
         self.reg = ToolRegistry(case_id, "caller")
         self.reg.add(Tool("record_outcome", "Record what the hospital agreed to and the case/reference number", {
             "type": "object", "properties": {
@@ -183,9 +195,10 @@ class CallSession:
             f"Hi, this is an automated assistant calling on behalf of {b['patient']}, with their authorization, "
             f"about account {b['account_number']}. {_follow_up(b)}"
             "The balance looks incorrect and I'd like to get it corrected.",
-            f"Your statement shows ${b['hospital_says_due']:,.0f} due, but {b['insurer']}'s EOB for claim "
-            f"{b['claim_number']} lists patient responsibility of ${b['eob_patient_responsibility']:,.0f}. "
-            "Could you apply the insurance adjustment?",
+            (f"Your statement shows ${b['hospital_says_due']:,.0f} due, but {b['insurer']}'s EOB for claim "
+             f"{b['claim_number']} lists patient responsibility of ${b['eob_patient_responsibility']:,.0f}. "
+             "Could you apply the insurance adjustment?" if b["insurer"] else
+             f"Your statement shows ${b['hospital_says_due']:,.0f} due. The patient is uninsured."),
             (f"There's also a ${pay['amount']:,.0f} payment made on {pay['date']} that should be on the account. "
              "With both applied the balance is "
              f"${b['correct_balance']:,.0f}." if pay else "Could you confirm the corrected balance?"),
@@ -198,31 +211,77 @@ class CallSession:
 
     async def turn(self, rep_said: str | None) -> str:
         """rep_said=None means the call just connected and BillBack speaks first."""
+        async for _ in self.reply(rep_said):
+            pass
+        return self.last_say
+
+    # Voice turns stream: reply() yields the spoken reply sentence by sentence while Claude is still writing,
+    # and draft() starts Claude before the rep's turn is final (Ink's turn.eager_end) without touching the
+    # session, so a draft the rep talks over is simply cancelled.
+
+    def _heard(self, rep_said: str | None) -> list[dict]:
+        """self.messages plus the rep's words, as a new list (self.messages is not changed)."""
+        heard = rep_said or "[call connected — the representative has picked up and said hello]"
+        msgs = list(self.messages)
+        if msgs and msgs[-1]["role"] == "user" and isinstance(msgs[-1]["content"], list):
+            # turn ended on tool results; keep roles alternating
+            msgs[-1] = {**msgs[-1], "content": [*msgs[-1]["content"], {"type": "text", "text": heard}]}
+        else:
+            msgs.append({"role": "user", "content": heard})
+        return msgs
+
+    def _llm(self, messages: list) -> "llm.Stream":
+        model = config.MODEL_FAST
+        # Lowest latency for a voice turn: no thinking on Haiku 5.5 (allowed at its default effort), low effort elsewhere.
+        opts = ({"thinking": {"type": "disabled"}} if "haiku-5-5" in model else {"output_config": {"effort": "low"}})
+        return llm.Stream(system=llm.cached(self._system()), messages=messages, tools=self.reg.specs(), model=model,
+                          max_tokens=1024, timeout=20, cache_control={"type": "ephemeral"}, **opts)
+
+    def draft(self, rep_said: str | None) -> dict | None:
+        """Start the first model call for this reply now; pass it to reply() to use it, or cancel_draft() it."""
+        if not llm.available():
+            return None
+        msgs = self._heard(rep_said)
+        return {"said": rep_said, "base": len(self.messages), "messages": msgs, "stream": self._llm(msgs)}
+
+    @staticmethod
+    def cancel_draft(d: dict | None) -> None:
+        if d:
+            d["stream"].cancel()
+
+    async def reply(self, rep_said: str | None, draft: dict | None = None):
+        """Like turn(), but yields the reply as it's written, one sentence (with its trailing space) at a time.
+        Tool calls run after the text that came with them has been yielded, so speech never waits on
+        record_outcome. Consume it to the end: history, tools and transcript events finish with it."""
         if rep_said:
             bus.emit(self.case_id, "transcript", "caller", speaker="rep", text=rep_said)
         if not llm.available():
-            return await self._scripted_turn(rep_said)
-        n = len(self.messages)
-        heard = rep_said or "[call connected — the representative has picked up and said hello]"
-        last = self.messages[-1] if self.messages else None
-        if last and last["role"] == "user" and isinstance(last["content"], list):
-            last["content"].append({"type": "text", "text": heard})  # turn ended on tool results; keep roles alternating
-        else:
-            self.messages.append({"role": "user", "content": heard})
-        model = config.MODEL_FAST
-        # Lowest latency for a voice turn: no thinking on Haiku 5.5 (allowed at its default effort), low effort elsewhere.
-        opts = {"thinking": {"type": "disabled"}, "effort": None} if "haiku-5-5" in model else {"effort": "low"}
+            self.last_say = await self._scripted_turn(rep_said)
+            yield self.last_say
+            return
+        if draft and (draft["said"] != rep_said or draft["base"] != len(self.messages)):
+            self.cancel_draft(draft)
+            draft = None
+        before = list(self.messages)
+        self.messages = draft["messages"] if draft else self._heard(rep_said)
         parts: list[str] = []
         try:
-            for _ in range(4):  # allow tool calls, then a spoken reply
-                resp = await llm.create(system=self._system(), messages=self.messages, tools=self.reg.specs(),
-                                        model=model, max_tokens=1024, timeout=20, **opts)
+            for i in range(4):  # allow tool calls, then a spoken reply
+                stream = draft["stream"] if draft and i == 0 else self._llm(self.messages)
+                cut, said = llm.Sentences(), []
+                async for delta in stream.deltas():
+                    for s in cut.feed(delta):
+                        said.append(s)
+                        yield s
+                for s in cut.flush():
+                    said.append(s)
+                    yield s
+                if "".join(said).strip():
+                    parts.append("".join(said).strip())
+                resp = stream.final
                 if resp.stop_reason in ("max_tokens", "refusal"):
                     break  # never run a cut-off tool call, and keep it out of the history
                 self.messages.append({"role": "assistant", "content": resp.content})
-                t = " ".join(b.text for b in resp.content if b.type == "text").strip()
-                if t:
-                    parts.append(t)
                 calls = [b for b in resp.content if b.type == "tool_use"]
                 if not calls:
                     break
@@ -232,14 +291,19 @@ class CallSession:
                 if parts and (self.ended or all(c.name == "record_outcome" for c in calls)):
                     break  # already said something this turn: a second model call only repeats it
         except Exception as e:
-            del self.messages[n:]  # keep the history valid for the next turn
+            self.messages = before  # keep the history valid for the next turn
             bus.emit(self.case_id, "warning", "caller", text=f"Caller LLM error: {type(e).__name__}")
-            parts = []
-        say = " ".join(parts) or "Sorry, could you say that again?"
+            if not parts:
+                parts = ["Sorry, could you say that again?"]
+                yield parts[0]
+        if not parts:
+            parts = ["Sorry, could you say that again?"]
+            yield parts[0]
+        say = " ".join(parts)
         if not self.ended and re.search(r"\b(goodbye|bye)\b", say, re.I):
             await self.reg.call("end_call", {"reason": "done"})  # model said goodbye but forgot end_call
         bus.emit(self.case_id, "transcript", "caller", speaker="billback", text=say)
-        return say
+        self.last_say = say
 
     def _scripted_follow_up(self) -> list[str]:
         b, prev = self.brief, _last_call(self.brief)

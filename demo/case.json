@@ -23,6 +23,9 @@
     "service_date": "2026-08-02",
     "total_charges": 8700.00,
     "amount_due": 8700.00,
+    "billing_phone": "",
+    "collection_agency": "",
+    "collection_phone": "",
     "line_items": [
       {"code": "99284", "description": "Emergency dept visit, high severity", "amount": 3150.00},
       {"code": "74177", "description": "CT abdomen and pelvis with contrast", "amount": 3890.00},

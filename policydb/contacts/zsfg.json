@@ -1,0 +1,45 @@
+{
+ "hospital_id": "zsfg",
+ "hospital": "Zuckerberg San Francisco General Hospital",
+ "built_at": "2026-10-25T05:25:39+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+   "artifact": "raw/zsfg/page-3dd45ec4b556.md"
+  },
+  {
+   "url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+   "artifact": "raw/zsfg/page-d9585349ea70.md"
+  },
+  {
+   "url": "https://www.zuckerbergsanfranciscogeneral.org/resource/sf-health-network-payment-policies-and-forms/",
+   "artifact": "raw/zsfg/page-cfe380dcf7e5.md"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "financial_assistance",
+   "label": "Patient Financial Assistance Department",
+   "phone": "628-206-3275",
+   "dial": "+16282063275",
+   "hours": "Monday: 8:00 am - 4:30 pm Tuesday: 8:00 am - 4:30 pm Wednesday: 8:00 am - 4:30 pm Thursday: 8:00 am - 4:30 pm",
+   "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/help-paying-your-bill/",
+   "artifact": "raw/zsfg/page-3dd45ec4b556.md",
+   "quote": "Patient Financial Assistance Department Phone: 628-206-3275"
+  },
+  {
+   "department": "billing",
+   "label": "Patient Accounting Customer Service Department",
+   "phone": "628-206-8448",
+   "dial": "+16282068448",
+   "hours": "Monday: 8:00 am - 4:30 pm Tuesday: 8:00 am - 4:30 pm Wednesday: 8:00 am - 4:30 pm Thursday: 8:00 am - 4:30 pm Friday: 8:00 am - 4:30 pm",
+   "source_url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+   "artifact": "raw/zsfg/page-d9585349ea70.md",
+   "quote": "Patient Accounting Customer Service Department Phone: 628-206-8448"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}

@@ -85,8 +85,3 @@ def load_cases() -> list[dict]:
 def delete_cases() -> None:
     for f in _cases_dir().glob("*.json"):
         f.unlink(missing_ok=True)
-
-
-def step(case_id: str, agent: str, key: str, label: str, status: str, result: str = "") -> None:
-    """A checklist item in the case UI. status: running | ok | flag | clear | win | wait."""
-    bus.emit(case_id, "step", agent, key=f"{agent}:{key}", label=label, status=status, result=result)

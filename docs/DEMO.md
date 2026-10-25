@@ -16,7 +16,7 @@
   **$1,100 − $500 = $600**, 93% less than the bill.
 - Policy (Bright Data): pulls **Sutter Health's own policies** from our policy database (crawled from
   sutterhealth.org and its policy PDFs, every quote verified against the source). Her payroll deposits
-  ($1,400 every two weeks, $36,400/yr) put her at 233% of the poverty line. Sutter writes off an insured
+  ($1,400 every two weeks, $36,400/yr) put her at 228% of the poverty line. Sutter writes off an insured
   patient's share only if medical bills are over 10% of income; hers are 3%. It says so plainly: **not
   eligible for the write-off**. But Sutter's billing and collections policy says **"All payment plans shall
   be interest-free"**, capped at 10% of monthly family income → **6 × $100/month, 0% interest**.

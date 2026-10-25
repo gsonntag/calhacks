@@ -21,8 +21,12 @@ name = addr = ""
 
 
 def load(case_file: str) -> None:
+    use(json.loads((ROOT / "demo" / case_file).read_text()))
+
+
+def use(case: dict) -> None:
+    """Render from a case dict (also used by billback/scenarios.py for generated cases)."""
     global p, b, e, name, addr
-    case = json.loads((ROOT / "demo" / case_file).read_text())
     p, b, e = case["patient"], case["bill"], case["eob"]
     name = f"{p['first_name']} {p['last_name']}"
     addr = f"{p['address']['street_number']} {p['address']['street_name']}, {p['address']['city']}, {p['address']['state']} {p['address']['zip']}"
@@ -64,7 +68,7 @@ def header(c: canvas.Canvas, title: str, sub: str) -> None:
 
 
 def bill(out: Path) -> None:
-    c = Watermarked(str(out), pagesize=letter)
+    c = Watermarked(str(out), pagesize=letter, invariant=1)
     header(c, b["provider"], "Patient Financial Services · Statement")
     c.setFillColor(colors.HexColor("#BE3337"))
     c.rect(50, H - 120, W - 100, 26, fill=1, stroke=0)
@@ -74,7 +78,9 @@ def bill(out: Path) -> None:
     c.setFillColor(colors.black)
     c.setFont("Helvetica", 11)
     y = H - 150
-    for k, v in [("Patient", name), ("Date of birth", p["dob"]), ("Address", addr), ("Account number", b["account_number"]),
+    facility = [("Facility", b["facility"])] if b.get("facility") else []
+    for k, v in [("Patient", name), ("Date of birth", p["dob"]), ("Address", addr), *facility,
+                 ("Account number", b["account_number"]),
                  ("Statement date", b["statement_date"]), ("Date of service", b["service_date"]),
                  ("Payment due by", b["due_date"])]:
         c.drawString(50, y, f"{k}:"); c.drawString(170, y, v); y -= 16
@@ -84,19 +90,60 @@ def bill(out: Path) -> None:
     c.line(50, y - 4, W - 50, y - 4); y -= 20
     c.setFont("Helvetica", 11)
     for li in b["line_items"]:
-        c.drawString(50, y, li["code"]); c.drawString(110, y, li["description"])
+        units = f"  x{li['units']}" if li.get("units", 1) != 1 else ""
+        c.drawString(50, y, li["code"]); c.drawString(110, y, li["description"] + units)
         c.drawRightString(W - 50, y, f"${li['amount']:,.2f}"); y -= 16
     c.line(50, y + 6, W - 50, y + 6); y -= 10
     c.drawString(110, y, "Total charges"); c.drawRightString(W - 50, y, f"${b['total_charges']:,.2f}"); y -= 16
-    c.drawString(110, y, "Insurance payments / adjustments"); c.drawRightString(W - 50, y, "$0.00"); y -= 16
-    c.drawString(110, y, "Patient payments"); c.drawRightString(W - 50, y, "$0.00"); y -= 22
+    adj, paid = b.get("insurance_adjustments", 0.0), b.get("patient_payments", 0.0)
+    c.drawString(110, y, "Insurance payments / adjustments"); c.drawRightString(W - 50, y, minus(adj)); y -= 16
+    c.drawString(110, y, "Patient payments"); c.drawRightString(W - 50, y, minus(paid)); y -= 22
     c.setFont("Helvetica-Bold", 14)
     c.drawString(110, y, "AMOUNT DUE"); c.drawRightString(W - 50, y, f"${b['amount_due']:,.2f}")
     c.save()
 
 
+def minus(v: float) -> str:
+    return f"-${v:,.2f}" if v else "$0.00"
+
+
+def eob_lines(c: canvas.Canvas, y: float) -> float:
+    """Per-line table, drawn only when the EOB has line detail (generated scenarios)."""
+    xs = [50, 82, 175, 245, 315, 390, 465, W - 50]
+
+    def row(vals: list[str]) -> None:
+        for i, v in enumerate(vals):
+            (c.drawString if i < 2 else c.drawRightString)(xs[i], y, v)
+
+    c.setFont("Helvetica-Bold", 9)
+    row(["Line", "Code", "Billed", "Allowed", "Deductible", "Coinsurance", "Plan paid", "You owe"])
+    c.line(50, y - 4, W - 50, y - 4)
+    y -= 16
+    c.setFont("Helvetica", 9)
+    notes = []
+    for li in e["lines"]:
+        mark = ""
+        if li.get("remark"):
+            mark = "*" * (len(notes) + 1)
+            notes.append(f"{mark} Line {li['line']}: {li['remark']}")
+        row([str(li["line"]), li["code"] + mark] + [f"${li[k]:,.2f}" for k in (
+            "billed", "allowed", "deductible", "coinsurance", "plan_paid", "patient_responsibility")])
+        y -= 13
+    c.line(50, y + 6, W - 50, y + 6)
+    y -= 8
+    c.setFont("Helvetica-Bold", 9)
+    row(["", "Total"] + [f"${v:,.2f}" for v in (e["billed"], e["allowed"], e.get("deductible_applied", 0.0),
+                                                 e.get("coinsurance", 0.0), e["plan_paid"], e["patient_responsibility"])])
+    y -= 14
+    c.setFont("Helvetica", 8.5)
+    for n in notes:
+        c.drawString(50, y, n)
+        y -= 12
+    return y - 10
+
+
 def eob(out: Path) -> None:
-    c = Watermarked(str(out), pagesize=letter)
+    c = Watermarked(str(out), pagesize=letter, invariant=1)
     header(c, e["insurer"], "Explanation of Benefits · THIS IS NOT A BILL")
     c.setFont("Helvetica", 11)
     y = H - 120
@@ -116,6 +163,8 @@ def eob(out: Path) -> None:
     for _, v in cols:
         c.drawString(x, y, f"${v:,.2f}"); x += 130
     y -= 36
+    if e.get("lines"):
+        y = eob_lines(c, y)
     c.setFont("Helvetica-Bold", 13)
     c.drawString(50, y, f"What you owe the provider: ${e['patient_responsibility']:,.2f}")
     y -= 18

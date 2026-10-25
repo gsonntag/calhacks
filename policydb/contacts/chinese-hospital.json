@@ -1,0 +1,41 @@
+{
+ "hospital_id": "chinese-hospital",
+ "hospital": "Chinese Hospital",
+ "built_at": "2026-10-25T05:25:43+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://chinesehospital-sf.org/financial-assistance/",
+   "artifact": "raw/chinese-hospital/page-efbb95afb112.md"
+  },
+  {
+   "url": "https://chinesehospital-sf.org/wp-content/uploads/2026/10/Financial_Assistance_Policy_EN_9-26-26-Tag.pdf",
+   "artifact": "raw/chinese-hospital/pdf-6bde4c69e798.txt"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "billing",
+   "label": "Patient Financial Services Department",
+   "phone": "1-415-677-2314",
+   "dial": "+14156772314",
+   "hours": "Monday to Friday, 8:30 a.m. – 4:30 p.m.",
+   "source_url": "https://chinesehospital-sf.org/financial-assistance/",
+   "artifact": "raw/chinese-hospital/page-efbb95afb112.md",
+   "quote": "Patient Financial Services Department** Phone: 1-415-677-2314 Email: patientfinancialservices@chasf.org"
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Patient Financial Services Department (financial assistance programs)",
+   "phone": "1-415-677-2314",
+   "dial": "+14156772314",
+   "hours": "Monday to Friday, 8:30 a.m. – 4:30 p.m.",
+   "source_url": "https://chinesehospital-sf.org/financial-assistance/",
+   "artifact": "raw/chinese-hospital/page-efbb95afb112.md",
+   "quote": "Patient Financial Services Department** Phone: 1-415-677-2314 Email: patientfinancialservices@chasf.org"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}

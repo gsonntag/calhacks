@@ -1,0 +1,2857 @@
+{
+ "hospital_id": "zsfg",
+ "hospital_name": "PRISCILLA CHAN & MARK ZUCKERBERG SAN FRANCISCO GENERAL HOSPITAL & TRAUMA CENTER",
+ "location_name": "PRISCILLA CHAN & MARK ZUCKERBERG SAN FRANCISCO GENERAL HOSPITAL & TRAUMA CENTER",
+ "hospital_address": "1001 POTRERO AVE SAN FRANCISCO CALIFORNIA 94110-3518",
+ "last_updated_on": "3/19/2026",
+ "template_version": "3.0.0",
+ "layout": "csv-tall",
+ "source": {
+  "cms_hpt_url": "https://www.zuckerbergsanfranciscogeneral.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "PRISCILLA CHAN & MARK ZUCKERBERG SAN FRANCISCO GENERAL HOSPITAL & TRAUMA CENTER",
+  "source_page_url": "https://www.zuckerbergsanfranciscogeneral.org/services/billing-assistance/",
+  "file_url": "https://sanfranciscogeneralhospitalfou.box.com/shared/static/bj0pj6iqcpc6bmb4yp7kobuz772j0jtl.csv",
+  "via": "brightdata-unlocker",
+  "fetched_at": "2026-10-25T03:55:34+00:00",
+  "sha256": "727ded4cbca23709f2ae3783943930366c88b55d3f024198466c0d25e2900bfd",
+  "bytes": 3934073
+ },
+ "codes_requested": 67,
+ "codes_found": 59,
+ "missing_codes": [
+  "36415",
+  "J2405",
+  "J1885",
+  "J1100",
+  "J2270",
+  "J3010",
+  "J0696",
+  "J7030"
+ ],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "HC ER Ex/Tx Rm Level I",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 576.0,
+   "discounted_cash": 576.0,
+   "negotiated_min": 49.6,
+   "negotiated_max": 576.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.6,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 49.6,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: no cpt line level payor reimbursement in the prior 12 months from the last updated date"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Psych Crisis-Level I",
+     "setting": "outpatient",
+     "gross": 1177.0
+    },
+    {
+     "description": "HC ER Ex/Tx Rm Level I",
+     "setting": "outpatient",
+     "gross": 576.0
+    },
+    {
+     "description": "HC Psych Crisis-Level I",
+     "setting": "outpatient",
+     "gross": 1177.0
+    }
+   ]
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "HC ER Ex/Tx Rm Level II",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1726.0,
+   "discounted_cash": 1726.0,
+   "negotiated_min": 49.6,
+   "negotiated_max": 1726.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.6,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 49.6,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: no cpt line level payor reimbursement in the prior 12 months from the last updated date"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Psych Crisis-Level II",
+     "setting": "outpatient",
+     "gross": 2734.0
+    },
+    {
+     "description": "HC ER Ex/Tx Rm Level II",
+     "setting": "outpatient",
+     "gross": 1726.0
+    },
+    {
+     "description": "HC Psych Crisis-Level II",
+     "setting": "outpatient",
+     "gross": 2734.0
+    }
+   ]
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "HC ER Ex/Tx Rm Level III",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 3694.0,
+   "discounted_cash": 3694.0,
+   "negotiated_min": 49.6,
+   "negotiated_max": 3694.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.6,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 49.6,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: no cpt line level payor reimbursement in the prior 12 months from the last updated date"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Psych Crisis-Level III",
+     "setting": "outpatient",
+     "gross": 4295.0
+    },
+    {
+     "description": "HC ER Ex/Tx Rm Level III",
+     "setting": "outpatient",
+     "gross": 3694.0
+    },
+    {
+     "description": "HC Psych Crisis-Level III",
+     "setting": "outpatient",
+     "gross": 4295.0
+    }
+   ]
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "HC ER Ex/Tx Rm Level IV",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6084.0,
+   "discounted_cash": 6084.0,
+   "negotiated_min": 49.6,
+   "negotiated_max": 6084.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.6,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 49.6,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "9 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: no cpt line level payor reimbursement in the prior 12 months from the last updated date"
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "HC Psych Crisis-Level IV",
+     "setting": "outpatient",
+     "gross": 5855.0
+    },
+    {
+     "description": "HC Psych Crisis-Level V",
+     "setting": "outpatient",
+     "gross": 7419.0
+    },
+    {
+     "description": "HC ER Ex/Tx Rm Level IV",
+     "setting": "outpatient",
+     "gross": 6084.0
+    }
+   ]
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "HC ED Level 5 Team Trauma",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 18248.0,
+   "discounted_cash": 18248.0,
+   "negotiated_min": 49.6,
+   "negotiated_max": 18248.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.6,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 49.6,
+     "methodology": "fee schedule",
+     "median": 155.03
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "HC ER Ex/Tx Rm Level V",
+     "setting": "outpatient",
+     "gross": 12281.0
+    },
+    {
+     "description": "HC Psych Crisis-Level VI",
+     "setting": "outpatient",
+     "gross": 8980.0
+    },
+    {
+     "description": "HC ED Level 5 Team Trauma",
+     "setting": "outpatient",
+     "gross": 18248.0
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "HC ED Critical Care 30-74 Mins.",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6771.0,
+   "discounted_cash": 6771.0,
+   "negotiated_min": 49.6,
+   "negotiated_max": 6771.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.6,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 49.6,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "9 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: no cpt line level payor reimbursement in the prior 12 months from the last updated date"
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "HC Trauma Critical Care 30-74mins",
+     "setting": "outpatient",
+     "gross": 6771.0
+    },
+    {
+     "description": "HC Trauma Critical Care 30-74mins",
+     "setting": "outpatient",
+     "gross": 6771.0
+    },
+    {
+     "description": "HC ED Critical Care 30-74 Mins.",
+     "setting": "outpatient",
+     "gross": 6771.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "HC Chest 1 View",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 384.0,
+   "discounted_cash": 384.0,
+   "negotiated_min": 6.63,
+   "negotiated_max": 384.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.63,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 6.63,
+     "methodology": "fee schedule",
+     "median": 20.5
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Chest 1 View",
+     "setting": "outpatient",
+     "gross": 384.0
+    },
+    {
+     "description": "HC Chest 1 View",
+     "setting": "inpatient",
+     "gross": 384.0
+    },
+    {
+     "description": "HC Chest 1 View",
+     "setting": "inpatient",
+     "gross": 384.0
+    }
+   ]
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "HC Chest Any 2 Views",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 402.0,
+   "discounted_cash": 402.0,
+   "negotiated_min": 10.31,
+   "negotiated_max": 402.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.31,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 10.31,
+     "methodology": "fee schedule",
+     "median": 25.93
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Chest Any 2 Views",
+     "setting": "outpatient",
+     "gross": 402.0
+    },
+    {
+     "description": "HC Chest Any 2 Views",
+     "setting": "inpatient",
+     "gross": 402.0
+    },
+    {
+     "description": "HC Chest Any 2 Views",
+     "setting": "inpatient",
+     "gross": 402.0
+    }
+   ]
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "HC CT Brain WO Contr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4403.0,
+   "discounted_cash": 4403.0,
+   "negotiated_min": 38.03,
+   "negotiated_max": 4403.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 38.03,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 38.03,
+     "methodology": "fee schedule",
+     "median": 197.65
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC CT Brain WO Contr",
+     "setting": "outpatient",
+     "gross": 4403.0
+    },
+    {
+     "description": "HC CT Brain WO Contr",
+     "setting": "inpatient",
+     "gross": 4403.0
+    },
+    {
+     "description": "HC CT Brain WO Contr",
+     "setting": "inpatient",
+     "gross": 4403.0
+    }
+   ]
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "HC CT Spn Cerv WO Contrast",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5241.0,
+   "discounted_cash": 5241.0,
+   "negotiated_min": 46.93,
+   "negotiated_max": 5241.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 46.93,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 46.93,
+     "methodology": "fee schedule",
+     "median": 233.66
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC CT Spn Cerv WO Contrast",
+     "setting": "outpatient",
+     "gross": 5241.0
+    },
+    {
+     "description": "HC CT Spn Cerv WO Contrast",
+     "setting": "inpatient",
+     "gross": 5241.0
+    },
+    {
+     "description": "HC CT Spn Cerv WO Contrast",
+     "setting": "inpatient",
+     "gross": 5241.0
+    }
+   ]
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "HC CT Chest WO Contr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5514.0,
+   "discounted_cash": 5514.0,
+   "negotiated_min": 47.81,
+   "negotiated_max": 5514.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 47.81,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 47.81,
+     "methodology": "fee schedule",
+     "median": 233.66
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC CT Chest WO Contr",
+     "setting": "outpatient",
+     "gross": 5514.0
+    },
+    {
+     "description": "HC CT Chest WO Contr",
+     "setting": "inpatient",
+     "gross": 5514.0
+    },
+    {
+     "description": "HC CT Chest WO Contr",
+     "setting": "inpatient",
+     "gross": 5514.0
+    }
+   ]
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "HC CT Espohogram",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6700.0,
+   "discounted_cash": 6700.0,
+   "negotiated_min": 60.43,
+   "negotiated_max": 6700.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 60.43,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 60.43,
+     "methodology": "fee schedule",
+     "median": 254.56
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "HC CT Espohogram",
+     "setting": "outpatient",
+     "gross": 6700.0
+    },
+    {
+     "description": "HC CT Chest W Contrast",
+     "setting": "outpatient",
+     "gross": 6700.0
+    },
+    {
+     "description": "HC CT Chest W Contrast",
+     "setting": "outpatient",
+     "gross": 6700.0
+    }
+   ]
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "HC CT Angio Chest W Post Process",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 7961.0,
+   "discounted_cash": 7961.0,
+   "negotiated_min": 101.73,
+   "negotiated_max": 7961.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 101.73,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 101.73,
+     "methodology": "fee schedule",
+     "median": 192.35
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC CT Angio Chest W Post Process",
+     "setting": "outpatient",
+     "gross": 7961.0
+    },
+    {
+     "description": "HC CT Angio Chest W Post Process",
+     "setting": "inpatient",
+     "gross": 7961.0
+    },
+    {
+     "description": "HC CT Angio Chest W Post Process",
+     "setting": "inpatient",
+     "gross": 7961.0
+    }
+   ]
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "HC CT Abdomen/Pelvis WO/Cont.",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1891.0,
+   "discounted_cash": 1891.0,
+   "negotiated_min": 65.45,
+   "negotiated_max": 1891.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 65.45,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 65.45,
+     "methodology": "fee schedule",
+     "median": 101.1
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC CT Abdomen/Pelvis WO/Cont.",
+     "setting": "outpatient",
+     "gross": 1891.0
+    },
+    {
+     "description": "HC CT Abdomen/Pelvis WO/Cont.",
+     "setting": "inpatient",
+     "gross": 1891.0
+    },
+    {
+     "description": "HC CT Abdomen/Pelvis WO/Cont.",
+     "setting": "inpatient",
+     "gross": 1891.0
+    }
+   ]
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "HC CT Abdomen/Pelvis W/Cont.",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 3596.0,
+   "discounted_cash": 3596.0,
+   "negotiated_min": 105.82,
+   "negotiated_max": 3596.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 105.82,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 105.82,
+     "methodology": "fee schedule",
+     "median": 202.9
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC CT Abdomen/Pelvis W/Cont.",
+     "setting": "outpatient",
+     "gross": 3596.0
+    },
+    {
+     "description": "HC CT Abdomen/Pelvis W/Cont.",
+     "setting": "inpatient",
+     "gross": 3596.0
+    },
+    {
+     "description": "HC CT Abdomen/Pelvis W/Cont.",
+     "setting": "inpatient",
+     "gross": 3596.0
+    }
+   ]
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "HC CT Abdomen/Pelvis W&WO/Cont.",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4759.0,
+   "discounted_cash": 4759.0,
+   "negotiated_min": 119.87,
+   "negotiated_max": 4759.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 119.87,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 119.87,
+     "methodology": "fee schedule",
+     "median": 233.05
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HC CT Abdomen/Pelvis W&WO/Cont.",
+     "setting": "outpatient",
+     "gross": 4759.0
+    },
+    {
+     "description": "HC CT Abdomen/Pelvis W&WO/Cont.",
+     "setting": "inpatient",
+     "gross": 4759.0
+    }
+   ]
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "HC MRI Brain WO Contrast",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6254.0,
+   "discounted_cash": 6254.0,
+   "negotiated_min": 71.4,
+   "negotiated_max": 6254.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 71.4,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "notes": [
+    "Discounted cash price equals the gross charge in this file."
+   ],
+   "line_items": 1
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "HC MRI Lumb Spine WO Con",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6944.0,
+   "discounted_cash": 6944.0,
+   "negotiated_min": 69.84,
+   "negotiated_max": 6944.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 69.84,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC MRI Lumb Spine WO Con",
+     "setting": "inpatient",
+     "gross": 6944.0
+    }
+   ]
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "HC Lumb.Spine Ap & Lateral",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 562.0,
+   "discounted_cash": 562.0,
+   "negotiated_min": 43.45,
+   "negotiated_max": 562.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 43.45,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 43.45,
+     "methodology": "fee schedule",
+     "median": 59.96
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "HC Spine Lumbar Any 2 or 3 Views",
+     "setting": "outpatient",
+     "gross": 562.0
+    },
+    {
+     "description": "HC Lumb.Spine Ap & Lateral",
+     "setting": "outpatient",
+     "gross": 562.0
+    },
+    {
+     "description": "HC Spine Lumbar Any 2 or 3 Views",
+     "setting": "outpatient",
+     "gross": 562.0
+    }
+   ]
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "HC Shoulder Left Min 2 Views",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 540.0,
+   "discounted_cash": 540.0,
+   "negotiated_min": 9.71,
+   "negotiated_max": 540.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.71,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 9.71,
+     "methodology": "fee schedule",
+     "median": 24.97
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "HC Shoulder Left Min 2 Views",
+     "setting": "outpatient",
+     "gross": 540.0
+    },
+    {
+     "description": "HC Bilateral Shoulder 2+ Views",
+     "setting": "outpatient",
+     "gross": 810.0
+    },
+    {
+     "description": "HC Shoulder Rght Min 2 Views",
+     "setting": "outpatient",
+     "gross": 540.0
+    }
+   ]
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "HC Wrist 3 Views Lt",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 535.0,
+   "discounted_cash": 535.0,
+   "negotiated_min": 36.06,
+   "negotiated_max": 535.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 36.06,
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL DELEGATED [5002]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 36.06,
+     "methodology": "fee schedule",
+     "median": 23.8
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "HC Bilateral Wrist 3+ Views",
+     "setting": "outpatient",
+     "gross": 802.0
+    },
+    {
+     "description": "HC Wrist 3 Views Rt",
+     "setting": "outpatient",
+     "gross": 535.0
+    },
+    {
+     "description": "HC Wrist 3 Views Lt",
+     "setting": "outpatient",
+     "gross": 535.0
+    }
+   ]
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "HC Ankle 3 Views Lt",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 535.0,
+   "discounted_cash": 535.0,
+   "negotiated_min": 9.44,
+   "negotiated_max": 535.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.44,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 9.44,
+     "methodology": "fee schedule",
+     "median": 24.16
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "HC Ankle 3 Views Lt",
+     "setting": "outpatient",
+     "gross": 535.0
+    },
+    {
+     "description": "HC Ankle 3 Views Rt",
+     "setting": "outpatient",
+     "gross": 535.0
+    },
+    {
+     "description": "HC Bilateral Ankle 3 Views",
+     "setting": "outpatient",
+     "gross": 802.0
+    }
+   ]
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "HC Foot Minimum 3 Views Lt",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 535.0,
+   "discounted_cash": 535.0,
+   "negotiated_min": 9.09,
+   "negotiated_max": 535.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.09,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 9.09,
+     "methodology": "fee schedule",
+     "median": 22.58
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "HC Foot Minimum 3 Views Lt",
+     "setting": "outpatient",
+     "gross": 535.0
+    },
+    {
+     "description": "HC Foot Minimum 3 Views Rt",
+     "setting": "outpatient",
+     "gross": 535.0
+    },
+    {
+     "description": "HC Bilateral Foot 3 Views",
+     "setting": "outpatient",
+     "gross": 801.0
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "HC US Abdomen Complete",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1759.0,
+   "discounted_cash": 1759.0,
+   "negotiated_min": 31.24,
+   "negotiated_max": 1759.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 31.24,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 31.24,
+     "methodology": "fee schedule",
+     "median": 71.6
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HC US Abdomen Complete",
+     "setting": "outpatient",
+     "gross": 1759.0
+    },
+    {
+     "description": "HC US Abdomen Complete",
+     "setting": "inpatient",
+     "gross": 1759.0
+    }
+   ]
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "HC US Abdomen Limited",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1419.0,
+   "discounted_cash": 1419.0,
+   "negotiated_min": 22.81,
+   "negotiated_max": 1419.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 22.81,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 22.81,
+     "methodology": "fee schedule",
+     "median": 52.28
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "32 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 32,
+   "variants": [
+    {
+     "description": "HC US Abdomen Limited",
+     "setting": "outpatient",
+     "gross": 1419.0
+    },
+    {
+     "description": "HC F.a.S.T.",
+     "setting": "outpatient",
+     "gross": 1419.0
+    },
+    {
+     "description": "HC US Abdomen Limited",
+     "setting": "outpatient",
+     "gross": 1419.0
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "HC Ultrasound Bladder",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1355.0,
+   "discounted_cash": 1355.0,
+   "negotiated_min": 25.4,
+   "negotiated_max": 1355.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 25.4,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 25.4,
+     "methodology": "fee schedule",
+     "median": 58.23
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "HC Ultrasound Bladder",
+     "setting": "outpatient",
+     "gross": 1355.0
+    },
+    {
+     "description": "HC US Pelvis Complete",
+     "setting": "outpatient",
+     "gross": 1355.0
+    },
+    {
+     "description": "HC US Pelvis Complete",
+     "setting": "outpatient",
+     "gross": 1355.0
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "HC Ekg Tracing Only",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 287.0,
+   "discounted_cash": 287.0,
+   "negotiated_min": 10.66,
+   "negotiated_max": 287.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.66,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 10.66,
+     "methodology": "fee schedule",
+     "median": 23.52
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Ekg Tracing Only",
+     "setting": "outpatient",
+     "gross": 287.0
+    },
+    {
+     "description": "HC Ekg Tracing Only",
+     "setting": "inpatient",
+     "gross": 287.0
+    },
+    {
+     "description": "HC Ekg Tracing Only",
+     "setting": "inpatient",
+     "gross": 287.0
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "HC Tte Comp 2d Mmd Dop Color Flow",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2172.0,
+   "discounted_cash": 2172.0,
+   "negotiated_min": 419.4,
+   "negotiated_max": 2172.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 419.4,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 419.4,
+     "methodology": "fee schedule",
+     "median": 177.42
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Tte Comp 2d Mmd Dop Color Flow",
+     "setting": "outpatient",
+     "gross": 2172.0
+    },
+    {
+     "description": "HC Tte Comp 2d Mmd Dop Color Flow",
+     "setting": "inpatient",
+     "gross": 2172.0
+    },
+    {
+     "description": "HC Tte Comp 2d Mmd Dop Color Flow",
+     "setting": "inpatient",
+     "gross": 2172.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "HC Metabol. Panel-Basic",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 406.0,
+   "discounted_cash": 406.0,
+   "negotiated_min": 10.43,
+   "negotiated_max": 406.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.43,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 10.43,
+     "methodology": "fee schedule",
+     "median": 11.07
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Metabol. Panel-Basic",
+     "setting": "outpatient",
+     "gross": 406.0
+    },
+    {
+     "description": "HC Metabol. Panel-Basic",
+     "setting": "inpatient",
+     "gross": 406.0
+    },
+    {
+     "description": "HC Metabol. Panel-Basic",
+     "setting": "inpatient",
+     "gross": 406.0
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "HC Comprehensive Metabolic Panel",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 528.0,
+   "discounted_cash": 528.0,
+   "negotiated_min": 13.18,
+   "negotiated_max": 528.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.18,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 13.18,
+     "methodology": "fee schedule",
+     "median": 13.98
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Comprehensive Metabolic Panel",
+     "setting": "outpatient",
+     "gross": 528.0
+    },
+    {
+     "description": "HC Comprehensive Metabolic Panel",
+     "setting": "inpatient",
+     "gross": 528.0
+    },
+    {
+     "description": "HC Comprehensive Metabolic Panel",
+     "setting": "inpatient",
+     "gross": 528.0
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "HC Lipids Panel",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 650.0,
+   "discounted_cash": 650.0,
+   "negotiated_min": 16.55,
+   "negotiated_max": 650.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.55,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 16.55,
+     "methodology": "fee schedule",
+     "median": 13.88
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Lipids Panel",
+     "setting": "outpatient",
+     "gross": 650.0
+    },
+    {
+     "description": "HC Lipids Panel",
+     "setting": "inpatient",
+     "gross": 650.0
+    },
+    {
+     "description": "HC Lipids Panel",
+     "setting": "inpatient",
+     "gross": 650.0
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "HC Cbc Platelets & Diff",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 269.0,
+   "discounted_cash": 269.0,
+   "negotiated_min": 9.68,
+   "negotiated_max": 269.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.68,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 9.68,
+     "methodology": "fee schedule",
+     "median": 10.11
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Cbc Platelets & Diff",
+     "setting": "outpatient",
+     "gross": 269.0
+    },
+    {
+     "description": "HC Cbc Platelets & Diff",
+     "setting": "inpatient",
+     "gross": 269.0
+    },
+    {
+     "description": "HC Cbc Platelets & Diff",
+     "setting": "inpatient",
+     "gross": 269.0
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "HC Cbc & Platelets Auto.",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 238.0,
+   "discounted_cash": 238.0,
+   "negotiated_min": 8.19,
+   "negotiated_max": 238.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.19,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 8.19,
+     "methodology": "fee schedule",
+     "median": 8.26
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Cbc & Platelets Auto.",
+     "setting": "outpatient",
+     "gross": 238.0
+    },
+    {
+     "description": "HC Cbc & Platelets Auto.",
+     "setting": "inpatient",
+     "gross": 238.0
+    },
+    {
+     "description": "HC Cbc & Platelets Auto.",
+     "setting": "inpatient",
+     "gross": 238.0
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "HC Prothrombin Time",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 173.0,
+   "discounted_cash": 173.0,
+   "negotiated_min": 5.01,
+   "negotiated_max": 173.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.01,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 5.01,
+     "methodology": "fee schedule",
+     "median": 4.8
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "16 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 16,
+   "variants": [
+    {
+     "description": "HC Prothrombin Time",
+     "setting": "outpatient",
+     "gross": 173.0
+    },
+    {
+     "description": "HC Inhibitor Assay Pt With Reflex to Pt 1:1 Mix Lab#24",
+     "setting": "outpatient",
+     "gross": 15.3
+    },
+    {
+     "description": "HC Lupus Anticoagulant Panel Lab #24",
+     "setting": "outpatient",
+     "gross": 10.0
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "HC Partial Thromboplastin Time",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 208.0,
+   "discounted_cash": 208.0,
+   "negotiated_min": 7.66,
+   "negotiated_max": 208.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.66,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 7.66,
+     "methodology": "fee schedule",
+     "median": 7.6
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "28 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 28,
+   "variants": [
+    {
+     "description": "HC Partial Thromboplastin Time",
+     "setting": "outpatient",
+     "gross": 208.0
+    },
+    {
+     "description": "HC Inhibitor Assay Ptt With Reflex to Ptt 1:1 Mix",
+     "setting": "outpatient",
+     "gross": 12.35
+    },
+    {
+     "description": "HC Reflex Partial Thromboplastin Time 1 Hour",
+     "setting": "outpatient",
+     "gross": 12.05
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "HC Troponin",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 363.0,
+   "discounted_cash": 363.0,
+   "negotiated_min": 12.15,
+   "negotiated_max": 363.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.15,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 12.15,
+     "methodology": "fee schedule",
+     "median": 12.97
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Troponin",
+     "setting": "outpatient",
+     "gross": 363.0
+    },
+    {
+     "description": "HC Troponin",
+     "setting": "inpatient",
+     "gross": 363.0
+    },
+    {
+     "description": "HC Troponin",
+     "setting": "inpatient",
+     "gross": 363.0
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "HC Lipase Blood",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 242.0,
+   "discounted_cash": 242.0,
+   "negotiated_min": 8.72,
+   "negotiated_max": 242.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.72,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 8.72,
+     "methodology": "fee schedule",
+     "median": 8.89
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Lipase Blood",
+     "setting": "outpatient",
+     "gross": 242.0
+    },
+    {
+     "description": "HC Lipase Blood",
+     "setting": "inpatient",
+     "gross": 242.0
+    },
+    {
+     "description": "HC Lipase Blood",
+     "setting": "inpatient",
+     "gross": 242.0
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "HC B-Type Natriuretic Peptide",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 209.0,
+   "discounted_cash": 209.0,
+   "negotiated_min": 43.25,
+   "negotiated_max": 209.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 43.25,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 43.25,
+     "methodology": "fee schedule",
+     "median": 30.15
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC B-Type Natriuretic Peptide",
+     "setting": "outpatient",
+     "gross": 209.0
+    },
+    {
+     "description": "HC B-Type Natriuretic Peptide",
+     "setting": "inpatient",
+     "gross": 209.0
+    },
+    {
+     "description": "HC B-Type Natriuretic Peptide",
+     "setting": "inpatient",
+     "gross": 209.0
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "HC Creatine Kinase Total",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 209.0,
+   "discounted_cash": 209.0,
+   "negotiated_min": 8.31,
+   "negotiated_max": 209.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.31,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 8.31,
+     "methodology": "fee schedule",
+     "median": 8.38
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Creatine Kinase Total",
+     "setting": "outpatient",
+     "gross": 209.0
+    },
+    {
+     "description": "HC Creatine Kinase Total",
+     "setting": "inpatient",
+     "gross": 209.0
+    },
+    {
+     "description": "HC Creatine Kinase Total",
+     "setting": "inpatient",
+     "gross": 209.0
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "HC Thyroid Stimulating Hormone",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 515.0,
+   "discounted_cash": 515.0,
+   "negotiated_min": 21.17,
+   "negotiated_max": 515.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 21.17,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 21.17,
+     "methodology": "fee schedule",
+     "median": 22.58
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Thyroid Stimulating Hormone",
+     "setting": "outpatient",
+     "gross": 515.0
+    },
+    {
+     "description": "HC Thyroid Stimulating Hormone",
+     "setting": "inpatient",
+     "gross": 515.0
+    },
+    {
+     "description": "HC Thyroid Stimulating Hormone",
+     "setting": "inpatient",
+     "gross": 515.0
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HC Hemogobin A1c (Glycated Hgb)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 289.0,
+   "discounted_cash": 289.0,
+   "negotiated_min": 12.25,
+   "negotiated_max": 289.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.25,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 12.25,
+     "methodology": "fee schedule",
+     "median": 12.78
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "HC Hemogobin A1c (Glycated Hgb)",
+     "setting": "outpatient",
+     "gross": 289.0
+    },
+    {
+     "description": "HC Hemoglobin A1c Sendout Lab #24",
+     "setting": "outpatient",
+     "gross": 10.0
+    },
+    {
+     "description": "HC Hemoglobin A1c Sendout Lab #24",
+     "setting": "outpatient",
+     "gross": 10.0
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "HC Urinalysis Micro. (Automated)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 149.0,
+   "discounted_cash": 149.0,
+   "negotiated_min": 3.97,
+   "negotiated_max": 149.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.97,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 3.97,
+     "methodology": "fee schedule",
+     "median": 4.37
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Urinalysis Micro. (Automated)",
+     "setting": "outpatient",
+     "gross": 149.0
+    },
+    {
+     "description": "HC Urinalysis Micro. (Automated)",
+     "setting": "inpatient",
+     "gross": 149.0
+    },
+    {
+     "description": "HC Urinalysis Micro. (Automated)",
+     "setting": "inpatient",
+     "gross": 149.0
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "HC Ua-Dipstick W/O Micro - Automated",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 130.0,
+   "discounted_cash": 130.0,
+   "negotiated_min": 2.81,
+   "negotiated_max": 130.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.81,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 2.81,
+     "methodology": "fee schedule",
+     "median": 2.83
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Ua-Dipstick W/O Micro - Automated",
+     "setting": "outpatient",
+     "gross": 130.0
+    },
+    {
+     "description": "HC Ua-Dipstick W/O Micro - Automated",
+     "setting": "inpatient",
+     "gross": 130.0
+    },
+    {
+     "description": "HC Ua-Dipstick W/O Micro - Automated",
+     "setting": "inpatient",
+     "gross": 130.0
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "HC Urine Pregnancy Test",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 452.0,
+   "discounted_cash": 452.0,
+   "negotiated_min": 9.27,
+   "negotiated_max": 452.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.27,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 9.27,
+     "methodology": "fee schedule",
+     "median": 5.14
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "HC Urine Pregnancy Test",
+     "setting": "outpatient",
+     "gross": 452.0
+    },
+    {
+     "description": "HC POCT Urine Pregnancy Test",
+     "setting": "outpatient",
+     "gross": 76.0
+    },
+    {
+     "description": "HC POCT Urine Pregnancy Test",
+     "setting": "outpatient",
+     "gross": 76.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "HC Cult. Urine Col. CT.",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 126.0,
+   "discounted_cash": 126.0,
+   "negotiated_min": 8.1,
+   "negotiated_max": 126.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.1,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 8.1,
+     "methodology": "fee schedule",
+     "median": 7.6
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Cult. Urine Col. CT.",
+     "setting": "outpatient",
+     "gross": 126.0
+    },
+    {
+     "description": "HC Cult. Urine Col. CT.",
+     "setting": "inpatient",
+     "gross": 126.0
+    },
+    {
+     "description": "HC Cult. Urine Col. CT.",
+     "setting": "inpatient",
+     "gross": 126.0
+    }
+   ]
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "HC Cult.BloodAer & Ana",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 406.0,
+   "discounted_cash": 406.0,
+   "negotiated_min": 12.88,
+   "negotiated_max": 406.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.88,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 12.88,
+     "methodology": "fee schedule",
+     "median": 13.64
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Cult.BloodAer & Ana",
+     "setting": "outpatient",
+     "gross": 406.0
+    },
+    {
+     "description": "HC Cult.BloodAer & Ana",
+     "setting": "inpatient",
+     "gross": 406.0
+    },
+    {
+     "description": "HC Cult.BloodAer & Ana",
+     "setting": "inpatient",
+     "gross": 406.0
+    }
+   ]
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "HC 2019 Ncov Rt Pcr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 225.0,
+   "discounted_cash": 225.0,
+   "negotiated_min": 225.0,
+   "negotiated_max": 225.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 73.6,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Sars-Cov-2 Amplified Probe Technique",
+     "setting": "outpatient",
+     "gross": 225.0
+    },
+    {
+     "description": "HC Sars-Cov-2 Amplified Probe Technique",
+     "setting": "outpatient",
+     "gross": 225.0
+    },
+    {
+     "description": "HC POCT Sars-Cov-2 Amplified Probe Technique (Cue)",
+     "setting": "outpatient",
+     "gross": 145.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "HC IV Hydration Init to 1hr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 449.0,
+   "discounted_cash": 449.0,
+   "negotiated_min": 7.36,
+   "negotiated_max": 449.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.36,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 7.36,
+     "methodology": "fee schedule",
+     "median": 51.3
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "HC IV Hydration Admin 1st Hour",
+     "setting": "outpatient",
+     "gross": 449.0
+    },
+    {
+     "description": "HC IV Hydration Init to 1hr",
+     "setting": "outpatient",
+     "gross": 449.0
+    },
+    {
+     "description": "HC IV Hydration Init to 1hr",
+     "setting": "outpatient",
+     "gross": 449.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "HC IV Hydration Ea Add Hr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 294.0,
+   "discounted_cash": 294.0,
+   "negotiated_min": 2.09,
+   "negotiated_max": 294.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.09,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 2.09,
+     "methodology": "fee schedule",
+     "median": 14.6
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "HC IV Hydrat Admin Ea Addl Hour",
+     "setting": "outpatient",
+     "gross": 294.0
+    },
+    {
+     "description": "HC IV Hydration Ea Add Hr",
+     "setting": "outpatient",
+     "gross": 294.0
+    },
+    {
+     "description": "HC IV Hydration Ea Add Hr",
+     "setting": "outpatient",
+     "gross": 294.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "HC IV Infus (Tx-Prophy-Dx) to 1hr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 563.0,
+   "discounted_cash": 563.0,
+   "negotiated_min": 89.79,
+   "negotiated_max": 563.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 89.79,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 89.79,
+     "methodology": "fee schedule",
+     "median": 62.6
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "14 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 14,
+   "variants": [
+    {
+     "description": "HC Plate Inhib IV Inf Init<=1 Hr",
+     "setting": "outpatient",
+     "gross": 563.0
+    },
+    {
+     "description": "HC IV Therapeutic Admin 1st Hour",
+     "setting": "outpatient",
+     "gross": 563.0
+    },
+    {
+     "description": "HC IV Infus (Tx-Prophy-Dx) to 1hr",
+     "setting": "outpatient",
+     "gross": 563.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "HC IV Infusion Ea Add Hr",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 294.0,
+   "discounted_cash": 294.0,
+   "negotiated_min": 27.64,
+   "negotiated_max": 294.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 27.64,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 27.64,
+     "methodology": "fee schedule",
+     "median": 19.27
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "HC IV Therap Admin Ea Addl Hour",
+     "setting": "outpatient",
+     "gross": 294.0
+    },
+    {
+     "description": "HC IV Infusion Ea Add Hr",
+     "setting": "outpatient",
+     "gross": 294.0
+    },
+    {
+     "description": "HC IV Infusion Ea Add Hr",
+     "setting": "outpatient",
+     "gross": 294.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "HC Ther/Proph/Diag Inj Sc/Im",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 252.0,
+   "discounted_cash": 252.0,
+   "negotiated_min": 26.9,
+   "negotiated_max": 252.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 26.9,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 26.9,
+     "methodology": "fee schedule",
+     "median": 18.75
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "HC Ther/Proph/Diag Inj Sc/Im",
+     "setting": "outpatient",
+     "gross": 252.0
+    },
+    {
+     "description": "HC Ther/Proph/Diag Inj Sc/Im",
+     "setting": "outpatient",
+     "gross": 252.0
+    },
+    {
+     "description": "HC Ther/Proph/Diag Inj Sc/Im",
+     "setting": "outpatient",
+     "gross": 252.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "HC Ivpush Single or Initial Drug",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 419.0,
+   "discounted_cash": 419.0,
+   "negotiated_min": 71.46,
+   "negotiated_max": 419.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 71.46,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 71.46,
+     "methodology": "fee schedule",
+     "median": 49.82
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "14 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 14,
+   "variants": [
+    {
+     "description": "HC IV Push Single or Initial Drug",
+     "setting": "outpatient",
+     "gross": 419.0
+    },
+    {
+     "description": "HC Ivpush Single or Initial Drug",
+     "setting": "outpatient",
+     "gross": 419.0
+    },
+    {
+     "description": "HC IV Push (Infusion <= 15 Min)",
+     "setting": "outpatient",
+     "gross": 419.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "HC Ivpush Ea Add Seqtl New Drug",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 218.0,
+   "discounted_cash": 218.0,
+   "negotiated_min": 30.54,
+   "negotiated_max": 218.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 30.54,
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 30.54,
+     "methodology": "fee schedule",
+     "median": 21.29
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "14 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 14,
+   "variants": [
+    {
+     "description": "HC IV Push Ea Addl New Drug",
+     "setting": "outpatient",
+     "gross": 218.0
+    },
+    {
+     "description": "HC Ivpush Ea Add Seqtl New Drug",
+     "setting": "outpatient",
+     "gross": 218.0
+    },
+    {
+     "description": "HC IV Push and Drug Infusion Additoinal",
+     "setting": "outpatient",
+     "gross": 218.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "HC Suturing Simple < 2.5cm",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 892.0,
+   "discounted_cash": 892.0,
+   "negotiated_min": 2.7,
+   "negotiated_max": 892.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.7,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 2.7,
+     "methodology": "fee schedule",
+     "median": 100.39
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Suturing Simple < 2.5cm",
+     "setting": "outpatient",
+     "gross": 141.0
+    },
+    {
+     "description": "HC Suturing Simple < 2.5cm",
+     "setting": "outpatient",
+     "gross": 892.0
+    },
+    {
+     "description": "HC Suturing Simple < 2.5cm",
+     "setting": "outpatient",
+     "gross": 141.0
+    }
+   ]
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "LOCAL",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "HC Absess I&D Simple",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 353.0,
+   "discounted_cash": 353.0,
+   "negotiated_min": 1.64,
+   "negotiated_max": 353.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.64,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 1.64,
+     "methodology": "fee schedule",
+     "median": 15.0
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Absess I&D Simple",
+     "setting": "outpatient",
+     "gross": 353.0
+    },
+    {
+     "description": "HC Absess I&D Simple",
+     "setting": "outpatient",
+     "gross": 483.0
+    },
+    {
+     "description": "HC Absess I&D Simple",
+     "setting": "outpatient",
+     "gross": 483.0
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "HC Apply Short Arm Splint; Static Right",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1336.0,
+   "discounted_cash": 1336.0,
+   "negotiated_min": 2.04,
+   "negotiated_max": 1336.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.04,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 2.04,
+     "methodology": "fee schedule",
+     "median": 5.0
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "18 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 18,
+   "variants": [
+    {
+     "description": "HC Apply Short Arm Splint; Static Left",
+     "setting": "outpatient",
+     "gross": 137.0
+    },
+    {
+     "description": "HC Apply Short Arm Splint; Static Right",
+     "setting": "outpatient",
+     "gross": 1336.0
+    },
+    {
+     "description": "HC Apply Short Arm Splint; Static Bilateral",
+     "setting": "outpatient",
+     "gross": 1827.0
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "HC Inhalation Therapy",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 792.0,
+   "discounted_cash": 792.0,
+   "negotiated_min": 1.68,
+   "negotiated_max": 792.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.68,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 1.68,
+     "methodology": "fee schedule",
+     "median": 16.78
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "27 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 27,
+   "variants": [
+    {
+     "description": "HC Inhalation Therapy",
+     "setting": "outpatient",
+     "gross": 792.0
+    },
+    {
+     "description": "HC Aerosol Treatment Initial",
+     "setting": "outpatient",
+     "gross": 844.0
+    },
+    {
+     "description": "HC Aerosol Treatment Subsequent",
+     "setting": "outpatient",
+     "gross": 844.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "HC Catheter Urethra Insert",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 850.0,
+   "discounted_cash": 850.0,
+   "negotiated_min": 3.83,
+   "negotiated_max": 850.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.83,
+   "payer_rates": 2,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross (Medi-Cal plan)",
+     "payer": "ANTHEM BLUE CROSS MEDI-CAL FFS [5001]",
+     "plan": "Blue Cross Medi-Cal",
+     "dollar": 3.83,
+     "methodology": "fee schedule",
+     "median": 99.46
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC Catheter Urethra Insert",
+     "setting": "outpatient",
+     "gross": 850.0
+    },
+    {
+     "description": "HC Catheter Urethra Insert",
+     "setting": "outpatient",
+     "gross": 82.0
+    },
+    {
+     "description": "HC Catheter Urethra Insert",
+     "setting": "outpatient",
+     "gross": 82.0
+    }
+   ]
+  }
+ }
+}

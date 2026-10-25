@@ -19,7 +19,10 @@ Return JSON: {"case_number": string|null, "rep_name": string|null, "account_on_h
 "open_items": [at most 3 short phrases for what is still unresolved], "confirmed_balance": number|null (only if the rep
 stated the balance now on the account), "refund_status": string|null (a few words),
 "summary": string (one short sentence, max 25 words, naming the rep, e.g. "Diane opened case FA-20931, put the account
-on hold and will send a corrected statement within 5 business days.")}"""
+on hold and will send a corrected statement within 5 business days."),
+"asks": {"<ask id>": {"status": "got"|"refused"|"later"|"unclear", "quote": string}} (one entry per ask in ASKS ON THE
+PLAN, if given: "got" = the rep agreed or did it on the call, "refused" = the rep said no, "later" = the rep promised it
+for later, "unclear" = not settled. "quote" is the rep's exact words that show it, copied verbatim; empty if unclear)}"""
 
 STATUS_SYSTEM = """You are BillBack, an AI agent that fights hospital bills for a patient. The patient asks about their
 case. Answer in the first person ("I called..."), in at most 3 short sentences (under 70 words), using only the CASE

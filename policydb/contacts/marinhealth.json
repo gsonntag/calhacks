@@ -1,0 +1,49 @@
+{
+ "hospital_id": "marinhealth",
+ "hospital": "MarinHealth Medical Center",
+ "built_at": "2026-10-25T05:26:43+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.mymarinhealth.org/about-us/community-benefit/",
+   "artifact": "raw/marinhealth/page-f91571c54cd0.md"
+  },
+  {
+   "url": "https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/help-paying-your-bill/",
+   "artifact": "raw/marinhealth/page-94b01e5acc16.md"
+  },
+  {
+   "url": "https://www.mymarinhealth.org/documents/content-assets/patients-visitors/1115_09-Financial-Assistance-Policy.pdf",
+   "artifact": "raw/marinhealth/pdf-2fa4455a062b.txt"
+  },
+  {
+   "url": "https://www.mymarinhealth.org/documents/content-assets/patients-visitors/2024-Financial-Assistance-Program-Letter-English.pdf",
+   "artifact": "raw/marinhealth/pdf-87d3d74efe19.txt"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "billing",
+   "label": "Patient Financial Services",
+   "phone": "1-415-925-7070",
+   "dial": "+14159257070",
+   "hours": "Monday – Friday: 7:30 am – 3:00 pm",
+   "source_url": "https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/help-paying-your-bill/",
+   "artifact": "raw/marinhealth/page-94b01e5acc16.md",
+   "quote": "**Patient Financial Services** 1-415-925-7070 Email Us * **Phone Hours** Monday – Friday: 7:30 am – 3:00 pm"
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Financial Assistance Program",
+   "phone": "1-415-925-7070",
+   "dial": "+14159257070",
+   "hours": null,
+   "source_url": "https://www.mymarinhealth.org/documents/content-assets/patients-visitors/2024-Financial-Assistance-Program-Letter-English.pdf",
+   "artifact": "raw/marinhealth/pdf-87d3d74efe19.txt",
+   "quote": "FINANCIAL ASSISTANCE PROGRAM P: 1-415-925-7070 Name:"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}

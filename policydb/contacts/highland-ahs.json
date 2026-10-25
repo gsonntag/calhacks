@@ -1,0 +1,41 @@
+{
+ "hospital_id": "highland-ahs",
+ "hospital": "Highland Hospital",
+ "built_at": "2026-10-25T05:26:18+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.alamedahealthsystem.org/wp-content/uploads/2021/04/HOSPITAL-FINANCIAL-ASSISTANCE-AND-CHARITY-CARE.pdf",
+   "artifact": "raw/highland-ahs/pdf-4b7522668b85.txt"
+  },
+  {
+   "url": "http://www.alamedahealthsystem.org/wp-content/uploads/2026/08/2026-Help-Paying-Your-Bill.pdf",
+   "artifact": "raw/highland-ahs/contact-pdf-85852e4a2bc4.txt"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "billing",
+   "label": "Patient Financial Services",
+   "phone": "(510) 895-7291",
+   "dial": "+15108957291",
+   "hours": null,
+   "source_url": "http://www.alamedahealthsystem.org/wp-content/uploads/2026/08/2026-Help-Paying-Your-Bill.pdf",
+   "artifact": "raw/highland-ahs/contact-pdf-85852e4a2bc4.txt",
+   "quote": "please contact our Patient Financial Services office (510) 895-7291"
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Financial Counseling Office - Highland Hospital",
+   "phone": "(510) 437-6419",
+   "dial": "+15104376419",
+   "hours": null,
+   "source_url": "http://www.alamedahealthsystem.org/wp-content/uploads/2026/08/2026-Help-Paying-Your-Bill.pdf",
+   "artifact": "raw/highland-ahs/contact-pdf-85852e4a2bc4.txt",
+   "quote": "Highland Hospital (510) 437-6419"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}
