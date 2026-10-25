@@ -3,18 +3,18 @@
 **"Is it legal for an AI to call a hospital for someone?"**
 Yes, with the patient's OK. HIPAA lets a hospital discuss payment with someone the patient agrees to,
 and the agreement can be verbal (45 CFR 164.510(b)). So the call starts with a warm handoff: the patient
-says on the line that BillBack may discuss the account, then the agent continues and answers identity
+says on the line that Remy may discuss the account, then the agent continues and answers identity
 checks (date of birth, member ID). At scale, a signed authorization (164.508) on file replaces the handoff.
-BillBack says it's an automated assistant and that the call is transcribed at the start of every call:
+Remy says it's an automated assistant and that the call is transcribed at the start of every call:
 California requires all-party consent to recording, and it's the honest thing to do.
 
 **"What about HIPAA?"**
-This demo uses only synthetic data. BillBack acts for the patient (it's the patient's representative,
+This demo uses only synthetic data. Remy acts for the patient (it's the patient's representative,
 not a vendor to the hospital), stores documents encrypted, and keeps the minimum necessary: the bill, the
 EOB, and the payment records it needs. Details and sources: `docs/feasibility.md`.
 
 **"Could a real bank actually give you this data?"**
-Yes. BillBack only needs transactions (payee, amount, date) and payroll deposits, which consumer-consent
+Yes. Remy only needs transactions (payee, amount, date) and payroll deposits, which consumer-consent
 aggregators (Plaid, MX, Finicity) provide today with the user's permission, including income products.
 Nessie stands in for that in the demo. We don't depend on the CFPB's 1033 open-banking rule (its
 compliance dates are stayed while it's rewritten), and statement upload is the fallback.
@@ -40,7 +40,7 @@ Nonprofit hospitals must have and publish a financial-assistance policy to keep 
 
 **"How is this different from existing companies?"**
 Advocates (human) charge a share of savings or hourly fees; AI bill tools mostly *explain* bills.
-BillBack does the whole job: proves what you owe from your actual bank records, finds the discount the
+Remy does the whole job: proves what you owe from your actual bank records, finds the discount the
 hospital's own policy requires, and makes the phone call.
 
 **"How do you make money?"**
@@ -49,14 +49,14 @@ and benefits platforms offering it as a perk, and hospitals' own patient-financi
 to clear charity-care backlogs.
 
 **Sponsor questions**
-- *Cartesia:* our own voice pipeline (`billback/voice/`, `docs/voice.md`): Twilio Media Streams audio goes
+- *Cartesia:* our own voice pipeline (`remy/voice/`, `docs/voice.md`): Twilio Media Streams audio goes
   to Cartesia Ink streaming STT, Claude decides what to say, Sonic TTS speaks it back in μ-law, with
   barge-in. Voice/accent picker; a pronunciation normalizer reads money, claim numbers, CPT codes and drug
   names correctly. Follow-up calls remember the last call.
 - *Capital One Nessie:* the patient's account is the source of truth: payroll deposits for income, the
   $500 payment the hospital missed, the double charge, and a plan written back as a recurring bill when
   something is still owed.
-- *Bright Data:* a real policy database (`billback/policies/`, `docs/brightdata.md`, evidence in
+- *Bright Data:* a real policy database (`remy/policies/`, `docs/brightdata.md`, evidence in
   `policydb/`): SERP API discovers each hospital's policy, Web Unlocker fetches pages and policy PDFs,
   extracted rules must quote text that the code finds in the source, versions are hashed and re-checked.
   Same bill at 4 SF hospitals gives different answers.

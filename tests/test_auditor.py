@@ -5,11 +5,11 @@ import json
 
 import pytest
 
-from billback import billcheck, config, finance
-from billback.agents import auditor, policy
-from billback.events import bus
-from billback.integrations.nessie import LocalMirror
-from billback.orchestrator import demo_case
+from remy import billcheck, config, finance
+from remy.agents import auditor, policy
+from remy.events import bus
+from remy.integrations.nessie import LocalMirror
+from remy.orchestrator import demo_case
 
 CPMC = {"provider": "California Pacific Medical Center", "account_number": "CPMC-48213977",
         "service_date": "2026-08-02", "statement_date": "2026-10-10", "total_charges": 8700.0, "amount_due": 8700.0}

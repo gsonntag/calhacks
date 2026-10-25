@@ -1,4 +1,4 @@
-# Cal Hacks 13.0 (Oct 23–25, 2026): rules, prizes, and BillBack gaps
+# Cal Hacks 13.0 (Oct 23–25, 2026): rules, prizes, and Remy gaps
 
 Researched 2026-10-25 around 00:30 PDT. Only web pages were read; no paid APIs were called.
 Raw pages saved next to this file: `cal-hacks-13-0.html`, `c13*.txt`, `hive_*.json`, `docs/*.txt`.
@@ -78,7 +78,7 @@ list: "impact, functionality, technical complexity, and creativity."
 4. **Creativity**: "original thinking… unexpected combinations of ideas or technologies. Clearly show what makes your project stand out."
 5. **Technical Complexity**: "command of the frameworks and infrastructure… sound architectural choices and engineering depth."
 
-## 3. Prizes BillBack can enter
+## 3. Prizes Remy can enter
 
 Prize text comes from https://cal-hacks-13-0.devpost.com/ (prize list) and the Hive prize data at
 https://hive.hackberkeley.org/api/live/prizes, which feeds https://hive.hackberkeley.org/prizes and holds
@@ -102,7 +102,7 @@ the full criteria.
 
 | Prize | Why it's a stretch |
 |---|---|
-| **[Hyphenate] Autonomous Systems for Finance** ($8k/$5k/$3k, top 5 get interviews) | The brief is "Pick a company and one corner of its finance team… build the autonomous system you'd hire to fill them." BillBack works for the *patient*, not a company's finance team. Its themes do match: "sources that disagree" (bank, bill and EOB), approvals, an audit trail, limited access. To enter, frame it as the "patient financial advocate" or "billing-dispute" seat. Hyphenate wants: a video that **opens with the moment**, a live demo (they "may ask… a scenario of our own"), "one line on the seats your system would fill", and "proof it works: what's real, what's simulated, and how you know" (a test set, planted errors with an answer key, or a benchmark). Source: https://docs.google.com/document/d/1u4iN8R97ILY3kfHTPKC82zdutHrGx4ze5eCAP-J92w4 |
+| **[Hyphenate] Autonomous Systems for Finance** ($8k/$5k/$3k, top 5 get interviews) | The brief is "Pick a company and one corner of its finance team… build the autonomous system you'd hire to fill them." Remy works for the *patient*, not a company's finance team. Its themes do match: "sources that disagree" (bank, bill and EOB), approvals, an audit trail, limited access. To enter, frame it as the "patient financial advocate" or "billing-dispute" seat. Hyphenate wants: a video that **opens with the moment**, a live demo (they "may ask… a scenario of our own"), "one line on the seats your system would fill", and "proof it works: what's real, what's simulated, and how you know" (a test set, planted errors with an answer key, or a benchmark). Source: https://docs.google.com/document/d/1u4iN8R97ILY3kfHTPKC82zdutHrGx4ze5eCAP-J92w4 |
 | **[Moss] Best Use of Moss** | It looks for "Voice AI" agents but requires Moss. We don't use it. |
 | **[Meta] Bringing People Closer Together with AI** | Judged on "human connection". A poor fit. |
 | **[CRS] Credit API, [Convex], [Spacetime], [Fetch.ai], [Apify], [Factory], [Atlassian] (Forge app required), [Visa] (shopping), [Elastic], [Bitdeer], [Mana], MLH tech prizes** | Each needs its sponsor's technology, which we don't use. Don't opt in, because judges penalize prizes entered just for coverage. |

@@ -25,10 +25,10 @@ sys.path.insert(0, str(ROOT))
 import httpx  # noqa: E402
 import uvicorn  # noqa: E402
 
-from billback import orchestrator  # noqa: E402
-from billback.agents import caller  # noqa: E402
-from billback.app import app  # noqa: E402
-from billback.voice import calls  # noqa: E402
+from remy import orchestrator  # noqa: E402
+from remy.agents import caller  # noqa: E402
+from remy.app import app  # noqa: E402
+from remy.voice import calls  # noqa: E402
 
 PORT = 8023
 _spec = importlib.util.spec_from_file_location("sim", ROOT / "scripts" / "sim_twilio_stream.py")
@@ -84,7 +84,7 @@ async def main() -> None:
         for said in lines:
             r = await run(c, session.id, said)
             first_audio.append(r["audio_ms"])
-            print(f"rep: {said}\n  billback: {r.get('say')}\n  first text {r['text_ms']} ms, first audio "
+            print(f"rep: {said}\n  remy: {r.get('say')}\n  first text {r['text_ms']} ms, first audio "
                   f"{r['audio_ms']} ms ({r['bytes']} audio bytes)")
             if r.get("ended"):
                 break

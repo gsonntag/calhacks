@@ -6,9 +6,9 @@ from datetime import date
 import httpx
 import pytest
 
-from billback import app as app_mod
-from billback import config, orchestrator
-from billback.events import bus
+from remy import app as app_mod
+from remy import config, orchestrator
+from remy.events import bus
 
 # Kinds web/case.html renders from the /ws/cases/{id} stream.
 CASE_HTML_KINDS = {"case_started", "agent_started", "agent_finished", "step", "review_done", "balance",
@@ -104,7 +104,7 @@ async def test_offline_end_to_end(client):
 
 
 async def _offline_call(c, scenario: str) -> tuple[dict, list[str], dict]:
-    """Runs a demo case's offline call; returns (call brief, what BillBack said, the call's outcome)."""
+    """Runs a demo case's offline call; returns (call brief, what Remy said, the call's outcome)."""
     case_id = (await c.post(f"/api/cases?scenario={scenario}")).json()["case_id"]
     await _approve(c, case_id, "caller")
     ready = await _wait_for(case_id, lambda e: e["kind"] == "call_ready")
@@ -112,7 +112,7 @@ async def _offline_call(c, scenario: str) -> tuple[dict, list[str], dict]:
         r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": "Your case number is 58213."})).json()
         if r["ended"]:
             break
-    said = [e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "billback"]
+    said = [e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "remy"]
     return orchestrator.cases[case_id]["result"]["brief"], said, r["outcome"]
 
 
@@ -185,12 +185,12 @@ async def test_placeholder_tool_token_is_rejected(client, monkeypatch):
     ("Your case number is 58213.", "58213"), ("case number BB 4471", "BB4471"),
     ("it's fa-2291", "FA-2291"), ("FA2291", "FA2291"), ("no number, sorry", "no number, sorry")])
 def test_scripted_case_number(said, expected):
-    from billback.agents.caller import _case_number
+    from remy.agents.caller import _case_number
     assert _case_number(said) == expected
 
 
 async def _run_policy(case):
-    from billback.agents import policy
+    from remy.agents import policy
     loop = asyncio.get_running_loop()
     txns, owed = loop.create_future(), loop.create_future()
     txns.set_result([{"id": f"t{i}", "merchant": "", **t} for i, t in enumerate(case["transactions"])])
@@ -203,8 +203,8 @@ async def _run_policy(case):
     ValueError("no JSON in model output"),
 ])
 async def test_bad_policy_extraction_never_crashes(monkeypatch, reply):
-    from billback import llm
-    from billback.agents import policy
+    from remy import llm
+    from remy.agents import policy
     async def fake_json_out(*a, **k):
         if isinstance(reply, Exception):
             raise reply
@@ -240,8 +240,8 @@ async def test_policy_comes_from_the_policy_db_offline():
 
 
 async def test_caller_llm_error_keeps_history_valid(monkeypatch):
-    from billback import llm
-    from billback.agents.caller import CallSession
+    from remy import llm
+    from remy.agents.caller import CallSession
     async def boom(**k):
         raise RuntimeError("overloaded")
     monkeypatch.setattr(llm, "available", lambda: True)

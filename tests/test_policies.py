@@ -6,11 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from billback import config
-from billback.integrations import brightdata
-from billback.integrations.brightdata import BDResponse, BrightDataError
-from billback.policies import compare, discover, extract, fetch, monitor, pipeline, registry
-from billback.policies.store import DEFAULT_DIR, PolicyStore
+from remy import config
+from remy.integrations import brightdata
+from remy.integrations.brightdata import BDResponse, BrightDataError
+from remy.policies import compare, discover, extract, fetch, monitor, pipeline, registry
+from remy.policies.store import DEFAULT_DIR, PolicyStore
 
 DB = PolicyStore(DEFAULT_DIR)
 SEED = {h.id: h for h in registry.SEED}

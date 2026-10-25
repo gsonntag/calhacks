@@ -8,11 +8,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from billback import llm
-from billback.agents import caller
-from billback.events import bus
-from billback.voice import calls, desk, media, pronounce, voices
-from billback.voice.cartesia_ws import TTS
+from remy import llm
+from remy.agents import caller
+from remy.events import bus
+from remy.voice import calls, desk, media, pronounce, voices
+from remy.voice.cartesia_ws import TTS
 from tests.test_voice import FakeSTT, FakeTTS, FakeTwilio, fakes  # noqa: F401  (fakes is a fixture)
 
 # ---------------------------------------------------------------- sentence chunking
@@ -114,7 +114,7 @@ async def test_reply_yields_first_sentence_before_claude_finishes(claude):
     assert rest == ["Could you apply the adjustment?"]
     assert s.last_say == "Thank you, Diane. Could you apply the adjustment?"
     tr = [(e["speaker"], e["text"]) for e in bus.history("c1") if e["kind"] == "transcript"]
-    assert tr == [("rep", "Hi, this is Diane."), ("billback", s.last_say)]  # same events the UI had
+    assert tr == [("rep", "Hi, this is Diane."), ("remy", s.last_say)]  # same events the UI had
     assert claude.created[0].kwargs["system"][0]["cache_control"] == {"type": "ephemeral"}  # prompt caching
 
 
@@ -370,14 +370,14 @@ async def test_desk_events_stream_text_then_audio_then_done(claude, monkeypatch)
                 yield t.encode()  # "audio" = the sentence bytes
 
     monkeypatch.setattr(desk, "_tts_for", lambda v: Sonic())
-    claude.script = [respond("Hello Diane, this is BillBack. I'm an automated assistant.")]
+    claude.script = [respond("Hello Diane, this is Remy. I'm an automated assistant.")]
     s = caller.CallSession("c10", {"goals": [], "voice_id": "priya"})
     lines = [json.loads(b) async for b in desk.events(s, "Billing, this is Diane.")]
     kinds = [e["type"] for e in lines]
     assert kinds[0] == "text" and kinds[-1] == "done" and "audio" in kinds
     assert [base64.b64decode(e["data"]).decode() for e in lines if e["type"] == "audio"] == [
-        "Hello Diane, this is BillBack. ", "I'm an automated assistant."]
-    assert lines[-1] == {"type": "done", "say": "Hello Diane, this is BillBack. I'm an automated assistant.",
+        "Hello Diane, this is Remy. ", "I'm an automated assistant."]
+    assert lines[-1] == {"type": "done", "say": "Hello Diane, this is Remy. I'm an automated assistant.",
                          "ended": False, "outcome": {}, "audio": True, "interrupted": False}
 
 
@@ -385,7 +385,7 @@ async def test_desk_route_without_cartesia_streams_text_only(monkeypatch):
     import httpx
     from fastapi import FastAPI
 
-    from billback.voice.routes import router
+    from remy.voice.routes import router
     app = FastAPI()
     app.include_router(router)
     s = caller.CallSession("c11", {"goals": [], "call_type": "first"})

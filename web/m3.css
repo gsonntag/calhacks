@@ -1,4 +1,4 @@
-/* BillBack — Material 3 design system (shared by every page).
+/* Remy — Material 3 design system (shared by every page).
    Color roles from a green seed (Material Theme Builder scheme), M3 type scale, shape, elevation,
    state layers and motion. Components are plain CSS classes: .m3-card, .m3-btn, .m3-chip, .m3-list, ...
    Light by default; dark via prefers-color-scheme or <html data-theme="dark">. */

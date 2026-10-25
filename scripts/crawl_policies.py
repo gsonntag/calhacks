@@ -16,10 +16,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import llm, prices  # noqa: E402
-from billback.integrations import brightdata  # noqa: E402
-from billback.policies import compare, monitor, pipeline, registry  # noqa: E402
-from billback.policies.store import PolicyStore  # noqa: E402
+from remy import llm, prices  # noqa: E402
+from remy.integrations import brightdata  # noqa: E402
+from remy.policies import compare, monitor, pipeline, registry  # noqa: E402
+from remy.policies.store import PolicyStore  # noqa: E402
 
 
 def printer(kind: str, **e) -> None:

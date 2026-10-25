@@ -1,4 +1,4 @@
-# BillBack plan (from 2026-10-25)
+# Remy plan (from 2026-10-25)
 
 Working branch: `master` on GitHub `gsonntag/calhacks` (the only remote). Gavin said so on 2026-10-25:
 `after-david-takeover` was squashed onto master (d2a5b45), and fixes now go straight to master. The 6 PM
@@ -14,12 +14,12 @@ real phone call" · Nessie "likely top 3" · Bright Data "strong contender, mode
 disqualification" (Live-ness 4/10). Gavin's picks are marked ✔. Not started.
 
 ### P0: before anyone sees it (bugs and disqualification risks)
-1. ✔ **Login on approve and reset.** `POST /api/approvals/{id}` and `POST /api/reset` (`billback/app.py:421`,
+1. ✔ **Login on approve and reset.** `POST /api/approvals/{id}` and `POST /api/reset` (`remy/app.py:421`,
    `:567`) are open to anyone. Through a public tunnel, a stranger could approve a call that rings a real
    phone. Add a shared secret.
 2. ✔ **No false win.** When billing only puts the account on hold, the case still shows the target ($600) as
-   the balance (`billback/orchestrator.py:455`). Show the real balance until the reduction is confirmed.
-3. ✔ **A patient missing from Nessie stops the whole case** (`billback/integrations/nessie.py:167`). Fall
+   the balance (`remy/orchestrator.py:455`). Show the real balance until the reduction is confirmed.
+3. ✔ **A patient missing from Nessie stops the whole case** (`remy/integrations/nessie.py:167`). Fall
    back to the sample data, and say so on the case page.
 4. **The app can't run on sample policies on stage.** Refuse to start without working keys, so
    `SAMPLE_TIERS` can't appear. The Bright Data track's "mocked or hardcoded data" rule could disqualify us.
@@ -47,7 +47,7 @@ disqualification" (Live-ness 4/10). Gavin's picks are marked ✔. Not started.
 ### P2: correctness
 10. **Income:** the poverty-line test uses gross pay but the income is take-home pay, so patients look more
     eligible than they are. Gig and Venmo income are ignored.
-11. **Interrupted replies:** when billing interrupts, BillBack remembers its whole reply, as if billing
+11. **Interrupted replies:** when billing interrupts, Remy remembers its whole reply, as if billing
     heard it. Use Sonic word timestamps to cut it at the word where it was interrupted.
 12. **Hospitals stored as "no tiers" are never re-crawled**, so Saint Francis stays wrong.
 13. **Read IDs back for confirmation.** A sim run accepted "FA 20931" misheard as "FA209-31".
@@ -67,7 +67,7 @@ disqualification" (Live-ness 4/10). Gavin's picks are marked ✔. Not started.
 - **Next to build:** item 5 below (Bright Data agent: real prices), then step 4's live call screen.
 - **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/`. Uploading
   needs a server with API keys. Only Rosa and Marcus have Nessie bank accounts; Dana, Amara, Lena don't yet.
-- **Contacts:** `billback/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
+- **Contacts:** `remy/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
   we'll call" still takes the number from the bill; it can use `contacts.for_case(case)`.
 
 ## Rule: paid API credits
@@ -106,7 +106,7 @@ Status (2026-10-25, 06:50): 1–4 built · 5 not built · 6 built (step 3). Outs
 
 1. **Fold New case into Cases.** *(Built.)* Cases is home, with a "+ New case" button that opens the chat intake. With
    no cases yet, go straight to the chat. Top bar: Cases · Hospitals · Under the hood.
-2. **Shared format for the two app agents.** *(Built: `billback/agents/report.py`.)* One shape for what each agent reports: steps (label, status,
+2. **Shared format for the two app agents.** *(Built: `remy/agents/report.py`.)* One shape for what each agent reports: steps (label, status,
    result) and findings (what was found, money saved, proof, source). Both agents and the UI use it.
 3. **Generic Review screen.** *(Built, commit 6563e09.)* The case page shows a live panel for each app agent that reports in, not
    hard-coded Auditor/Policy columns. Findings feed the "ranked by money saved" list.
@@ -122,7 +122,7 @@ Status (2026-10-25, 06:50): 1–4 built · 5 not built · 6 built (step 3). Outs
 Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
 
 6. **Step 3: the plan (Decide agent) and in-place Ask / "This is wrong"** (see below). *(Built 2026-10-25:
-   `billback/agents/decide.py`, data format in `docs/plan-format.md`; gaps listed under "Step 3: what's
+   `remy/agents/decide.py`, data format in `docs/plan-format.md`; gaps listed under "Step 3: what's
    built".)*
 
 ## The flow (settled 2026-10-25)
@@ -146,7 +146,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   labels on answers (for judges). Asking never changes anything.
 - Each finding has **"This is wrong"**: saved as an explicit correction on that finding (logged in the case
   history). Allowed until the call starts; a change after approval resets the approval.
-- Reuse the existing "Ask BillBack" endpoint (`/api/cases/{id}/ask`) scoped to one agent's evidence.
+- Reuse the existing "Ask Remy" endpoint (`/api/cases/{id}/ask`) scoped to one agent's evidence.
 
 ### What reruns (no change-tracking needed)
 - **Fetched data** (Nessie transactions, Bright Data policy/prices) is slow and costs money: fetched once and
@@ -181,7 +181,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   points at the exact data.
 - **Questions** are answered in the chat only. **Change requests** ("refund first", "don't mention a plan",
   "I can do $150/mo", "ask for a supervisor if they say no") produce a new version of the plan.
-- The decision is **rules-based code** (`billback/agents/decide.py`, using `finance.settle` and
+- The decision is **rules-based code** (`remy/agents/decide.py`, using `finance.settle` and
   `finance.payment_plan`; it replaced `orchestrator.call_asks`); Claude writes the explanation and turns chat
   requests into plan changes, which the rules check.
 - Guardrails: the chat changes strategy, never facts; numbers always come from the code; every ask must be
@@ -196,7 +196,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 - Works differently from the text above:
   - "A change after approval resets the approval": built, but "Call now" starts the call at once, so there's
     almost never a gap to correct in.
-  - The fallback in "How I decided" is text only. On the call, BillBack uses its built-in rule (restate the
+  - The fallback in "How I decided" is text only. On the call, Remy uses its built-in rule (restate the
     evidence once, then ask for a supervisor or a written review). A "supervisor" ask goes on the plan only
     when you ask for it in the chat.
   - The committed replays were recorded before step 3, so they show only the old ask list. Re-record after
@@ -218,11 +218,11 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   empty insurance statement.
 
 ### Step 4: the call (fully autonomous) *(design only, not built)*
-- No mid-call steering (no nudge box). When billing refuses an ask, BillBack follows the approved plan's
+- No mid-call steering (no nudge box). When billing refuses an ask, Remy follows the approved plan's
   fallback by itself; it doesn't pause to ask.
 - On screen: the live transcript, the plan's asks as a checklist that ticks off live as the rep agrees
   ("✓ Insurance applied, rep agreed"), and a running new balance.
-- Voice: Cartesia stock voices as today (no voice cloning: BillBack always says it's an automated assistant
+- Voice: Cartesia stock voices as today (no voice cloning: Remy always says it's an automated assistant
   calling on the patient's behalf).
 - Later: let the patient join the live call (Twilio conference) when billing insists on the patient.
 
@@ -236,7 +236,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 - A follow-up call reuses this plan with only the unfinished asks.
 
 ### Step 5: what's built (2026-10-25, offline while Cartesia has no credits)
-- **Scorecard** (`billback/agents/scorecard.py`): after every call each ask on the plan the call used gets
+- **Scorecard** (`remy/agents/scorecard.py`): after every call each ask on the plan the call used gets
   got / refused / promised later / unclear (supervisor: "not needed" when nothing was refused). Plain code
   reads what the call agent recorded and the rep's words; when Claude is on, the post-call transcript read
   (`followups.EXTRACT_SYSTEM`, now with an `asks` field) also marks each ask, but its mark only counts if its
@@ -261,14 +261,14 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 ### Call speed *(built, merged 2026-10-25, commit e1fa24f)*
 Claude's reply streams into Cartesia sentence by sentence, Claude starts on Ink's `turn.eager_end`, outcomes
 are recorded off the critical path instead of with a second Claude call, and prompts are cached. Desk mode
-streams too (`billback/voice/desk.py`). Measured live before the credits ran out: phone path 1.0–2.7 s →
+streams too (`remy/voice/desk.py`). Measured live before the credits ran out: phone path 1.0–2.7 s →
 0.44–1.1 s (10 of 11 turns under 0.8 s); desk mode median 3.0 s → 0.93 s. Details in `docs/voice.md`.
 Not done: a Chrome rehearsal of the new desk player in `web/rep.html` (needs Cartesia credits). Moss (Cal
 Hacks sponsor) was evaluated and skipped: it's fast retrieval, not LLM latency.
 
 ### Data on hand (added tonight)
 - 12 hospitals in the policy DB (8 new Bay Area); real price tables for 11 in `policydb/prices/`
-  (`billback/prices.py`). Check MarinHealth and El Camino tiers: they were read as "all patients".
+  (`remy/prices.py`). Check MarinHealth and El Camino tiers: they were read as "all patients".
 - Realistic cases from real prices with known answers: `demo/scenarios/` (`scripts/make_scenario.py`):
   rosa-real ($15,414 → $1,575), marcus-real ($4,174 → $0), dana-altabates-refund, amara-kaiser-uninsured,
   lena-johnmuir. Making rosa-real the main demo case means updating demo/case.json, PDFs, Nessie seed, tests,

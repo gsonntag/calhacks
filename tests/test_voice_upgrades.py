@@ -11,12 +11,12 @@ import httpx
 import pytest
 from fastapi import FastAPI
 
-from billback import config
-from billback.agents import caller
-from billback.events import bus
-from billback.voice import calls, desk, heard, media, pronounce, voices
-from billback.voice.cartesia_ws import PCM_24K, STT, TTS
-from billback.voice.routes import router
+from remy import config
+from remy.agents import caller
+from remy.events import bus
+from remy.voice import calls, desk, heard, media, pronounce, voices
+from remy.voice.cartesia_ws import PCM_24K, STT, TTS
+from remy.voice.routes import router
 from tests.test_latency import FakeSonicWS, claude, respond, tool_block, wait_for  # noqa: F401  (claude is a fixture)
 from tests.test_voice import FakeSTT, FakeTTS, FakeTwilio, fakes  # noqa: F401  (fakes is a fixture)
 
@@ -410,7 +410,7 @@ async def test_case_number_read_inside_the_same_turn_is_not_confirmed(claude):
 @pytest.mark.parametrize("answer,number", [("Yes, that's right.", "FA20931"), ("No, it's FA-20981.", "FA-20981")])
 async def test_scripted_call_reads_the_case_number_back(answer, number):
     from tests.test_voice import _brief
-    from billback import orchestrator
+    from remy import orchestrator
     case = orchestrator.new_case()
     s = caller.CallSession(case["id"], _brief(case))
     for line in ["Billing, this is Diane.", "Okay.", "I see it.", "Okay.", "Yes, it's on hold."]:
@@ -439,7 +439,7 @@ def _strongest(pcm: list[int], freqs) -> list[int]:
 
 @pytest.mark.parametrize("key", list("1590#*"))
 def test_dtmf_tones_decode_to_the_right_key(key):
-    from billback.voice import audio
+    from remy.voice import audio
     tone = audio.dtmf(key)
     assert len(tone) == 8000 * (120 + 100) // 1000  # 120 ms tone + 100 ms gap
     pcm = list(memoryview(audio.ulaw_to_pcm16(tone[:960])).cast("h"))
@@ -475,7 +475,7 @@ class MenuBrain:
 
 
 async def test_phone_menu_gets_keypad_tones_and_hold_messages_get_silence(fakes):
-    from billback.voice import audio
+    from remy.voice import audio
     brain = MenuBrain()
     leg = calls.register(media.Leg("m1", voices.default(), brain=brain, greet_after=None))
     tw = FakeTwilio(leg.token, [])
@@ -501,5 +501,5 @@ async def test_press_keys_turn_is_silent_and_takes_one_model_call(claude):
     out = [x async for x in s.reply("For billing, press 2. For pharmacy, press 3.")]
     assert out == [] and s.last_say == "" and len(claude.created) == 1
     assert s.take_keys() == "2" and s.take_keys() == ""
-    assert not any(e["kind"] == "transcript" and e["speaker"] == "billback" for e in bus.history("k1"))
+    assert not any(e["kind"] == "transcript" and e["speaker"] == "remy" for e in bus.history("k1"))
     assert "press_keys" in {t["name"] for t in s.reg.specs()} and "phone menu" in caller.SYSTEM

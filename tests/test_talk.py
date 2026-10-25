@@ -1,8 +1,8 @@
-"""Talk to BillBack (the mic on the Cases page, agents/talk.py). Anything with consequences takes two turns:
-BillBack says exactly what it will do, and only a yes after that runs it. Offline: the browser's transcript is
+"""Talk to Remy (the mic on the Cases page, agents/talk.py). Anything with consequences takes two turns:
+Remy says exactly what it will do, and only a yes after that runs it. Offline: the browser's transcript is
 used (no Cartesia key) and the rules answer (no Claude)."""
-from billback import orchestrator
-from billback.events import bus
+from remy import orchestrator
+from remy.events import bus
 
 from test_decide import _plan_ready
 from test_flow import _wait_for, client  # noqa: F401  (client is a fixture)
@@ -22,7 +22,7 @@ async def test_status_by_voice_changes_nothing(client):
     assert qa[-1]["voice"] is True and qa[-1]["question"] == "how's it going?"  # also in the case page's chat
 
 
-async def test_call_needs_a_yes_after_billback_says_what_it_will_do(client):
+async def test_call_needs_a_yes_after_remy_says_what_it_will_do(client):
     case_id = await _plan_ready(client)
     r = (await say(client, case_id, "go ahead and call them")).json()
     assert r["pending"] == "start_call" and "I'll call California Pacific Medical Center billing" in r["reply"]

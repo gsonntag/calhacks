@@ -3,7 +3,7 @@
 Each file is one finished call: the plan's asks and money, what the rep said, what the call agent recorded
 (`outcome`), what was read from the transcript (`info`; `info.asks` is what Claude would return), and the
 mark each ask should get (`expect`). `tests/test_scorecard.py` runs every file through
-`billback/agents/scorecard.py`.
+`remy/agents/scorecard.py`.
 
 - `all-won.json`: billing fixes everything on the call.
 - `partial.json`: insurance and payment fixed, free care refused (so the refund is too).

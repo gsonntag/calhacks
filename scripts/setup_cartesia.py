@@ -1,4 +1,4 @@
-"""One-time Cartesia setup: phone number and the BillBack caller agent.
+"""One-time Cartesia setup: phone number and the Remy caller agent.
 
     uv run python scripts/setup_cartesia.py            # polling mode: no public URL needed
     PUBLIC_BASE_URL=https://... uv run python scripts/setup_cartesia.py   # also wires webhooks + outcome tool
@@ -13,9 +13,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import config  # noqa: E402
-from billback.agents.caller import SYSTEM  # noqa: E402
-from billback.integrations.cartesia import _req  # noqa: E402
+from remy import config  # noqa: E402
+from remy.agents.caller import SYSTEM  # noqa: E402
+from remy.integrations.cartesia import _req  # noqa: E402
 
 WEBHOOK_INSTRUCTIONS = SYSTEM.replace("call record_outcome", "use the record_outcome tool")
 POLLING_INSTRUCTIONS = SYSTEM.replace(
@@ -48,7 +48,7 @@ async def main() -> None:
         agent_id = config.CARTESIA_AGENT_ID
         await _req("PATCH", f"/v1/agents/{agent_id}", {"config": agent_cfg})
     else:
-        agent = await _req("POST", "/v1/agents", {"name": "BillBack Caller", "config": agent_cfg})
+        agent = await _req("POST", "/v1/agents", {"name": "Remy Caller", "config": agent_cfg})
         agent_id = agent.get("id") or agent.get("agent_id")
     if hook_id:
         await _req("PATCH", f"/agents/{agent_id}", {"webhook_id": hook_id})
@@ -56,7 +56,7 @@ async def main() -> None:
 
     number_id = config.CARTESIA_FROM_NUMBER_ID
     if not number_id:
-        num = await _req("POST", "/agents/phone-numbers/provision", {"label": "BillBack"})
+        num = await _req("POST", "/agents/phone-numbers/provision", {"label": "Remy"})
         number_id = num.get("id") or num.get("phone_number_id")
         print("number", num)
 

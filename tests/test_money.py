@@ -4,10 +4,10 @@ from datetime import date
 
 import pytest
 
-from billback import config, finance, orchestrator
-from billback.agents import planner
-from billback.events import bus
-from billback.integrations.nessie import LocalMirror
+from remy import config, finance, orchestrator
+from remy.agents import planner
+from remy.events import bus
+from remy.integrations.nessie import LocalMirror
 
 TODAY = date(2026, 10, 24)
 

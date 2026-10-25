@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from billback import config, orchestrator
-from billback.agents import scorecard
-from billback.events import bus
+from remy import config, orchestrator
+from remy.agents import scorecard
+from remy.events import bus
 
 from test_followups import FIRST_CALL, SECOND_CALL, _approve, _desk_call, _wait_for, client  # noqa: F401
 

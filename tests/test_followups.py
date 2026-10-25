@@ -5,10 +5,10 @@ from datetime import date
 import httpx
 import pytest
 
-from billback import app as app_mod
-from billback import events, followups, orchestrator
-from billback.agents import policy
-from billback.events import bus
+from remy import app as app_mod
+from remy import events, followups, orchestrator
+from remy.agents import policy
+from remy.events import bus
 
 FIRST_CALL = ["Patient Financial Services, this is Diane, how can I help you?", "Okay, let me pull that up.",
               "I see it.", "Okay.",

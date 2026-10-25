@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BillBack — Cases</title>
+<title>Remy — Cases</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
 <!--
-  Cases (home, served at /): every saved case (data/cases/), its balance, calls, the follow-up BillBack scheduled and
-  when it's due. Polls /api/dashboard. Per-case actions: Ask BillBack (/ask), Call again (/call-again, which
+  Cases (home, served at /): every saved case (data/cases/), its balance, calls, the follow-up Remy scheduled and
+  when it's due. Polls /api/dashboard. Per-case actions: Ask Remy (/ask), Call again (/call-again, which
   waits on the patient's approval on the case page), and a demo clock (/clock) to make a follow-up come due.
   "+ New case" opens the chat intake (new.html); with no cases yet the page goes straight there.
 -->
@@ -55,7 +55,7 @@
   .head-row .case-head { flex: 1; min-width: 0; padding-right: 8px; }
   .case-toggle { flex: none; display: flex; align-items: center; gap: 12px; padding: 14px 20px 14px 12px; align-self: stretch; cursor: pointer; }
 
-  /* talk to BillBack: hold the mic, ask or tell it what to do, hear the answer */
+  /* talk to Remy: hold the mic, ask or tell it what to do, hear the answer */
   .mic { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
          background: var(--md-secondary-container); color: var(--md-on-secondary-container); touch-action: none; user-select: none; -webkit-user-select: none; }
   .mic:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 2px; }
@@ -124,7 +124,7 @@
 </head>
 <body>
 <header class="m3-top-app-bar">
-  <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
+  <a href="/" class="m3-brand" aria-label="Remy home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">Remy</span></a>
   <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/" aria-current="page">Cases</a><a class="m3-tab" href="onboarding.html">Get started</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="households.html">Households</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 
@@ -132,7 +132,7 @@
   <div class="hero">
     <div>
       <h1 class="headline-l">Your billing, handled.</h1>
-      <p class="body-l muted">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+      <p class="body-l muted">Every bill Remy is working on, what billing promised, and when it checks back.</p>
     </div>
     <a class="m3-btn filled" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
   </div>
@@ -267,7 +267,7 @@ function ensureCard(c) {
   el.className = 'm3-card case card'; el.id = 'case-' + c.id;
   el.innerHTML = `<div class="head-row">
       <button type="button" class="case-head" aria-expanded="false" aria-controls="body-${c.id}"><span class="main"></span></button>
-      <button type="button" class="mic" data-mic="${c.id}" aria-label="Talk to BillBack about this case: hold to talk, or tap to start and stop"
+      <button type="button" class="mic" data-mic="${c.id}" aria-label="Talk to Remy about this case: hold to talk, or tap to start and stop"
         title="Hold to talk (or tap to start, tap again to send)">${icon('mic')}</button>
       <span class="case-toggle" aria-hidden="true"></span>
     </div>
@@ -277,8 +277,8 @@ function ensureCard(c) {
       <div class="acts"></div>
       <div class="tl"></div>
       <div class="ask">
-        <h3 class="title-m sub-h">Ask BillBack</h3>
-        <form class="ask-row" data-ask="${c.id}"><input class="m3-input pill" name="q" type="text" placeholder="Ask about this case…" aria-label="Ask BillBack about this case" autocomplete="off"><button type="submit" class="m3-btn filled">Ask</button></form>
+        <h3 class="title-m sub-h">Ask Remy</h3>
+        <form class="ask-row" data-ask="${c.id}"><input class="m3-input pill" name="q" type="text" placeholder="Ask about this case…" aria-label="Ask Remy about this case" autocomplete="off"><button type="submit" class="m3-btn filled">Ask</button></form>
         <div class="chips"><button type="button" class="m3-chip" data-q="What's the status?">What's the status?</button><button type="button" class="m3-chip" data-q="When will you check back?">When will you check back?</button><button type="button" class="m3-chip" data-q="How much do I owe now?">How much do I owe now?</button></div>
         <div class="answer" aria-live="polite"></div>
       </div>
@@ -362,7 +362,7 @@ document.addEventListener('click', async (e) => {
     refresh();
   }
 });
-// ---------- talk to BillBack: the mic on each case (POST /api/cases/{id}/talk, agents/talk.py) ----------
+// ---------- talk to Remy: the mic on each case (POST /api/cases/{id}/talk, agents/talk.py) ----------
 // Hold to talk (or tap to start, tap again to send). The recording goes to Cartesia Ink on the server; the
 // browser's own speech recognition runs alongside and is used when Cartesia can't. The answer is spoken with
 // Cartesia Sonic (/api/tts), or the browser's voice when that fails. Actions wait for your spoken yes.
@@ -435,7 +435,7 @@ async function stopTalk() {
   if (voice.chunks.length) fd.append('audio', new Blob(voice.chunks, { type: voice.rec.mimeType || 'audio/webm' }), 'speech.webm');
   let r;
   try { r = await (await fetch(`/api/cases/${id}/talk`, { method: 'POST', body: fd })).json(); }
-  catch (e) { r = { reply: 'Sorry, I couldn’t reach BillBack.' }; }
+  catch (e) { r = { reply: 'Sorry, I couldn’t reach Remy.' }; }
   showTalk(id, { you: r.heard, reply: r.reply, pending: r.pending, by: r.heard_by });
   refresh();
   await say(id, r.reply);

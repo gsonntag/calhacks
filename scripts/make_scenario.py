@@ -8,14 +8,14 @@ bill.pdf + eob.pdf (watermarked SAMPLE).
     uv run --with reportlab python scripts/make_scenario.py all   # also the PDFs
 
 Offline: reads policydb/prices/*.json and policydb/policies.sqlite3 only, no paid API calls. Fixed seeds, so
-re-running gives the same files. Scenarios are defined in billback/scenarios.py (SPECS).
+re-running gives the same files. Scenarios are defined in remy/scenarios.py (SPECS).
 """
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import config, scenarios  # noqa: E402
+from remy import config, scenarios  # noqa: E402
 
 
 def main(argv: list[str]) -> int:

@@ -5,10 +5,10 @@ import json
 
 import pytest
 
-from billback import billcheck, config, finance, prices, scenarios
-from billback.agents import auditor, policy
-from billback.events import bus
-from billback.integrations.nessie import LocalMirror
+from remy import billcheck, config, finance, prices, scenarios
+from remy.agents import auditor, policy
+from remy.events import bus
+from remy.integrations.nessie import LocalMirror
 
 NAMES = list(scenarios.SPECS)
 

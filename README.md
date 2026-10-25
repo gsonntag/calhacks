@@ -1,6 +1,6 @@
-# BillBack
+# Remy
 
-**An AI agent that fights your hospital bill.** Upload the bill and your insurance statement. BillBack
+**An AI agent that fights your hospital bill.** Upload the bill and your insurance statement. Remy
 works out what you actually owe from your bank records, finds the discount the hospital's own published
 policy requires it to give you, calls billing to get it fixed, and follows up until the corrected bill
 arrives. Nothing is said or paid on your behalf without your approval.
@@ -26,17 +26,17 @@ number, follow-up scheduled.**
                             quotes
 ```
 
-**Orchestration** (`billback/orchestrator.py`): a fixed pipeline, on purpose (predictable on stage):
+**Orchestration** (`remy/orchestrator.py`): a fixed pipeline, on purpose (predictable on stage):
 intake → Auditor ∥ Policy (in parallel, sharing results) → approval → call → plan → follow-ups. Claude is
 used where judgement is needed: reading the documents, extracting policy rules, the phone call (a Claude
-tool-use loop with `record_outcome` / `end_call`, `billback/agents/caller.py`), reading the call outcome and
+tool-use loop with `record_outcome` / `end_call`, `remy/agents/caller.py`), reading the call outcome and
 answering "what's the status?". The Auditor, Policy step and Planner are deterministic code.
 
-**Harness** (`billback/harness.py`): tools have permission tiers: `read` runs freely, `act` is announced,
+**Harness** (`remy/harness.py`): tools have permission tiers: `read` runs freely, `act` is announced,
 `consequential` blocks on the patient's approval (placing the call, saving a payment plan). Every tool
 call/result/approval is an event streamed to the UI and appended to `data/<case>.audit.jsonl`.
 
-**Money is computed, not generated** (`billback/finance.py`): reconciliation, duplicate detection, income
+**Money is computed, not generated** (`remy/finance.py`): reconciliation, duplicate detection, income
 annualisation from payroll deposits, % of the federal poverty line, discount tiers (including the insured
 high-medical-cost rule), payment plan within the policy's income cap. Claude extracts policy text with verbatim quotes, which the
 code verifies against the fetched document, and does the talking; it never invents a number.
@@ -44,10 +44,10 @@ code verifies against the fetched document, and does the talking; it never inven
 ## Sponsor map (where to look)
 | Sponsor | What it does here | Code | Docs |
 |---|---|---|---|
-| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts discount tiers, collections rules and payment-plan terms (interest-free, income cap) whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 12 Bay Area hospitals; same bill → different answers. Real price tables: each hospital's CMS price file found via its `cms-hpt.txt`, ~67 common ER/outpatient codes kept (gross, cash, negotiated min/max, named payer rates). | `billback/policies/`, `billback/integrations/brightdata.py`, `scripts/crawl_policies.py`, `billback/prices.py`, `billback/price_sources.py`, `scripts/build_price_tables.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
-| **Cartesia** | Our own voice pipeline: Twilio Media Streams ↔ Cartesia Ink streaming STT + Sonic TTS ↔ Claude call brain, barge-in, voice/accent picker (American, British, Indian English, Spanish), pronunciation normalizer for money, IDs, CPT codes and medical terms. Managed Agents path kept as an alternative. | `billback/voice/`, `billback/integrations/cartesia.py`, `scripts/sim_twilio_stream.py` | [`docs/voice.md`](docs/voice.md); voice demo at `/voice.html` |
-| **Capital One Nessie** | The patient's bank: payroll deposits → income, the $500 payment the hospital missed, a duplicate charge, and a payment plan written back as a recurring bill when something is still owed. | `billback/integrations/nessie.py`, `billback/agents/auditor.py`, `scripts/seed_nessie.py` | [`docs/feasibility.md`](docs/feasibility.md) (how real bank data is obtained) |
-| **Anthropic Claude** | Intake (vision on bill/EOB), policy extraction with quotes, the call brain, outcome/follow-up extraction, status answers. | `billback/agents/`, `billback/followups.py` | |
+| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts discount tiers, collections rules and payment-plan terms (interest-free, income cap) whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 12 Bay Area hospitals; same bill → different answers. Real price tables: each hospital's CMS price file found via its `cms-hpt.txt`, ~67 common ER/outpatient codes kept (gross, cash, negotiated min/max, named payer rates). | `remy/policies/`, `remy/integrations/brightdata.py`, `scripts/crawl_policies.py`, `remy/prices.py`, `remy/price_sources.py`, `scripts/build_price_tables.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
+| **Cartesia** | Our own voice pipeline: Twilio Media Streams ↔ Cartesia Ink streaming STT + Sonic TTS ↔ Claude call brain, barge-in, voice/accent picker (American, British, Indian English, Spanish), pronunciation normalizer for money, IDs, CPT codes and medical terms. Managed Agents path kept as an alternative. | `remy/voice/`, `remy/integrations/cartesia.py`, `scripts/sim_twilio_stream.py` | [`docs/voice.md`](docs/voice.md); voice demo at `/voice.html` |
+| **Capital One Nessie** | The patient's bank: payroll deposits → income, the $500 payment the hospital missed, a duplicate charge, and a payment plan written back as a recurring bill when something is still owed. | `remy/integrations/nessie.py`, `remy/agents/auditor.py`, `scripts/seed_nessie.py` | [`docs/feasibility.md`](docs/feasibility.md) (how real bank data is obtained) |
+| **Anthropic Claude** | Intake (vision on bill/EOB), policy extraction with quotes, the call brain, outcome/follow-up extraction, status answers. | `remy/agents/`, `remy/followups.py` | |
 
 Also: [`docs/competitors.md`](docs/competitors.md), [`docs/judge-qa.md`](docs/judge-qa.md),
 [`docs/DEMO.md`](docs/DEMO.md), pitch deck at `/pitch.html`.
@@ -57,7 +57,7 @@ Also: [`docs/competitors.md`](docs/competitors.md), [`docs/judge-qa.md`](docs/ju
 ```bash
 uv sync
 cp .env.example .env            # fill what you have; blanks run in a labelled offline mode
-uv run uvicorn billback.app:app --port 8000
+uv run uvicorn remy.app:app --port 8000
 # open http://localhost:8000   (Cases; the chat intake when there are none yet. Also /flows/, /hospitals.html)
 uv run pytest -q                # 139 tests, fully offline
 ```
@@ -73,7 +73,7 @@ uv run python scripts/build_price_tables.py        # rebuild policydb/prices/ fr
 Real phone calls need Twilio credentials and a public HTTPS URL (Twilio must reach `/voice/twilio/*`):
 `cloudflared tunnel --url http://localhost:8000`, then set `PUBLIC_BASE_URL` (see `docs/voice.md`).
 Without them, calls run in **desk mode**: the case page links a rep console (`rep.html`) where a teammate
-plays billing, and BillBack answers out loud through Cartesia TTS. With no Anthropic key it falls back to a
+plays billing, and Remy answers out loud through Cartesia TTS. With no Anthropic key it falls back to a
 scripted caller so the whole flow still runs offline. `case.html?replay=1` replays the last finished run.
 
 ## Status: what's done, what's partial
@@ -81,12 +81,12 @@ scripted caller so the whole flow still runs offline. `case.html?replay=1` repla
 | Piece | Status | Evidence |
 |---|---|---|
 | Intake (Claude reads the bill + EOB PDFs) | Done, run live | live cases start empty and are filled from the documents (`orchestrator.new_case`, `app._apply_uploads`) |
-| Money math | Done | `billback/finance.py`, `tests/test_finance.py` |
+| Money math | Done | `remy/finance.py`, `tests/test_finance.py` |
 | Bank (Capital One Nessie): income, missed payment, duplicate, plan written back | Done, run live | `integrations/nessie.py`, `agents/planner.py`, `scripts/seed_nessie.py` |
-| Hospital policy DB (Bright Data SERP → Unlocker → PDFs → Claude → quote verification → SQLite) | Done, run live | `billback/policies/`, crawl artifacts in `policydb/raw/`, request log in `policydb/policies.json` |
+| Hospital policy DB (Bright Data SERP → Unlocker → PDFs → Claude → quote verification → SQLite) | Done, run live | `remy/policies/`, crawl artifacts in `policydb/raw/`, request log in `policydb/policies.json` |
 | Policy change detection (recheck) | Done; tested, no real policy change seen yet | `policies/monitor.py`, `tests/test_policies.py::test_recheck_detects_change_only_when_content_changes` |
 | Call agent (Claude tool-use loop) | Done, run live in desk mode | `agents/caller.py`; replays in `demo/replay_*.json` |
-| Real phone call (Twilio Media Streams ↔ Cartesia STT/TTS ↔ Claude, barge-in) | **Partial: built and tested against simulated Twilio/Cartesia sockets; no live phone call recorded yet** | `billback/voice/`, `tests/test_voice.py`, `scripts/sim_twilio_stream.py` |
+| Real phone call (Twilio Media Streams ↔ Cartesia STT/TTS ↔ Claude, barge-in) | **Partial: built and tested against simulated Twilio/Cartesia sockets; no live phone call recorded yet** | `remy/voice/`, `tests/test_voice.py`, `scripts/sim_twilio_stream.py` |
 | Cartesia TTS in desk mode, voice picker, pronunciation | Done, run live | `integrations/cartesia.py`, `voice/voices.py`, `voice/pronounce.py` |
 | Fast replies: Claude streamed into Sonic sentence by sentence, speculative start on Ink eager_end, prompt caching | Done, measured live: first audio 0.44–0.8 s after the rep stops (phone simulator), median 0.93 s (desk mode, was 3.0 s) | `voice/media.py`, `voice/desk.py`, `llm.py`, `docs/voice.md` (Latency), `tests/test_latency.py` |
 | Approval gate, audit log, follow-ups, "call again", status answers | Done | `harness.py`, `followups.py`, `tests/test_followups.py` |
@@ -108,12 +108,12 @@ scripted caller so the whole flow still runs offline. `case.html?replay=1` repla
   bill and EOB; the bank account is found in Nessie by the patient's name; the policy comes from the Bright
   Data policy DB. "Use the sample bill" sends the sample PDFs through the same reading. The sample case data
   is only used by the offline mock (no API keys).
-- BillBack says it's an automated assistant and that the call is transcribed, never agrees to pay on a
+- Remy says it's an automated assistant and that the call is transcribed, never agrees to pay on a
   call, and gets the patient's verbal authorization (HIPAA 45 CFR 164.510(b)); see `docs/feasibility.md`.
 
 ## Layout
 ```
-billback/  app.py orchestrator.py harness.py events.py finance.py followups.py llm.py config.py prices.py price_sources.py
+remy/  app.py orchestrator.py harness.py events.py finance.py followups.py llm.py config.py prices.py price_sources.py
            agents/        intake auditor policy caller planner
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes
            voice/         calls media cartesia_ws pronounce voices authorization audio routes

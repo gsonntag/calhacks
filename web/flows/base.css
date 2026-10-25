@@ -1,4 +1,4 @@
-/* BillBack flows: shared tokens + primitives. Each flow page links this and adds its own styles. */
+/* Remy flows: shared tokens + primitives. Each flow page links this and adds its own styles. */
 :root{
   --accent:#BE3337; --accent-dark:#9E2A2E; --tint:#FDECEC; --tint-2:#FFF6F6;
   --ink:#1A1A1E; --muted:#4D4D55; --muted-2:#6B6B73;

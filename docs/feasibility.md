@@ -1,4 +1,4 @@
-# BillBack: feasibility analysis
+# Remy: feasibility analysis
 
 Researched October 2026. Primary sources are linked where I could open them. Several primary sites (leginfo, eCFR) blocked automated fetches, so where a claim rests on secondary summaries it says so. This is engineering diligence, not legal advice.
 
@@ -38,7 +38,7 @@ We do **not** need: account credentials, SSN, full account or routing numbers, a
 
 ### Nessie as stand-in
 
-Capital One's Nessie is a sandbox API with synthetic customers, accounts, deposits and bills. It is a legitimate stand-in for the *shape* of the data (payee, amount, date, deposit), and the `finance.py` logic only needs those fields. It is **not** evidence that real banks expose this data through that API. The honest pitch: "Nessie for the demo; Plaid/Finicity/MX with consent in production, mapping the same fields; statement upload as fallback." The adapter boundary is `billback/integrations/nessie.py`, so the swap is contained.
+Capital One's Nessie is a sandbox API with synthetic customers, accounts, deposits and bills. It is a legitimate stand-in for the *shape* of the data (payee, amount, date, deposit), and the `finance.py` logic only needs those fields. It is **not** evidence that real banks expose this data through that API. The honest pitch: "Nessie for the demo; Plaid/Finicity/MX with consent in production, mapping the same fields; statement upload as fallback." The adapter boundary is `remy/integrations/nessie.py`, so the swap is contained.
 
 ## 2. Hospital side
 
@@ -56,9 +56,9 @@ Capital One's Nessie is a sandbox API with synthetic customers, accounts, deposi
 
 - **45 CFR 164.510(b)** lets a covered entity disclose information to a person the patient identifies as involved in their *payment* for care, limited to what is relevant to that role. If the patient is present, the entity may disclose if the patient agrees, is given a chance to object, or the entity can reasonably infer no objection ([eCFR 164.510, via Cornell LII](https://www.law.cornell.edu/cfr/text/45/164.510)). The text does not require a writing, so a verbal agreement during the call can suffice; whether a particular billing office accepts it is a matter of its own policy.
 - **How billing offices actually verify:** they typically ask for patient name, date of birth, account number and address or phone. The AI cannot invent these; it gets them from the bill and the patient. Some offices will refuse any third party without paperwork. I did not find a published industry standard, so this is practice-based, not cited.
-- **Warm or three-way handoff:** the patient joins (or is on the line and says "yes, I authorize BillBack to discuss my bill") at the start of the call. That satisfies 164.510(b) agreement on the record and removes the identity problem. This is the demo-safe and legally cleanest design. Our "approval gate" screen already captures the patient's consent in writing in our audit log, which supports but does not replace the hospital's own check.
+- **Warm or three-way handoff:** the patient joins (or is on the line and says "yes, I authorize Remy to discuss my bill") at the start of the call. That satisfies 164.510(b) agreement on the record and removes the identity problem. This is the demo-safe and legally cleanest design. Our "approval gate" screen already captures the patient's consent in writing in our audit log, which supports but does not replace the hospital's own check.
 - **Scalable path: written authorization, 45 CFR 164.508** (or the hospital's own "authorized representative" form). Collected once during onboarding, uploaded or faxed to billing. This is the roadmap item.
-- **BillBack's own HIPAA status.** We act for the patient, not for the hospital, so we are probably not the hospital's business associate and a BAA with the hospital does not apply. Our existing Q&A says BillBack "would be a business associate under a BAA", which is probably the wrong framing; get counsel on whether any covered entity or employer-plan relationship would change that (the B2B model could). Consumer health data we hold is likely governed by FTC rules (Health Breach Notification Rule) and California law (CMIA, CCPA) instead; I did not research those in depth.
+- **Remy's own HIPAA status.** We act for the patient, not for the hospital, so we are probably not the hospital's business associate and a BAA with the hospital does not apply. Our existing Q&A says Remy "would be a business associate under a BAA", which is probably the wrong framing; get counsel on whether any covered entity or employer-plan relationship would change that (the B2B model could). Consumer health data we hold is likely governed by FTC rules (Health Breach Notification Rule) and California law (CMIA, CCPA) instead; I did not research those in depth.
 
 ### AI disclosure and telephone law
 
@@ -88,7 +88,7 @@ CMS requires hospitals to post machine-readable files of standard charges. The C
 | Claim | Where | Problem | Suggested fix |
 |---|---|---|---|
 | "California's bot-disclosure law requires that [the AI says it's automated]" | `docs/judge-qa.md` | SB 1001 is about online bots, not phone calls | "We disclose on every call as a best practice and for consent to record; AI-voice rules (FCC 2024) mainly protect consumers being called." |
-| "BillBack would be a business associate under a BAA" | `docs/judge-qa.md` | We act for the patient, not for the hospital; probably not a business associate | "We act as the patient's authorized representative; we handle data under the patient's consent and plan for HIPAA-grade security." |
+| "Remy would be a business associate under a BAA" | `docs/judge-qa.md` | We act for the patient, not for the hospital; probably not a business associate | "We act as the patient's authorized representative; we handle data under the patient's consent and plan for HIPAA-grade security." |
 | "Patients connect their bank read-only" | `docs/judge-qa.md` | True in principle through aggregators, but not what the demo does (Nessie) | Keep, but add "via Plaid/MX/Finicity; Nessie is the sandbox" |
 | Demo outcome | README, devpost, `web/pitch.html` | Numbers used to differ across materials | Aligned: $8,700 → $1,100 → $600 on a 6 × $100 interest-free plan, collections paused |
 | "Nonprofit hospitals must publish" plus "California requires discounts up to 400% FPL" | `web/pitch.html` | Basically correct; California law applies to licensed hospitals generally, 501(r) to nonprofits | Optional nuance |

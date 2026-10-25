@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from billback import price_sources, prices
-from billback.policies import discover, registry
+from remy import price_sources, prices
+from remy.policies import discover, registry
 
 FIX = Path(__file__).parent / "fixtures" / "prices"
 

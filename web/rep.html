@@ -11,9 +11,9 @@
 <style>
   /* Desk-mode call: a teammate plays the hospital billing rep in the browser.
      Backup for when the Cartesia phone call isn't available. The mic streams to Cartesia Ink (hands-free,
-     Ink decides when the rep's turn ends; talking over BillBack interrupts it). Without Ink (no key, 402,
+     Ink decides when the rep's turn ends; talking over Remy interrupts it). Without Ink (no key, 402,
      error) it falls back to holding the mic button with Chrome's speech recognition, or typing.
-     BillBack's replies play through Cartesia Sonic (or the browser voice if no key). */
+     Remy's replies play through Cartesia Sonic (or the browser voice if no key). */
   body { min-height: 100vh; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
   .m3-top-app-bar { flex: none; gap: 12px; border-bottom: 1px solid var(--md-outline-variant); }
   .who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -103,7 +103,7 @@ function playPcm(b64) {
   return true;
 }
 // Seconds of this reply's audio actually played so far (gaps between chunks don't count): the server
-// cuts BillBack's memory of the reply at the word reached (POST .../interrupt).
+// cuts Remy's memory of the reply at the word reached (POST .../interrupt).
 function playedSeconds() { const now = actx ? actx.currentTime : 0; return sched.reduce((t, c) => t + Math.min(c.dur, Math.max(0, now - c.at)), 0); }
 function stopAudio() { for (const s of sources) { try { s.stop(); } catch (e) {} } sources = []; nextAt = 0; carry = null; }
 function playing() { return voiceTalking || sources.length > 0 || (actx && actx.currentTime < nextAt); }
@@ -118,7 +118,7 @@ function render() {
   else cur.bubble.innerHTML = esc(cur.text.slice(0, cur.heardLen)) + (cur.text.length > cur.heardLen ? `<span class="unheard" title="Not heard: the rep interrupted">${esc(cur.text.slice(cur.heardLen))}</span>` : '');
   $('log').scrollTop = 1e9;
 }
-// The rep talked over BillBack: stop the audio now; for a streamed Sonic reply, tell the server how much
+// The rep talked over Remy: stop the audio now; for a streamed Sonic reply, tell the server how much
 // played so it stops generating and remembers only the words the rep heard.
 async function interrupt() {
   if (!cur || cur.cut || !playing()) return;
@@ -188,7 +188,7 @@ $('hang').onclick = async () => {
   try { await fetch(`/api/calls/${callId}/hangup`, {method: 'POST'}); } catch (e) {}
 };
 $('answer').onclick = async () => {
-  $('answer').remove(); $('sub').textContent = 'On call with BillBack (automated assistant)';
+  $('answer').remove(); $('sub').textContent = 'On call with Remy (automated assistant)';
   audioCtx();
   startInk();  // in the click: mic permission and the AudioContext need a user gesture
   turn('Patient Financial Services, this is Diane, how can I help you?');
@@ -197,8 +197,8 @@ $('send').onclick = () => { const t = $('txt').value.trim(); if (t) { $('txt').v
 $('txt').onkeydown = (e) => { if (e.key === 'Enter') $('send').click(); };
 
 // ---- Listening. First choice: the mic streamed to Cartesia Ink through our server (WS .../listen), hands-
-// free; Ink's turn events say when the rep is done. Talking over BillBack (real words, not "mm-hmm", and not
-// BillBack's own voice leaking from the speakers) interrupts it, like the phone path's barge-in.
+// free; Ink's turn events say when the rep is done. Talking over Remy (real words, not "mm-hmm", and not
+// Remy's own voice leaking from the speakers) interrupts it, like the phone path's barge-in.
 // Fallback when Ink isn't available (no key, HTTP 402, error): hold the mic button, Chrome's SpeechRecognition.
 const DEFAULT_PH = $('txt').placeholder;
 let ink = null, micLive = false;   // ink: {ws, stream, node}
@@ -215,7 +215,7 @@ async function startInk() {
   try {
     if (!navigator.mediaDevices || !window.AudioWorkletNode) throw new Error('no mic API');
     const ctx = audioCtx(); if (!ctx) throw new Error('no audio');
-    let key = ''; try { key = localStorage.getItem('billback-admin-key') || ''; } catch (e) {}  // see auth.js
+    let key = ''; try { key = localStorage.getItem('remy-admin-key') || localStorage.getItem('billback-admin-key') || ''; } catch (e) {}  // see auth.js
     ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/api/calls/${callId}/listen${key ? '?key=' + encodeURIComponent(key) : ''}`);
     ws.binaryType = 'arraybuffer';
     const first = await new Promise((res) => {
@@ -270,8 +270,8 @@ function onInk(ev) {
     if (talking && ev.barge && !ev.echo) interrupt();
   } else if (ev.type === 'end') {
     $('txt').placeholder = DEFAULT_PH;
-    if ((talking || justStopped) && ev.echo) return;      // BillBack's own voice through the speakers
-    if (talking && !ev.barge) return;                      // "mm-hmm" while BillBack talks: listening, not a turn
+    if ((talking || justStopped) && ev.echo) return;      // Remy's own voice through the speakers
+    if (talking && !ev.barge) return;                      // "mm-hmm" while Remy talks: listening, not a turn
     if (talking) interrupt();
     turn(ev.text);
   }
@@ -289,7 +289,7 @@ $('mic').addEventListener('pointerdown', (e) => {
   audioCtx();
   if (ink) { micLive = !micLive; micUi(); return; }  // hands-free: the button mutes
   if (!rec) return;
-  interrupt();  // pressing to talk over BillBack cuts it off
+  interrupt();  // pressing to talk over Remy cuts it off
   $('mic').classList.add('on');
   try { rec.start(); } catch (err) {}
 });

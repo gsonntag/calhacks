@@ -4,9 +4,9 @@ import httpx
 import pytest
 from fastapi.routing import APIRoute
 
-from billback import app as app_mod
-from billback import auth, config
-from billback.agents import policy
+from remy import app as app_mod
+from remy import auth, config
+from remy.agents import policy
 
 TOKEN = "s3cret-admin-token-0123456789"
 # Mutating routes that stay open: own signature/secret (webhooks, Twilio), or harmless (simulated, pure text).
@@ -32,10 +32,10 @@ def test_every_mutating_route_needs_the_key_unless_listed():
 async def test_token_set_refuses_missing_or_wrong_key(monkeypatch, path):
     monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
     async with _client() as c:
-        for headers in ({}, {"X-BillBack-Key": "wrong"}, {"X-BillBack-Key": TOKEN + "x"}):
+        for headers in ({}, {"X-Remy-Key": "wrong"}, {"X-Remy-Key": TOKEN + "x"}):
             r = await c.post(path, json={"approved": True}, headers=headers)
-            assert r.status_code == 401 and r.headers["x-billback-auth"] == "required"
-        r = await c.post(path, json={"approved": True}, headers={"X-BillBack-Key": TOKEN})
+            assert r.status_code == 401 and r.headers["x-remy-auth"] == "required"
+        r = await c.post(path, json={"approved": True}, headers={"X-Remy-Key": TOKEN})
         assert r.status_code == 200
 
 
@@ -56,12 +56,12 @@ async def test_no_token_allows_only_direct_localhost(monkeypatch):
             assert (await c.post("/api/reset", headers=h)).status_code == 401
     async with _client(("203.0.113.9", 1)) as c:
         assert (await c.post("/api/reset")).status_code == 401
-        assert (await c.post("/api/reset", headers={"X-BillBack-Key": ""})).status_code == 401
+        assert (await c.post("/api/reset", headers={"X-Remy-Key": ""})).status_code == 401
 
 
 def test_startup_warning_only_without_a_token(monkeypatch):
     monkeypatch.setattr(config, "ADMIN_TOKEN", "")
-    assert "BILLBACK_ADMIN_TOKEN" in auth.startup_warning()
+    assert "REMY_ADMIN_TOKEN" in auth.startup_warning()
     monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
     assert auth.startup_warning() is None
 
@@ -76,7 +76,7 @@ def _live_keys(monkeypatch):
 def test_missing_live_lists_every_blank_key():
     names = " ".join(config.missing_live())
     for k in ("ANTHROPIC_API_KEY", "BRIGHTDATA_API_KEY", "BRIGHTDATA_UNLOCKER_ZONE", "BRIGHTDATA_SERP_ZONE",
-              "NESSIE_API_KEY", "BILLBACK_ADMIN_TOKEN"):
+              "NESSIE_API_KEY", "REMY_ADMIN_TOKEN"):
         assert k in names
 
 

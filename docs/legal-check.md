@@ -123,7 +123,7 @@ Source: [HSC 127425](https://california.public.law/codes/health_and_safety_code_
 
 ## 6. Marcus and Medi-Cal
 
-**Case data** (`billback/scenarios.py` "marcus-real"; `demo/scenarios/marcus-real/`):
+**Case data** (`remy/scenarios.py` "marcus-real"; `demo/scenarios/marcus-real/`):
 - Marcus Lee, born 1984-03-17 (age 42), household of 3, Berkeley.
 - Pay: $1,560 every two weeks from Alameda County Transit, about $40,560 a year or $3,380 a month.
 - Insurance: a high-deductible employer-type plan ("Tidewater Arc Health HDHP", fictional). $5,000 of deductible left, then 30% coinsurance.
@@ -152,14 +152,14 @@ Source: [HSC 127425](https://california.public.law/codes/health_and_safety_code_
 
 ## Other legal statements in code and docs (brief)
 
-- `docs/ideas-backlog.md` says the HSC 127405(d) cap applies to "uninsured patients or those at or under 400% FPL". More precisely, it limits what the hospital may *expect to collect* from patients who qualify under its discount policy (uninsured or high medical costs) **and** are at or under 400% FPL. It's the greater of Medicare or Medi-Cal. The note in `billback/scenarios.py` ("uninsured ... at or under 400% FPL") is fine.
+- `docs/ideas-backlog.md` says the HSC 127405(d) cap applies to "uninsured patients or those at or under 400% FPL". More precisely, it limits what the hospital may *expect to collect* from patients who qualify under its discount policy (uninsured or high medical costs) **and** are at or under 400% FPL. It's the greater of Medicare or Medi-Cal. The note in `remy/scenarios.py` ("uninsured ... at or under 400% FPL") is fine.
 - `docs/ideas-backlog.md` #1 says "CA bans credit reporting and lawsuits before 180 days". Split it: credit reporting is banned outright; lawsuits wait 180 days from the first bill.
 - `docs/ideas-backlog.md` #16, "shrinking from 2027": correct (1 month for expansion adults, 2 months for others, from Jan 1, 2027).
 - `docs/ideas-backlog.md` #15 (good-faith estimate: $400 over, 120 days) and #19 (CFPB rule vacated July 2025; bureaus drop debts under $500): consistent with what I know. Not re-fetched.
 - `docs/ideas-backlog.md` #20: Rumsey is about when the clock starts on a hospital debt. California's limit is 4 years for written contracts (CCP 337) but 2 years for oral ones (CCP 339). Say "often 4 years".
-- `billback/price_sources.py` "public by law" is correct (45 CFR part 180).
-- UCSF's policy (`policydb/raw/ucsf-health/pdf-db570fe1a4ce.txt`) says emergency physicians must give discounts up to 350% FPL (HSC 127450 et seq.). That's not something BillBack claims, but it matters for the roadmap item on separate ER physician bills.
-- `billback/agents/caller.py` forbids inventing laws. Good. No code path states a deadline or statute to the rep, so no code is wrong today. The risk is in future copy.
+- `remy/price_sources.py` "public by law" is correct (45 CFR part 180).
+- UCSF's policy (`policydb/raw/ucsf-health/pdf-db570fe1a4ce.txt`) says emergency physicians must give discounts up to 350% FPL (HSC 127450 et seq.). That's not something Remy claims, but it matters for the roadmap item on separate ER physician bills.
+- `remy/agents/caller.py` forbids inventing laws. Good. No code path states a deadline or statute to the rep, so no code is wrong today. The risk is in future copy.
 
 ## Sources not opened directly
 

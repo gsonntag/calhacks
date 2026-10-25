@@ -1,4 +1,4 @@
-# What winning Devposts look like, and what BillBack should change
+# What winning Devposts look like, and what Remy should change
 
 Researched 2026-10-25 (Cal Hacks 13.0 weekend). Web search and fetch only.
 
@@ -83,7 +83,7 @@ voice-agent (Dispatch AI, Orion, SensePlan, FaceTimeOS) angles. It has no confir
    outnumber recycling bins about two to one). The tagline gives the mechanism in five words. "How we
    built it" starts with design: they **sketched each page to plan the engagement loop**, which is
    Intentionality evidence.
-6. **Dispatch AI (Berkeley AI Hackathon 2024, Grand Prize). This is the closest analogue to BillBack**:
+6. **Dispatch AI (Berkeley AI Hackathon 2024, Grand Prize). This is the closest analogue to Remy**:
    a voice agent in a high-stakes domain with a human in the loop. The tagline makes a promise: "An
    empathetic AI dispatcher for 911: real-time transcripts, emotion-aware triage, and a live operator
    cockpit." The inspiration has **hard numbers** (911 centres lose about 80% of staff within a year and
@@ -224,12 +224,12 @@ architecture diagram" so judges see how the parts fit together.
 
 ---
 
-## 4. BillBack draft vs winners
+## 4. Remy draft vs winners
 
 **What the draft already does well**
 - A strong, concrete hook ($8,700 "final notice" for an insured ER visit), and a hero outcome number
   ($8,700 → $1,100 → $600 on a 6 × $100 interest-free plan).
-- An honest result: "She isn't eligible for Sutter's write-off, and BillBack says so." That earns trust
+- An honest result: "She isn't eligible for Sutter's write-off, and Remy says so." That earns trust
   and Intentionality points.
 - The same-bill-at-four-hospitals comparison (Marcus: $0 vs $5,600) is a genuinely creative,
   data-driven moment.
@@ -272,18 +272,18 @@ architecture diagram" so judges see how the parts fit together.
 
 ---
 
-## 5. Recommended Devpost outline for BillBack
+## 5. Recommended Devpost outline for Remy
 
-**Title:** BillBack
+**Title:** Remy
 **Tagline (≤140 chars), options:**
 - "An AI agent that audits your hospital bill, finds the hospital's own discount rules, and calls billing to fix it."
-- "$8,700 → $600: BillBack audits hospital bills against your insurance and bank, then phones billing for you."
+- "$8,700 → $600: Remy audits hospital bills against your insurance and bank, then phones billing for you."
 
 **Thumbnail (3:2):** the Resolved screen with **$8,700 struck through → $600**, "collections paused",
-"case FA 20931", and the BillBack wordmark. It should be legible at small gallery size.
+"case FA 20931", and the Remy wordmark. It should be legible at small gallery size.
 
 **Gallery (6–8 images, in order):** (1) the Resolved hero; (2) Review screen with the Auditor and Policy
-checklists side by side; (3) the Approval screen ("Here's exactly what BillBack will ask for"); (4) the live
+checklists side by side; (3) the Approval screen ("Here's exactly what Remy will ask for"); (4) the live
 call transcript with citations highlighted; (5) the architecture diagram; (6) the policy DB page showing
 verified quotes and source links; (7) the same bill at different hospitals ($0 vs $5,600); (8) the
 follow-up and cases dashboard.
@@ -294,7 +294,7 @@ follow-up and cases dashboard.
 2. **What it does (150 words + GIF).** Keep our four numbered steps (Prove / Find / Call / Follow up), one
    or two lines each, with the key verb bolded. Put a 5–8 s GIF of the call transcript after step 3. End
    with the demo result in bold: **$8,700 → $1,100 → $600, 6 × $100 at 0%, collections paused, case
-   number**, plus the honest "not eligible for the write-off, and BillBack says so", plus the Marcus
+   number**, plus the honest "not eligible for the write-off, and Remy says so", plus the Marcus
    comparison as one sentence with the image.
 3. **How we built it (200 words + diagram).** The diagram first. Then the harness (permission tiers,
    approval gate, audit log), then the pipeline, then "the model never invents a number". Then a
@@ -346,14 +346,14 @@ playback logged out.
 
 | Time | Segment | On screen | Narration and audio |
 |---|---|---|---|
-| 0:00–0:10 | Hook | The printed $8,700 final notice, then a cut to the BillBack upload | "Rosa got an $8,700 final notice for an ER visit her insurance was supposed to cover. BillBack fixes bills like this, and makes the phone call for you." |
+| 0:00–0:10 | Hook | The printed $8,700 final notice, then a cut to the Remy upload | "Rosa got an $8,700 final notice for an ER visit her insurance was supposed to cover. Remy fixes bills like this, and makes the phone call for you." |
 | 0:10–0:20 | Drop it in | Drag the bill and EOB, click Go (jump cut past loading) | "She drops in the bill and her insurance statement. That's all." |
 | 0:20–0:45 | Audit + policy | Auditor and Policy checklists filling side by side; captions $1,100 → $600 and "$500 already paid" | "The auditor finds the insurance adjustment the hospital never applied, and a $500 payment in her bank the bill doesn't show. The policy agent reads Sutter's own published policy: she's not eligible for a write-off, and it says so, but Sutter requires interest-free payment plans." |
 | 0:45–0:55 | Approval | The approval card listing exactly what will be asked; voice picker | "Nothing happens without her OK, and it will never agree to pay on a call." |
-| 0:55–1:30 | The call (wow) | Live call with a scrolling transcript; citation chips highlight | Real audio about 25 s: the rep pushes back, BillBack cites the claim number, the payment reference and the policy line, then gets case FA 20931 and a collections pause. |
+| 0:55–1:30 | The call (wow) | Live call with a scrolling transcript; citation chips highlight | Real audio about 25 s: the rep pushes back, Remy cites the claim number, the payment reference and the policy line, then gets case FA 20931 and a collections pause. |
 | 1:30–1:40 | Resolved | **$8,700 struck through → $600**, 6 × $100 at 0%, collections paused, the plan saved in Nessie | "Eight thousand seven hundred down to six hundred, interest-free, collections stopped." |
 | 1:40–1:52 | How it works | Architecture diagram frame; sponsor logos placed on their boxes | "Our own agent harness with approval gates; deterministic money math; Bright Data-crawled hospital policies with verified quotes; Cartesia speech on our own Twilio pipeline at under a second a turn; Capital One Nessie for the bank side; Claude as the brain." |
-| 1:52–2:00 | Close | Same bill at different hospitals ($0 vs $5,600), then the logo and tagline | "Same bill, different hospital, different answer. BillBack fights your hospital bill so you don't have to." |
+| 1:52–2:00 | Close | Same bill at different hospitals ($0 vs $5,600), then the logo and tagline | "Same bill, different hospital, different answer. Remy fights your hospital bill so you don't have to." |
 
 ### 3-minute fallback (if the full 3 min is allowed)
 
@@ -363,7 +363,7 @@ playback logged out.
 | 0:15–0:30 | Drop it in | Same as the 2-min version. |
 | 0:30–1:05 | Audit + policy | Show the source quote link on the policy card (Bright Data) and the income calculation from payroll deposits. |
 | 1:05–1:15 | Approval | Play the voice and accent preview for a second. |
-| 1:15–2:05 | The call | A longer call: two pushbacks ("full amount is due", "can you pay by card today?") and BillBack's refusal. |
+| 1:15–2:05 | The call | A longer call: two pushbacks ("full amount is due", "can you pay by card today?") and Remy's refusal. |
 | 2:05–2:20 | Resolved | Nessie recurring bill, follow-up date set. |
 | 2:20–2:35 | Follow-up | Cases dashboard → +1 week → overdue → "Call again" opens with "On the October 24th call, Diane opened case FA 20931...". |
 | 2:35–2:50 | How it works / real vs simulated | The diagram, plus one line: "Real: hospital policies, the bank records API, speech, approvals. Simulated: the patient and the billing rep." |

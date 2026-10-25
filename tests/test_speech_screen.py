@@ -1,9 +1,9 @@
-"""The speech screen (mandate.screen): the last check on every sentence BillBack speaks, whether or not the
+"""The speech screen (mandate.screen): the last check on every sentence Remy speaks, whether or not the
 model called check_offer. The caller tests use a fake Claude (tests/test_latency.py), so they run offline."""
 import pytest
 
-from billback.agents import caller, mandate
-from billback.events import bus
+from remy.agents import caller, mandate
+from remy.events import bus
 
 from test_latency import claude, respond, tool_block  # noqa: F401  (claude is a fixture)
 from test_mandate import BRIEF
@@ -134,7 +134,7 @@ async def test_the_model_agreeing_without_check_offer_is_screened(claude):
     assert len(g) == 1 and g[0]["offer"] == "speech" and g[0]["decision"] == "refused" and g[0]["say"] == safe
     assert s.messages[-1] == {"role": "assistant", "content": [{"type": "text", "text": safe}]}
     tr = [(e["speaker"], e["text"]) for e in bus.history("sp1") if e["kind"] == "transcript"]
-    assert tr[-1] == ("billback", safe)
+    assert tr[-1] == ("remy", safe)
 
 
 async def test_screen_keeps_streaming_and_tools(claude):

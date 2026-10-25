@@ -1,6 +1,6 @@
-# BillBack voice pipeline (Twilio + Cartesia + Claude)
+# Remy voice pipeline (Twilio + Cartesia + Claude)
 
-BillBack's phone calls run on our own real-time pipeline: **Twilio** carries the call, **Cartesia Ink**
+Remy's phone calls run on our own real-time pipeline: **Twilio** carries the call, **Cartesia Ink**
 transcribes the billing rep as they speak and detects when they've finished a turn, **Claude** decides what
 to say (the same call brain as desk mode, `agents/caller.py`), and **Cartesia Sonic** speaks it in the
 voice and accent picked for the case. Before every TTS request, a pronunciation normalizer rewrites claim
@@ -15,17 +15,17 @@ the patient-authorization handoff.
 
 | File | What it does |
 |---|---|
-| `billback/voice/calls.py` | Entry point `run_twilio_call(case, brief)`, `twilio_ready()`. Places calls (direct or conference), registers per-call stream tokens, handles status callbacks, cleans up. |
-| `billback/voice/media.py` | `MediaSession`: one Twilio Media Stream. Handles the Twilio stream protocol, feeds audio to STT, runs the turn loop, streams TTS back, does barge-in. `Leg` = one expected stream. |
-| `billback/voice/cartesia_ws.py` | Streaming clients: Ink STT (`/stt/turns/websocket`) and Sonic TTS (`/tts/websocket`; `stream_many` speaks sentences as they arrive). |
-| `billback/voice/desk.py` | Desk mode, streamed: `POST /api/calls/{id}/turn/stream` returns the reply as NDJSON text + audio for `web/rep.html`; `WS /api/calls/{id}/listen` relays the browser mic to Ink; `POST /api/calls/{id}/interrupt` handles barge-in. |
-| `billback/voice/heard.py` | `Spoken`: what one reply played (Sonic requests, audio length, word timestamps) and `heard(played_s)`, the reply cut at the last word played. `is_echo` for desk mode. |
-| `billback/voice/pronounce.py` | Text normalizer applied before every TTS call (phone pipeline, desk mode `/api/tts`, voice previews). |
-| `billback/voice/voices.py` | Voice catalog (American, British, Indian English, Mexican Spanish), resolved per case. |
-| `billback/voice/authorization.py` | Captures the patient's verbal consent, the HIPAA 164.510(b) step. |
-| `billback/voice/audio.py` | G.711 μ-law helpers (framing, decoding for recordings, keypad tones for phone menus). |
-| `billback/voice/routes.py` | FastAPI `router`: Twilio webhooks + media WebSocket, `/api/voices*`. |
-| `billback/integrations/twilio.py` | Twilio REST over httpx (calls, conference participants), TwiML, `X-Twilio-Signature` validation. |
+| `remy/voice/calls.py` | Entry point `run_twilio_call(case, brief)`, `twilio_ready()`. Places calls (direct or conference), registers per-call stream tokens, handles status callbacks, cleans up. |
+| `remy/voice/media.py` | `MediaSession`: one Twilio Media Stream. Handles the Twilio stream protocol, feeds audio to STT, runs the turn loop, streams TTS back, does barge-in. `Leg` = one expected stream. |
+| `remy/voice/cartesia_ws.py` | Streaming clients: Ink STT (`/stt/turns/websocket`) and Sonic TTS (`/tts/websocket`; `stream_many` speaks sentences as they arrive). |
+| `remy/voice/desk.py` | Desk mode, streamed: `POST /api/calls/{id}/turn/stream` returns the reply as NDJSON text + audio for `web/rep.html`; `WS /api/calls/{id}/listen` relays the browser mic to Ink; `POST /api/calls/{id}/interrupt` handles barge-in. |
+| `remy/voice/heard.py` | `Spoken`: what one reply played (Sonic requests, audio length, word timestamps) and `heard(played_s)`, the reply cut at the last word played. `is_echo` for desk mode. |
+| `remy/voice/pronounce.py` | Text normalizer applied before every TTS call (phone pipeline, desk mode `/api/tts`, voice previews). |
+| `remy/voice/voices.py` | Voice catalog (American, British, Indian English, Mexican Spanish), resolved per case. |
+| `remy/voice/authorization.py` | Captures the patient's verbal consent, the HIPAA 164.510(b) step. |
+| `remy/voice/audio.py` | G.711 μ-law helpers (framing, decoding for recordings, keypad tones for phone menus). |
+| `remy/voice/routes.py` | FastAPI `router`: Twilio webhooks + media WebSocket, `/api/voices*`. |
+| `remy/integrations/twilio.py` | Twilio REST over httpx (calls, conference participants), TwiML, `X-Twilio-Signature` validation. |
 | `scripts/sim_twilio_stream.py` | Plays Twilio against a local server to test the whole loop without a phone. |
 | `scripts/bench_desk.py` | Desk-mode latency bench over real HTTP (`--old` measures the original turn + `/api/tts` path). |
 | `web/voice.html` | Voice picker + pronunciation before/after demo. |
@@ -72,7 +72,7 @@ Ink → us      turn.start … turn.update {"transcript"} … turn.eager_end …
 us            on eager_end: CallSession.draft(text) starts Claude early (no side effects); turn.resume cancels it
 us            on turn.end: CallSession.reply(text, draft) streams Claude's reply sentence by sentence
               ("Thank you, Diane. " first); record_outcome / end_call run after the text that came with them
-              (CallSession emits the rep and BillBack "transcript" events, the same as in desk mode)
+              (CallSession emits the rep and Remy "transcript" events, the same as in desk mode)
 us → Sonic    per sentence (one generation at a time; sentences that arrived meanwhile are joined):
               {"context_id":"<sid>-3_1","transcript":normalize(sentence),"voice","language":"en-IN","normalization":"en-US",
                "output_format":{"container":"raw","encoding":"pcm_mulaw","sample_rate":8000},"add_timestamps":true}
@@ -130,7 +130,7 @@ sets `call_done`. `run_twilio_call` sees that and hangs up through REST.
 
 ## Latency
 
-The number that matters is the time from the rep finishing a sentence to BillBack starting to talk.
+The number that matters is the time from the rep finishing a sentence to Remy starting to talk.
 Both paths were measured live (Claude Haiku 5.5, Cartesia Ink + Sonic) the same way before and after the
 changes, on 2026-10-25.
 
@@ -173,14 +173,14 @@ What each change bought:
 
 Model choice is unchanged: Haiku 5.5 with thinking disabled.
 
-**Repeatable timing log.** Every phone turn logs one line (logger `billback.latency`, printed even under
+**Repeatable timing log.** Every phone turn logs one line (logger `remy.latency`, printed even under
 uvicorn), and every desk turn logs `desk turn: first_text=… first_audio=…`:
 
 ```
-billback.latency turn=4 draft=used eager_lead=347ms first_text=307ms first_audio=439ms (from rep turn.end)
+remy.latency turn=4 draft=used eager_lead=347ms first_text=307ms first_audio=439ms (from rep turn.end)
 ```
 
-Set `BILLBACK_LATENCY_DEBUG=1` to also log every Ink event and Claude's first-token time, total time and
+Set `REMY_LATENCY_DEBUG=1` to also log every Ink event and Claude's first-token time, total time and
 cache hits per call. The simulator prints `leg.stats` (`latency_ms`, time to first sentence, Sonic first
 chunk, drafts used and discarded).
 
@@ -195,7 +195,7 @@ the start of our reply. The barge-in rules are unchanged; the old pipeline did t
 
 The desk demo used to listen with Chrome's SpeechRecognition (hold the mic button), so only the speaking
 side was Cartesia. Now `web/rep.html` streams the mic to Ink through our server, hands-free, and the rep can
-talk over BillBack.
+talk over Remy.
 
 ```
 web/rep.html  getUserMedia (echoCancellation) → AudioWorklet → 16 kHz pcm_s16le, 100 ms frames
@@ -211,7 +211,7 @@ on barge-in   stop Web Audio now, POST /api/calls/{id}/interrupt {"played_s"}: t
 
 Ink's turn events decide when the rep is done, the same as on the phone. The server adds two flags so the
 rules stay in Python: `barge` is `media.should_barge_in(text)` (real words, not "mm-hmm"), and `echo` is
-`heard.is_echo(text, reply)`: nearly all the words are BillBack's own reply, which happens when it plays
+`heard.is_echo(text, reply)`: nearly all the words are Remy's own reply, which happens when it plays
 through laptop speakers into the mic. The page knows whether audio is playing, so it decides. While playing,
 a `partial` or `end` with `barge` and not `echo` interrupts; backchannel and echo are ignored; an `end` then
 becomes the next turn. `played_s` is the sum of the scheduled Web Audio chunks already played (gaps don't
@@ -219,7 +219,7 @@ count). The interrupted bubble shows the unheard rest struck through. The mic bu
 
 **Fallback.** If the socket says `unavailable` (no `CARTESIA_API_KEY`, HTTP 402 out of credits, or an Ink
 `error` event), fails to connect, or closes mid-call, the page goes back to push-to-talk with Chrome's
-SpeechRecognition and says so next to the call status. Pressing the mic while BillBack talks still stops
+SpeechRecognition and says so next to the call status. Pressing the mic while Remy talks still stops
 the audio (and cuts the history when the reply was streamed Sonic audio). Typing always works.
 
 Not done yet: speculative drafts on `turn.eager_end` in desk mode (the page sends the turn on `end`).
@@ -274,7 +274,7 @@ rewritten; money and dates are left to Sonic's own normalizer for that language.
 answer a case or reference number with only "Let me read that back: <number as heard>. Is that right?",
 and call `record_outcome` with it after the rep says yes. The read-back rule above makes the rep hear
 "F A 2 0 9 dash 3 1", which sounds different from "F A, 2 0 9 3 1". `record_outcome` also checks it in code:
-a `case_number` counts as confirmed (`case_number_confirmed: true` in the outcome) only if BillBack said it
+a `case_number` counts as confirmed (`case_number_confirmed: true` in the outcome) only if Remy said it
 in an earlier turn, so the rep has answered since, or it is a number from the brief. Otherwise it is still
 saved, flagged unconfirmed, and the tool result tells Claude to read it back. This adds no model call: the
 read-back is the reply to the rep's turn. The offline scripted brain reads the number back the same way.
@@ -290,9 +290,9 @@ what Sonic receives.
 **Legal basis.** 45 CFR 164.510(b) lets a covered entity disclose information to a person the patient
 identifies as involved in payment for their care, if the patient agrees. The agreement can be verbal. The
 billing office decides whether to accept it, so the cleanest design is the patient saying it on the call.
-Every call also discloses that BillBack is an automated assistant and that the call is transcribed
+Every call also discloses that Remy is an automated assistant and that the call is transcribed
 (California requires all-party consent to recording). We don't record call audio; we transcribe it.
-BillBack only places an AI-voice call to the patient after the patient approved the call in the app, which
+Remy only places an AI-voice call to the patient after the patient approved the call in the app, which
 is relevant under the FCC's 2024 TCPA ruling on AI voices.
 
 **What gets recorded.** `AuthorizationBrain` asks one fixed question (no LLM: the wording is auditable),
@@ -316,11 +316,11 @@ The app's Voice URL (`POST /voice/twilio/agent`) returns `<Connect><Stream>`, so
 bidirectional media stream that hears the conference mix. When `TWILIO_TWIML_APP_SID` is set and the
 patient has a phone number:
 
-1. Dial the patient into conference `billback-<case>` (participant label `patient`).
-2. When they answer (status callback `in-progress`), add BillBack (`app:AP…?token=…`, label `billback`).
-   The stream starts with `AuthorizationBrain`: "Hi Rosa, this is BillBack… This call is transcribed…
+1. Dial the patient into conference `remy-<case>` (participant label `patient`).
+2. When they answer (status callback `in-progress`), add Remy (`app:AP…?token=…`, label `remy`).
+   The stream starts with `AuthorizationBrain`: "Hi Rosa, this is Remy… This call is transcribed…
    do I have your permission to discuss your account with the hospital's billing office?" The answer goes to the audit log.
-3. On "yes", BillBack tells the patient to stay on the line, then dials the hospital into the same
+3. On "yes", Remy tells the patient to stay on the line, then dials the hospital into the same
    conference (`EndConferenceOnExit=true`). When billing answers, the same media session switches brains
    (`MediaSession.set_brain`) to the Claude `CallSession`. If the rep wants to hear it from the patient,
    the patient is right there and confirms in their own words, which is the warm three-way handoff
@@ -429,15 +429,15 @@ Sample live run (`--short`, Priya / Indian English):
 
 ```
 rep      Patient financial services? This is Diane. How can I help
-billback Hi Diane, I'm an automated assistant calling on behalf of Rosa Martinez, who has authorized this
+remy Hi Diane, I'm an automated assistant calling on behalf of Rosa Martinez, who has authorized this
          call. This call is transcribed. Rosa's account number is CPMC-48213977, …
          -> Sonic got: … account number is <spell>CPMC 4821 3977</spell>, …
 rep      Okay, I've paused collections on the account while we look at this.
-billback … the explanation of benefits on claim C-2026-0815-44917 shows Rosa's patient responsibility as $1,100, …
+remy … the explanation of benefits on claim C-2026-0815-44917 shows Rosa's patient responsibility as $1,100, …
          -> Sonic got: … claim <spell>C 2026 0815 44917</spell> shows … one thousand one hundred dollars, not the
             eight thousand seven hundred dollars …
 rep      Your case number is FA209-31.
 outcome: case_number FA209-31, account_on_hold (recorded by Claude's record_outcome tool)
-         (the rep had said FA 20931; BillBack now reads numbers back first, see "Reading IDs back")
+         (the rep had said FA 20931; Remy now reads numbers back first, see "Reading IDs back")
 latency (turn.end → first audio): 1419, 1936, 2733 ms; Sonic first chunk 125–148 ms   (before streaming; now ~0.45–0.8 s, see Latency)
 ```

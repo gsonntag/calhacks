@@ -10,15 +10,15 @@ from datetime import timedelta
 
 import pytest
 
-from billback import billcheck, config, llm, orchestrator
-from billback.agents import policy
-from billback.agents.report import Report
-from billback.events import bus
-from billback.integrations import brightdata
-from billback.integrations.brightdata import BDResponse, BrightDataError
-from billback.policies import crawl as crawl_mod
-from billback.policies import discover, fetch, pipeline, registry
-from billback.policies.store import DEFAULT_DIR, PolicyStore
+from remy import billcheck, config, llm, orchestrator
+from remy.agents import policy
+from remy.agents.report import Report
+from remy.events import bus
+from remy.integrations import brightdata
+from remy.integrations.brightdata import BDResponse, BrightDataError
+from remy.policies import crawl as crawl_mod
+from remy.policies import discover, fetch, pipeline, registry
+from remy.policies.store import DEFAULT_DIR, PolicyStore
 
 from test_flow import _wait_for, client  # noqa: F401  (client is a fixture)
 
@@ -423,7 +423,7 @@ def test_lena_insured_overcharge_is_found():
 
 async def test_insured_lines_step_says_what_was_compared():
     case = {**orchestrator.demo_case(), "id": "lines-step"}
-    from billback.agents import auditor  # noqa: PLC0415
+    from remy.agents import auditor  # noqa: PLC0415
     from test_scenarios import LocalMirror  # noqa: PLC0415
     import asyncio  # noqa: PLC0415
     loop = asyncio.get_running_loop()

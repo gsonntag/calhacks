@@ -1,8 +1,8 @@
-"""Tiger Data storage (billback/tiger.py). The database itself isn't reachable in tests: these cover the parts that
+"""Tiger Data storage (remy/tiger.py). The database itself isn't reachable in tests: these cover the parts that
 decide what gets stored, and that a case never depends on Tiger being there."""
 import httpx
 
-from billback import app as app_module, config, tiger
+from remy import app as app_module, config, tiger
 
 
 def test_off_without_url():
