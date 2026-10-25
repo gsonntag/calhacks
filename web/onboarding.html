@@ -45,12 +45,13 @@
   .per b { font-weight: 500; white-space: nowrap; }
   .per .free { color: var(--st-money); }
   #err { padding: 12px 16px; }
+  .field-err { margin-top: -8px; font: 400 13px/18px var(--md-font); color: var(--md-error); }
 </style>
 </head>
 <body>
 <header class="m3-top-app-bar">
   <a href="/" class="m3-brand" aria-label="Remy home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">Remy</span></a>
-  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="onboarding.html" aria-current="page">Get started</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="households.html">Households</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="onboarding.html" aria-current="page">Get started</a><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 <main class="m3-page m3-stack">
   <div class="hero">
@@ -72,7 +73,7 @@
         </div>
         <div class="actions"><button class="m3-btn filled" type="submit">Continue</button></div>
       </form>
-      <form class="m3-card card" id="ask" hidden></form>
+      <form class="m3-card card" id="ask" novalidate hidden></form>
       <div class="m3-card card" id="done" hidden></div>
     </div>
     <aside class="m3-card meter" id="meter" aria-live="polite">
@@ -114,6 +115,12 @@ function meter(a) {
     `<button type="button" class="m3-chip" data-k="${k}" title="Change">${esc(LABEL[k])}: ${esc(k in answers ? show(k, answers[k]) : 'not sure')}</button>`).join('');
 }
 
+// The bounds remy/onboarding.clean() accepts; anything outside is refused here, with a reason, before sending.
+const LIMITS = { household_size: [1, 20, 'Enter a whole number from 1 to 20.'],
+  income: [0, 10_000_000, 'Enter a yearly amount between $0 and $10,000,000.'],
+  medical_oop: [0, 10_000_000, 'Enter an amount between $0 and $10,000,000.'] };
+let problem = '';
+
 function ask(a) {
   const n = a.next, f = $('ask');
   $('done').hidden = !!n; f.hidden = !n;
@@ -123,11 +130,12 @@ function ask(a) {
     ? `<select class="m3-select" id="v" required><option value="">Choose…</option>${n.options.map((o) => `<option value="${esc(o.id)}">${esc(o.name)} · ${esc(o.city)}</option>`).join('')}</select>`
     : n.kind === 'yesno'
       ? `<div class="m3-segmented" role="group" aria-label="${esc(n.q)}"><button type="button" data-yes="1">Yes</button><button type="button" data-yes="0">No</button></div>`
-      : `<input class="m3-input" id="v" type="number" min="${n.kind === 'number' ? 1 : 0}" step="${n.kind === 'number' ? 1 : 100}" required value="${n.prefill ?? ''}" inputmode="numeric">`;
+      : `<input class="m3-input" id="v" type="number" min="${n.kind === 'number' ? 1 : 0}" step="${n.kind === 'number' ? 1 : 'any'}" value="${n.prefill ?? ''}" inputmode="${n.kind === 'number' ? 'numeric' : 'decimal'}" aria-describedby="verr">`;
   f.innerHTML = `<div class="gain">Narrows it most · removes ~${Math.round(100 * n.gain)}% of the uncertainty</div>
     <h2 class="title-l">${esc(n.q)}</h2><p class="why">${esc(n.why)}</p>
     ${n.prefill_note ? `<div class="bank">${esc(n.prefill_note)}. Change it if your household earns more before taxes.</div>` : ''}
     ${input}
+    <div class="field-err" id="verr" role="alert"${problem ? '' : ' hidden'}>${esc(problem)}</div>
     <div class="actions">${n.kind === 'yesno' ? '' : '<button class="m3-btn filled" type="submit">Next</button>'}
       <button class="m3-btn text" type="button" id="skip">I'm not sure</button></div>`;
   f.dataset.field = n.field; f.dataset.kind = n.kind;
@@ -160,7 +168,7 @@ async function save() {
   try {
     const r = await post('/api/onboarding');
     $('saved').innerHTML = r.saved
-      ? `Saved to your profile (Tiger Data). <a href="new.html">Start a case with your bill</a> · <a href="households.html">Households</a>`
+      ? `Saved to your profile (Tiger Data). <a href="new.html">Start a case with your bill</a>`
       : r.stored === 'local'
         ? `Saved on this server (Tiger Data isn't connected). Your next case under this name${answers.dob ? ' and date of birth' : ''} will use it. <a href="new.html">Start a case with your bill</a>`
         : 'Couldn\'t save your profile.';
@@ -170,7 +178,15 @@ async function save() {
 const err = (e) => { $('err').hidden = false; $('err').textContent = e.message || String(e); };
 async function step() {
   $('err').hidden = true;
-  try { const a = await post('/api/onboarding/assess'); meter(a); ask(a); } catch (e) { err(e); }
+  try {
+    let a = await post('/api/onboarding/assess');
+    if (a.invalid && a.invalid.length) {  // the server refused an answer: drop it and say why on the question
+      a.invalid.forEach((k) => delete answers[k]);
+      problem = (LIMITS[a.invalid[0]] || [, , "That answer didn't look right. Try again."])[2];
+      a = await post('/api/onboarding/assess');
+    }
+    meter(a); ask(a); problem = '';
+  } catch (e) { err(e); }
 }
 function answer(field, v) { answers[field] = v; skipped.delete(field); step(); }
 
@@ -181,9 +197,13 @@ $('who').onsubmit = (e) => {
 };
 $('ask').onsubmit = (e) => {
   e.preventDefault();
-  const f = e.target, v = $('v').value;
-  if (v === '') return;
-  answer(f.dataset.field, f.dataset.kind === 'select' ? v : Number(v));
+  const f = e.target, raw = $('v').value.trim(), field = f.dataset.field, lim = LIMITS[field];
+  const say = (msg) => { $('verr').textContent = msg; $('verr').hidden = false; $('v').focus(); };
+  if (raw === '') return say(f.dataset.kind === 'select' ? 'Choose one, or tap "I\'m not sure".' : 'Enter a number, or tap "I\'m not sure".');
+  if (f.dataset.kind === 'select') return answer(field, raw);
+  const v = Number(raw);
+  if (!Number.isFinite(v) || (lim && (v < lim[0] || v > lim[1] || (field === 'household_size' && !Number.isInteger(v))))) return say(lim ? lim[2] : 'Enter a number.');
+  answer(field, v);
 };
 $('answered').onclick = (e) => {
   const k = e.target.closest('[data-k]')?.dataset.k;

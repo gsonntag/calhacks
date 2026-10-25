@@ -64,3 +64,13 @@ async def test_assess_route_works_offline():
         assert r.status_code == 200 and r.json()["bank"] is None and "certainty" in r.json()
         r = await c.post("/api/onboarding", json={"answers": {"first_name": "Rosa", "last_name": "M"}})
         assert r.status_code == 200 and r.json()["saved"] is False
+
+
+async def test_assess_reports_answers_it_refused():
+    # an out-of-range answer used to be dropped silently, so the page asked the same question again
+    transport = httpx.ASGITransport(app=app_module.app, client=("127.0.0.1", 50000))
+    async with httpx.AsyncClient(transport=transport, base_url="http://t") as c:
+        r = (await c.post("/api/onboarding/assess", json={"answers": {"income": 124_521_400, "household_size": 3}})).json()
+        assert r["invalid"] == ["income"]
+        r = (await c.post("/api/onboarding/assess", json={"answers": {"income": 52_350, "household_size": 3}})).json()
+        assert r["invalid"] == []
