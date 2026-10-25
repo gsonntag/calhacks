@@ -814,7 +814,7 @@ function recheckHTML(m, ui) {
 // stage; the others their last poll
 Rail.live = (c) => {
   const m = state.models[c.id];
-  if (!m || !m.bill) return null;
+  if (!m || !m.bill || c.status === 'interrupted') return null;  // stopped (⋯ menu) or cut off by a restart: no live stage
   if (m.error) return ['Error', ''];
   const stage = stageOf(m);
   if (stage === 4) return openNext(m) ? ['What’s next', 'amber'] : null;  // the poll knows whether billing confirmed it
