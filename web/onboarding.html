@@ -11,7 +11,8 @@
 <!--
   Onboarding: builds the household profile by asking only what can change the outcome (billback/onboarding.py).
   Each answer goes to POST /api/onboarding/assess, which returns how certain the outcome is and the one question
-  that narrows it most. Save: POST /api/onboarding -> Tiger Data profile (billback/tiger.py).
+  that narrows it most. Save: POST /api/onboarding -> Tiger Data profile (billback/tiger.py), or a local copy when
+  Tiger is off; the patient's next case uses it. A stated income is double-checked against the bank (income_check).
 -->
 <style>
   .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
@@ -28,6 +29,8 @@
   .actions { display: flex; flex-wrap: wrap; gap: 8px; }
   .gain { font: 500 12px/16px var(--md-font); color: var(--md-primary); letter-spacing: .4px; text-transform: uppercase; }
   .bank { padding: 10px 14px; border-radius: var(--md-shape-m); background: var(--st-info-container); color: var(--st-on-info-container); font: 400 14px/20px var(--md-font); }
+  .bank.ok { background: var(--st-success-container); color: var(--st-on-success-container); }
+  .bank.warn { background: var(--st-warn-container); color: var(--st-on-warn-container); }
   .meter { position: sticky; top: 80px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
   .meter .big { font: 700 40px/44px var(--md-font); font-variant-numeric: tabular-nums; }
   .bar { height: 8px; border-radius: 4px; background: var(--md-surface-container-highest); overflow: hidden; }
@@ -138,9 +141,18 @@ function finish(a) {
   $('done').innerHTML = `<h2 class="title-l">${a.decided ? "That's all we need" : "That's as far as we can get"}</h2>
     <p class="why">${a.decided ? 'More answers wouldn\'t change the result.' : 'The rest depends on answers you weren\'t sure about. A bill or bank history will settle it.'}</p>
     ${a.bank ? `<div class="bank">Bank: about ${money(a.bank.annual)}/yr take-home (${esc(a.bank.source)})</div>` : ''}
+    ${incomeCheck(a)}
     <div class="per">${per}</div>
     <div class="actions"><button class="m3-btn filled" id="save" type="button">Save my profile</button></div><div class="small" id="saved"></div>`;
   $('save').onclick = save;
+}
+
+// What the bank says about the income they told us (finance.stated_check), in plain words.
+function incomeCheck(a) {
+  const c = a.income_check;
+  if (c) return `<div class="bank ${c.ok ? 'ok' : 'warn'}"><b>Income check:</b> ${esc(c.text)}</div>`;
+  if ('income' in answers) return `<div class="small">We'll check the ${money(answers.income)} you told us against your bank when you start a case.</div>`;
+  return '';
 }
 
 async function save() {
@@ -149,7 +161,9 @@ async function save() {
     const r = await post('/api/onboarding');
     $('saved').innerHTML = r.saved
       ? `Saved to your profile (Tiger Data). <a href="new.html">Start a case with your bill</a> · <a href="households.html">Households</a>`
-      : 'Tiger Data isn\'t connected here, so nothing was saved.';
+      : r.stored === 'local'
+        ? `Saved on this server (Tiger Data isn't connected). Your next case under this name${answers.dob ? ' and date of birth' : ''} will use it. <a href="new.html">Start a case with your bill</a>`
+        : 'Couldn\'t save your profile.';
   } catch (e) { $('save').disabled = false; err(e); }
 }
 

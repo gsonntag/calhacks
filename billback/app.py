@@ -43,14 +43,18 @@ it checks what was already paid, finds duplicate charges, looks up the hospital'
 policy, calls billing on the patient's behalf, and never pays anything without the patient's approval.
 Talk like a calm, warm friend. 1-3 short sentences. Ask at most one question per reply.
 Gather: who the bill is from, the amount and any deadline/collections notice, whether insurance paid part,
-how many people are in their household (it decides charity-care eligibility), and ask them to attach the bill
-and the insurance EOB if they haven't.
+how many people are in their household (it decides charity-care eligibility), roughly what the household earns
+a year before taxes (optional: they may skip it; BillBack double-checks it against their bank), and ask them to
+attach the bill and the insurance EOB if they haven't.
 As soon as you have the bill (attached or described) and the patient says go or has nothing to add,
 call start_case. Don't give legal advice."""
 
 START_TOOL = {"name": "start_case", "description": "Open a case and start working on the bill",
-              "input_schema": {"type": "object", "properties": {"summary": {"type": "string"},
-                                                                "household_size": {"type": "integer"}}}}
+              "input_schema": {"type": "object", "properties": {
+                  "summary": {"type": "string"},
+                  "household_size": {"type": "integer"},
+                  "income_annual": {"type": "number", "description": "What the household earns a year before "
+                                                                     "taxes, if the patient said"}}}}
 
 CANNED = [
     "Got it. How much is the hospital asking for, and is there a deadline or a collections notice?",
@@ -125,13 +129,28 @@ def _sample_uploads(scenario: str) -> list[tuple[str, bytes]]:
     return [(n, (config.DEMO_DIR / n).read_bytes()) for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
 
 
-async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default", household_size: int | None = None) -> dict:
+def _stated_income(v) -> float | None:
+    """A yearly before-tax income the patient gave, or None when missing or implausible."""
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return None
+    return round(v, 2) if 0 < v <= 10_000_000 else None
+
+
+async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default", household_size: int | None = None,
+                    income_annual: float | None = None) -> dict:
     """Live (Claude available): an empty case filled from the documents; "use the sample bill" sends the sample
-    PDFs through the same reading. Offline: the sample case. Starts the pipeline unless intake failed."""
+    PDFs through the same reading. Offline: the sample case. Starts the pipeline unless intake failed.
+    household_size, income_annual (before taxes): what the patient told us in chat."""
     live = llm.available()
     case = orchestrator.new_case(scenario=scenario, from_documents=live)
     if household_size and 1 <= household_size <= 20:  # not on a bill or EOB: the patient tells us
         case["patient"]["household_size"] = int(household_size)
+    else:
+        household_size = None
+    if (income_annual := _stated_income(income_annual)) is not None:  # checked against the bank by the policy agent
+        case["patient"].update(stated_income_annual=income_annual, stated_income_source="chat")
     if live and not uploads:
         uploads = _sample_uploads(scenario)
     case["documents"] = [n for n, _ in uploads] or list(SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"]))
@@ -142,23 +161,32 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
             orchestrator.set_status(case, "error")
             bus.emit(case["id"], "error", text=str(e))
             return case
-    if not household_size:
-        await _household_from_profile(case)
+    await _from_onboarding(case, household_size is not None, income_annual is not None)
     return _launch(case)
 
 
-async def _household_from_profile(case: dict) -> None:
-    """The patient didn't say their household size in chat: use what they told us at onboarding (Tiger Data
-    profile, matched on name + date of birth). Never blocks the case."""
+async def _from_onboarding(case: dict, has_household: bool, has_income: bool) -> None:
+    """Fill in what the patient told us at onboarding (onboarding.find_profile: Tiger Data, or the local copy
+    when Tiger is off; matched on name + date of birth) and didn't already say in chat: household size, income
+    before taxes (double-checked against the bank by the policy agent), insurance and medical bills as they
+    described them (the documents still decide insured). Never blocks the case."""
     try:
-        prof = await tiger.get_profile(case["patient"])
+        prof = await onboarding.find_profile(case["patient"])
     except Exception as e:
         print("profile lookup failed:", type(e).__name__)
         return
-    if prof and prof.get("household_size"):
-        case["patient"]["household_size"] = int(prof["household_size"])
-        case["patient"]["household_source"] = "onboarding"
-        orchestrator.save(case)
+    if not prof:
+        return
+    p = case["patient"]
+    if not has_household and prof.get("household_size"):
+        p.update(household_size=int(prof["household_size"]), household_source="onboarding")
+    if not has_income and (income := _stated_income(prof.get("income"))) is not None:
+        p.update(stated_income_annual=income, stated_income_source="onboarding")
+    if isinstance(prof.get("insured"), bool):
+        p["insured_stated"] = prof["insured"]
+    if prof.get("medical_oop") is not None:
+        p["medical_oop_stated"] = float(prof["medical_oop"])
+    orchestrator.save(case)
 
 
 @app.get("/api/mode")
@@ -190,8 +218,8 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
     note = f" [attached: {', '.join(n for n, _ in uploads)}]" if uploads else ""
     msgs.append({"role": "user", "content": (message or "(sent files)") + note})
 
-    async def launch(household_size: int | None = None) -> dict:
-        return await _new_case(uploads, household_size=household_size)
+    async def launch(household_size: int | None = None, income_annual: float | None = None) -> dict:
+        return await _new_case(uploads, household_size=household_size, income_annual=income_annual)
 
     if llm.available():
         try:
@@ -203,8 +231,9 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
             reply = " ".join(b.text for b in resp.content if b.type == "text").strip()
             use = next((b for b in resp.content if b.type == "tool_use"), None)
             if use:
-                hh = use.input.get("household_size") if isinstance(use.input, dict) else None
-                case = await launch(hh if isinstance(hh, int) else None)
+                args = use.input if isinstance(use.input, dict) else {}
+                hh = args.get("household_size")
+                case = await launch(hh if isinstance(hh, int) else None, args.get("income_annual"))
                 return {"reply": reply or CANNED[-1], "case_id": case["id"], "started": True}
             return {"reply": reply or "Sorry, could you say that again?"}
 
@@ -226,11 +255,12 @@ async def gmail_scan():
 
 @app.post("/api/cases", dependencies=ADMIN)
 async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default",
-                     household_size: int | None = None):
+                     household_size: int | None = None, income_annual: float | None = None):
     """Start a case from uploaded bill/EOB files, or the sample bill when none are sent.
-    ?scenario=freecare picks the second demo patient (bank history + sample policy)."""
+    ?scenario=freecare picks the second demo patient (bank history + sample policy).
+    ?income_annual: what the household earns a year before taxes, if the patient said."""
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
-    case = await _new_case(uploads, scenario, household_size)
+    case = await _new_case(uploads, scenario, household_size, income_annual)
     return {"case_id": case["id"]}
 
 
@@ -291,13 +321,14 @@ async def onboarding_assess(o: Onboarding):
 
 @app.post("/api/onboarding", dependencies=ADMIN)
 async def onboarding_save(o: Onboarding):
-    """Save the household's profile to Tiger Data. A later case for the same name + DOB reuses its household size."""
+    """Save the household's profile (Tiger Data, or locally when it's off). A later case for the same name + DOB
+    uses its household size, income before taxes (checked against the bank) and insurance answer."""
     a, out = await _assess(o)
     if not (a.get("first_name") and a.get("last_name")):
         raise HTTPException(400, "First and last name are required")
     hosp = next((h["name"] for h in out["per_hospital"] if h["id"] == a.get("hospital_id")), None)
-    pid = await tiger.save_onboarding(a, {k: v for k, v in out.items() if k != "bank"}, hosp)
-    return {**out, "profile_id": pid, "saved": pid is not None}
+    kept = await onboarding.save_profile(a, {k: v for k, v in out.items() if k != "bank"}, hosp)
+    return {**out, **kept}
 
 
 @app.get("/api/dashboard")
