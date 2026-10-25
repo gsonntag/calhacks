@@ -20,6 +20,7 @@ and the PDFs when reportlab is available. Runs offline with fixed seeds; re-runn
 | `marcus-real` | UCSF | HDHP, 3 people, 149% FPL | none (the policy is the win) | $4,174.43 → $0 free care (out-of-pocket 12.2% of income: this bill + $1,682 of pediatrician, pharmacy, orthopedic, imaging and PT bills in his bank; 11.5% even on estimated gross pay) |
 | `dana-altabates-refund` | Alta Bates Summit | insured, 2 people, 181% FPL | refund owed ($750 credited payments), gym double charge | $3,646.20 → $0 free care + $750 refund |
 | `amara-kaiser-uninsured` | Kaiser Oakland | uninsured, 2 people, 290% FPL | ankle X-ray above posted price, foot X-ray twice, $300 not credited, streaming double charge | $6,678.57 → $5,098.57 → 50% off → $2,399.28, 12 × $200/mo |
+| `raj-cpmc` | CPMC Van Ness | insured, 4 people, 135% FPL, wife's part-time pay + his Uber/Lyft payouts | IV hydration billed twice, CT abdomen/pelvis above posted price, insurance not applied, $400 payment not credited | $16,088.70 → $3,800 → $0 free care + $400 refund. The bank decides it: this bill's $4,200 share is 9.5% of take-home income (under Sutter's 10% bar); with $2,053 of other medical bills in his bank it's 14.1%, and 11.3% of estimated gross pay. Start it with `/api/cases?scenario=raj` |
 | `lena-johnmuir` | John Muir Walnut Creek | insured, 1 person, 508% FPL | insurance not applied, CT angiogram above posted price, dry-cleaner double charge | $27,619.57 → $967.52, no discount, 6 × $162/mo |
 
 ## What's real
@@ -55,7 +56,7 @@ and the PDFs when reportlab is available. Runs offline with fixed seeds; re-runn
 - `discount`, `settle`, `plan`, `correct`: FPL %, discount %, balance, refund and plan.
 - `medical_spending`: the out-of-pocket the high-medical-cost rules use: this bill's share plus the bank's other
   medical bills in the 12 months before `as_of` (`finance.medical_spending`, with the transaction ids), and
-  whether the bank is what decides eligibility (today it isn't for any of these patients: it adds margin).
+  whether the bank is what decides eligibility (it does only for `raj-cpmc`; for the others it adds margin).
 - `finance_reconcile`: what the app's reconciliation gives today, including matched payment and duplicate ids.
 - `findings`: what a correct audit should report (the money per finding follows the waterfall, so nothing is
   counted twice). `must_not_report`: false positives to avoid.
@@ -68,7 +69,8 @@ long after that will count fewer paychecks (the same applies to `demo/case.json`
 ## Add a scenario
 1. Add an entry to `SPECS` in `remy/scenarios.py`: `hospital_id` (one with a price table), `procedures`
    (codes in that table, with units), `patient`, `pay`, `rent`, `merchants`, `insurance` (or `None`), `visit`
-   dates and `errors`. Give it its own `seed`.
+   dates and `errors`. Give it its own `seed`. Optional `gig`: weekly platform payouts (Uber, Lyft...) that
+   vary week to week, with skipped weeks and `off` periods; `finance.income` counts them as income.
 2. `uv run --with reportlab python scripts/make_scenario.py <name>`. The generator refuses inconsistent specs.
    That includes a bank merchant that `finance._matches_payee` would mistake for a hospital payment (avoid words
    from the hospital's name), an accidental bank duplicate, or a real insurer's name.

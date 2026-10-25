@@ -24,7 +24,9 @@ RUNTIME = ("call_done", "turns_seen", "wh_counts", "wh_turn_ids")
 ACTIVE = ("created", "reviewing", "deciding", "awaiting_call_approval", "calling", "planning")
 
 
-SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
+# demo patients a case can start from (?scenario=...): paths under demo/. "raj" is the generated hero case
+# (demo/scenarios/raj-cpmc: remy/scenarios.py), where the bank history is what qualifies him for free care.
+SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json", "raj": "scenarios/raj-cpmc/case.json"}
 
 
 def demo_case(scenario: str = "default") -> dict:

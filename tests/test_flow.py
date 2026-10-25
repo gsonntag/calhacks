@@ -250,3 +250,50 @@ async def test_caller_llm_error_keeps_history_valid(monkeypatch):
     say = await s.turn("hello?")
     assert say == "Sorry, could you say that again?" and s.messages == [] and not s.ended
     assert any(e["kind"] == "warning" for e in bus.history("c1"))
+
+
+class _RajDay(date):
+    @classmethod
+    def today(cls):
+        return date(2026, 10, 25)  # the as_of of demo/scenarios/raj-cpmc/expected.json
+
+
+async def test_raj_hero_case_end_to_end(client, monkeypatch):
+    """?scenario=raj: both app agents + the Decide agent, offline, reach the answer key, and the plan asks for every
+    correction, free care and the refund; the offline call ends at $0 + the $400 back."""
+    monkeypatch.setattr(orchestrator, "date", _RajDay)
+    exp = json.loads((config.DEMO_DIR / "scenarios" / "raj-cpmc" / "expected.json").read_text())
+    c = client
+    case_id = (await c.post("/api/cases?scenario=raj&household_size=4")).json()["case_id"]
+    plan = (await _wait_for(case_id, lambda e: e["kind"] == "plan_version"))["plan"]
+    hist = bus.history(case_id)
+    finds = {e["key"].split(":", 1)[1]: e for e in hist if e["kind"] == "finding" and e["agent"] == "auditor"}
+    assert finds["duplicate_line-7"]["saved"] == 1160 and finds["price_above_posted-2"]["saved"] == 776
+    assert finds["insurance"]["saved"] == next(f["money"] for f in exp["findings"] if f["id"] == "insurance_not_applied")
+    assert [k for k in finds if k.startswith("paid-")] == [f["id"] for f in exp["findings"] if f["id"].startswith("paid-")]
+
+    m = plan["money"]
+    assert m["billed"] == exp["totals"]["amount_due"] and m["owed"] == exp["waterfall"]["owed_before_discount"]
+    assert m["target"] == 0 and m["refund"] == exp["correct"]["refund"] == 400
+    asks = {a["id"]: a for a in plan["asks"]}
+    assert {"bill_line-7", "bill_line-2", "insurance", "payment", "discount", "refund", "hold", "case_number"} <= set(asks)
+    assert "bills 96360 a second time" in asks["bill_line-7"]["text"]
+    assert "74176 above the hospital's posted price" in asks["bill_line-2"]["text"]
+    assert "free care" in asks["discount"]["text"] and asks["refund"]["money"] == 400
+
+    elig = orchestrator.cases[case_id]["facts"]["pol"]["eligibility"]
+    assert elig["discount_pct"] == 100 and not elig.get("gross_check")
+
+    await _approve(c, case_id, "caller")
+    ready = await _wait_for(case_id, lambda e: e["kind"] == "call_ready")
+    for line in ["Patient Financial Services, this is Diane, how can I help you?", "Okay, let me pull that up.",
+                 "I see it.", "Okay.", "Yes, I've opened a financial assistance review and put the account on hold.",
+                 "Your case number is 58213.", "Yes, that's right."]:
+        r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": line})).json()
+        if r["ended"]:
+            break
+    said = " ".join(e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "remy")
+    assert "$400" in said
+    s = (await _wait_for(case_id, lambda e: e["kind"] == "case_done"))["summary"]
+    # not confirmed by billing yet: $0 and the $400 refund are what Remy expects once the corrections land
+    assert s["expected"] == 0 and s["expected_refund"] == 400 and s["case_number"] == "58213"
