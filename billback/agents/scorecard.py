@@ -28,6 +28,7 @@ GOT = {  # kind -> pattern in the rep's words that means it was done
 PROMISE = {  # kind -> promised action (followups.PROMISES) that means it's coming later
     "insurance": "Send a corrected statement",
     "payment": "Send a corrected statement",
+    "bill_line": "Send a corrected statement",
     "discount": "Complete the financial-assistance review",
     "refund": "Process the refund",
 }
@@ -65,7 +66,7 @@ def from_call(ask: dict, outcome: dict, info: dict, rep_lines: list[str], money:
     if kind == "payment" and outcome.get("payment_applied"):
         return "got", "Your payment was applied", "call record"
     if isinstance(confirmed, (int, float)):
-        limit = money["target"] if kind in ("discount",) else money["owed"] if kind in ("insurance", "payment") else None
+        limit = money["target"] if kind in ("discount",) else money["owed"] if kind in ("insurance", "bill_line", "payment") else None
         if limit is not None and confirmed <= limit + 0.5:
             return "got", f"Billing confirmed the balance is ${confirmed:,.0f}", "rep said"
     if kind in GOT:

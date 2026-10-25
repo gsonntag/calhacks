@@ -17,7 +17,7 @@ from . import scorecard
 from .report import Report
 
 AGENTS = {"auditor": "Nessie agent", "policy": "Bright Data agent", "decide": "Decide agent"}
-KINDS = ("insurance", "payment", "discount", "refund", "plan", "supervisor", "hold", "case_number")
+KINDS = ("insurance", "bill_line", "payment", "discount", "refund", "plan", "supervisor", "hold", "case_number")
 SKIPPABLE = ("plan", "hold", "supervisor")
 CORRECTABLE_UNTIL = ("awaiting_call_approval", "done")  # no call is running (done: the plan for the next call)
 
@@ -128,7 +128,7 @@ def next_step(case: dict, asks: list[dict], results: dict[str, dict]) -> dict | 
             continue
         if a["kind"] == "discount" and pol["policy"].get("apply_how"):
             options.append(f"Apply for financial assistance yourself: {pol['policy']['apply_how']}")
-        elif a["kind"] in ("insurance", "payment", "refund"):
+        elif a["kind"] in ("insurance", "bill_line", "payment", "refund"):
             options.append("Send billing a written dispute with the insurance statement and bank record attached")
         elif a["kind"] == "hold":
             options.append("Ask in writing for collections to be paused while this is reviewed")
@@ -163,7 +163,14 @@ def compute(case: dict) -> dict:
 
     billed, eob_share = float(rec["billed_due"]), float(rec["patient_responsibility"])
     ins_wrong = "auditor:insurance" in bad
+    line_errors = [c for c in rec.get("line_errors") or [] if f"auditor:{c['kind']}-{c['line']}" not in bad]
+    line_total = round(sum(c["amount"] for c in line_errors), 2)
     share = billed if ins_wrong else eob_share
+    if not rec.get("insured", True):  # self-pay: a line marked wrong goes back into the share
+        share = round(billed - line_total, 2)
+    elif ins_wrong:
+        share = round(billed - line_total, 2)
+    ins_gap = round(billed - share - line_total, 2)  # what's left once the line errors are taken out
     payments = [p for p in rec["payments"] if f"auditor:paid-{p['id']}" not in bad]
     paid = round(sum(p["amount"] for p in payments), 2)
     elig, inc = pol["eligibility"], pol["income"]
@@ -173,8 +180,11 @@ def compute(case: dict) -> dict:
     target, refund = st["balance"], st["refund"]
 
     math_lines = [{"label": "Hospital says you owe", "amount": billed, "source": acct}]
-    if billed > share:
-        math_lines.append({"label": "Insurance not applied", "amount": -round(billed - share, 2), "source": claim,
+    for c in line_errors:
+        math_lines.append({"label": c.get("label", "Bill error"), "amount": -c["amount"], "source": c.get("source", acct),
+                           "finding": f"auditor:{c['kind']}-{c['line']}"})
+    if ins_gap > 0:
+        math_lines.append({"label": "Insurance not applied", "amount": -ins_gap, "source": claim,
                            "finding": "auditor:insurance"})
     for p in payments:
         math_lines.append({"label": f"Payment you already made {p['date'][:10]}", "amount": -p["amount"],
@@ -194,10 +204,16 @@ def compute(case: dict) -> dict:
         asks.append({"id": kind, "kind": kind, "money": round(amount, 2), "value": value or (f"−{money(amount)}" if amount else ""),
                      "text": text, "goal": goal, "findings": findings or [], "basis": basis, **extra})
 
-    if billed > share:
-        ask("insurance", f"Apply your insurance: the statement says you owe {money(share)}, not {money(billed)}",
-            f"Get the insurance adjustment applied: the EOB says the patient owes {money(share)}, not {money(billed)}.",
-            billed - share, findings=["auditor:insurance"])
+    for c in line_errors:
+        what = (f"line {c['line']} bills {c['code']} a second time" if c["kind"] == "duplicate_line"
+                else f"line {c['line']} charges {c['code']} above the hospital's posted price")
+        ask("bill_line", f"Remove the error on your bill: {what} ({money(c['amount'])})",
+            f"Get the bill corrected: {c['detail']} Source: {c['source']}.",
+            c["amount"], findings=[f"auditor:{c['kind']}-{c['line']}"], id=f"bill_line-{c['line']}")
+    if ins_gap > 0:
+        ask("insurance", f"Apply your insurance: the statement says you owe {money(eob_share)}, not {money(billed)}",
+            f"Get the insurance adjustment applied: the EOB says the patient owes {money(eob_share)}, not {money(billed)}.",
+            ins_gap, findings=["auditor:insurance"])
     if paid:
         ask("payment", f"Show the {money(paid)} you already paid, bringing it to {money(owed)}",
             f"Get the {money(paid)} already paid applied (give date and reference when asked).",
