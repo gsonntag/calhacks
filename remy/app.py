@@ -51,7 +51,8 @@ class BodyGuard:
         if scope["type"] != "http" or scope["method"] not in ("POST", "PUT", "PATCH"):
             return await self.inner(scope, receive, send)
         req = Request(scope)
-        if scope["path"] in UPLOAD_PATHS and not auth.allowed(req):
+        multipart = req.headers.get("content-type", "").lower().startswith("multipart/")  # every one is ADMIN
+        if (scope["path"] in UPLOAD_PATHS or multipart) and not auth.allowed(req):
             resp = JSONResponse({"detail": "admin key required"}, 401, headers={"X-Remy-Auth": "required"})
             return await resp(scope, receive, send)
         length = req.headers.get("content-length", "")
@@ -204,6 +205,8 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
         household_size = None
     if (income_annual := _stated_income(income_annual)) is not None:  # checked against the bank by the policy agent
         case["patient"].update(stated_income_annual=income_annual, stated_income_source="chat")
+    if household_size is not None or income_annual is not None:
+        case["sample"] = False  # holds what the patient told us
     if live and not uploads:
         uploads = _sample_uploads(scenario)
     case["documents"] = [n for n, _ in uploads] or [n.removeprefix("scenarios/").replace("/", "-")
@@ -231,6 +234,7 @@ async def _from_onboarding(case: dict, has_household: bool, has_income: bool) ->
         return
     if not prof:
         return
+    case["sample"] = False  # the patient's own onboarding answers
     p = case["patient"]
     if not has_household and prof.get("household_size"):
         p.update(household_size=int(prof["household_size"]), household_source="onboarding")
@@ -568,6 +572,7 @@ async def add_correction(case_id: str, c: Correction):
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
+    case["sample"] = False  # a correction may carry the patient's real details
     out = await _decide_call(decide.correct(case, c.finding, c.note))
     orchestrator.save(case)
     return out

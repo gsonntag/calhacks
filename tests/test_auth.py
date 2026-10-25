@@ -182,7 +182,7 @@ def test_uploaded_case_websocket_needs_the_key(monkeypatch, two_cases):
 async def test_upload_refused_before_the_body_is_read(monkeypatch):
     monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
     async with _client(("203.0.113.9", 1)) as c:
-        for path in ("/api/chat", "/api/cases"):
+        for path in ("/api/chat", "/api/cases", "/api/cases/abc123/talk"):  # any multipart body
             r = await c.post(path, files={"files": ("bill.pdf", b"%PDF-1.4 x", "application/pdf")})
             assert r.status_code == 401 and r.headers["x-remy-auth"] == "required"
 
