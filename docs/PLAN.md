@@ -35,7 +35,7 @@ bank history and insurer stay synthetic.
 
 ## Rough version (build now, in order)
 
-Status (2026-10-25, 05:20): 1–3 built · 4 done on branch `nessie-fixes`, not merged yet · 5 not built ·
+Status (2026-10-25, 06:10): 1–4 built · 5 not built ·
 6 built (step 3).
 
 1. **Fold New case into Cases.** *(Built.)* Cases is home, with a "+ New case" button that opens the chat intake. With
@@ -44,8 +44,8 @@ Status (2026-10-25, 05:20): 1–3 built · 4 done on branch `nessie-fixes`, not 
    result) and findings (what was found, money saved, proof, source). Both agents and the UI use it.
 3. **Generic Review screen.** *(Built, commit 6563e09.)* The case page shows a live panel for each app agent that reports in, not
    hard-coded Auditor/Policy columns. Findings feed the "ranked by money saved" list.
-4. **Nessie agent:** *(Done on branch `nessie-fixes`, commit 7fa5967: strict payment match, uninsured
-   cases, credited payments. Not merged into `after-david-takeover` yet.)* Fix the loose payment match first (any word like "Medical"/"Pacific" in a merchant name
+4. **Nessie agent:** *(Built, commit 7fa5967: strict payment match, uninsured cases, credited payments.
+   Merged into `after-david-takeover`.)* Fix the loose payment match first (any word like "Medical"/"Pacific" in a merchant name
    counts as a payment to the hospital, and there's no date check: `finance._matches_payee`).
 5. **Bright Data agent: real prices.** *(Not built. The price tables (`policydb/prices/`) and the rosa-real
    scenario exist, but the agent has no price check or duplicate-line check, and Rosa's bill is still the
@@ -136,6 +136,20 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   - The committed replays were recorded before step 3, so they show only the old ask list. Re-record after
     the next live run.
 
+### Review and Ask changes (2026-10-25, commit e80d78d)
+- **Step 2 is split by agent:** each agent's column shows its live panel, then "What it found" under it
+  (biggest saving first); on a phone the columns stack. The merged "What they found" list is gone. An agent
+  that found nothing says "Nothing to correct here." The hospital's policy quotes still sit below both
+  columns (they are Bright Data's evidence; could move into its column).
+- **Ask answers explain, not repeat:** Claude now gets the records behind the finding (Nessie: the full
+  insurance statement, the bill, matched bank payments, duplicate charges, the math; Bright Data: policy
+  quotes, eligibility, plan terms, income) and is told to answer the question and explain the numbers.
+  Offline (no Claude key) it still just repeats the finding's proof. Tested by Gavin on 8002 with Claude on.
+- **Ask is hard to find:** it shows only after you expand a finding, only once a plan exists (older cases and
+  replays never show it). Proposed, not built: an Ask button on the finding row, shown once that agent is done.
+- **Uninsured call brief fixed:** `caller.build_brief` and the offline call script no longer crash on an
+  empty insurance statement.
+
 ### Step 4: the call (fully autonomous) *(design only, not built)*
 - No mid-call steering (no nudge box). When billing refuses an ask, BillBack follows the approved plan's
   fallback by itself; it doesn't pause to ask.
@@ -168,7 +182,7 @@ LLM latency.
   rosa-real ($15,414 → $1,575), marcus-real ($4,174 → $0), dana-altabates-refund, amara-kaiser-uninsured,
   lena-johnmuir. Making rosa-real the main demo case means updating demo/case.json, PDFs, Nessie seed, tests,
   docs and re-recording the replay.
-- Nessie agent bugs: fixed on branch `nessie-fixes` (loose payment matching, crash on uninsured patients,
+- Nessie agent bugs: fixed and merged, commit 7fa5967 (loose payment matching, crash on uninsured patients,
   credited payments reported as missed), not merged yet.
 
 ### Defaults chosen when building step 3 (2026-10-25; data format in `docs/plan-format.md`)
