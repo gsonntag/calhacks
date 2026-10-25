@@ -106,7 +106,7 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
    with only the open asks.
 
 ```
- chat / drop-and-go ──► Orchestrator ──► audit log + live case page (web/case.html), Cases list (web/dashboard.html)
+ chat / drop-and-go ──► Orchestrator ──► audit log + Cases page (web/case.html: case rail + live case)
                               │
    ┌──────────────┬───────────┼────────────────┬────────────────────┬──────────────────┐
    ▼              ▼           ▼                ▼                    ▼                  ▼
@@ -205,7 +205,7 @@ Optional (`TIGER_DATABASE_URL`). Every household Remy helps is stored in Tiger C
 - every Nessie transaction in a `transactions` hypertable, tagged income or not
 - a real-time `monthly_cashflow` continuous aggregate
 
-The case page shows "Income by month (Tiger Data)", and `/households.html` (admin only) lists households
+The case page shows "Income by month (Tiger Data)", and `GET /api/households` (admin only) lists households
 lowest % of poverty line first. Tiger only stores and rolls up data; eligibility math stays in `finance.py`. A
 Tiger failure never blocks a case. Code: `remy/tiger.py`, `remy/onboarding.py`.
 
@@ -352,8 +352,8 @@ remy/  app.py orchestrator.py harness.py events.py finance.py billcheck.py follo
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes
            voice/         calls media cartesia_ws desk heard pronounce voices authorization audio routes
            integrations/  nessie brightdata cartesia twilio
-web/       dashboard.html (Cases, at /)  new.html (chat intake)  case.html  ops.html (Under the hood)  hospitals.html
-           onboarding.html  households.html  rep.html (desk billing)  approve.html (phone approval)  voice.html  pitch.html
+web/       case.html (Cases, at /: rail.js case rail + live case)  new.html (chat intake)  ops.html (Under the hood)  hospitals.html
+           onboarding.html  rep.html (desk billing)  approve.html (phone approval)  voice.html  pitch.html
            auth.js  flows/drop-go.html
 demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, scenarios/, outcomes/, replays
 policydb/  policies.sqlite3, policies.json, raw/ (Bright Data crawl artifacts), prices/ (real price tables)
