@@ -1,6 +1,7 @@
 """Tiger Data (Timescale Postgres): every household we help, and its bank history over time.
 
-    profiles          one row per household: who, household size, insurance, latest income and eligibility
+    profiles          one row per household: who, household size, insurance, latest income and eligibility;
+                      onboarding (billback/onboarding.py) adds what the patient told us and the assessment
     transactions      hypertable (by time): every Nessie transaction pulled for a case, tagged income or not
     monthly_cashflow  continuous aggregate over transactions: income, spending and paychecks per household
                       per month. Real-time (materialized_only = false), so a case's own deposits show up at once.
@@ -15,6 +16,7 @@ from datetime import datetime, timezone
 
 import psycopg
 from psycopg.rows import dict_row
+from psycopg.types.json import Jsonb
 
 from . import config, finance
 
@@ -26,6 +28,10 @@ CREATE TABLE IF NOT EXISTS profiles (
     income_annual numeric, income_source text, fpl_pct numeric, discount_pct numeric,
     last_case_id text, last_txn_at timestamptz,
     updated_at timestamptz NOT NULL DEFAULT now());
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS income_reported numeric;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS medical_oop numeric;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS onboarding jsonb;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS onboarded_at timestamptz;
 CREATE TABLE IF NOT EXISTS transactions (
     time timestamptz NOT NULL,
     profile_id text NOT NULL,
@@ -144,6 +150,7 @@ async def households_by_need(limit: int = 200) -> list[dict]:
         """SELECT p.id, p.first_name, p.last_name, p.city, p.zip, p.household_size, p.insured, p.hospital,
                   p.income_annual::float AS income_annual, p.income_source, p.fpl_pct::float AS fpl_pct,
                   p.discount_pct::float AS discount_pct, p.last_case_id, p.updated_at,
+                  p.income_reported::float AS income_reported, p.onboarded_at IS NOT NULL AS onboarded,
                   coalesce(sum(m.income), 0)::float AS income_12mo, count(m.month) AS months_on_file,
                   coalesce(json_agg(json_build_object('month', m.month::date, 'income', m.income::float)
                                     ORDER BY m.month) FILTER (WHERE m.month IS NOT NULL), '[]') AS months
@@ -153,3 +160,41 @@ async def households_by_need(limit: int = 200) -> list[dict]:
            ORDER BY p.fpl_pct ASC NULLS LAST, p.updated_at DESC
            LIMIT %s""", (limit,)), TIMEOUT)
     return [{**r, "updated_at": r["updated_at"].isoformat()} for r in await cur.fetchall()]
+
+
+async def save_onboarding(answers: dict, assessment: dict, hospital: str | None) -> str | None:
+    """Upsert what the patient told us at onboarding. Bank-derived columns (income_annual, fpl_pct from a case)
+    are left alone: a later case fills them from the bank. Returns the profile id, None when Tiger is off."""
+    if not enabled():
+        return None
+    pid = profile_id(answers)
+    db = await _db()
+    await asyncio.wait_for(db.execute(
+        """INSERT INTO profiles (id, first_name, last_name, dob, zip, household_size, insured, hospital,
+                                 income_reported, medical_oop, onboarding, onboarded_at, fpl_pct, discount_pct, updated_at)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, now(), %s, %s, now())
+           ON CONFLICT (id) DO UPDATE SET
+             zip = coalesce(excluded.zip, profiles.zip),
+             household_size = coalesce(excluded.household_size, profiles.household_size),
+             insured = coalesce(excluded.insured, profiles.insured),
+             hospital = coalesce(excluded.hospital, profiles.hospital),
+             income_reported = excluded.income_reported, medical_oop = excluded.medical_oop,
+             onboarding = excluded.onboarding, onboarded_at = now(),
+             fpl_pct = coalesce(profiles.fpl_pct, excluded.fpl_pct),
+             discount_pct = coalesce(profiles.discount_pct, excluded.discount_pct), updated_at = now()""",
+        (pid, answers.get("first_name"), answers.get("last_name"), answers.get("dob"), answers.get("zip"),
+         answers.get("household_size"), answers.get("insured"), hospital, answers.get("income"),
+         answers.get("medical_oop"), Jsonb({"answers": answers, "assessment": assessment}),
+         round(sum(assessment["fpl_range"]) / 2, 1) if assessment.get("decided") and assessment.get("fpl_range") else None,
+         assessment.get("discount_pct") if assessment.get("decided") else None)), TIMEOUT)
+    return pid
+
+
+async def get_profile(patient: dict) -> dict | None:
+    """The stored profile for this patient (name + DOB), or None."""
+    if not enabled():
+        return None
+    cur = await asyncio.wait_for((await _db()).execute(
+        "SELECT id, household_size, insured, income_reported::float AS income_reported, onboarded_at "
+        "FROM profiles WHERE id = %s", (profile_id(patient),)), TIMEOUT)
+    return await cur.fetchone()

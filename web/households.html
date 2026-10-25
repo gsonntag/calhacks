@@ -42,7 +42,7 @@
 <body>
 <header class="m3-top-app-bar">
   <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
-  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="households.html" aria-current="page">Households</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="onboarding.html">Get started</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="households.html" aria-current="page">Households</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 <main class="m3-page m3-stack">
   <div class="hero">
@@ -79,10 +79,11 @@ async function load() {
     .map(([k, v]) => `<div class="m3-card"><div class="label-l muted">${k}</div><div class="stat-value">${v}</div></div>`).join('');
   $('list').innerHTML = hs.length ? hs.map((h) => {
     const [cls, what] = band(h);
-    const who = [h.household_size && `household of ${h.household_size}`, h.insured ? 'insured' : 'uninsured', h.city].filter(Boolean).join(' · ');
+    const who = [h.household_size && `household of ${h.household_size}`, h.insured == null ? '' : h.insured ? 'insured' : 'uninsured', h.city || h.zip, h.onboarded && 'onboarded'].filter(Boolean).join(' · ');
+    const inc = [h.income_annual != null && `${money(h.income_annual)}/yr take-home (bank)`, h.income_reported != null && `${money(h.income_reported)}/yr told us`].filter(Boolean).join(' · ');
     const link = h.last_case_id ? `<a href="case.html?id=${encodeURIComponent(h.last_case_id)}">latest case</a>` : '';
     return `<div class="hh"><div><div class="name">${esc(h.first_name)} ${esc(h.last_name)}</div>
-      <div class="sub">${esc(who)}</div><div class="sub">${esc(h.hospital)} · ${money(h.income_annual)}/yr take-home ${link ? '· ' + link : ''}</div></div>
+      <div class="sub">${esc(who)}</div><div class="sub">${esc([h.hospital, inc].filter(Boolean).join(' · '))} ${link ? '· ' + link : ''}</div></div>
       <div class="spark">${spark(h.months)}</div>
       <div class="fpl ${cls}"><b>${h.fpl_pct == null ? '—' : Math.round(h.fpl_pct) + '%'}</b><span>of poverty line · ${what}</span></div></div>`;
   }).join('') : '<div class="empty muted">No households yet. They appear here once a case reaches the income step.</div>';
