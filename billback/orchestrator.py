@@ -148,7 +148,10 @@ def call_asks(audit: dict, pol: dict) -> list[str]:
 
 
 def save_replay(case: dict) -> None:
-    """Keep the event stream of the latest finished case per scenario for case.html?replay=1 (Wi-Fi insurance)."""
+    """Keep the event stream of the latest finished case per scenario for case.html?replay=1 (Wi-Fi insurance).
+    Only live runs (Claude available) are kept: an offline mock run must never replace a real recording."""
+    if not llm.available():
+        return
     evs = [e for e in bus.history(case["id"]) if e["kind"] not in ("tool_call", "tool_result", "agent_thought")
            or e.get("tool") == "create_payment_plan"]
     (events.DATA_DIR / f"replay_{case.get('scenario', 'default')}.json").write_text(json.dumps(evs, default=str))
