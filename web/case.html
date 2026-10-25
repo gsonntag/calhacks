@@ -733,7 +733,7 @@ function renderTabs() {
 
 function phaseText(m) {
   if (m.outcome.case_number) return `Billing agreed · case ${m.outcome.case_number}`;
-  const last = m.lines[m.lines.length - 1];
+  const last = m.lines.filter((l) => l.who !== 'guard').pop();  // guardrail notes aren't speech
   if (!last) return 'Dialing…';
   return last.who === 'rep' ? 'Billing is responding' : 'BillBack is making your case';
 }
@@ -838,7 +838,7 @@ function assistantLine(m, ds, tab) {
     .filter(Boolean).join('; ');
   if (ds === 2) return { text: (found || (reviewed ? `I checked your bill. ${reviewed}.` : '')) + ` Want me to call ${prov} billing?`, chip: 'Voice agent ready' };
   if (ds === 3) {
-    const mine = m.lines.filter((l) => l.who !== 'rep').pop();
+    const mine = m.lines.filter((l) => l.who === 'billback').pop();
     const said = mine ? (mine.text.length > 180 ? mine.text.slice(0, 177).trimEnd() + '…' : mine.text) : '';
     return { text: said ? `“${said}”` : `I’m dialing ${prov} billing.`, chip: 'On the call', cls: 'success', live: true };
   }
@@ -1267,7 +1267,7 @@ function nowText(m, ds, a) {
   }
   if (ds === 2) return `Check the plan, then tap Call now and I’ll call ${prov} billing.`;
   if (ds === 3) {
-    const l = m.lines[m.lines.length - 1];
+    const l = m.lines.filter((x) => x.who !== 'guard').pop();
     return l ? `${l.who === 'rep' ? 'Billing' : 'BillBack'}: “${l.text.length > 160 ? l.text.slice(0, 157).trimEnd() + '…' : l.text}”` : `Dialing ${prov} billing…`;
   }
   return a.text;

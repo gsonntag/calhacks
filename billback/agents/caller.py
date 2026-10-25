@@ -16,6 +16,7 @@ from ..harness import ToolRegistry, Tool
 from . import mandate
 
 INTERRUPTED = "—[interrupted]"  # ends a remembered reply the rep talked over (voice/heard.py)
+CLEARED_CALLS = 2  # an allowed check_offer clears a promise for this many model calls after it (the reply, one more)
 
 SYSTEM = """You are BillBack, an AI assistant on a live phone call with a hospital billing representative,
 calling on behalf of a patient who authorized you. You speak out loud, so:
@@ -212,8 +213,12 @@ class CallSession:
                           "before agreeing to it or giving information", mandate.TOOL_SPEC, self._check, tier="act"))
         self.keys = ""  # keypad presses the phone transport hasn't sent yet (take_keys)
         self.refused: list[dict] = []  # check_offer refusals this call (agents/mandate.py)
-        self.cleared: set[str] = set()  # offer kinds check_offer allowed this call: the speech screen lets them through
+        # offer kinds check_offer allowed, with the amounts it allowed: the speech screen lets a promise within
+        # them through, for the next CLEARED_CALLS model calls only ({kind: {"total", "monthly", "until"}})
+        self.cleared: dict[str, dict] = {}
+        self.calls = 0                  # model calls this call (cleared offers expire by it)
         self.heard: list[str] = []      # what the rep said this call (a reference number they gave may be read back)
+        self._script_said: tuple[str, str] | None = None  # offline: the last scripted line, as written and as said
 
     async def _record(self, **kw) -> dict:
         self.outcome.update({k: v for k, v in kw.items() if v not in (None, "")})
@@ -236,7 +241,9 @@ class CallSession:
                                                   if k in ("monthly", "months", "total", "interest_pct", "info")})
         out = {"offer": kind, **{k: v for k, v in kw.items() if v not in (None, "")}, **d.as_dict()}
         if d.allowed:
-            self.cleared.add(kind)
+            if kind in mandate.UNLOCKS:
+                self.cleared[kind] = {**mandate.cleared_amounts(self.brief, kind, **kw),
+                                      "until": self.calls + CLEARED_CALLS}
         else:
             self.refused.append(out)
         bus.emit(self.case_id, "guardrail", "caller", **out)
@@ -245,7 +252,8 @@ class CallSession:
     def _screen(self, text: str, said: list[str]) -> str:
         """The last check on every sentence before it's spoken (mandate.screen): one the mandate wouldn't clear
         is replaced with a safe line and shown on the case page. Returns "" for a safe line already said this turn."""
-        safe, blocked = mandate.screen(text, self.brief, self.cleared, self.heard)
+        live = {k: v for k, v in self.cleared.items() if self.calls <= v["until"]}
+        safe, blocked = mandate.screen(text, self.brief, live, self.heard)
         for b in blocked:
             bus.emit(self.case_id, "guardrail", "caller", offer="speech", decision="refused", rule=b["rule"],
                      reason=b["reason"], say=b["say"])
@@ -408,6 +416,7 @@ class CallSession:
         try:
             for i in range(4):  # allow tool calls, then a spoken reply
                 stream = draft["stream"] if draft and i == 0 else self._llm(self.messages)
+                self.calls += 1
                 cut, said, wrote = llm.Sentences(), [], []  # said: screened, as spoken; wrote: as the model wrote it
                 async for delta in stream.deltas():
                     for s in cut.feed(delta):
@@ -448,7 +457,7 @@ class CallSession:
                 no = [d for d in no if d.get("decision") == "refused"]
                 if no:  # a refusal is said in the mandate's words, never left to the model
                     line = " ".join(dict.fromkeys(d["say"] for d in no if d.get("say")))
-                    yield line
+                    yield line + " "  # the trailing space every spoken sentence has, for TTS
                     parts.append(line)
                     self.messages.append({"role": "assistant", "content": line})
                     break
@@ -533,10 +542,18 @@ class CallSession:
         elif rep_said and len(lines) >= 5 and step >= len(lines) - 3:  # replying to the hold ask, case-number ask or read-back
             fields = self._held()
             if step == len(lines) - 1:  # the rep confirmed the read-back, or corrected it ("no, it's FA-20931")
-                said_back = _case_number(str(self.messages[-1]["content"]).removeprefix("Let me read that back: "))
-                fields["case_number"] = _case_number(rep_said) if re.search(r"\d", rep_said) else said_back
+                if re.search(r"\d", rep_said):
+                    fields["case_number"] = _case_number(rep_said)
+                elif self._script_said and self._script_said[1] == self._script_said[0].strip():  # never a blocked read-back
+                    fields["case_number"] = _case_number(self._script_said[0].removeprefix("Let me read that back: "))
             await self.reg.call("record_outcome", fields)
-        say = self._screen(lines[min(step, len(lines) - 1)], [])
+        line = lines[min(step, len(lines) - 1)]
+        cut, said = llm.Sentences(), []  # screened one sentence at a time: a blocked one can't take the rest with it
+        for s in [*cut.feed(line), *cut.flush()]:
+            if s := self._screen(s, said):
+                said.append(s)
+        say = "".join(said).strip()
+        self._script_said = (line, say)
         self.messages += [{"role": "user", "content": rep_said or ""}, {"role": "assistant", "content": say}]
         if step >= len(lines) - 1:
             if not self.outcome.get("account_on_hold"):

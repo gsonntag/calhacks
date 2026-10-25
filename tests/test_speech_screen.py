@@ -33,6 +33,13 @@ def rules(text, allowed=(), heard=()):
     "Call (415) 555-1212 or 415-555-1212.",
     "That's account 48213977 6 months ago.",
     "Once it's corrected to $600, could you set up an interest-free payment plan of 6 monthly payments of $100?",
+    # confirming what the patient approved, asking it back, and words that only look like promises
+    "So the patient would pay $100 a month for six months, interest-free?",
+    "Just to confirm, the patient will pay $600 total once corrected.",
+    "Once it's corrected, the patient can pay the remaining balance.",
+    "Sure, the patient will accept the corrected balance of $600.",
+    "I'd like to make a payment plan request.",
+    "We will pay attention to that.",
 ])
 def test_normal_lines_pass(text):
     assert mandate.screen(text, BRIEF) == (text, [])
@@ -53,6 +60,14 @@ def test_normal_lines_pass(text):
     ("Please go ahead and enroll her.", "commit"),
     ("Yes, set it up.", "commit"),
     ("Deal.", "commit"),
+    ("Once it's corrected, we'll pay the $8,700.", "commit"),             # more than the corrected balance
+    ("Once it's corrected, the patient will pay $300 a month.", "commit"),  # more than the approved monthly
+    ("Once it's corrected, we'll pay three hundred.", "commit"),           # an amount in words can't be checked
+    ("I agree to pay $300, okay?", "commit"),                             # a tag question is still a promise
+    ("Absolutely, put her down for $300 a month.", "commit"),
+    ("You can bill the card on file.", "pay_now"),
+    ("Her SSN ends in 6789.", "pii"),
+    ("Her social security number ends with 6789.", "pii"),
     ("I can pay $100 today.", "pay_now"),
     ("Go ahead and charge the card.", "pay_now"),
     ("I'm a real person.", "human"),
@@ -74,12 +89,36 @@ def test_an_allowed_check_offer_lets_the_caller_agree_but_never_pay_now():
     assert rules("Her SSN is 123-45-6789.", allowed={"payment_plan"}) == ["pii"]
 
 
+def test_cleared_promises_stay_within_the_allowed_amounts():
+    allowed = {"payment_plan": {"total": 600, "monthly": 100}}
+    assert rules("Great, we'll pay $100 a month.", allowed=allowed) == []
+    assert rules("Great, we'll pay $300 a month.", allowed=allowed) == ["commit"]
+    assert rules("Great, we'll pay $8,700.", allowed=allowed) == ["commit"]
+    assert rules("Go ahead and charge the card.", allowed=allowed) == ["pay_now"]
+
+
+def test_policy_numbers_pass_only_when_they_are_the_patients():
+    line = "She has insurance through Blue Shield, policy 123 456 789."
+    assert rules(line) == ["pii"]                                              # 9 digits nobody gave us
+    assert mandate.screen(line, {**BRIEF, "insurance_member_id": "123456789"})[1] == []
+
+
+def test_every_number_in_the_brief_may_be_said():
+    brief = {**BRIEF, "previous_calls": [{"date": "2026-10-01", "rep": "Dana", "case_number": "482913377"}],
+             "payments_made": [{"date": "2026-03-03", "amount": 250, "reference": "482913378"}]}
+    assert mandate.screen("I'm following up on case number 482913377.", brief)[1] == []
+    assert mandate.screen("The payment reference is 4829 13378.", brief)[1] == []
+    assert mandate.screen("The payment reference is 482913379.", brief)[1]     # not in the brief
+
+
 def test_brief_values_and_read_backs_of_long_reference_numbers():
     assert rules("The claim number is 2026 0815 44917.") == []         # in the brief, grouped differently
     assert rules("The claim number is 2026 0815 44917.") == []
     assert rules("Let me read that back: 2026-1234-56789.") == ["pii"]  # 13 digits nobody gave us
     assert rules("Let me read that back: 2026-1234-56789.", heard=["It's 2026-1234-56789."]) == []
     assert rules("Is it 123-45-6789?", heard=["Is her SSN 123-45-6789?"]) == ["pii"]  # never confirms an SSN
+    assert rules("Let me read that back: 482913377.", heard=["Your reference is 482913377."]) == []  # 9 digits too
+    assert rules("Let me read that back: 482913377.") == ["pii"]
     no_claim = {**BRIEF, "claim_number": None}
     assert mandate.screen("Claim C-2026-0815-44917.", no_claim)[1]     # not in this brief: fails closed
 
@@ -138,3 +177,73 @@ def test_zip_plus_four_is_not_an_ssn():
         assert mandate.screen(line, brief)[1] == [], line
     assert mandate.screen("Her number is 123-45-6789.", brief)[1]           # SSN shape still blocked
     assert mandate.screen("It's 947021234.", brief)[1]                      # bare 9 digits: can't tell, blocked
+
+
+async def test_an_allowed_check_offer_clears_promises_only_briefly(claude):
+    """An allowed plan clears the agreement right after it and one more model call, not the rest of the call."""
+    claude.script = [respond("", tool_block("check_offer", {"kind": "payment_plan", "monthly": 100, "months": 6})),
+                     respond("Great, we'll take that plan at $100 a month."),
+                     respond("Yes, we'll pay $100 a month."),
+                     respond("We'll pay $100 a month.")]
+    s = caller.CallSession("sp5", BRIEF)
+    assert await s.turn("We can do six payments of $100, interest-free.") == "Great, we'll take that plan at $100 a month."
+    assert await s.turn("So that's $100 a month?") == "Yes, we'll pay $100 a month."
+    assert await s.turn("Anything else?") == mandate.SAY["commit"]               # expired
+
+
+async def test_an_allowed_check_offer_clears_only_its_amounts(claude):
+    claude.script = [respond("", tool_block("check_offer", {"kind": "payment_plan", "monthly": 100, "months": 6})),
+                     respond("Great, we'll pay $300 a month.")]
+    s = caller.CallSession("sp6", BRIEF)
+    assert await s.turn("We can do six payments of $100, interest-free.") == mandate.SAY["commit"]
+
+
+FOLLOW_UP = {**BRIEF, "call_type": "follow_up", "correct_balance": 600, "hospital_says_due": 8700,
+             "previous_calls": [{"date": "2026-10-01", "rep": "Dana", "case_number": "482913377",
+                                 "promised": ["Apply the insurance adjustment"]}]}
+
+
+async def test_a_follow_up_opener_keeps_a_nine_digit_case_number(monkeypatch):
+    monkeypatch.setattr(caller.llm, "available", lambda: False)
+    s = caller.CallSession("sp7", FOLLOW_UP)
+    said = await s.turn(None)
+    assert said.startswith("Hi, this is an automated assistant") and "case number 482913377" in said
+    assert not [e for e in bus.history("sp7") if e["kind"] == "guardrail"]
+
+
+async def test_a_blocked_sentence_doesnt_take_the_disclosure_with_it(monkeypatch):
+    monkeypatch.setattr(caller.llm, "available", lambda: False)
+    monkeypatch.setattr(caller.CallSession, "_scripted",
+                        lambda self, rep: ["Hi, this is an automated assistant for Rosa. Her SSN is 123-45-6789."])
+    s = caller.CallSession("sp8", {**BRIEF, "call_type": "first"})
+    assert await s.turn(None) == "Hi, this is an automated assistant for Rosa. " + mandate.SAY["pii"]
+
+
+OFFLINE = {"patient": "Rosa Martinez", "account_number": "CPMC-48213977", "claim_number": "C-2026-0815-44917",
+           "insurer": "Golden State", "hospital_says_due": 8700, "eob_patient_responsibility": 1100, "payments_made": [],
+           "correct_balance": 1100, "balance_after_assistance": 1100, "ask_kinds": ["insurance", "hold", "case_number"],
+           "goals": []}
+
+
+async def offline_call(case_id, reference):
+    s = caller.CallSession(case_id, OFFLINE)
+    said = []
+    for rep in [None, "Hello", "ok", "ok", "Done, it's on hold", reference, "Yes that's right", "bye"]:
+        if s.ended:
+            break
+        said.append(await s.turn(rep))
+    return s, said
+
+
+async def test_offline_read_back_of_a_nine_digit_reference(monkeypatch):
+    monkeypatch.setattr(caller.llm, "available", lambda: False)
+    s, said = await offline_call("sp9", "Your reference is 482913377")
+    assert "Let me read that back: 482913377. Is that right?" in said
+    assert s.outcome["case_number"] == "482913377" and s.outcome["case_number_confirmed"] is True
+
+
+async def test_offline_blocked_read_back_is_not_recorded(monkeypatch):
+    monkeypatch.setattr(caller.llm, "available", lambda: False)
+    s, said = await offline_call("sp10", "Your reference is 482913377, same as her social")
+    assert said[-2] == mandate.SAY["pii"] + " Is that right?"              # the rep's number with "social": not read back
+    assert "case_number" not in s.outcome and s.outcome["account_on_hold"] is True

@@ -24,6 +24,13 @@ def test_payment_plans_only_within_what_the_patient_approved():
     assert not ok(kind="payment_plan", monthly=100, total=8700)      # a plan on the uncorrected balance
     assert not ok(kind="payment_plan", monthly=100, interest_pct=12)
     assert not ok(kind="payment_plan")                               # no amount: ask, don't agree
+    assert not ok(kind="payment_plan", monthly=100, months=87)       # same monthly, longer: a bigger total
+    assert not ok(kind="payment_plan", monthly=100, months=7)
+    assert ok(kind="payment_plan", monthly=100, months=5)            # shorter and cheaper is fine
+    assert not ok(kind="payment_plan", monthly=90, months=12)        # $1,080 is more than the corrected $600
+    last = {**BRIEF, "proposed_payment_plan": {"months": 6, "monthly": 100.0, "last": 50.0, "total": 550.0},
+            "balance_after_assistance": 550}
+    assert mandate.evaluate(last, "payment_plan", monthly=100, months=6).allowed  # the approved plan, smaller last one
     no_plan = {**BRIEF, "proposed_payment_plan": None}
     assert not mandate.evaluate(no_plan, "payment_plan", monthly=50).allowed
 
@@ -44,13 +51,23 @@ def test_information_fails_closed():
     assert not ok(kind="something_new")
 
 
+def test_information_names_are_normalised():
+    for what in ("DOB", "birthdate", "Date of Birth", "birth-date", "member number", "Insurance ID", "policy_number",
+                 "account", "Account Number", "claim", "name"):
+        assert ok(kind="info_request", info=what), what
+    for what in ("social", "Social Security Number", "SSN", "credit card", "card_number", "debit-card",
+                 "bank account", "routing", "favourite colour"):
+        assert not ok(kind="info_request", info=what), what
+    assert not mandate.evaluate({**BRIEF, "insurance_member_id": None}, "info_request", info="policy number").allowed
+
+
 async def test_a_refusal_is_spoken_in_the_mandates_words(claude):
     """The rep pushes a $300/month plan; Claude checks it; the code says no, not the model."""
     claude.script = [respond("", tool_block("check_offer", {"kind": "payment_plan", "monthly": 300, "months": 3}))]
     s = caller.CallSession("m1", BRIEF)
     said = [x async for x in s.reply("I can do three hundred a month starting today. Should I enrol you?")]
     want = mandate.evaluate(BRIEF, "payment_plan", monthly=300, months=3).say
-    assert said == [want] and s.last_say == want
+    assert said == [want + " "] and s.last_say == want                # trailing space for TTS, like every sentence
     assert len(claude.created) == 1                                  # no second model call to talk past it
     g = [e for e in bus.history("m1") if e["kind"] == "guardrail"]
     assert g[0]["decision"] == "refused" and g[0]["offer"] == "payment_plan" and g[0]["monthly"] == 300
