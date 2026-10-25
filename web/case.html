@@ -154,6 +154,8 @@
     .m3-card { padding: 16px; }
   }
   @media (pointer: coarse), (max-width: 640px) { .case-tabs button, .case-tabs a { min-height: 44px; } }
+  #jumpCall { position: fixed; right: 24px; bottom: 24px; z-index: 20; }
+  @media (max-width: 640px) { #jumpCall { right: 16px; bottom: 16px; } }
 </style>
 </head>
 <body>
@@ -175,6 +177,7 @@
   <button type="button" class="m3-chip new-case" id="newCase"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</button>
 </nav>
 
+<button class="m3-fab" id="jumpCall" type="button" hidden><span class="material-symbols-rounded" aria-hidden="true">skip_next</span>Jump to the call</button>
 <main class="m3-page narrow">
   <div id="caseError" class="m3-card error" role="alert" hidden></div>
   <div id="caseWarnings" class="body-m" aria-live="polite"></div>
@@ -836,9 +839,10 @@ window.addEventListener('scroll', () => document.querySelector('.m3-top-app-bar'
 setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.active]; if (m && m.call && !m.callEnded) render(); }, 500);
 setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);
 
-// ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5] ----------
+// ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5][&jump=call] ----------
 // Plays a recorded run with its original timing, entirely in the browser. Approvals are shown and then
 // resolved by the recording itself, so the demo works with no network beyond loading the page.
+// "Jump to the call" (or &jump=call) applies everything before the call instantly and plays on from there.
 async function startReplay(params) {
   const scenario = params.get('scenario') || 'default', speed = +(params.get('speed') || 1);
   let events;
@@ -849,16 +853,42 @@ async function startReplay(params) {
   state.active = id; state.models[id] = blankModel();
   window.decide = () => {}; // buttons do nothing; the recording drives the story
   document.body.classList.add('replay');
-  const t0 = events[0].ts, start = Date.now() / 1000;
-  const shift = (e) => ({ ...e, ts: start + (e.ts - t0) / speed });
-  // compress long human pauses (waiting on approvals, the rep thinking) so the replay keeps moving
-  let clock = 0, prev = t0;
-  for (const e of events) {
-    clock += Math.min(e.ts - prev, 4) / speed; prev = e.ts;
-    const at = clock;
-    setTimeout(() => { apply(model(id), { ...shift(e), ts: start + at }); state.now = Date.now() / 1000; render(); }, at * 1000);
+  const callIdx = events.findIndex((e) => e.kind === 'call_ready');
+  const jumpBtn = $('jumpCall');
+  let timers = [], next = 0;
+  const show = (e, at) => { apply(model(id), { ...e, ts: at }); state.now = Date.now() / 1000; };
+  // play events[from..] from now, compressing long human pauses (approvals, the rep thinking)
+  function play(from) {
+    const start = Date.now() / 1000;
+    let clock = 0, prev = events[from].ts;
+    for (let i = from; i < events.length; i++) {
+      const e = events[i];
+      clock += Math.min(e.ts - prev, 4) / speed; prev = e.ts;
+      const at = clock;
+      timers.push(setTimeout(() => {
+        next = i + 1; show(e, start + at); render();
+        if (callIdx >= 0 && i >= callIdx) jumpBtn.hidden = true;
+      }, at * 1000));
+    }
   }
+  function jumpToCall() {
+    if (callIdx < 0 || next > callIdx) return;
+    timers.forEach(clearTimeout); timers = [];
+    const now = Date.now() / 1000;
+    for (let i = next; i < callIdx; i++) show(events[i], now - (events[callIdx].ts - events[i].ts));
+    next = callIdx; jumpBtn.hidden = true; render();
+    play(callIdx);
+    setTimeout(() => {  // bring the call step (and its transcript) into view
+      const row = [...document.querySelectorAll('[aria-expanded]')].find((x) => /Call billing/.test(x.textContent));
+      const bar = document.querySelector('.m3-top-app-bar');
+      if (row) scrollTo({ top: row.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 12, behavior: 'smooth' });
+    }, 400);
+  }
+  jumpBtn.hidden = callIdx < 0;
+  jumpBtn.onclick = jumpToCall;
+  play(0);
   render();
+  if (params.get('jump') === 'call') jumpToCall();
 }
 
 (async () => {
