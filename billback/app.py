@@ -8,15 +8,15 @@ from contextlib import asynccontextmanager
 
 import anthropic
 
-from fastapi import FastAPI, File, Form, Request, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import auth, config, events, followups, llm, orchestrator
+from . import auth, config, events, finance, followups, llm, onboarding, orchestrator, tiger
 from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
-from .integrations import cartesia
+from .integrations import cartesia, nessie
 from .events import bus
 from .harness import gate
 from .policies import registry
@@ -142,7 +142,23 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
             orchestrator.set_status(case, "error")
             bus.emit(case["id"], "error", text=str(e))
             return case
+    if not household_size:
+        await _household_from_profile(case)
     return _launch(case)
+
+
+async def _household_from_profile(case: dict) -> None:
+    """The patient didn't say their household size in chat: use what they told us at onboarding (Tiger Data
+    profile, matched on name + date of birth). Never blocks the case."""
+    try:
+        prof = await tiger.get_profile(case["patient"])
+    except Exception as e:
+        print("profile lookup failed:", type(e).__name__)
+        return
+    if prof and prof.get("household_size"):
+        case["patient"]["household_size"] = int(prof["household_size"])
+        case["patient"]["household_source"] = "onboarding"
+        orchestrator.save(case)
 
 
 @app.get("/api/mode")
@@ -223,6 +239,65 @@ async def list_cases():
     return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
              "status": c["status"], "case_number": orchestrator.summary(c)["case_number"],
              "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
+
+
+@app.get("/api/households", dependencies=ADMIN)
+async def households():
+    """Every household we've helped, lowest income vs the poverty line first, with 12 months of income from
+    Tiger Data. Admin-only: names, income and household size are personal."""
+    if not tiger.enabled():
+        return {"enabled": False, "households": []}
+    return {"enabled": True, "households": await tiger.households_by_need()}
+
+
+class Onboarding(BaseModel):
+    answers: dict = {}
+    skipped: list[str] = []
+
+
+_bank_cache: dict[tuple[str, str], dict | None] = {}
+
+
+async def _bank_income(first: str | None, last: str | None) -> dict | None:
+    """Take-home income from the patient's Nessie account (same finance.income a case uses), or None."""
+    if not (config.NESSIE_API_KEY and first and last):
+        return None
+    key = (first.lower(), last.lower())
+    if key not in _bank_cache:
+        try:
+            client = nessie.NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL)
+            found = await client.find_account(first, last)
+            inc = finance.income(await client.transactions(found["account_id"])) if found else None
+            _bank_cache[key] = ({"annual": inc["annual"], "source": inc["source"]}
+                                if inc and inc["annual"] else None)
+        except Exception as e:
+            print("onboarding bank lookup failed:", type(e).__name__)
+            return None
+    return _bank_cache[key]
+
+
+async def _assess(o: Onboarding) -> tuple[dict, dict]:
+    a = onboarding.clean(o.answers)
+    bank = await _bank_income(a.get("first_name"), a.get("last_name"))
+    hs = await asyncio.to_thread(onboarding.hospitals_with_tiers)
+    return a, {**onboarding.assess(a, bank, o.skipped, hs), "bank": bank}
+
+
+@app.post("/api/onboarding/assess", dependencies=ADMIN)
+async def onboarding_assess(o: Onboarding):
+    """The answers so far -> how certain the outcome is, and the one question that would narrow it most."""
+    return (await _assess(o))[1]
+
+
+@app.post("/api/onboarding", dependencies=ADMIN)
+async def onboarding_save(o: Onboarding):
+    """Save the household's profile to Tiger Data. A later case for the same name + DOB reuses its household size."""
+    a, out = await _assess(o)
+    if not (a.get("first_name") and a.get("last_name")):
+        raise HTTPException(400, "First and last name are required")
+    hosp = next((h["name"] for h in out["per_hospital"] if h["id"] == a.get("hospital_id")), None)
+    pid = await tiger.save_onboarding(a, {k: v for k, v in out.items() if k != "bank"}, hosp)
+    return {**out, "profile_id": pid, "saved": pid is not None}
 
 
 @app.get("/api/dashboard")
