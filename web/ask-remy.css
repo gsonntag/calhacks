@@ -1,0 +1,53 @@
+/* Ask Remy: the button in the corner, its one-time hint and the chat panel. Used by the case page (its own agent
+   chat) and by web/ask-remy.js on the other tabs. An extended FAB: the label says what it is; a short glow the first
+   time it shows. */
+.chat-fab { position: fixed; right: 24px; bottom: 24px; z-index: 40; height: 56px; padding: 0 22px 0 18px; border-radius: 16px; border: 0;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 10px; background: var(--md-primary); color: var(--md-on-primary);
+            font: 500 16px/20px var(--md-font); letter-spacing: .1px; box-shadow: 0 0 0 3px var(--md-surface), var(--md-elev-3); }
+.chat-fab[hidden] { display: none; }
+.chat-fab .material-symbols-rounded { font-size: 24px; }
+.chat-fab:hover { filter: brightness(1.08); }
+.chat-fab:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 3px; }
+.chat-fab.glow { animation: fabglow 1.6s var(--md-ease) 3; }
+@keyframes fabglow { 0% { box-shadow: 0 0 0 3px var(--md-surface), var(--md-elev-3), 0 0 0 0 color-mix(in srgb, var(--md-primary) 45%, transparent); }
+                     100% { box-shadow: 0 0 0 3px var(--md-surface), var(--md-elev-3), 0 0 0 16px transparent; } }
+.chat-tip { position: fixed; right: 24px; bottom: 92px; z-index: 40; max-width: min(300px, calc(100vw - 32px)); display: flex; align-items: flex-start; gap: 6px;
+            padding: 12px 8px 12px 16px; border-radius: var(--md-shape-l); background: var(--md-inverse-surface);
+            color: var(--md-inverse-on-surface); font: 400 14px/20px var(--md-font); box-shadow: var(--md-elev-3); }
+.chat-tip[hidden] { display: none; }
+.chat-tip::after { content: ""; position: absolute; right: 36px; bottom: -6px; width: 12px; height: 12px; transform: rotate(45deg);
+                   background: inherit; }
+.chat-tip p { margin: 0; flex: 1; }
+.chat-tip button { flex: none; width: 28px; height: 28px; margin: -4px 0; border: 0; border-radius: 50%; background: transparent; color: inherit;
+                   cursor: pointer; display: grid; place-items: center; }
+.chat-tip button .material-symbols-rounded { font-size: 18px; }
+.chat-panel { position: fixed; right: 24px; bottom: 96px; z-index: 41; width: min(420px, calc(100vw - 32px)); height: min(620px, calc(100dvh - 140px));
+              display: flex; flex-direction: column; border-radius: var(--md-shape-xl); background: var(--md-surface-container-low);
+              border: 1px solid var(--md-outline-variant); box-shadow: var(--md-elev-3); overflow: hidden; }
+.chat-panel[hidden] { display: none; }
+.chat-head { display: flex; align-items: center; gap: 8px; padding: 12px 8px 4px 20px; }
+.chat-head h2 { margin: 0; flex: 1; font: 500 18px/24px var(--md-font); }
+.chat-who { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 16px 12px; border-bottom: 1px solid var(--md-outline-variant); }
+.chat-who .m3-chip { min-height: 32px; height: auto; }
+.chat-who .m3-chip[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
+.chat-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+.chat-intro { display: flex; flex-direction: column; gap: 6px; margin: 0 0 4px; padding: 0; list-style: none; color: var(--md-on-surface-variant); font: 400 13px/18px var(--md-font); }
+.chat-intro b { font-weight: 500; }
+.chat-intro li.on { color: var(--md-on-surface); }
+.chat-intro .note { margin-top: 2px; }
+.chat-note { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; }
+.chat-src { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; overflow-wrap: anywhere; }
+.chat-form { display: flex; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid var(--md-outline-variant); }
+.chat-form .m3-input { flex: 1; min-width: 0; }
+.chat-log .bubble-wrap { display: flex; flex-direction: column; gap: 2px; }
+.chat-log .bubble-wrap.me { align-items: flex-end; }
+.chat-log .bubble-wrap.them { align-items: flex-start; }
+.chat-log .bubble-who { font: 500 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; }
+.chat-log .bubble-wrap .m3-bubble { font-size: 15px; line-height: 22px; }
+@media (max-width: 640px) {
+  .chat-log .bubble-wrap .m3-bubble { max-width: 92%; }
+  .chat-fab { right: 16px; bottom: 16px; }
+  .chat-tip { right: 16px; bottom: 84px; }
+  .chat-panel { right: 16px; left: 16px; bottom: 84px; width: auto; height: calc(100dvh - 160px); }
+}
+@media (prefers-reduced-motion: reduce) { .chat-fab.glow { animation: none; } }
