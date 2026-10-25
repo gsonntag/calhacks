@@ -57,6 +57,7 @@ One-time data scripts (they call paid APIs; the results are already committed):
 uv run python scripts/seed_nessie.py [freecare|<scenario>]   # synthetic patient's bank in Nessie
 uv run python scripts/crawl_policies.py crawl                # (re)build the hospital policy DB via Bright Data
 uv run python scripts/crawl_policies.py recheck              # detect policy changes
+uv run python scripts/crawl_policies.py hcai <id>            # add a hospital's HCAI-filed policy (no Bright Data request)
 uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/prices/ from the hospitals' CMS price files
 ```
 
@@ -159,7 +160,10 @@ Code: `remy/voice/` (`media.py`, `cartesia_ws.py`, `desk.py`, `heard.py`, `prono
 - **Policy database** (`policydb/`, committed as crawl evidence): 12 Bay Area hospitals. SERP API finds each
   hospital's financial-assistance policy, Web Unlocker fetches the page and its PDFs, Claude extracts the
   discount tiers and payment-plan rules with quotes, code verifies each quote against the fetched text, and
-  SQLite keeps versions. Rechecks compare content hashes and re-extract only on change.
+  SQLite keeps versions. Rechecks compare content hashes and re-extract only on change. All 12 have verified
+  tiers: where a hospital's own site doesn't give the real policy (Stanford, SF General, Saint Francis), the
+  copy it filed with California HCAI is fetched over plain HTTPS (Bright Data refuses .gov sites) and checked
+  the same way (`remy/policies/hcai.py`).
 - **Live on the case page**: a case uses the stored policy unless it is stale (a "no tiers" result older than
   6 hours, or any policy older than 30 days) or the hospital is new; then it crawls live. **"Recheck now"**
   under the Bright Data panel does the same on demand. Each request streams as its own line: tool, URL, and
@@ -170,12 +174,12 @@ Code: `remy/voice/` (`media.py`, `cartesia_ws.py`, `desk.py`, `heard.py`, `prono
   common ER and outpatient codes kept (`policydb/prices/`). The bill check flags lines above the hospital's
   posted price, for insured and self-pay bills (drug lines only when the units convert).
 - **Same bill, every hospital** (`/hospitals.html`, `remy/policies/compare.py`): Marcus's $5,600 UCSF bill
-  run through each stored policy. $0 at CPMC, UCSF, Alta Bates Summit, El Camino, John Muir, Kaiser Oakland
-  and MarinHealth (their high-medical-cost or income tiers cover him); $5,600 at Chinese Hospital and Highland
-  (their tiers are for uninsured patients) and at Stanford, Saint Francis and SF General (no verified income
-  tiers on record).
+  run through each stored policy. $0 at CPMC, UCSF, Stanford, Alta Bates Summit, El Camino, John Muir, Kaiser
+  Oakland and MarinHealth (their high-medical-cost or income tiers cover him); $5,600 at Chinese Hospital,
+  Highland and Saint Francis (their tiers are for uninsured patients) and at SF General (its charity care
+  stops at 138% FPL).
 
-Code: `remy/integrations/brightdata.py`, `remy/policies/`, `remy/agents/policy.py`,
+Code: `remy/integrations/brightdata.py`, `remy/policies/` (HCAI: `hcai.py`), `remy/agents/policy.py`,
 `remy/prices.py`, `remy/price_sources.py`, `remy/billcheck.py`, `scripts/crawl_policies.py`.
 Docs: [`docs/brightdata.md`](docs/brightdata.md).
 
@@ -218,7 +222,8 @@ Data agent or the Planner) and on the Cases-page mic. Models:
 didn't compute.
 
 ## Real vs simulated
-- **Real:** Bright Data crawls of real hospital policies and real CMS price files (`policydb/`), Nessie API
+- **Real:** Bright Data crawls of real hospital policies, the policies hospitals filed with California HCAI, and
+  real CMS price files (`policydb/`), Nessie API
   records, Claude, Cartesia speech, the approval gate and the audit log.
 - **Simulated:** the patients, bills, insurance statements, insurer and bank histories are synthetic (PDFs are
   watermarked SAMPLE). "Hospital billing" is a teammate on the rep console (or their phone with Twilio).
@@ -251,8 +256,8 @@ didn't compute.
 - **Desk mode** doesn't yet start Claude early on Ink's `turn.eager_end` (the phone path does). In
   conference mode Ink hears one mixed track.
 - **The live Bright Data path** (streamed crawl, retries, "Recheck now", stale re-crawl) is tested with replies
-  in the real shapes but has not run against Bright Data since it was built. Three hospitals (Stanford, Saint
-  Francis, SF General) are stored as "no tiers", so they give no discount. MarinHealth's and El Camino's tiers
+  in the real shapes but has not run against Bright Data since it was built. Stanford, Saint Francis and SF
+  General get their tiers from the HCAI filing, not their own sites. MarinHealth's and El Camino's tiers
   were read as "all patients" and need a manual check. A policy that changes on "Recheck now" is shown but
   not applied to the current plan; a new case applies it. The `crawl_policies.py recheck` CLI doesn't re-crawl
   "no tiers" hospitals from Google (the app does).

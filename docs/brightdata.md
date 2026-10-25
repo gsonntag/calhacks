@@ -189,7 +189,7 @@ per-request tokens (UCSF's Cloudflare email links changed on every fetch).
 | California Pacific Medical Center (Sutter Health) | sutterhealth.org financial-assistance page; Hospital Financial Assistance Policy PDF (46 pp); Billing/Collections Policy PDF (21 pp) | uninsured <= 400% FPL: 100%; insured <= 400% FPL with out-of-pocket > 10% of income: 100%. Payment plans: interest-free, capped at 10% of monthly family income |
 | UCSF Medical Center | ucsfhealth.org help-paying-your-bill page; Patient Financial Assistance Policy PDF (12 pp); Self-Pay Discount Policy PDF (5 pp) | self-pay <= 400% FPL: 100%; insured with out-of-pocket > 10% of income (and <= 400% FPL via `limit_quote`): 100% |
 | Chinese Hospital | chinesehospital-sf.org financial-assistance page; Financial Assistance Policy PDF (11 pp, dated 9-26-26) | self-pay <= 200% FPL: 100%. 200-400% FPL and high-medical-cost help are capped at Medicare rates (stored as verified "other relief", not a fixed %) |
-| Zuckerberg San Francisco General | three zuckerbergsanfranciscogeneral.org pages | none: the site gives a 138% FPL limit for charity care and says discounts "depend on FPL" without percentages; the full policy is only on HCAI (see limitations) |
+| Zuckerberg San Francisco General | three zuckerbergsanfranciscogeneral.org pages; + Charity Care Policy as filed with HCAI (13 pp, effective 2025-11-14, plain HTTPS) | all <= 138% FPL: 100% (from the HCAI-filed policy). <= 400% FPL capped at Medicare rates and the FPL-scaled Discount Payment Program are stored as verified "other relief". Version 1 (site pages only) had no tiers |
 
 ### Wider Bay Area (second seed, 8 hospitals)
 
@@ -205,8 +205,8 @@ Francis Memorial (now UCSF Health). Status as `scripts/crawl_policies.py show` p
 | Kaiser Permanente Oakland Medical Center | kp.org "help paying your bill" + Medical Financial Assistance pages; MFA application PDF (Northern California, 2024) | all patients <= 200% FPG: 100% award; 201-400% FPG: 50% award. Source is the MFA program application, not a formal policy document |
 | MarinHealth Medical Center, Greenbrae | help-paying-your-bill + community-benefit pages; Financial Assistance Policy PDF; 2024 program letter PDF | "all patients" <= 400% FPL: 100% (see limitations); insured high medical cost <= 400% FPL: 100% |
 | El Camino Hospital, Mountain View | Financial assistance eligibility/procedures PDF (uploaded 2022-04), found directly by Google | <= 400% FPL: 100% ("full charity care to patients whose Family Income is at or below 400%") |
-| Stanford Health Care, Palo Alto | stanfordhealthcare.org health-insurance-plans page only | **no tiers.** First crawl failed on a Google 429 ("This query recently failed"). The retry's results had no Stanford Health Care policy: the top hit was Stanford Children's policy (a different hospital, correctly not treated as official), so only an insurance page was fetched |
-| UCSF Health Saint Francis Hospital, San Francisco | a Spanish St. Mary's financial-assistance application PDF | **no tiers.** First crawled as "Saint Francis Memorial Hospital (Dignity Health)": no official page, because Dignity sold the hospital to UCSF Health in 2024 and neither dignityhealth.org nor CommonSpirit's price index lists it any more. Re-crawled under UCSF's name: Google's only official hit was the Spanish application form, which the old ranking didn't demote |
+| Stanford Health Care, Palo Alto | stanfordhealthcare.org health-insurance-plans page; + Charity Care Policy as filed with HCAI (22 pp, effective 2025-03-12, plain HTTPS) | uninsured <= 400% FPL: 100%; insured <= 400% FPL with out-of-pocket > 10% of income: 100% (from the HCAI-filed policy). Version 1 had **no tiers**: Google's results had no Stanford Health Care policy (the top hit was Stanford Children's, a different hospital, correctly not treated as official), so only an insurance page was fetched |
+| UCSF Health Saint Francis Hospital, San Francisco | a Spanish St. Mary's financial-assistance application PDF; + Charity Care Policy as filed with HCAI (12 pp, effective 2026-01-16, plain HTTPS) | self-pay <= 400% FPL: 100% (from the HCAI-filed policy); insured with out-of-pocket > 10% of income: written off, stored as verified "other relief" (no FPL limit stated). Version 1 had **no tiers**: first crawled as "Saint Francis Memorial Hospital (Dignity Health)": no official page, because Dignity sold the hospital to UCSF Health in 2024 and neither dignityhealth.org nor CommonSpirit's price index lists it any more. Re-crawled under UCSF's name: Google's only official hit was the Spanish application form, which the old ranking didn't demote |
 
 Crawls in this round: 12 (the cap), 8 first crawls plus 4 re-runs: Stanford (after the 429), Saint Francis
 (after the rename), John Muir twice. John Muir's first crawl picked `johnmuirhealth.com/secure.html` (a
@@ -361,10 +361,18 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
 
 ## Honest limitations
 
-- **California HCAI is blocked.** Every California hospital files its charity-care policy with HCAI, and Google
-  returns those attachments, but Bright Data's Web Unlocker refuses government domains ("classified as Government
-  and blocked"). We record the HCAI link as a reference and don't fetch it. That is why ZSFG, whose own site
-  defers to HCAI, has no fixed-percent tier.
+- **California HCAI is not reachable through Bright Data.** Every California hospital files its charity-care
+  policy with HCAI, but Web Unlocker refuses government domains ("classified as Government and blocked"). The
+  HCAI attachment Google happens to return is still not fetched (for Stanford it was Stanford Children's, a
+  different hospital). Instead, a registry entry can name its page on HCAI's Hospital Fair Pricing Policy Lookup
+  (`Hospital.hcai`); for those hospitals `policies/hcai.py` always reads that page
+  and fetches the newest filed Charity Care / Discount Payment PDF over **plain HTTPS** (logged in `crawl_log`
+  with no Bright Data product, role `state_filed`), alongside whatever the site gave. Always, not only when the
+  site links no policy PDF: Saint Francis's site links one, and it is a Spanish application form; and crawls
+  and rechecks must fetch the same sources or an unchanged policy hashes as changed. Stanford, ZSFG and Saint
+  Francis got their tiers
+  this way (`scripts/crawl_policies.py hcai <id>`: stored documents rebuilt from committed artifacts + the
+  HCAI copy, re-extracted, no Bright Data request).
 - **Verification proves the words, not the reading.** A verified quote is really in the hospital's document and
   states the FPL limit, but the discount %, `applies_to` and out-of-pocket threshold are Claude's reading of it.
   The quotes are shown next to every number so a person can check. Re-running extraction can classify borderline

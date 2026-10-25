@@ -12,6 +12,7 @@ class Hospital:
     domains: tuple[str, ...] = ()       # official domains (preferred by discover.rank)
     aliases: tuple[str, ...] = ()       # other names a bill or user might use
     query: str = ""                     # SERP query; default built from name + city
+    hcai: str = ""                      # slug of its HCAI Hospital Fair Pricing Policy Lookup page (policies/hcai.py)
 
     @property
     def search_query(self) -> str:
@@ -29,7 +30,8 @@ SEED = (
              ("zuckerbergsanfranciscogeneral.org", "sf.gov", "sfdph.org"),
              ("ZSFG", "SF General", "San Francisco General Hospital",
               "Priscilla Chan and Mark Zuckerberg San Francisco General Hospital"),
-             "Zuckerberg San Francisco General Hospital financial assistance charity care policy"),
+             "Zuckerberg San Francisco General Hospital financial assistance charity care policy",
+             "priscilla-chan-mark-zuckerberg-san-francisco-general-hospital-trauma-center"),
     # added because ZSFG's own site doesn't publish its full policy (it points to HCAI, which Bright Data blocks)
     Hospital("chinese-hospital", "Chinese Hospital", "Chinese Hospital", "San Francisco", ("chinesehospital-sf.org",),
              ("Chinese Hospital San Francisco",), "Chinese Hospital San Francisco financial assistance charity care policy"),
@@ -40,7 +42,7 @@ SEED = (
              "Alta Bates Summit Medical Center Sutter Health financial assistance policy"),
     Hospital("stanford-health", "Stanford Health Care", "Stanford Medicine", "Palo Alto",
              ("stanfordhealthcare.org",), ("Stanford Hospital", "Stanford Medical Center", "Stanford Health Care Palo Alto"),
-             "Stanford Health Care financial assistance charity care policy"),
+             "Stanford Health Care financial assistance charity care policy", "stanford-health-care"),
     Hospital("highland-ahs", "Highland Hospital", "Alameda Health System", "Oakland",
              ("alamedahealthsystem.org",), ("Alameda Health System", "Highland Hospital Oakland", "AHS Highland"),
              "Alameda Health System Highland Hospital financial assistance charity care policy"),
@@ -50,7 +52,8 @@ SEED = (
              ("sfcommunityhospitals.ucsfhealth.org",),
              ("Saint Francis Memorial Hospital", "Saint Francis Memorial", "St. Francis Memorial Hospital",
               "Dignity Health Saint Francis", "UCSF Saint Francis"),
-             "UCSF Health Saint Francis Hospital San Francisco financial assistance policy"),
+             "UCSF Health Saint Francis Hospital San Francisco financial assistance policy",
+             "st-francis-memorial-hospital"),
     Hospital("john-muir-wc", "John Muir Medical Center, Walnut Creek", "John Muir Health", "Walnut Creek",
              ("johnmuirhealth.com",), ("John Muir Medical Center", "John Muir Health", "John Muir Walnut Creek"),
              "site:johnmuirhealth.com financial assistance policy"),
