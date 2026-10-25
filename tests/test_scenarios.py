@@ -5,8 +5,9 @@ import json
 
 import pytest
 
-from billback import config, finance, prices, scenarios
+from billback import billcheck, config, finance, prices, scenarios
 from billback.agents import auditor, policy
+from billback.events import bus
 from billback.integrations.nessie import LocalMirror
 
 NAMES = list(scenarios.SPECS)
@@ -150,9 +151,10 @@ def test_refund_case():
     assert exp["must_not_report"] and "missed" in exp["must_not_report"][0]["what"]
 
 
-@pytest.mark.parametrize("name", [n for n in NAMES if scenarios.SPECS[n]["insurance"]])
+@pytest.mark.parametrize("name", NAMES)
 async def test_app_agents_reach_expected_balance(name):
-    """The app's own Nessie + Bright Data agents, offline (LocalMirror bank, policy DB), on the generated case."""
+    """The app's own Nessie + Bright Data agents, offline (LocalMirror bank, policy DB), on the generated case,
+    including the uninsured one ("eob": {})."""
     case, exp = load(name)
     case = {**case, "id": f"scn-{name}", "today": exp["as_of"]}
     loop = asyncio.get_running_loop()
@@ -161,10 +163,48 @@ async def test_app_agents_reach_expected_balance(name):
         auditor.run(case, LocalMirror(case), "mirror", "Offline bank (mirror)", txns_ready, owed_ready),
         policy.run(case, txns_ready, owed_ready))
     assert aud["reconciliation"]["owed"] == exp["finance_reconcile"]["owed"]
+    assert aud["reconciliation"]["patient_responsibility"] == exp["totals"]["patient_responsibility"]
     assert pol["target"] == exp["correct"]["balance"]
     assert pol["refund"] == exp["correct"]["refund"]
     assert pol["eligibility"]["discount_pct"] == exp["correct"]["discount_pct"]
+    assert pol["eligibility"]["insured"] is exp["discount"]["insured"] is bool(case["eob"])
     assert (pol["plan"]["months"], pol["plan"]["monthly"]) == (exp["plan"]["months"], exp["plan"]["monthly"])
+
+    # what the Nessie agent reported: exactly the missed payments expected.json lists, never credited ones
+    found = {e["key"].split(":", 1)[1]: e for e in bus.history(case["id"])
+             if e["kind"] == "finding" and e["agent"] == "auditor"}
+    want_paid = {f["id"]: f["money"] for f in exp["findings"] if f["id"].startswith("paid-")}
+    assert {k: f["saved"] for k, f in found.items() if k.startswith("paid-")} == want_paid
+    missed = {e["source"].rsplit("txn ", 1)[1] for e in bus.history(case["id"])
+              if e["kind"] == "evidence" and e["label"] == "Payment hospital may not see"}
+    assert missed == {k.removeprefix("paid-") for k in want_paid}
+    for m in exp["must_not_report"]:
+        if "missed" in m["what"]:
+            txn = m["what"].split()[1]
+            assert f"paid-{txn}" not in found and txn not in missed, m
+    if not case["eob"]:  # self-pay: the bill's own line errors set the share, reported with their money
+        lines = {k.split("-")[0]: f["saved"] for k, f in found.items() if k.split("-")[0] in
+                 ("duplicate_line", "price_above_posted")}
+        assert lines == {f["id"]: f["money"] for f in exp["findings"]
+                         if f["id"] in ("duplicate_line", "price_above_posted")}
+        assert "insurance" not in found
+        assert not any(ln["label"].startswith("Insurance") for ln in aud["reconciliation"]["lines"])
+    lines = aud["reconciliation"]["lines"]
+    if aud["reconciliation"]["owed"] > 0:  # the reconciliation lines add up to what's owed
+        assert c(sum(ln["amount"] for ln in lines if not ln.get("total"))) == c(lines[-1]["amount"])
+
+
+@pytest.mark.parametrize("name", [n for n in NAMES if not scenarios.SPECS[n]["insurance"]])
+def test_self_pay_reconcile_without_pseudo_eob(name):
+    """No EOB at all: finance + billcheck reach the generator's numbers from the bill and the price file alone."""
+    case, exp = load(name)
+    txns = LocalMirror(case).txns
+    fixes = billcheck.line_corrections(case["bill"], case["hospital"]["name"])
+    rec = finance.reconcile(case["bill"], case["eob"], txns, corrections=fixes)
+    fr = exp["finance_reconcile"]
+    for k in ("billed_due", "patient_responsibility", "insurance_adjustment", "paid", "owed", "overbilled_by"):
+        assert rec[k] == fr[k], k
+    assert rec["insured"] is False
 
 
 def test_real_insurer_names_are_rejected():

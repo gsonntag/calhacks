@@ -12,7 +12,7 @@ finance.py, not the model."""
 import asyncio
 from urllib.parse import urlparse
 
-from .. import config, finance, llm
+from .. import billcheck, config, finance, llm
 from ..events import bus
 from ..integrations import brightdata
 from ..policies import pipeline, registry
@@ -180,9 +180,10 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     r.step("income", "Estimate your income from payroll deposits", "running")
     txns = await txns_ready
     inc = finance.income(txns, today=finance._d(case["today"]))
-    eob = case.get("eob") or {}
+    insured = billcheck.insured(case)  # explicit: an empty or missing insurance statement means self-pay
+    oop = float((case.get("eob") or {}).get("patient_responsibility") or 0) if insured else 0.0
     elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], tiers,
-                                    insured=bool(eob), out_of_pocket=float(eob.get("patient_responsibility") or 0))
+                                    insured=insured, out_of_pocket=oop)
     r.step("income", "Estimate your income from payroll deposits", "ok",
            f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr, household of {elig['household_size']})",
            [(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}") for t in inc["deposits"][-3:]])

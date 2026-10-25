@@ -7,6 +7,8 @@ import math
 import re
 from datetime import date, datetime, timedelta
 
+from . import billcheck
+
 # HHS poverty guidelines, 48 contiguous states. 2025 values; update when the
 # 2026 guidelines are confirmed.
 FPL_BASE = 15_650
@@ -26,28 +28,49 @@ def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9 ]", "", (s or "").lower())
 
 
-def _matches_payee(txn: dict, payee: str) -> bool:
-    words = [w for w in _norm(payee).split() if len(w) > 3]
-    hay = _norm(f"{txn.get('merchant', '')} {txn.get('description', '')}")
-    return any(w in hay for w in words)
+def _matches_payee(txn: dict, payee: str, account: str | None = None) -> bool:
+    """A payment to this hospital: its own name or a registry alias as a whole phrase, or the bill's account
+    number. Generic words a payee shares with other merchants ("Pacific", "Medical", "Center") never count."""
+    return billcheck.is_payment_to(txn, payee, account)
 
 
-def reconcile(bill: dict, eob: dict, txns: list[dict]) -> dict:
+def reconcile(bill: dict, eob: dict, txns: list[dict], corrections: list[dict] | None = None) -> dict:
+    """eob {} (or None) = self-pay: the patient's share is the bill's own charges, less any `corrections`
+    (bill-line errors from billcheck.line_corrections). Insured: the EOB's patient responsibility.
+    `payments` are all bank payments to the hospital since the date of service (they all count toward `paid`);
+    `uncredited_payments` are the ones the bill doesn't already show."""
+    eob = eob or {}
     payee = bill["provider"]
-    payments = [t for t in txns if t["type"] in ("purchase", "withdrawal", "transfer") and _matches_payee(t, payee)]
-    paid = round(sum(t["amount"] for t in payments), 2)
-    responsibility = float(eob["patient_responsibility"])
-    owed = round(max(0.0, responsibility - paid), 2)
+    payments = [t for t in txns if t["type"] in ("purchase", "withdrawal", "transfer")
+                and billcheck.on_or_after_service(t, bill, eob)
+                and _matches_payee(t, payee, bill.get("account_number"))]
+    credited, uncredited = billcheck.split_credited(bill, payments)
+    not_on_bill = round(sum(t["not_on_bill"] for t in uncredited), 2)
+    bill_credits = billcheck.bill_credits(bill)
+    bank_paid = round(sum(t["amount"] for t in payments), 2)
+    # payments the bill credits that the bank history doesn't show (cash, another card) still count as paid
+    paid = round(bank_paid + max(0.0, bill_credits - (bank_paid - not_on_bill)), 2)
+    insured = eob.get("patient_responsibility") not in (None, "")
+    fixes = [] if insured else list(corrections or [])
     billed_due = float(bill["amount_due"])
-    insurance_adj = round(float(bill.get("total_charges", billed_due)) - responsibility, 2)
+    charges = float(bill.get("total_charges", billed_due))
+    if insured:
+        responsibility = float(eob["patient_responsibility"])
+    else:
+        responsibility = round(charges - float(bill.get("insurance_adjustments") or 0)
+                               - sum(float(c["amount"]) for c in fixes), 2)
+    owed = round(max(0.0, responsibility - paid), 2)
+    insurance_adj = round(charges - responsibility, 2)
 
-    lines = [
-        {"label": "Hospital says you owe", "amount": billed_due, "source": f"bill · acct {bill.get('account_number', '?')}"},
-        {"label": "Insurance adjustment not applied", "amount": -round(billed_due - responsibility, 2),
-         "source": f"EOB · claim {eob.get('claim_number', '?')} · patient responsibility ${responsibility:,.2f}"},
-    ]
-    for t in payments:
-        lines.append({"label": f"Payment already made {t['date'][:10]}", "amount": -t["amount"],
+    lines = [{"label": "Hospital says you owe", "amount": billed_due, "source": f"bill · acct {bill.get('account_number', '?')}"}]
+    if insured:
+        lines.append({"label": "Insurance adjustment not applied", "amount": -round(billed_due + bill_credits - responsibility, 2) or 0.0,
+                      "source": f"EOB · claim {eob.get('claim_number', '?')} · patient responsibility ${responsibility:,.2f}"})
+    for c in fixes:
+        lines.append({"label": c.get("label", "Bill error"), "amount": -round(float(c["amount"]), 2),
+                      "source": c.get("source", "bill")})
+    for t in uncredited:
+        lines.append({"label": f"Payment already made {t['date'][:10]}", "amount": -t["not_on_bill"],
                       "source": f"Nessie txn {t['id']}"})
     lines.append({"label": "Actually owed", "amount": owed, "source": "computed", "total": True})
 
@@ -55,7 +78,13 @@ def reconcile(bill: dict, eob: dict, txns: list[dict]) -> dict:
         "billed_due": billed_due,
         "patient_responsibility": responsibility,
         "insurance_adjustment": insurance_adj,
+        "insured": insured,
+        "corrections": fixes,
         "payments": payments,
+        "credited_payments": credited,
+        "uncredited_payments": uncredited,
+        "credited_on_bill": bill_credits,
+        "uncredited_paid": not_on_bill,
         "paid": paid,
         "owed": owed,
         "overbilled_by": round(billed_due - owed, 2),
