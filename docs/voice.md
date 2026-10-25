@@ -17,7 +17,8 @@ the patient-authorization handoff.
 |---|---|
 | `billback/voice/calls.py` | Entry point `run_twilio_call(case, brief)`, `twilio_ready()`. Places calls (direct or conference), registers per-call stream tokens, handles status callbacks, cleans up. |
 | `billback/voice/media.py` | `MediaSession`: one Twilio Media Stream. Handles the Twilio stream protocol, feeds audio to STT, runs the turn loop, streams TTS back, does barge-in. `Leg` = one expected stream. |
-| `billback/voice/cartesia_ws.py` | Streaming clients: Ink STT (`/stt/turns/websocket`) and Sonic TTS (`/tts/websocket`). |
+| `billback/voice/cartesia_ws.py` | Streaming clients: Ink STT (`/stt/turns/websocket`) and Sonic TTS (`/tts/websocket`; `stream_many` speaks sentences as they arrive). |
+| `billback/voice/desk.py` | Desk mode, streamed: `POST /api/calls/{id}/turn/stream` returns the reply as NDJSON text + audio for `web/rep.html`. |
 | `billback/voice/pronounce.py` | Text normalizer applied before every TTS call (phone pipeline, desk mode `/api/tts`, voice previews). |
 | `billback/voice/voices.py` | Voice catalog (American, British, Indian English, Mexican Spanish), resolved per case. |
 | `billback/voice/authorization.py` | Captures the patient's verbal consent, the HIPAA 164.510(b) step. |
@@ -25,8 +26,10 @@ the patient-authorization handoff.
 | `billback/voice/routes.py` | FastAPI `router`: Twilio webhooks + media WebSocket, `/api/voices*`. |
 | `billback/integrations/twilio.py` | Twilio REST over httpx (calls, conference participants), TwiML, `X-Twilio-Signature` validation. |
 | `scripts/sim_twilio_stream.py` | Plays Twilio against a local server to test the whole loop without a phone. |
+| `scripts/bench_desk.py` | Desk-mode latency bench over real HTTP (`--old` measures the original turn + `/api/tts` path). |
 | `web/voice.html` | Voice picker + pronunciation before/after demo. |
 | `tests/test_voice.py` | Offline tests (fake Twilio, fake STT/TTS): protocol, barge-in, signatures, normalizer, full calls. |
+| `tests/test_latency.py` | Offline tests for the latency work: sentence chunking, streamed turns, eager-end drafts, desk stream. |
 
 ## Architecture
 
@@ -63,23 +66,27 @@ Twilio → us   {"event":"start","start":{"streamSid","callSid","customParameter
               token must match a Leg we registered before dialing; otherwise the socket is closed (1008)
 Twilio → us   {"event":"media","media":{"payload":<base64 μ-law>}}   every 20 ms, continuously
 us → Ink      binary 100 ms chunks (800 bytes)
-Ink → us      turn.start … turn.update {"transcript"} … turn.end {"transcript":"Your case number is FA-20931"}
-us            CallSession.turn(text) → Claude (may call record_outcome / end_call) → "Thank you, Diane…"
+Ink → us      turn.start … turn.update {"transcript"} … turn.eager_end … turn.end {"transcript":"Your case number is FA-20931"}
+us            on eager_end: CallSession.draft(text) starts Claude early (no side effects); turn.resume cancels it
+us            on turn.end: CallSession.reply(text, draft) streams Claude's reply sentence by sentence
+              ("Thank you, Diane. " first); record_outcome / end_call run after the text that came with them
               (CallSession emits the rep and BillBack "transcript" events, the same as in desk mode)
-us → Sonic    {"context_id","transcript":normalize(text),"voice","language":"en-IN","normalization":"en-US",
+us → Sonic    per sentence (one generation at a time; sentences that arrived meanwhile are joined):
+              {"context_id":"<sid>-3_1","transcript":normalize(sentence),"voice","language":"en-IN","normalization":"en-US",
                "output_format":{"container":"raw","encoding":"pcm_mulaw","sample_rate":8000}}
 Sonic → us    {"type":"chunk","data":<base64>} … {"type":"done"}
 us → Twilio   {"event":"media","streamSid","media":{"payload":…}} per chunk, then {"event":"mark","mark":{"name":"say-3"}}
 Twilio → us   {"event":"mark","mark":{"name":"say-3"}}  when playback actually finished
 ```
 
-**Speaking state.** We count ourselves as speaking from the first TTS chunk until Twilio echoes the mark.
+**Speaking state.** We count ourselves as speaking from the first TTS chunk until Twilio echoes the mark
+(sent once the whole streamed reply has been generated).
 Sonic generates faster than real time, so most of an utterance is still sitting in Twilio's buffer after
 generation finishes.
 
 **Barge-in.** While we are speaking, an Ink `turn.update` with real speech triggers barge-in: we send Twilio
-`{"event":"clear"}` (which flushes its playback buffer), cancel the Sonic context, and drop chunks still in
-flight. "Real speech" means two or more words that aren't backchannel ("mm-hmm", "okay"), or a one-word
+`{"event":"clear"}` (which flushes its playback buffer), cancel the reply's Sonic contexts, and drop chunks
+still in flight. The brain still finishes its turn (history, tools, transcript), but nothing more is sent. "Real speech" means two or more words that aren't backchannel ("mm-hmm", "okay"), or a one-word
 interjection ("wait", "sorry", "no"). A single stray word is usually the tail of a turn that Ink closed a
 beat early. We found this in a live run: the rep's "…how can I help" ended a turn, the trailing "you?"
 arrived as a new turn while the reply was starting, and that should not interrupt. Backchannel heard while
@@ -95,26 +102,66 @@ sets `call_done`. `run_twilio_call` sees that and hangs up through REST.
 
 ## Latency
 
-Measured by the simulator (`scripts/sim_twilio_stream.py`, live Cartesia + Claude, real local WebSocket):
+The number that matters is the time from the rep finishing a sentence to BillBack starting to talk.
+Both paths were measured live (Claude Haiku 5.5, Cartesia Ink + Sonic) the same way before and after the
+changes, on 2026-10-25.
 
-| Stage | Measured |
-|---|---|
-| Ink turn end, after the rep stops | model-driven (semantic turn detection, `eager_end` then `end`) |
-| Claude turn (Haiku 5.5, no thinking) | 1.27 s, 1.81 s, 2.60 s |
-| Sonic first audio chunk | 148 ms, 125 ms, 130 ms |
-| **rep turn.end → first agent audio sent** | **1.42 s, 1.94 s, 2.73 s** |
+| Path, metric | Before | After |
+|---|---|---|
+| **Phone** (`scripts/sim_twilio_stream.py`): Ink `turn.end` → first agent audio sent to Twilio | 1044, 1119, 1152, 1250, 2715 ms (earlier run: 1419, 1936, 2733) | 439, 457, 464, 614, 614, 627, 634, 666, 697, 781, 1122 ms |
+| **Desk** (`scripts/bench_desk.py`, what `web/rep.html` waits for): rep's send → first playable audio | 1198, 2360, 2720, 3293, 3456, 3569 ms (median 3.0 s) | 664–1684 ms over 12 turns, median 0.93 s |
 
-Claude dominates, and the slower turns are the ones where it also called `record_outcome`. Next steps, in
-order of payoff:
-1. Speculative replies on `turn.eager_end`: start the Claude call early and discard it on `turn.resume`.
-   Ink emits both events, as the docs recommend for this.
-2. Stream Claude's tokens into a Sonic context sentence by sentence (`continue: true`) so speech starts
-   after the first sentence. This means streaming `CallSession.turn`, which today returns a whole reply,
-   and keeping the desk-mode contract.
-3. Run `record_outcome` without a second model round trip (answer, then record in the background).
+On the phone path 10 of 11 turns now start speaking in under 0.8 s. The outlier is a slow Claude first
+token. Sonic's first chunk takes 110–130 ms after it gets a sentence.
+
+What each change bought:
+
+1. **Streaming Claude into Sonic, sentence by sentence** (`llm.Stream`, `llm.Sentences`, `CallSession.reply`,
+   `TTS.stream_many`). This is the biggest win, about 0.5–2 s per turn: speech starts once Claude has written
+   its first sentence (Claude's first token ≈ 0.4–0.6 s, first sentence ≈ 0.1 s later) instead of
+   after the whole reply. Each sentence goes through `pronounce.normalize` on its own. The chunker only
+   breaks at `.`/`!`/`?` followed by whitespace, and not after abbreviations or initials, so money, IDs and
+   dates are never split (tested). Each request gets its own Sonic context (`<ctx>_<n>`), one generation at a
+   time. The Cartesia plan allows only 2 concurrent generations, and a context expires 1 s after its last
+   audio, so continuations would break on a slow gap between sentences.
+2. **Speculation on `turn.eager_end`** (`CallSession.draft`, `MediaSession._speculate`). Claude starts
+   with the words so far. `turn.resume`, or a `turn.end` with different words, cancels the draft. A draft
+   has no side effects (no history, events or tools) until `reply()` uses it. Ink's eager_end comes
+   10–570 ms before `turn.end` (typically 130–340 ms), and that time comes straight off the latency. In the
+   sim, drafts were used on most turns.
+3. **`record_outcome` off the critical path.** Tools run after the text that came with them has been
+   yielded to TTS, so a reply that also records the outcome speaks as fast as any other (the 2.6–2.7 s
+   turns before; 440 ms in the run above). The system prompt now asks for the spoken sentence before the
+   tool call, because a reply that is only a tool call still needs a second model call.
+4. **Prompt caching.** `cache_control` on the system prompt + case brief (tools render first, so they are
+   cached too) and on the conversation history. Haiku 5.5 caches prefixes of 512 tokens and up, and every
+   turn after the first reads about 2.5 k cached tokens.
+5. **Desk mode** (`voice/desk.py`, `web/rep.html`). Before, it waited for Claude's whole reply, then for
+   Sonic's whole 44.1 kHz WAV from `/api/tts`, before playing anything. Now one request streams NDJSON
+   (`text` sentences, `audio` pcm_s16le 24 kHz chunks, `done`) over a Sonic WebSocket that stays open
+   between turns, and the page schedules the chunks back to back with Web Audio. If streaming isn't
+   available it falls back to the old `turn` + `/api/tts`, and if Sonic fails it falls back to the browser
+   voice.
+
+Model choice is unchanged: Haiku 5.5 with thinking disabled.
+
+**Repeatable timing log.** Every phone turn logs one line (logger `billback.latency`, printed even under
+uvicorn), and every desk turn logs `desk turn: first_text=… first_audio=…`:
+
+```
+billback.latency turn=4 draft=used eager_lead=347ms first_text=307ms first_audio=439ms (from rep turn.end)
+```
+
+Set `BILLBACK_LATENCY_DEBUG=1` to also log every Ink event and Claude's first-token time, total time and
+cache hits per call. The simulator prints `leg.stats` (`latency_ms`, time to first sentence, Sonic first
+chunk, drafts used and discarded).
 
 Twilio adds network and jitter-buffer delay on a real call (typically 100–200 ms each way), which the
 simulator doesn't include.
+
+Turn-taking caveat: because we now answer within about 0.5 s, a rep who pauses mid-sentence ("…this is
+Diane. [pause] How can I help you?") is more likely to have Ink end the turn early and then barge in on
+the start of our reply. The barge-in rules are unchanged; the old pipeline did the same thing, just later.
 
 ## Voices and accents
 
@@ -315,5 +362,5 @@ billback … the explanation of benefits on claim C-2026-0815-44917 shows Rosa's
             eight thousand seven hundred dollars …
 rep      Your case number is FA209-31.
 outcome: case_number FA209-31, account_on_hold (recorded by Claude's record_outcome tool)
-latency (turn.end → first audio): 1419, 1936, 2733 ms; Sonic first chunk 125–148 ms
+latency (turn.end → first audio): 1419, 1936, 2733 ms; Sonic first chunk 125–148 ms   (before streaming; now ~0.45–0.8 s, see Latency)
 ```

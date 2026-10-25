@@ -88,6 +88,7 @@ scripted caller so the whole flow still runs offline. `case.html?replay=1` repla
 | Call agent (Claude tool-use loop) | Done, run live in desk mode | `agents/caller.py`; replays in `demo/replay_*.json` |
 | Real phone call (Twilio Media Streams ↔ Cartesia STT/TTS ↔ Claude, barge-in) | **Partial: built and tested against simulated Twilio/Cartesia sockets; no live phone call recorded yet** | `billback/voice/`, `tests/test_voice.py`, `scripts/sim_twilio_stream.py` |
 | Cartesia TTS in desk mode, voice picker, pronunciation | Done, run live | `integrations/cartesia.py`, `voice/voices.py`, `voice/pronounce.py` |
+| Fast replies: Claude streamed into Sonic sentence by sentence, speculative start on Ink eager_end, prompt caching | Done, measured live: first audio 0.44–0.8 s after the rep stops (phone simulator), median 0.93 s (desk mode, was 3.0 s) | `voice/media.py`, `voice/desk.py`, `llm.py`, `docs/voice.md` (Latency), `tests/test_latency.py` |
 | Approval gate, audit log, follow-ups, "call again", status answers | Done | `harness.py`, `followups.py`, `tests/test_followups.py` |
 | Gmail intake | **Not built: the "Demo inbox" chip loads the sample bill** (marked `simulated` by the API and in the UI) | `app.gmail_scan` |
 | 10 of the 12 intake designs in `/flows/` | Clickable mockups (labelled Mock); Drop & Go is the live one | `web/flows/index.html` |

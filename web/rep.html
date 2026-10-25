@@ -54,7 +54,7 @@ if (hospName) document.getElementById('hosp').textContent = hospName;
 const $ = (x) => document.getElementById(x);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let busy = false, ended = false;
-function add(cls, text) { $('log').insertAdjacentHTML('beforeend', `<div class="m3-bubble ${cls === "me" ? "me" : "them"}">${esc(text)}</div>`); $('log').scrollTop = 1e9; }
+function add(cls, text) { $('log').insertAdjacentHTML('beforeend', `<div class="m3-bubble ${cls === "me" ? "me" : "them"}">${esc(text)}</div>`); $('log').scrollTop = 1e9; return $('log').lastElementChild; }
 let audio = null;
 async function speakOnce(text) {
   try {
@@ -71,10 +71,66 @@ function speak(text) {
     res();
   }, limit))]);
 }
+// Streamed replies (POST .../turn/stream, NDJSON): text sentences as Claude writes them and Sonic audio
+// (pcm_s16le 24 kHz) as it's generated, scheduled back to back with Web Audio. Speech starts after the
+// first sentence instead of after the whole reply plus a whole WAV. Falls back to turn + /api/tts.
+let actx = null, nextAt = 0, sources = [], carry = null;
+function audioCtx() {  // created/resumed inside a click or mic press (autoplay rules)
+  try {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+  } catch (e) { actx = null; }
+  return actx;
+}
+function playPcm(b64) {
+  const ctx = audioCtx(); if (!ctx) return false;
+  let bin = atob(b64);
+  if (carry !== null) { bin = carry + bin; carry = null; }
+  if (bin.length % 2) { carry = bin.slice(-1); bin = bin.slice(0, -1); }
+  const n = bin.length >> 1; if (!n) return true;
+  const buf = ctx.createBuffer(1, n, 24000), ch = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
+  const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
+  nextAt = Math.max(nextAt, ctx.currentTime + 0.02); src.start(nextAt); nextAt += buf.duration;
+  sources.push(src); src.onended = () => { sources = sources.filter((x) => x !== src); };
+  return true;
+}
+function stopAudio() { for (const s of sources) { try { s.stop(); } catch (e) {} } sources = []; nextAt = 0; carry = null; }
+function playbackDone() {
+  return new Promise((res) => { const tick = () => { if (ended || !actx || actx.currentTime >= nextAt) res(); else setTimeout(tick, Math.max(30, (nextAt - actx.currentTime) * 1000)); }; tick(); });
+}
+// null = the server has no streaming endpoint (use the old path); throws if the stream breaks mid-turn.
+async function turnStream(repSaid) {
+  const res = await fetch(`/api/calls/${callId}/turn/stream`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})});
+  if (!res.ok || !res.body) return null;
+  const reader = res.body.getReader(), dec = new TextDecoder();
+  let buf = '', bubble = null, played = false, final = null;
+  for (;;) {
+    const {value, done} = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, {stream: true});
+    let i;
+    while ((i = buf.indexOf('\n')) >= 0) {
+      const line = buf.slice(0, i); buf = buf.slice(i + 1);
+      if (!line.trim()) continue;
+      const ev = JSON.parse(line);
+      if (ev.type === 'text') { if (!bubble) bubble = add('bb', ''); bubble.textContent += ev.text; $('log').scrollTop = 1e9; }
+      else if (ev.type === 'audio' && !ended) { played = playPcm(ev.data) || played; }
+      else if (ev.type === 'done') final = ev;
+    }
+  }
+  if (!final) throw new Error('stream cut');
+  if (final.say) { if (!bubble) bubble = add('bb', ''); bubble.textContent = final.say; }
+  if (played) await playbackDone(); else if (final.say && !ended) await speak(final.say);
+  return final;
+}
 async function turn(repSaid) {
   if (busy || ended) return; busy = true;
+  audioCtx();
   try {
     if (repSaid) add('me', repSaid);
+    const streamed = await turnStream(repSaid);
+    if (streamed) { if (streamed.ended) { ended = true; $('sub').textContent = 'Call ended'; } return; }
     const res = await fetch(`/api/calls/${callId}/turn`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})});
     if (!res.ok) throw new Error('turn ' + res.status);
     const r = await res.json();
@@ -85,7 +141,7 @@ async function turn(repSaid) {
   } finally { busy = false; }
 }
 $('hang').onclick = async () => {
-  ended = true; $('sub').textContent = 'Call ended';
+  ended = true; $('sub').textContent = 'Call ended'; stopAudio();
   try { await fetch(`/api/calls/${callId}/hangup`, {method: 'POST'}); } catch (e) {}
 };
 $('answer').onclick = () => { $('answer').remove(); $('sub').textContent = 'On call with BillBack (automated assistant)'; turn('Patient Financial Services, this is Diane, how can I help you?'); };
