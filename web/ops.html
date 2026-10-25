@@ -167,6 +167,7 @@
   </div>
 </main>
 
+<script src="/auth.js"></script>
 <script>
 const id = new URLSearchParams(location.search).get('id');
 const $ = (x) => document.getElementById(x);
@@ -292,12 +293,15 @@ function handle(e) {
       if (e.kind === 'call_ended') laneState('caller', 'done', o.case_number ? `Case ${o.case_number}` : 'Call ended');
       break;
     }
-    case 'plan_proposed': laneState('planner', 'active', e.months ? `${e.months} × ${money(e.monthly)}/mo · ${e.reason}` : e.reason); break;
-    case 'tool_result': if (e.tool === 'create_payment_plan') laneState('planner', 'done', e.result.blocked ? 'Declined by you' : 'Plan saved in your bank'); break;
+    case 'plan_proposed': laneState('planner', 'active', e.months ? `${e.text || `${e.months} × ${money(e.monthly)}/mo`} · ${e.reason}` : e.reason); break;
+    case 'tool_result': if (e.tool === 'create_payment_plan') laneState('planner', 'done', e.result.blocked ? 'Declined by you'
+      : e.result.payments ? `${e.result.payments} payments scheduled in your bank, last on ${e.result.last_date}` : 'Plan saved in your bank'); break;
     case 'case_done': {
       const s = e.summary;
       $('doneBanner').style.display = 'block';
-      $('doneBanner').innerHTML = `${money(s.started_at)} → ${money(s.now)}${s.case_number ? ` · case ${esc(s.case_number)}` : ''}${s.plan_created ? ` · ${s.plan.months} × ${money(s.plan.monthly)}/mo approved` : ''}`;
+      const waiting = s.confirmed === false && s.expected != null && s.expected < s.now;
+      $('doneBanner').innerHTML = (waiting ? `Billing still shows ${money(s.now)} · ${money(s.expected)} expected once confirmed`
+        : `${money(s.started_at)} → ${money(s.now)}`) + `${s.case_number ? ` · case ${esc(s.case_number)}` : ''}${s.plan_created ? ` · ${esc(s.plan.text || `${s.plan.months} × ${money(s.plan.monthly)}/mo`)} approved` : ''}`;
       break;
     }
     case 'error': addEvidence('Error', e.text, 'system'); break;

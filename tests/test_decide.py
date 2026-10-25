@@ -25,10 +25,8 @@ async def test_v1_backs_every_ask_with_a_finding(client):
     assert v1["v"] == 1 and v1["reason"]["kind"] == "initial" and case["status"] == "awaiting_call_approval"
     assert v1["money"] == {"billed": 8700, "owed": 600, "target": 600, "refund": 0, "saved": 8100}
     # biggest money first, then the plan, then the standard asks
-    # bill_line: line 3 bills 80053 at $420; CPMC's posted price is $386 (the J2405 drug line isn't compared: the
-    # file prices it per 12.25 mL, HCPCS per 1 mg). The $34 comes out of the $7,600 insurance gap, not on top.
-    assert [a["kind"] for a in v1["asks"]] == ["insurance", "payment", "bill_line", "plan", "hold", "case_number"]
-    assert [a["money"] for a in v1["asks"][:3]] == [7566, 500, 34]
+    assert [a["kind"] for a in v1["asks"]] == ["insurance", "payment", "plan", "hold", "case_number"]
+    assert [a["money"] for a in v1["asks"][:2]] == [7600, 500]
     findings = case["facts"]["findings"]
     for a in v1["asks"]:
         assert a["basis"] == "standard" or (a["findings"] and all(k in findings for k in a["findings"]))

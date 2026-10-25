@@ -325,8 +325,12 @@
   "income": {
     "annual": 39000.0,
     "monthly": 3250.0,
-    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,500 x 26)",
-    "deposits_counted": 6
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,500 x 26); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 48750.0,
+    "bills_monthly": 2116.9,
+    "bills_source": "31 regular Nessie payments in the last 90 days (Arco 51st St, Bakesale Betty, Bay Wireless Co, Rockridge Market Hall…)"
   },
   "discount": {
     "fpl_pct": 180.2,
@@ -336,7 +340,14 @@
     "insured": true,
     "oop_pct_income": 11.3,
     "discount_pct": 100.0,
-    "tier_quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income)."
+    "tier_quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+    "at_estimated_gross": {
+      "gross_annual_est": 48750.0,
+      "fpl_pct": 225.3,
+      "oop_pct_income": 9.0,
+      "discount_pct": 0,
+      "text": "Based on take-home pay. If the hospital counts gross pay (about $48,750/yr, 225% of the poverty line, medical bills 9% of income), the discount would be 0%, not 100%. Have pay stubs ready."
+    }
   },
   "settle": {
     "discounted_share": 0.0,
@@ -348,11 +359,15 @@
     "refund": 750.0,
     "discount_pct": 100.0,
     "plan_months": 0,
-    "plan_monthly": 0.0
+    "plan_monthly": 0.0,
+    "plan_last": 0.0
   },
   "plan": {
     "months": 0,
     "monthly": 0.0,
+    "last": 0.0,
+    "total": 0.0,
+    "text": "nothing owed",
     "reason": "nothing owed"
   },
   "finance_reconcile": {

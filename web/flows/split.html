@@ -65,8 +65,8 @@
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
-const ITEMS = [['99284', 'Emergency dept visit, high severity', '3,150.00'], ['74177', 'CT abdomen and pelvis w/ contrast', '3,890.00'],
-  ['80053', 'Comprehensive metabolic panel', '420.00'], ['85025', 'Complete blood count', '190.00'], ['96374', 'IV push, single drug', '610.00'], ['J2405', 'Ondansetron injection', '440.00']];
+const ITEMS = [['99284', 'Emergency dept visit, high severity', '3,184.00'], ['74177', 'CT abdomen and pelvis w/ contrast', '3,890.00'],
+  ['80053', 'Comprehensive metabolic panel', '386.00'], ['85025', 'Complete blood count', '190.00'], ['96374', 'IV push, single drug', '610.00'], ['J2405', 'Ondansetron injection', '440.00']];
 const head = (stamp, cls) => `<div class="dh"><div><div class="h">CALIFORNIA PACIFIC MEDICAL CENTER</div><div class="s">Patient: Rosa Martinez · Acct CPMC-48213977<br>Service date Aug 2, 2026 · Statement Oct 10</div></div><span class="stamp ${cls}">${stamp}</span></div>`;
 const items = ITEMS.map(([c, d, a]) => `<tr><td><span class="code">${c}</span>${d}</td><td>$${a}</td></tr>`).join('');
 const ADJ = [

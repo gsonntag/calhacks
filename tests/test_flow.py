@@ -67,13 +67,14 @@ async def test_offline_end_to_end(client):
     assert r["ended"] is True
     assert r["outcome"]["case_number"] == "58213"
 
-    # $600 is still owed: the interest-free plan (Sutter's terms) waits for the patient's OK, then goes to the bank
-    await _approve(c, case_id, "planner")
+    # $600 is still owed: the interest-free plan (Sutter's terms) is proposed; the patient decides on it, no OK asked
     done = await _wait_for(case_id, lambda e: e["kind"] == "case_done")
     s = done["summary"]
-    assert s["started_at"] == 8700 and s["now"] == 600 and s["refund"] == 0
+    # a review and a hold are not a reduction: billing still shows $8,700 until it confirms the $600
+    assert s["started_at"] == 8700 and s["now"] == 8700 and s["refund"] == 0
+    assert s["expected"] == 600 and s["confirmed"] is False
     assert s["case_number"] == "58213"
-    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is True
+    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is False
 
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
@@ -88,13 +89,15 @@ async def test_offline_end_to_end(client):
     paid = next(e for e in steps if e["key"] == "auditor:payments" and e["status"] != "running")
     assert paid["status"] == "flag" and any("$500.00" in p["text"] and p["source"] for p in paid["proof"])
     finds = {e["title"]: e for e in hist if e["kind"] == "finding"}
-    assert finds["Insurance wasn’t applied"]["saved"] == 7566  # + $34: 80053 above CPMC's posted price
-    assert finds["80053 charged above the hospital's posted price"]["saved"] == 34
-    assert not any("J2405" in t for t in finds)  # per-12.25 mL file price vs per-1 mg HCPCS unit: not compared
+    assert finds["Insurance wasn’t applied"]["saved"] == 7600
     assert finds["A payment you made was missed"]["saved"] == 500
     assert finds["Interest-free payment plan"]["saved"] == 0 and finds["Interest-free payment plan"]["value"] == "6 × $100/mo"
     assert all(f["proof"] and f["source"] for f in finds.values())
-    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600]
+    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600, 8700]
+    assert [e for e in hist if e["kind"] == "balance"][-1]["label"] == "Billing still shows"
+    # nothing asks to set the plan up in the bank: the patient decides at the end
+    assert not any(e["kind"] == "approval_requested" and e["agent"] == "planner" for e in hist)
+    assert not any(e["kind"] == "tool_call" and e.get("tool") == "create_payment_plan" for e in hist)
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)

@@ -144,7 +144,6 @@
   .bubble-who { font: 500 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; }
   .bubble-wrap .m3-bubble { font-size: 15px; line-height: 22px; }
   @media (max-width: 640px) { .bubble-wrap .m3-bubble { max-width: 92%; } }
-  #deskLink:empty { display: none; }
 
   /* Resolved details */
   .final { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; }
@@ -161,7 +160,7 @@
 
   .in { animation: fadein .35s var(--md-ease); }
   @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .replay #deskLink, .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn { display: none !important; }
+  .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn { display: none !important; }
 
   @media (max-width: 640px) {
     .m3-top-app-bar { padding: 8px 12px; }
@@ -283,18 +282,13 @@
   /* findings: Ask / This is wrong, in place */
   .find-acts { display: flex; flex-wrap: wrap; gap: 4px 8px; }
   .find-acts .m3-btn { min-height: 32px; padding: 0 12px; }
-  .finds summary .find-ask { min-height: 32px; padding: 0 12px; }
-  .find-ask[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
   .find-box { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); }
   .find-box form { display: flex; gap: 8px; flex-wrap: wrap; }
   .find-box .m3-input { flex: 1; min-width: 180px; }
-  .qa { display: flex; flex-direction: column; gap: 2px; }
-  .qa .q { font-weight: 500; }
-  .qa .lbl { font: 500 11px/16px var(--md-font); color: var(--md-on-surface-variant); }
   .wrong-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--st-warn); font: 500 12px/16px var(--md-font); }
   .finds li.is-wrong .fl { text-decoration: line-through; text-decoration-color: var(--md-on-surface-variant); }
   .finds li.flash { border-radius: var(--md-shape-m); }
-  .replay .find-acts, .replay .find-ask, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
+  .replay .find-acts, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
   @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
 </head>
@@ -434,7 +428,6 @@
           <div class="transcript-wrap" id="transcriptWrap">
             <div id="transcript" aria-live="polite"></div>
           </div>
-          <span class="body-m muted" id="deskLink"></span>
           <div><button type="button" class="m3-btn outlined" id="endCallBtn" hidden><span class="material-symbols-rounded" aria-hidden="true">call_end</span>End call</button></div>
         </div>
       </li>
@@ -491,6 +484,7 @@
   </section>
 </main>
 
+<script src="/auth.js"></script>
 <script>
 const STATUS = ['Upload', 'Reviewing', 'Your plan', 'On call', 'Resolved'];
 const AGENT_STATUS = {created: 1, reviewing: 1, deciding: 2, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
@@ -554,7 +548,10 @@ function apply(m, e) {
     case 'reconciliation': m.rec = e; break;
     case 'review_done': m.review = { auditor: e.auditor, policy: e.policy }; break;
     case 'balance': m.balances.push(e.amount); break;
-    case 'approval_requested': m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; if (e.agent === 'planner') m.plan = { ...(m.plan || {}), ...e.detail }; break;
+    case 'approval_requested':
+      // the payment plan is the patient's own decision at the end: show the plan, never a Yes/No card (old replays have one)
+      if (e.agent === 'planner') { m.plan = { ...(m.plan || {}), ...e.detail }; break; }
+      m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; break;
     case 'approval_resolved': {
       const who = Object.keys(m.approvals).find((k) => m.approvals[k].id === e.approval_id);
       if (who) { m.approvals[who].resolved = e.approved;
@@ -725,6 +722,12 @@ function correctedBalance(m) {
   if (m.done && m.done.now != null) return m.done.now;
   return m.balances.length > 1 ? m.balances[m.balances.length - 1] : null;
 }
+// done, but billing hasn't confirmed the lower balance yet (a hold or an open review is not a reduction)
+function awaitingConfirm(m) {
+  return !!(m.done && m.done.confirmed === false && m.done.expected != null && m.done.expected < m.done.now);
+}
+// the plan exactly as the server wrote it ("17 × $88/mo, then $78.98"); older events only have months × monthly
+const planLabel = (p) => p.text || `${p.months} × ${money(p.monthly)}/mo`;
 function planOf(m) {
   if (m.done && m.done.plan && m.done.plan.months > 0) return m.done.plan;
   return m.plan && m.plan.months > 0 ? m.plan : null;
@@ -801,9 +804,10 @@ function assistantLine(m, ds, tab) {
   // ds 4
   if (m.callDeclined) return { text: `Okay, I didn’t call ${prov}.` + (found ? ' ' + found : ''), chip: 'Voice agent ready' };
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
-  if (planPending) { const p = m.plan || {}; return { text: `The call is done. Want me to set up ${p.months} × ${money(p.monthly)}/mo with ${prov}?`, chip: 'Waiting for you', cls: 'warn' }; }
+  if (planPending) { const p = m.plan || {}; return { text: `The call is done. Want me to set up ${planLabel(p)} with ${prov}?`, chip: 'Waiting for you', cls: 'warn' }; }
   if (!m.done) return { text: `The call is done. ${outcomeText(m)}.`, chip: 'Wrapping up' };
-  const bits = [orig != null && now != null && now !== orig ? `Your ${prov} bill went from ${money(orig)} to ${money(now)}.` : `Your ${prov} balance is ${money(now)}.`];
+  const bits = [awaitingConfirm(m) ? `${prov} still shows ${money(now)}. I expect ${money(m.done.expected)} once they apply the corrections; it isn’t confirmed yet.`
+    : orig != null && now != null && now !== orig ? `Your ${prov} bill went from ${money(orig)} to ${money(now)}.` : `Your ${prov} balance is ${money(now)}.`];
   if (m.done.case_number) bits.push(`Case ${m.done.case_number} is open.`);
   if (m.done.refund) bits.push(`They owe you ${money(m.done.refund)} back.`);
   if (m.followup) bits.push(`I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.`);
@@ -853,8 +857,9 @@ function render() {
   let support = 'Checking…';
   if (m.bill && now != null && (m.review || ds > 1)) {
     const parts = [], saved = orig - now, p = planOf(m);
-    parts.push(saved > 0 ? `Saves ${money(saved)}` : 'Same as the bill');
-    if (p) parts.push(`${p.months} × ${money(p.monthly)}/mo, interest-free`);
+    if (awaitingConfirm(m)) parts.push(`Billing still shows this · expected ${money(m.done.expected)} once the correction lands`);
+    else parts.push(saved > 0 ? `Saves ${money(saved)}` : 'Same as the bill');
+    if (p) parts.push(`${planLabel(p)}, interest-free`);
     if (m.done && m.done.refund) parts.push(`+ ${money(m.done.refund)} back to you`);
     support = parts.join(' · ');
   } else if (m.error) support = '';
@@ -934,7 +939,6 @@ function render() {
     return `<div class="bubble-wrap ${them ? 'them' : 'me'}${i >= (seen[tk] || 0) ? ' in' : ''}"><span class="bubble-who">${them ? 'Billing' : 'BillBack'}</span><span class="m3-bubble ${them ? 'them' : 'me'}">${esc(l.text)}</span></div>`;
   }).join(''));
   seen[tk] = m.lines.length;
-  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}&hospital=${encodeURIComponent(prov)}" target="_blank">open the billing-rep console</a>` : '');
   $('endCallBtn').hidden = !(m.call && !m.callEnded && !m.done);
   $('callSummary').textContent = m.callDeclined ? 'No call made'
     : m.call ? (m.callEnded ? `${outcomeText(m)} · ${timer(el)}` : `${phaseText(m)} · ${timer(el)}`)
@@ -947,12 +951,14 @@ function render() {
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
   const nextV = latestPlan(m, m.round + 1), sc = m.scorecards.filter((x) => x.n === m.round).pop();
   $('finalTitle').textContent = nextV && nextV.next && nextV.next.kind !== 'done' ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
-  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
+  setText($('finalLine'), m.done ? `${money(m.done.now)}${awaitingConfirm(m) ? ` now, ${money(m.done.expected)} expected` : ''} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
-  const refund = m.done && m.done.refund;
-  $('finalNote').hidden = !refund;
+  const refund = m.done && m.done.refund, waiting = awaitingConfirm(m);
+  $('finalNote').hidden = !refund && !waiting;
   $('finalNote').innerHTML = refund
     ? `<b class="text-success">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
+    : waiting ? `Billing hasn’t confirmed a lower balance yet: their records still show ${money(m.done.now)}. Expected ${money(m.done.expected)}`
+        + (m.done.expected_refund ? ` and ${money(m.done.expected_refund)} back to you` : '') + ' once the review or correction lands. We’ll check back.'
     : 'We’ll check back once billing confirms your new balance.';
   const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
   $('followBox').hidden = !(m.done && fu);
@@ -970,7 +976,7 @@ function render() {
   $('planBox').classList.toggle('attn-card', planPending);
   if (showPlan) {
     const p = m.plan;
-    $('planText').innerHTML = `Pay the ${money(p.months * p.monthly)} as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free?`;
+    $('planText').innerHTML = `Pay the ${money(p.total != null ? p.total : p.months * p.monthly)} as <b>${esc(planLabel(p))}</b>, interest-free?`;
     $('planYes').hidden = $('planNo').hidden = $('planYes').parentNode.hidden = !(pa && pa.resolved === undefined);
   }
 
@@ -1017,31 +1023,21 @@ function setHTMLKeep(el, html) {
 }
 
 function findingHTML(f, m, ui, isNew, acts) {
-  const k = esc(f.key), c = m.corrections[f.key], qa = m.qa[f.key] || [], box = ui.box[f.key];
+  const k = esc(f.key), c = m.corrections[f.key], box = ui.box[f.key];
   const open = ui.finds.has(f.key) || !!box;
   const flash = ui.flashFind === f.key && Date.now() < ui.flashUntil ? ' flash' : '';
   const err = ui.err[f.key] ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.err[f.key])}</p>` : '';
-  // Ask sits on the row once the finding's agent is done; it needs the saved plan facts, so it waits for the plan
-  const askBtn = !acts.live || !(m.agent[f.agent] || {}).done ? ''
-    : `<button type="button" class="m3-btn text find-ask" data-act="ask" data-key="${k}"${acts.ask ? '' : ' aria-disabled="true" title="Available once the plan is ready"'}>${sym('chat_bubble')}Ask</button>`;
   const buttons = !acts.ask ? '' : `<div class="find-acts">
       ${c ? (acts.correct ? `<button type="button" class="m3-btn text" data-act="undo" data-id="${esc(c.id)}">${sym('undo')}Undo “This is wrong”</button>` : '')
           : acts.correct ? `<button type="button" class="m3-btn text" data-act="wrong" data-key="${k}">${sym('flag')}This is wrong</button>` : ''}</div>`;
-  const answers = qa.map((x) => `<div class="qa"><span class="q">${esc(x.question)}</span><span>${esc(x.answer)}</span>
-      <span class="lbl">${esc(agentName(m, x.agent))}${(x.sources || []).length ? ' · ' + srcHTML(x.sources[0]) : ''}</span></div>`).join('');
-  const busy = ui.busy['ask:' + f.key];
-  const askForm = box === 'ask' ? `<form data-form="ask" data-key="${k}"><input class="m3-input" data-draft="ask:${k}" maxlength="500"
-      value="${esc(ui.drafts['ask:' + f.key] || '')}" placeholder="Ask the agent that found this" aria-label="Your question"${busy ? ' disabled' : ''}>
-      <button type="submit" class="m3-btn filled"${busy ? ' disabled' : ''}>${busy ? 'Asking…' : 'Ask'}</button></form>` : '';
-  const askBox = answers || askForm ? `<div class="find-box">${answers}${askForm}${box === 'ask' ? err : ''}</div>` : '';
   const wrongBox = box === 'wrong' && !c ? `<div class="find-box"><p class="body-m" style="margin:0">What’s wrong? (optional) I’ll leave this finding out and redo the plan.</p>
       <form data-form="wrong" data-key="${k}"><input class="m3-input" data-draft="wrong:${k}" maxlength="500" value="${esc(ui.drafts['wrong:' + f.key] || '')}"
       placeholder="e.g. that payment was to my dentist" aria-label="What’s wrong">
       <button type="submit" class="m3-btn filled"${ui.busy['wrong:' + f.key] ? ' disabled' : ''}>Save</button>
       <button type="button" class="m3-btn text" data-act="cancel" data-key="${k}">Cancel</button></form>${err}</div>` : '';
   const tag = c ? `<p class="wrong-tag">${sym('flag')}You said this is wrong${c.note ? ': “' + esc(c.note) + '”' : ''}${c.v ? ` · <button type="button" class="made-v" data-act="goplan">plan v${c.v}</button>` : ''}</p>` : '';
-  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b>${askBtn}</summary>
-    <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}${askBox}</div></details></li>`;
+  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
+    <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}</div></details></li>`;
 }
 
 // what an older version has that the latest doesn't (for "tap an older version to compare")
@@ -1260,7 +1256,9 @@ function renderNow(m, ds, tab, a) {
   if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   $('nowMoney').hidden = !live || orig == null;
-  setText($('nowWas'), orig != null ? money(orig) : '');
+  const waiting = awaitingConfirm(m);  // billing still shows the bill's amount: no "was → now" arrow
+  setText($('nowWas'), orig != null && !waiting ? money(orig) : '');
+  $('nowMoney').querySelector('.material-symbols-rounded').style.display = waiting ? 'none' : '';
   setText($('nowOwe'), now != null && (m.review || ds > 1) ? money(now) : 'checking…');
   $('nowOwe').classList.toggle('pending', !(now != null && (m.review || ds > 1)));
   setText($('nowSave'), $('statOweSupport').textContent === 'Checking…' ? '' : $('statOweSupport').textContent);
@@ -1418,7 +1416,7 @@ document.querySelector('main').addEventListener('click', async (e) => {
     try { await post(`/api/cases/${state.active}/policy/recheck`); }
     catch (err) { ui.recheckErr = err.message; }
     ui.rechecking = false; render();
-  } else if (act === 'ask' || act === 'wrong') {
+  } else if (act === 'wrong') {
     ui.box[key] = ui.box[key] === act ? undefined : act; ui.finds.add(key); delete ui.err[key]; render();
     const n = document.querySelector(`[data-draft="${CSS.escape(act + ':' + key)}"]`); if (n) n.focus();
   } else if (act === 'cancel') { delete ui.box[key]; render(); }
@@ -1466,11 +1464,9 @@ document.querySelector('main').addEventListener('submit', async (e) => {
   if (state.active === 'replay') return;
   const ui = uiOf(state.active), key = f.dataset.key, kind = f.dataset.form, dk = kind + ':' + key;
   const text = (ui.drafts[dk] || '').trim();
-  if (kind === 'ask' && !text) return;
   ui.busy[dk] = true; delete ui.err[key]; render();
   try {
-    if (kind === 'ask') await post(`/api/cases/${state.active}/ask`, { question: text, finding: key });
-    else { await post(`/api/cases/${state.active}/corrections`, { finding: key, note: text }); delete ui.box[key]; }
+    await post(`/api/cases/${state.active}/corrections`, { finding: key, note: text }); delete ui.box[key];
     ui.drafts[dk] = '';
   } catch (err) { ui.err[key] = err.message; }
   finally { delete ui.busy[dk]; render(); }

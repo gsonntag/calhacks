@@ -298,8 +298,12 @@
   "income": {
     "annual": 36400.0,
     "monthly": 3033.33,
-    "source": "7 Nessie payroll deposits, paid every two weeks (avg $1,400 x 26)",
-    "deposits_counted": 7
+    "source": "7 Nessie payroll deposits, paid every two weeks (avg $1,400 x 26); take-home pay",
+    "deposits_counted": 7,
+    "basis": "take-home",
+    "gross_annual_est": 45500.0,
+    "bills_monthly": 1391.33,
+    "bills_source": "31 regular Nessie payments in the last 90 days (BART Clipper Reload, Berkeley Bowl, Cafe Leila, East Bay Wireless…)"
   },
   "discount": {
     "fpl_pct": 228.1,
@@ -309,7 +313,8 @@
     "insured": true,
     "oop_pct_income": 5.7,
     "discount_pct": 0,
-    "tier_quote": null
+    "tier_quote": null,
+    "at_estimated_gross": null
   },
   "settle": {
     "discounted_share": 2074.98,
@@ -321,12 +326,16 @@
     "refund": 0.0,
     "discount_pct": 0,
     "plan_months": 18,
-    "plan_monthly": 88.0
+    "plan_monthly": 88.0,
+    "plan_last": 78.98
   },
   "plan": {
     "months": 18,
     "monthly": 88.0,
-    "reason": "$88/mo stays under 4% of monthly income ($3,033): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
+    "last": 78.98,
+    "total": 1574.98,
+    "reason": "$88/mo stays under 4% of monthly income ($3,033): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%; you have about $1,642/mo left after regular bills",
+    "text": "17 × $88/mo, then $78.98"
   },
   "finance_reconcile": {
     "billed_due": 15414.33,
@@ -368,7 +377,7 @@
       "agent": "bright_data",
       "title": "Interest-free payment plan",
       "money": 0,
-      "value": "18 x $88/mo"
+      "value": "17 × $88/mo, then $78.98"
     }
   ],
   "must_not_report": [

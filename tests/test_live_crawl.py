@@ -401,12 +401,14 @@ def test_posted_unit_price_converts_only_like_units():
     assert billcheck.posted_unit_price("J1885", _entry(12.0))[0] is None  # no unit in the file
 
 
-def test_old_demo_bill_no_false_zofran_flag():
-    """demo/case.json (CPMC, insured): J2405 $440 vs the file's $16.33 per 12.25 mL is not compared. 80053 at
-    $420 is above CPMC's posted $386 and is reported ($34): a real mismatch on the real price file."""
+def test_default_demo_case_has_no_price_above_posted():
+    """demo/case.json (CPMC, insured) must match the replays and pitch: no line flag. J2405 $440 vs the file's
+    $16.33 per 12.25 mL is not compared (per 1 mg in HCPCS). 80053 is billed at CPMC's posted $386 (it was $420,
+    $34 above; the $34 moved to 99284, $3,184 vs CPMC's posted $5,214), so the total is still $8,700."""
     case = json.loads((config.DEMO_DIR / "case.json").read_text())
+    assert sum(li["amount"] for li in case["bill"]["line_items"]) == case["bill"]["total_charges"] == 8700
     review = billcheck.line_review(case["bill"], case["hospital"]["name"])
-    assert [(c["kind"], c["code"], c["amount"]) for c in review["corrections"]] == [("price_above_posted", "80053", 34.0)]
+    assert review["corrections"] == []
     assert [(s["line"], s["code"]) for s in review["skipped"]] == [(6, "J2405")]
     assert "12.25 mL" in review["skipped"][0]["why"]
     assert review["compared"] == 5
@@ -429,7 +431,8 @@ async def test_insured_lines_step_says_what_was_compared():
                             loop.create_future())
     lines = next(e for e in reversed(bus.history("lines-step")) if e["kind"] == "step" and e["key"] == "auditor:lines")
     texts = [p["text"] for p in lines["proof"]]
-    assert lines["status"] == "flag" and any(t.startswith("Line 3 charges $420.00") for t in texts)
+    assert lines["status"] == "clear" and texts[0] == "5 lines compared with the hospital's posted prices"
+    assert not any(e["kind"] == "finding" and "posted price" in e["title"] for e in bus.history("lines-step"))
     assert any(t.startswith("Line 6 (J2405) not compared") for t in texts)
     assert aud["reconciliation"]["owed"] == 600  # insured: the share is still the insurance statement's
 

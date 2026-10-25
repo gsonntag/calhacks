@@ -291,8 +291,12 @@
   "income": {
     "annual": 80600.0,
     "monthly": 6716.67,
-    "source": "6 Nessie payroll deposits, paid every two weeks (avg $3,100 x 26)",
-    "deposits_counted": 6
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $3,100 x 26); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 100750.0,
+    "bills_monthly": 3070.6,
+    "bills_source": "33 regular Nessie payments in the last 90 days (Diablo Wireless, Gregory Lane Residences, Pleasant Hill Safeway, Shell Contra Costa Blvd…)"
   },
   "discount": {
     "fpl_pct": 505.0,
@@ -302,7 +306,8 @@
     "insured": true,
     "oop_pct_income": 1.2,
     "discount_pct": 0,
-    "tier_quote": null
+    "tier_quote": null,
+    "at_estimated_gross": null
   },
   "settle": {
     "discounted_share": 967.52,
@@ -314,12 +319,16 @@
     "refund": 0.0,
     "discount_pct": 0,
     "plan_months": 6,
-    "plan_monthly": 162.0
+    "plan_monthly": 162.0,
+    "plan_last": 157.52
   },
   "plan": {
     "months": 6,
     "monthly": 162.0,
-    "reason": "$162/mo stays under 4% of monthly income ($6,717): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
+    "last": 157.52,
+    "total": 967.52,
+    "reason": "$162/mo stays under 4% of monthly income ($6,717): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%; you have about $3,646/mo left after regular bills",
+    "text": "5 × $162/mo, then $157.52"
   },
   "finance_reconcile": {
     "billed_due": 27619.57,
@@ -366,7 +375,7 @@
       "agent": "bright_data",
       "title": "Interest-free payment plan",
       "money": 0,
-      "value": "6 x $162/mo"
+      "value": "5 × $162/mo, then $157.52"
     }
   ],
   "must_not_report": [

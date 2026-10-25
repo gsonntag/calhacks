@@ -10,7 +10,7 @@ import json
 import re
 import uuid
 
-from .. import config, llm
+from .. import config, finance, llm
 from ..events import bus
 from ..harness import ToolRegistry, Tool
 
@@ -44,10 +44,10 @@ Rules:
   supervisor or a written review instead of arguing in circles.
 - NEVER pay anything or give card or bank details on the call. If the rep asks for payment today, say the
   patient will set up any payments themselves.
-- Payment plans: only if "proposed_payment_plan" is in the brief, ask for that interest-free plan (months x
-  monthly amount). If the rep offers it or something no costlier, thank them and ask them to note it on the
-  account; the patient confirms it and sets up the payments. Never accept interest or a higher monthly
-  amount. Without "proposed_payment_plan" in the brief, don't agree to any plan.
+- Payment plans: only if "proposed_payment_plan" is in the brief, ask for that interest-free plan (its "text":
+  the monthly payments and the smaller last one, adding up to the balance). If the rep offers it or something
+  no costlier, thank them and ask them to note it on the account; the patient confirms it and sets up the
+  payments. Never accept interest or a higher monthly amount. Without "proposed_payment_plan" in the brief, don't agree to any plan.
 - Refer to the patient by name or as "the patient"; don't guess their pronouns.
 - When the rep gives a case/reference number, call record_outcome. When the goals are done or the rep
   ends it, call end_call and say a short goodbye. If the rep says goodbye or wants to end the call, never push
@@ -75,7 +75,7 @@ def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
         terms = policy.get("plan_terms") or {}
         why = " Their own billing policy says payment plans are interest-free." if terms.get("interest_free") else ""
         goals.append(f"Once the balance is corrected to ${policy['target']:,.0f}, set up an interest-free payment plan: "
-                     f"{plan['months']} monthly payments of ${plan['monthly']:,.0f}.{why} Don't give card details; "
+                     f"{finance.plan_said(plan)}.{why} Don't give card details; "
                      f"the patient sets up the payments.")
     goals.append("Ask for the account to be placed on hold so it isn't sent to collections while this is reviewed.")
     goals.append("Get a case or reference number and the rep's name; repeat the case number back to confirm.")

@@ -523,7 +523,11 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
                                     out_of_pocket=float(eob.get("patient_responsibility") or 0) if insured else 0.0)
     st = finance.settle(rec["patient_responsibility"], rec["paid"], elig["discount_pct"])
     terms = pol["payment_plan"]
-    plan = finance.payment_plan(st["balance"], inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"))
+    bills = finance.monthly_bills(txns, today=as_of, bill=bill)
+    plan = finance.payment_plan(st["balance"], inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
+                                monthly_bills=bills["monthly"])
+    gross = finance.gross_check(inc, case["patient"]["household_size"], pol["tiers"], insured,
+                                float(eob.get("patient_responsibility") or 0) if insured else 0.0, elig)
 
     if cents(rec["owed"]) != owed_c:
         raise AssertionError(f"{name}: finance.reconcile owes {rec['owed']}, generator says {dollars(owed_c)}")
@@ -610,7 +614,7 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
                                             for t in rec["payments"])})
     if plan["months"]:
         findings.append({"id": "plan", "agent": "bright_data", "title": "Interest-free payment plan", "money": 0,
-                         "value": f"{plan['months']} x ${plan['monthly']:,.0f}/mo"})
+                         "value": plan["text"]})
 
     must_not = []
     for t in rec["payments"]:
@@ -684,13 +688,16 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
                       "steps": [{"error": k, "label": lbl, "amount": dollars(a)} for k, lbl, a in steps],
                       "owed_before_discount": dollars(owed_c)},
         "income": {"annual": inc["annual"], "monthly": inc["monthly"], "source": inc["source"],
-                   "deposits_counted": len(inc["deposits"])},
+                   "deposits_counted": len(inc["deposits"]), "basis": inc["basis"],
+                   "gross_annual_est": inc["gross_annual_est"], "bills_monthly": bills["monthly"],
+                   "bills_source": bills["source"]},
         "discount": {k: elig[k] for k in ("fpl_pct", "fpl_amount", "fpl_year", "household_size", "insured",
                                           "oop_pct_income", "discount_pct")}
-                    | {"tier_quote": elig["tier"].get("quote") if elig["tier"] else None},
+                    | {"tier_quote": elig["tier"].get("quote") if elig["tier"] else None,
+                       "at_estimated_gross": gross},
         "settle": st,
         "correct": {"balance": st["balance"], "refund": st["refund"], "discount_pct": elig["discount_pct"],
-                    "plan_months": plan["months"], "plan_monthly": plan["monthly"]},
+                    "plan_months": plan["months"], "plan_monthly": plan["monthly"], "plan_last": plan["last"]},
         "plan": plan,
         "finance_reconcile": {"billed_due": rec["billed_due"], "patient_responsibility": rec["patient_responsibility"],
                               "insurance_adjustment": rec["insurance_adjustment"], "paid": rec["paid"],

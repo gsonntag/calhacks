@@ -14,7 +14,8 @@ before putting anything on screen.
   CPT/HCPCS columns, and every demo code is present.
 - Rosa's original made-up prices sat below CPMC Van Ness's real gross charges (99284 $3,150 vs $5,214;
   74177 $3,890 vs $8,287; 85025 $190 vs $217; 96374 $610 vs $647; only 80053 was above: $420 vs $386
-  outpatient). J2405's drug units are ambiguous. Sutter lists its discounted cash price equal to gross.
+  outpatient; since 2026-10-25 the sample bill has 80053 at $386 and 99284 at $3,184, same $8,700 total).
+  J2405's drug units are ambiguous. Sutter lists its discounted cash price equal to gross.
 - For an insured patient the insurer's negotiated rate matters, not gross. The files have negotiated rates
   (e.g. 74177: Aetna $4,717, Blue Shield $6,302), but our insurer is fictional.
 - Price data pays off most for uninsured patients or those at or under 400% FPL: California caps their

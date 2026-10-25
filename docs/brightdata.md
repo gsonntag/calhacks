@@ -414,6 +414,7 @@ set the share, so the balance doesn't change, but the claim was built on a wrong
   $822.50, and the insurance finding is the rest ($25,829.55). Her morphine line (file: per 1 mL; HCPCS: per
   10 mg) is not compared.
 - The old sample bill (`demo/case.json`, CPMC, insured): J2405 $440 against the file's "$16.33" is **not**
-  flagged (per 12.25 mL vs per 1 mg). 80053 at $420 against CPMC's posted $386 **is** flagged: $34, taken out
-  of the $7,600 insurance gap ($7,566 + $34), so the balance stays $600. It's a real mismatch with the real
-  file, so it's reported rather than hidden.
+  flagged (per 12.25 mL vs per 1 mg). Its made-up 80053 charge ($420) was $34 above CPMC's posted $386, so
+  the demo data was aligned to the real file: 80053 is now $386 and 99284 $3,184 (posted $5,214), same $8,700
+  total, PDFs regenerated. The sample bill has no line flag, and its findings ($7,600 insurance, $500 payment)
+  match the replays and pitch.
