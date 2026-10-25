@@ -175,7 +175,6 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
 
     free = [t for t in tiers if t.get("discount_pct") == 100]
     step(cid, "policy", "free", "Check free care", "running")
-    await asyncio.sleep(0.4)
     if elig["discount_pct"] == 100:
         why = (f" (your out-of-pocket is {elig['oop_pct_income']:.0f}% of income)"
                if elig["tier"].get("min_oop_pct_income") is not None else "")
@@ -187,7 +186,6 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
 
     if elig["discount_pct"] != 100:
         step(cid, "policy", "tiers", "Check discount tiers", "running")
-        await asyncio.sleep(0.4)
         step(cid, "policy", "tiers", "Check discount tiers", "win" if elig["discount_pct"] else "clear",
              f"You qualify for {elig['discount_pct']:.0f}% off" if elig["discount_pct"] else "No discount tier matched")
 
@@ -207,7 +205,6 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     target = st["balance"]
     label = "Apply free care" if d == 100 else "Apply discount"
     step(cid, "policy", "apply", label, "running")
-    await asyncio.sleep(0.3)
     paid = f" − ${paid_info['paid']:,.0f} paid" if paid_info["paid"] else ""
     end = f"you're owed ${st['refund']:,.0f} back" if st["refund"] else f"${target:,.0f}"
     if d == 100 and not paid_info["paid"]:
@@ -222,7 +219,6 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"))
     if plan["months"]:
         step(cid, "policy", "plan", "Payment plan terms", "running")
-        await asyncio.sleep(0.3)
         rules = [r for r in ("interest-free" if terms.get("interest_free") else "",
                              f"max {terms['max_pct_monthly_income']:g}% of monthly income"
                              if terms.get("max_pct_monthly_income") else "") if r]

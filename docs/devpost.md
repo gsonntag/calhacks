@@ -33,8 +33,9 @@ other two).
 - **Our own agent harness** (Python): tools carry permission tiers (read / act / consequential);
   consequential tools block on a human approval gate; every tool call and result is streamed to the UI and
   appended to an audit log.
-- **Agents:** intake (Claude vision reads PDFs/photos), auditor, policy (runs in parallel with the auditor,
-  waiting on its results), caller, planner.
+- **Pipeline:** intake (Claude vision reads PDFs/photos) → auditor and policy check (deterministic code,
+  run in parallel, the policy step waiting on the auditor's results) → approval → caller (a Claude tool-use
+  loop that runs the phone call) → planner. A fixed order on purpose; Claude where judgement is needed.
 - **Deterministic money math** — the model never invents a number; every figure cites its source.
 - **Capital One Nessie** for the patient's account; **Bright Data** SERP API + Web Unlocker feeding a
   versioned hospital-policy database with quote verification and change detection; **Cartesia** Ink STT +

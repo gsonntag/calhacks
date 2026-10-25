@@ -26,9 +26,15 @@ number, follow-up scheduled.**
                             quotes
 ```
 
+**Orchestration** (`billback/orchestrator.py`): a fixed pipeline, on purpose (predictable on stage):
+intake → Auditor ∥ Policy (in parallel, sharing results) → approval → call → plan → follow-ups. Claude is
+used where judgement is needed: reading the documents, extracting policy rules, the phone call (a Claude
+tool-use loop with `record_outcome` / `end_call`, `billback/agents/caller.py`), reading the call outcome and
+answering "what's the status?". The Auditor, Policy step and Planner are deterministic code.
+
 **Harness** (`billback/harness.py`): tools have permission tiers: `read` runs freely, `act` is announced,
-`consequential` blocks on the patient's approval. Every tool call/result/approval is an event streamed to
-the UI and appended to `data/<case>.audit.jsonl`.
+`consequential` blocks on the patient's approval (placing the call, saving a payment plan). Every tool
+call/result/approval is an event streamed to the UI and appended to `data/<case>.audit.jsonl`.
 
 **Money is computed, not generated** (`billback/finance.py`): reconciliation, duplicate detection, income
 annualisation from payroll deposits, % of the federal poverty line, discount tiers (including the insured
@@ -69,11 +75,32 @@ Without them, calls run in **desk mode**: the case page links a rep console (`re
 plays billing, and BillBack answers out loud through Cartesia TTS. With no Anthropic key it falls back to a
 scripted caller so the whole flow still runs offline. `case.html?replay=1` replays the last finished run.
 
+## Status: what's done, what's partial
+
+| Piece | Status | Evidence |
+|---|---|---|
+| Intake (Claude reads the bill + EOB PDFs) | Done, run live | live cases start empty and are filled from the documents (`orchestrator.new_case`, `app._apply_uploads`) |
+| Money math | Done | `billback/finance.py`, `tests/test_finance.py` |
+| Bank (Capital One Nessie): income, missed payment, duplicate, plan written back | Done, run live | `integrations/nessie.py`, `agents/planner.py`, `scripts/seed_nessie.py` |
+| Hospital policy DB (Bright Data SERP → Unlocker → PDFs → Claude → quote verification → SQLite) | Done, run live | `billback/policies/`, crawl artifacts in `policydb/raw/`, request log in `policydb/policies.json` |
+| Policy change detection (recheck) | Done; tested, no real policy change seen yet | `policies/monitor.py`, `tests/test_policies.py::test_recheck_detects_change_only_when_content_changes` |
+| Call agent (Claude tool-use loop) | Done, run live in desk mode | `agents/caller.py`; replays in `demo/replay_*.json` |
+| Real phone call (Twilio Media Streams ↔ Cartesia STT/TTS ↔ Claude, barge-in) | **Partial: built and tested against simulated Twilio/Cartesia sockets; no live phone call recorded yet** | `billback/voice/`, `tests/test_voice.py`, `scripts/sim_twilio_stream.py` |
+| Cartesia TTS in desk mode, voice picker, pronunciation | Done, run live | `integrations/cartesia.py`, `voice/voices.py`, `voice/pronounce.py` |
+| Approval gate, audit log, follow-ups, "call again", status answers | Done | `harness.py`, `followups.py`, `tests/test_followups.py` |
+| Gmail intake | **Not built: the "Demo inbox" chip loads the sample bill** (marked `simulated` by the API and in the UI) | `app.gmail_scan` |
+| 10 of the 12 intake designs in `/flows/` | Clickable mockups (labelled Mock); Drop & Go is the live one | `web/flows/index.html` |
+
 ## Real vs simulated (say this to judges)
 - **Real:** Bright Data crawls of real hospital policies (committed in `policydb/`), Nessie API records,
   Claude reasoning, Cartesia STT/TTS, the approval gate and audit log.
-- **Simulated:** the patient, bill, EOB and bank history are synthetic (PDFs are watermarked SAMPLE);
-  "hospital billing" is a teammate; the Gmail button loads a demo inbox.
+- **Simulated:** the patient, bill, EOB and bank history are synthetic (PDFs are watermarked SAMPLE).
+  The numbers were chosen for the story: Rosa's insurance share ($1,100) and pay ($1,400 biweekly) make her
+  an honest "not eligible for the write-off, but owed a lot less" case; Marcus is the free-care case.
+  "Hospital billing" is a teammate (the rep console, or their phone once Twilio is live). The "Demo inbox"
+  chip loads the sample bill instead of real Gmail.
+- **Replay** (`case.html?replay=1`) plays back a recorded live run (desk mode) with long pauses shortened;
+  only live runs are ever recorded.
 - **Live mode builds the case only from the uploaded documents:** Claude reads the patient's name, DOB,
   bill and EOB; the bank account is found in Nessie by the patient's name; the policy comes from the Bright
   Data policy DB. "Use the sample bill" sends the sample PDFs through the same reading. The sample case data
