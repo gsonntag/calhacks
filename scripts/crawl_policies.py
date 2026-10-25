@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import llm  # noqa: E402
+from billback import llm, prices  # noqa: E402
 from billback.integrations import brightdata  # noqa: E402
 from billback.policies import compare, monitor, pipeline, registry  # noqa: E402
 from billback.policies.store import PolicyStore  # noqa: E402
@@ -73,6 +73,17 @@ async def recheck(store: PolicyStore, ids: list[str]) -> None:
     print(json.dumps(results, indent=1))
 
 
+def no_tier_reason(cur: dict) -> str:
+    """Plain summary of why a stored version has no fixed-percent tier (from what was fetched and extracted)."""
+    docs = cur["documents"]
+    kinds = ", ".join(f"{d['kind']} {d['url'].split('/')[-1][:60] or d['url']}" for d in docs)
+    other = [o for o in cur["extracted"].get("other_relief") or [] if o]
+    if not any(d["kind"] == "pdf" and d["role"] == "policy_doc" for d in docs):
+        return f"no policy document was found/fetched (sources: {kinds}); extraction had only web pages"
+    return (f"the fetched documents ({kinds}) state no fixed-percent FPL tier"
+            + (f"; {len(other)} non-percentage relief item(s) stored" if other else ""))
+
+
 def show(store: PolicyStore, ids: list[str]) -> None:
     for h in store.hospitals():
         if ids and h.id not in ids:
@@ -80,7 +91,8 @@ def show(store: PolicyStore, ids: list[str]) -> None:
         cur = store.current(h.id)
         print(f"\n== {h.name} ({h.id}) — {len(store.versions(h.id))} version(s), {len(store.checks(h.id))} check(s)")
         if not cur:
-            print("  not crawled")
+            fail = next((r for r in reversed(store.crawl_log(h.id)) if r["stage"] == "pipeline" and not r["ok"]), None)
+            print(f"  not crawled{': last crawl FAILED: ' + fail['note'] if fail else ''}")
             continue
         print(f"  fetched {cur['fetched_at']}  sha256 {cur['content_sha256'][:16]}  status {cur['status']}")
         for d in cur["documents"]:
@@ -91,6 +103,13 @@ def show(store: PolicyStore, ids: list[str]) -> None:
             print(f"        \"{t['quote']}\"")
         v = cur["verification"]
         print(f"  quotes: {v['tiers_verified']} tiers verified, {v['tiers_rejected']} rejected")
+        if not cur["extracted"]["tiers"]:
+            print(f"  why no tiers: {no_tier_reason(cur)}")
+        if pt := prices.table(h.id):
+            print(f"  price table: {pt['codes_found']}/{pt['codes_requested']} codes from {pt['location_name'][:60]!r}"
+                  f" (file updated {pt['last_updated_on']}, CMS template v{pt['template_version']})")
+        else:
+            print("  price table: none (scripts/build_price_tables.py; see docs/brightdata.md)")
     print(f"\nBright Data requests logged: {store.request_counts()}")
 
 

@@ -1,0 +1,3141 @@
+{
+ "hospital_id": "stanford-health",
+ "hospital_name": "Stanford Health Care",
+ "location_name": "Stanford Health Care",
+ "hospital_address": "300 Pasteur Drive, Stanford, CA 94305",
+ "last_updated_on": "2026-04-01",
+ "template_version": "3.0.0",
+ "layout": "json",
+ "source": {
+  "cms_hpt_url": "https://stanfordhealthcare.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "Stanford Health Care",
+  "source_page_url": "https://stanfordhealthcare.org/for-patients-visitors/price-transparency.html",
+  "file_url": "https://stanfordhealthcare.org/content/dam/SHC/patientsandvisitors/pricingtransparency/946174066_stanford-health-care_standardcharges.json",
+  "via": "https",
+  "fetched_at": "2026-10-25T03:56:45+00:00",
+  "sha256": "d21ae2b92615b8496cc7124d3456b9761dbf439d0f231919e4195a86bac68259",
+  "bytes": 154579203
+ },
+ "codes_requested": 67,
+ "codes_found": 67,
+ "missing_codes": [],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "Emergency Care Level 1",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1598.0,
+   "discounted_cash": 639.2,
+   "negotiated_min": 124.03,
+   "negotiated_max": 124.03,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.03,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 124.03,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Emergency Care Level 1'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Emergency Care Level 1 Proc",
+     "setting": "both",
+     "gross": 1598.0
+    },
+    {
+     "description": "Emr Dpt Vst Mayx Req Phy/Qhp",
+     "setting": "both",
+     "gross": 105.0
+    },
+    {
+     "description": "Emr Dpt Vst Mayx Req Phy/Qhp",
+     "setting": "both",
+     "gross": 105.0
+    }
+   ]
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "Emergency Care Lev2",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2767.0,
+   "discounted_cash": 1106.8,
+   "negotiated_min": 225.84,
+   "negotiated_max": 225.84,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 225.84,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 225.84,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Emergency Care Lev2'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Emergency Care Level 2 Proc",
+     "setting": "both",
+     "gross": 2767.0
+    },
+    {
+     "description": "Emergency Dept Visit Sf Mdm",
+     "setting": "both",
+     "gross": 177.0
+    },
+    {
+     "description": "Emergency Dept Visit Sf Mdm",
+     "setting": "both",
+     "gross": 177.0
+    }
+   ]
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "Emergency Care Lev3",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4988.0,
+   "discounted_cash": 1995.2,
+   "negotiated_min": 401.51,
+   "negotiated_max": 401.51,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 401.51,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 401.51,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Emergency Care Lev3'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Emergency Care Level 3 Proc",
+     "setting": "both",
+     "gross": 4988.0
+    },
+    {
+     "description": "Emergency Dept Visit Low Mdm",
+     "setting": "both",
+     "gross": 306.0
+    },
+    {
+     "description": "Emergency Dept Visit Low Mdm",
+     "setting": "both",
+     "gross": 306.0
+    }
+   ]
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "Emergency Care Lev4",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11859.0,
+   "discounted_cash": 4743.6,
+   "negotiated_min": 613.74,
+   "negotiated_max": 613.74,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 613.74,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 613.74,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Emergency Care Lev4'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Emergency Care Level 4 Proc",
+     "setting": "both",
+     "gross": 11859.0
+    },
+    {
+     "description": "Emergency Dept Visit Mod Mdm",
+     "setting": "both",
+     "gross": 524.0
+    },
+    {
+     "description": "Emergency Dept Visit Mod Mdm",
+     "setting": "both",
+     "gross": 524.0
+    }
+   ]
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "Emergency Care Lev5",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 15270.0,
+   "discounted_cash": 6108.0,
+   "negotiated_min": 875.94,
+   "negotiated_max": 875.94,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 875.94,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 875.94,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Emergency Care Lev5'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "Emergency Care Level 5 Proc",
+     "setting": "both",
+     "gross": 15270.0
+    },
+    {
+     "description": "Trauma Center High",
+     "setting": "both",
+     "gross": 15270.0
+    },
+    {
+     "description": "Trauma Center Moderate",
+     "setting": "both",
+     "gross": 15270.0
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "Critical Care/Eval/Mgtmt; First 30-74 Minutes",
+   "setting": "outpatient",
+   "billing_class": "professional",
+   "gross": 1668.0,
+   "discounted_cash": 834.0,
+   "negotiated_min": 1214.97,
+   "negotiated_max": 1214.97,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1214.97,
+   "rates_line": "Critical care first hour",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 1214.97,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "51",
+   "notes": [
+    "Gross charge is from line 'Critical Care/Eval/Mgtmt; First 30-74 Minutes'; payer rates are from line 'Critical care first hour' (the file lists them separately).",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "Critical Care/Eval/Mgtmt; First 30-74 Minutes",
+     "setting": "outpatient",
+     "gross": 1668.0,
+     "modifiers": "51"
+    },
+    {
+     "description": "Critical Care 30-74 Min",
+     "setting": "both",
+     "gross": 20787.0
+    },
+    {
+     "description": "Critical Care/Eval/Mgtmt; First 30-74 Minutes",
+     "setting": "both",
+     "gross": 1668.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "Xr Chest Single View",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1315.0,
+   "discounted_cash": 526.0,
+   "negotiated_min": 128.0,
+   "negotiated_max": 128.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.0,
+   "rates_line": "X-ray exam chest 1 view",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 128.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Xr Chest Single View'; payer rates are from line 'X-ray exam chest 1 view' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "X-Ray Exam Chest 2 Views",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1351.0,
+   "discounted_cash": 540.4,
+   "negotiated_min": 128.0,
+   "negotiated_max": 128.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.0,
+   "rates_line": "X-ray exam chest 2 views",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 128.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'X-Ray Exam Chest 2 Views'; payer rates are from line 'X-ray exam chest 2 views' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "CT Head WO Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 7777.0,
+   "discounted_cash": 3110.8,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "Ct head/brain w/o dye",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Head WO Contrast'; payer rates are from line 'Ct head/brain w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "CT C-Spine WO Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 10045.0,
+   "discounted_cash": 4018.0,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "Ct neck spine w/o dye",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT C-Spine WO Contrast'; payer rates are from line 'Ct neck spine w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "CT Thorax W/O Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 8352.0,
+   "discounted_cash": 3340.8,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "Ct thorax w/o dye",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Thorax W/O Contrast'; payer rates are from line 'Ct thorax w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "CT Thorax W Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 10126.0,
+   "discounted_cash": 4050.4,
+   "negotiated_min": 257.99,
+   "negotiated_max": 257.99,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 257.99,
+   "rates_line": "Ct thorax w/dye",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 257.99,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Thorax W Contrast'; payer rates are from line 'Ct thorax w/dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "CT Angio Chest WO/W Cont",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 17706.0,
+   "discounted_cash": 7082.4,
+   "negotiated_min": 257.99,
+   "negotiated_max": 257.99,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 257.99,
+   "rates_line": "Ct angiography chest",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 257.99,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Angio Chest WO/W Cont'; payer rates are from line 'Ct angiography chest' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "CT Abdomen-Pelvis WO Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 13837.0,
+   "discounted_cash": 5534.8,
+   "negotiated_min": 350.95,
+   "negotiated_max": 350.95,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 350.95,
+   "rates_line": "Ct abd & pelvis w/o contrast",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 350.95,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Abdomen-Pelvis WO Contrast'; payer rates are from line 'Ct abd & pelvis w/o contrast' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "CT Abdomen-Pelvis W Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 17197.0,
+   "discounted_cash": 6878.8,
+   "negotiated_min": 513.15,
+   "negotiated_max": 513.15,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 513.15,
+   "rates_line": "Ct abd & pelv w/contrast",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 513.15,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Abdomen-Pelvis W Contrast'; payer rates are from line 'Ct abd & pelv w/contrast' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "CT Abdomen-Pelvis WO/W Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 19274.0,
+   "discounted_cash": 7709.6,
+   "negotiated_min": 513.15,
+   "negotiated_max": 513.15,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 513.15,
+   "rates_line": "Ct abd & pelv 1/> regns",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 513.15,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'CT Abdomen-Pelvis WO/W Contrast'; payer rates are from line 'Ct abd & pelv 1/> regns' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "MRI Brain WO Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11744.0,
+   "discounted_cash": 4697.6,
+   "negotiated_min": 350.95,
+   "negotiated_max": 350.95,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 350.95,
+   "rates_line": "Mri brain stem w/o dye",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 350.95,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'MRI Brain WO Contrast'; payer rates are from line 'Mri brain stem w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "MRI L-Spine WO Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11019.0,
+   "discounted_cash": 4407.6,
+   "negotiated_min": 350.95,
+   "negotiated_max": 350.95,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 350.95,
+   "rates_line": "Mri lumbar spine w/o dye",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 350.95,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'MRI L-Spine WO Contrast'; payer rates are from line 'Mri lumbar spine w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "Xr L-Spine 2-3v",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1773.0,
+   "discounted_cash": 709.2,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "X-ray exam l-s spine 2/3 vws",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Xr L-Spine 2-3v'; payer rates are from line 'X-ray exam l-s spine 2/3 vws' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "Xr Shoulder Min 2/V",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1789.0,
+   "discounted_cash": 715.6,
+   "negotiated_min": 128.0,
+   "negotiated_max": 128.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.0,
+   "rates_line": "X-ray exam of shoulder",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 128.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Xr Shoulder Min 2/V'; payer rates are from line 'X-ray exam of shoulder' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "Xr Wrist Min 3v",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1828.0,
+   "discounted_cash": 731.2,
+   "negotiated_min": 128.0,
+   "negotiated_max": 128.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.0,
+   "rates_line": "X-ray exam of wrist",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 128.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Xr Wrist Min 3v'; payer rates are from line 'X-ray exam of wrist' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "Xr Ankle Min 3v",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1832.0,
+   "discounted_cash": 732.8,
+   "negotiated_min": 128.0,
+   "negotiated_max": 128.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.0,
+   "rates_line": "X-ray exam of ankle",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 128.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Xr Ankle Min 3v'; payer rates are from line 'X-ray exam of ankle' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "Xr Foot Min 3v",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1792.0,
+   "discounted_cash": 716.8,
+   "negotiated_min": 128.0,
+   "negotiated_max": 128.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.0,
+   "rates_line": "X-ray exam of foot",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 128.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Xr Foot Min 3v'; payer rates are from line 'X-ray exam of foot' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "US Abdomen",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3272.0,
+   "discounted_cash": 1308.8,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "Us exam abdom complete",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'US Abdomen'; payer rates are from line 'Us exam abdom complete' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "US Abdomen Limited",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2421.0,
+   "discounted_cash": 968.4,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "Echo exam of abdomen",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'US Abdomen Limited'; payer rates are from line 'Echo exam of abdomen' (the file lists them separately).",
+    "16 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 16,
+   "variants": [
+    {
+     "description": "US Abdomen Limited",
+     "setting": "both",
+     "gross": 2421.0
+    },
+    {
+     "description": "Ultrasound Abdominal R-T W/Image Limited",
+     "setting": "both",
+     "gross": 420.0
+    },
+    {
+     "description": "Ultrasound Abdominal R-T W/Image Limited",
+     "setting": "both",
+     "gross": 420.0
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "US Pelvic Non OB",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2945.0,
+   "discounted_cash": 1178.0,
+   "negotiated_min": 153.77,
+   "negotiated_max": 153.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.77,
+   "rates_line": "Us exam pelvic complete",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 153.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'US Pelvic Non OB'; payer rates are from line 'Us exam pelvic complete' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "US Pelvic Non-OB",
+     "setting": "both",
+     "gross": 2945.0
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "Ecg Hosp",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1810.0,
+   "discounted_cash": 724.0,
+   "negotiated_min": 86.77,
+   "negotiated_max": 86.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 86.77,
+   "rates_line": "Electrocardiogram tracing",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 86.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Ecg Hosp'; payer rates are from line 'Electrocardiogram tracing' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "Tte W Doppler W Color",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 12065.0,
+   "discounted_cash": 4826.0,
+   "negotiated_min": 803.7,
+   "negotiated_max": 803.7,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 803.7,
+   "rates_line": "Tte w/doppler complete",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 803.7,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Tte W Doppler W Color'; payer rates are from line 'Tte w/doppler complete' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "HC Venipuncture",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 112.0,
+   "discounted_cash": 44.8,
+   "negotiated_min": 9.34,
+   "negotiated_max": 9.34,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.34,
+   "rates_line": "Routine venipuncture",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 9.34,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Venipuncture'; payer rates are from line 'Routine venipuncture' (the file lists them separately).",
+    "9 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "Collj Ven Bld Vnpnxr",
+     "setting": "both",
+     "gross": 24.0
+    },
+    {
+     "description": "Collj Ven Bld Vnpnxr",
+     "setting": "both",
+     "gross": 24.0
+    },
+    {
+     "description": "Collj Ven Bld Vnpnxr",
+     "setting": "both",
+     "gross": 24.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "HC Metabolic Pnl Basic",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1035.0,
+   "discounted_cash": 414.0,
+   "negotiated_min": 8.46,
+   "negotiated_max": 8.46,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.46,
+   "rates_line": "Metabolic panel total ca",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 8.46,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Metabolic Pnl Basic'; payer rates are from line 'Metabolic panel total ca' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "HC Metabolic Pnl Comp",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1243.0,
+   "discounted_cash": 497.2,
+   "negotiated_min": 10.56,
+   "negotiated_max": 10.56,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.56,
+   "rates_line": "Comprehen metabolic panel",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 10.56,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Metabolic Pnl Comp'; payer rates are from line 'Comprehen metabolic panel' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "HC Lipid Panel - Calculated Ld",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 662.0,
+   "discounted_cash": 264.8,
+   "negotiated_min": 13.39,
+   "negotiated_max": 13.39,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.39,
+   "rates_line": "Lipid panel",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 13.39,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Lipid Panel - Calculated Ld'; payer rates are from line 'Lipid panel' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "HC Cbc W/Auto Diff",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 445.0,
+   "discounted_cash": 178.0,
+   "negotiated_min": 7.77,
+   "negotiated_max": 7.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.77,
+   "rates_line": "Complete cbc w/auto diff wbc",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 7.77,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Cbc W/Auto Diff'; payer rates are from line 'Complete cbc w/auto diff wbc' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Bld# Compl Auto Hhrwp&Auto Diffial",
+     "setting": "both",
+     "gross": 37.0
+    },
+    {
+     "description": "Bld# Compl Auto Hhrwp&Auto Diffial",
+     "setting": "both",
+     "gross": 37.0
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "HC Complete Blood Count",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 444.0,
+   "discounted_cash": 177.6,
+   "negotiated_min": 6.47,
+   "negotiated_max": 6.47,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.47,
+   "rates_line": "Complete cbc automated",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 6.47,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Complete Blood Count'; payer rates are from line 'Complete cbc automated' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "HC Prothrombin Time",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 410.0,
+   "discounted_cash": 164.0,
+   "negotiated_min": 4.29,
+   "negotiated_max": 4.29,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4.29,
+   "rates_line": "Prothrombin time",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 4.29,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Prothrombin Time'; payer rates are from line 'Prothrombin time' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Protime",
+     "setting": "both",
+     "gross": 410.0
+    },
+    {
+     "description": "Labaclpt Prothrombin Time",
+     "setting": "both",
+     "gross": 410.0
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "HC Thromplas Ptt",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 564.0,
+   "discounted_cash": 225.6,
+   "negotiated_min": 6.01,
+   "negotiated_max": 6.01,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.01,
+   "rates_line": "Thromboplastin time partial",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 6.01,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Thromplas Ptt'; payer rates are from line 'Thromboplastin time partial' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Pttinh 5 Min Norm Plasma",
+     "setting": "both",
+     "gross": 564.0
+    },
+    {
+     "description": "Labaclptt Thromboplastin Ptt",
+     "setting": "both",
+     "gross": 564.0
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "HC Pctn1-Troponin 1",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1120.0,
+   "discounted_cash": 448.0,
+   "negotiated_min": 12.47,
+   "negotiated_max": 12.47,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.47,
+   "rates_line": "Assay of troponin quant",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 12.47,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Pctn1-Troponin 1'; payer rates are from line 'Assay of troponin quant' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC Labhstni High Sens Tropinin I",
+     "setting": "both",
+     "gross": 1120.0
+    },
+    {
+     "description": "HC 6956 Lab719 Troponin T",
+     "setting": "both",
+     "gross": 50.0
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "HC Lipase",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 612.0,
+   "discounted_cash": 244.8,
+   "negotiated_min": 6.89,
+   "negotiated_max": 6.89,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.89,
+   "rates_line": "Assay of lipase",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 6.89,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Lipase'; payer rates are from line 'Assay of lipase' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Lipase, Fluid",
+     "setting": "both",
+     "gross": 612.0
+    },
+    {
+     "description": "7067 Lipase Assay",
+     "setting": "both",
+     "gross": 17.4
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "HC Nt-Probnp",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1469.0,
+   "discounted_cash": 587.6,
+   "negotiated_min": 39.26,
+   "negotiated_max": 39.26,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 39.26,
+   "rates_line": "Assay of natriuretic peptide",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 39.26,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Nt-Probnp'; payer rates are from line 'Assay of natriuretic peptide' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "HC Creatinine Kinase Total",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 447.0,
+   "discounted_cash": 178.8,
+   "negotiated_min": 6.51,
+   "negotiated_max": 6.51,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.51,
+   "rates_line": "Assay of ck (cpk)",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 6.51,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Creatinine Kinase Total'; payer rates are from line 'Assay of ck (cpk)' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HC 6956 12808r CK Total",
+     "setting": "both",
+     "gross": 11.36
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "HC 6912 Nbs/Tsh",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 20.17,
+   "discounted_cash": 8.07,
+   "negotiated_min": 16.8,
+   "negotiated_max": 16.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.8,
+   "rates_line": "Assay thyroid stim hormone",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 16.8,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC 6912 Nbs/Tsh'; payer rates are from line 'Assay thyroid stim hormone' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HC 7055 12580r Tsh",
+     "setting": "both",
+     "gross": 27.07
+    },
+    {
+     "description": "HC Highly Sensitiv Tsh",
+     "setting": "both",
+     "gross": 661.0
+    },
+    {
+     "description": "HC Tshft4 Tsh",
+     "setting": "both",
+     "gross": 661.0
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HC Glycolated Hemoglobin",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 315.0,
+   "discounted_cash": 126.0,
+   "negotiated_min": 9.71,
+   "negotiated_max": 9.71,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.71,
+   "rates_line": "Glycosylated hemoglobin test",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 9.71,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Glycolated Hemoglobin'; payer rates are from line 'Glycosylated hemoglobin test' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hemoglobin A1c POC",
+     "setting": "both",
+     "gross": 315.0
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "HC Urine Routine-Micro",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 426.0,
+   "discounted_cash": 170.4,
+   "negotiated_min": 3.17,
+   "negotiated_max": 3.17,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.17,
+   "rates_line": "Urinalysis auto w/scope",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 3.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Urine Routine-Micro'; payer rates are from line 'Urinalysis auto w/scope' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "HC Urinalysis Auto",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 366.0,
+   "discounted_cash": 146.4,
+   "negotiated_min": 2.25,
+   "negotiated_max": 2.25,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.25,
+   "rates_line": "Urinalysis auto w/o scope",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 2.25,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Urinalysis Auto'; payer rates are from line 'Urinalysis auto w/o scope' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Urn Screen POC",
+     "setting": "both",
+     "gross": 366.0
+    },
+    {
+     "description": "Urnls Dip Stick/Tablet Rgnt Auto W/O Mic",
+     "setting": "both",
+     "gross": 11.0
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "HC Urine Pregnancy Screen",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 359.0,
+   "discounted_cash": 143.6,
+   "negotiated_min": 8.61,
+   "negotiated_max": 8.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.61,
+   "rates_line": "Urine pregnancy test",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 8.61,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Urine Pregnancy Screen'; payer rates are from line 'Urine pregnancy test' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Urine Pregnancy Screen",
+     "setting": "both",
+     "gross": 359.0
+    },
+    {
+     "description": "Urine Pregnancy Tst Vis Color Cmprsn Meths",
+     "setting": "both",
+     "gross": 25.0
+    },
+    {
+     "description": "Urine Pregnancy Tst Vis Color Cmprsn Meths",
+     "setting": "both",
+     "gross": 50.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "HC Urn Cult",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 949.0,
+   "discounted_cash": 379.6,
+   "negotiated_min": 8.07,
+   "negotiated_max": 8.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.07,
+   "rates_line": "Urine culture/colony count",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 8.07,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Urn Cult'; payer rates are from line 'Urine culture/colony count' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "HC Blood Culture",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1491.0,
+   "discounted_cash": 596.4,
+   "negotiated_min": 10.32,
+   "negotiated_max": 10.32,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.32,
+   "rates_line": "Blood culture for bacteria",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 10.32,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'HC Blood Culture'; payer rates are from line 'Blood culture for bacteria' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "Labcovid19 Coronavirus Rt Pcr",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 417.0,
+   "discounted_cash": 166.8,
+   "negotiated_min": 51.31,
+   "negotiated_max": 51.31,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 51.31,
+   "rates_line": "Sars-cov-2 covid-19 amp prb",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 51.31,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Labcovid19 Coronavirus Rt Pcr'; payer rates are from line 'Sars-cov-2 covid-19 amp prb' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Labsars-Cov-2 Rt Pcr",
+     "setting": "both",
+     "gross": 417.0
+    },
+    {
+     "description": "Labstatcovrespcr Cov-19",
+     "setting": "both",
+     "gross": 417.0
+    },
+    {
+     "description": "Labcovrespcr Cov-19",
+     "setting": "both",
+     "gross": 417.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "Hydration Infusion Up to 1hr",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2879.0,
+   "discounted_cash": 1151.6,
+   "negotiated_min": 312.86,
+   "negotiated_max": 312.86,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 312.86,
+   "rates_line": "Hydration iv infusion init",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 312.86,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hydration Infusion Up to 1hr'; payer rates are from line 'Hydration iv infusion init' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "IV Infusion Hydration Initial 31 Min-1 Hour",
+     "setting": "both",
+     "gross": 319.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "Hydration Infusion Ea Addtl Hr",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1640.0,
+   "discounted_cash": 656.0,
+   "negotiated_min": 68.87,
+   "negotiated_max": 68.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 68.87,
+   "rates_line": "Hydrate iv infusion add-on",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 68.87,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hydration Infusion Ea Addtl Hr'; payer rates are from line 'Hydrate iv infusion add-on' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "2nd Enctr Hydra Infus Ea Addl",
+     "setting": "both",
+     "gross": 1640.0
+    },
+    {
+     "description": "IV Infusion Hydration Each Additional Hour",
+     "setting": "both",
+     "gross": 84.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "IV Infusion-Therapeutic-1st Hr",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3191.0,
+   "discounted_cash": 1276.4,
+   "negotiated_min": 312.86,
+   "negotiated_max": 312.86,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 312.86,
+   "rates_line": "Ther/proph/diag iv inf init",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 312.86,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'IV Infusion-Therapeutic-1st Hr'; payer rates are from line 'Ther/proph/diag iv inf init' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "2nd Enc-IV Inf-Ther-1st Hr",
+     "setting": "both",
+     "gross": 3191.0
+    },
+    {
+     "description": "IV Infusion Therapy/Prophylaxis /Dx 1st >1 Hour",
+     "setting": "both",
+     "gross": 398.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "IV Infusion-Ther-Addtl-Hrs",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1640.0,
+   "discounted_cash": 656.0,
+   "negotiated_min": 68.87,
+   "negotiated_max": 68.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 68.87,
+   "rates_line": "Ther/proph/diag iv inf addon",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 68.87,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'IV Infusion-Ther-Addtl-Hrs'; payer rates are from line 'Ther/proph/diag iv inf addon' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "2nd Enc-IV Inf-Ther-Ea Add Hr",
+     "setting": "both",
+     "gross": 1640.0
+    },
+    {
+     "description": "IV Infusion Therapy Prophylaxis/Dx Ea Hour",
+     "setting": "both",
+     "gross": 118.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "Ther/Diag/Proph Inj Subq/Im",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 933.0,
+   "discounted_cash": 373.2,
+   "negotiated_min": 105.9,
+   "negotiated_max": 105.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 105.9,
+   "rates_line": "Ther/proph/diag inj sc/im",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 105.9,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Ther/Diag/Proph Inj Subq/Im'; payer rates are from line 'Ther/proph/diag inj sc/im' (the file lists them separately).",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "Therap/Pro/Dx Inj Sq/Im",
+     "setting": "both",
+     "gross": 933.0
+    },
+    {
+     "description": "Therapeutic Prophylactic/Dx Injection Subq/Im",
+     "setting": "both",
+     "gross": 117.0
+    },
+    {
+     "description": "Therapeutic Prophylactic/Dx Injection Subq/Im",
+     "setting": "both",
+     "gross": 117.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "Therapypro/Dx Ivp Initial",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1411.0,
+   "discounted_cash": 564.4,
+   "negotiated_min": 312.86,
+   "negotiated_max": 312.86,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 312.86,
+   "rates_line": "Ther/proph/diag inj iv push",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 312.86,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Therapypro/Dx Ivp Initial'; payer rates are from line 'Ther/proph/diag inj iv push' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "2nd Enctr Tx/Dx Injection: Initial",
+     "setting": "both",
+     "gross": 1411.0
+    },
+    {
+     "description": "Ther Proph/Dx Njx IV Push Single/1st Sbst/Drug",
+     "setting": "both",
+     "gross": 311.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "IV Push Injctn of New Subst.",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1114.0,
+   "discounted_cash": 445.6,
+   "negotiated_min": 68.87,
+   "negotiated_max": 68.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 68.87,
+   "rates_line": "Tx/pro/dx inj new drug addon",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 68.87,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'IV Push Injctn of New Subst.'; payer rates are from line 'Tx/pro/dx inj new drug addon' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Therapypro//Dx IV Push Addl",
+     "setting": "both",
+     "gross": 1114.0
+    },
+    {
+     "description": "2nd Enc Ivp Inj+Seq New Drug",
+     "setting": "both",
+     "gross": 1114.0
+    },
+    {
+     "description": "Ther Proph/Dx Njx Ea Seql IV Push Sbst/Drug",
+     "setting": "both",
+     "gross": 127.0
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "Ondansetron (Zofran) per 1mg",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1.0,
+   "discounted_cash": 0.4,
+   "negotiated_min": 0.54,
+   "negotiated_max": 9.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.94,
+   "rates_line": "Ondansetron Hcl Injection",
+   "payer_rates": 30,
+   "payer_dollar_rates": 30,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna [10200]",
+     "plan": "Aetna",
+     "dollar": 2.38,
+     "algorithm": "Fee schedule rate ($2.38). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 1.02
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Card (Out Of State) [40000]",
+     "plan": "Anthem Blue Cross",
+     "dollar": 0.75,
+     "algorithm": "Fee schedule rate ($0.75). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 0.11
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "American Specialty Health Plan Alt Payer [971000000]",
+     "plan": "Blue Shield",
+     "dollar": 3.96,
+     "algorithm": "Fee schedule rate ($3.96). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna [11000]",
+     "plan": "Cigna Hmo",
+     "dollar": 6.56,
+     "algorithm": "Fee schedule rate ($6.56). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 12.96
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Uhc West Comm Alt Payer [913600000]",
+     "plan": "United Health Care",
+     "dollar": 1.04,
+     "algorithm": "Fee schedule rate ($1.04). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet [12100]",
+     "plan": "Healthnet",
+     "dollar": 1.49,
+     "algorithm": "Fee schedule rate ($1.49). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ondansetron (Zofran) injection, per 1 mg).",
+    "Gross charge is from line 'Ondansetron (Zofran) per 1mg'; payer rates are from line 'Ondansetron Hcl Injection' (the file lists them separately).",
+    "50 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 50,
+   "variants": [
+    {
+     "description": "ONDANSETRON HCL (PF) 4 MG/2 ML INJ SOLN",
+     "setting": "both",
+     "gross": 5.01,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ONDANSETRON HCL (PF) 4 MG/2 ML INJ SOLN",
+     "setting": "both",
+     "gross": 4.71,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ONDANSETRON HCL (PF) 4 MG/2 ML INJ SOLN",
+     "setting": "both",
+     "gross": 5.01,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "Ketorolac Inj per 15mg",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 12.0,
+   "discounted_cash": 4.8,
+   "negotiated_min": 0.3,
+   "negotiated_max": 0.3,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.3,
+   "rates_line": "Ketorolac tromethamine inj",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 0.3,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ketorolac (Toradol) injection, per 15 mg).",
+    "Gross charge is from line 'Ketorolac Inj per 15mg'; payer rates are from line 'Ketorolac tromethamine inj' (the file lists them separately).",
+    "68 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 68,
+   "variants": [
+    {
+     "description": "KETOROLAC 60 MG/2 ML IM SOLN",
+     "setting": "both",
+     "gross": 89.38,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "KETOROLAC 60 MG/2 ML IM SOLN",
+     "setting": "both",
+     "gross": 89.38,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "KETOROLAC 60 MG/2 ML IM SOLN",
+     "setting": "both",
+     "gross": 35.64,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "Dexameth Sod Phos 1mg",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2.0,
+   "discounted_cash": 0.8,
+   "negotiated_min": 0.68,
+   "negotiated_max": 9.38,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.7,
+   "rates_line": "Dexamethasone Sodium Phos per 1mg",
+   "payer_rates": 30,
+   "payer_dollar_rates": 30,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna [10200]",
+     "plan": "Aetna",
+     "dollar": 2.98,
+     "algorithm": "Fee schedule rate ($2.98). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 0.42
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Card (Out Of State) [40000]",
+     "plan": "Anthem Blue Cross",
+     "dollar": 1.19,
+     "algorithm": "Fee schedule rate ($1.19). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 0.13
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "American Specialty Health Plan Alt Payer [971000000]",
+     "plan": "Blue Shield",
+     "dollar": 4.19,
+     "algorithm": "Fee schedule rate ($4.19). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna [11000]",
+     "plan": "Cigna Hmo",
+     "dollar": 0.9,
+     "algorithm": "Fee schedule rate ($0.90). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 0.12
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Uhc West Comm Alt Payer [913600000]",
+     "plan": "United Health Care",
+     "dollar": 1.7,
+     "algorithm": "Fee schedule rate ($1.70). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet [12100]",
+     "plan": "Healthnet",
+     "dollar": 2.1,
+     "algorithm": "Fee schedule rate ($2.10). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Dexamethasone injection, per 1 mg).",
+    "Gross charge is from line 'Dexameth Sod Phos 1mg'; payer rates are from line 'Dexamethasone Sodium Phos per 1mg' (the file lists them separately).",
+    "53 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 53,
+   "variants": [
+    {
+     "description": "DEXAMETHASONE SODIUM PHOS (PF) 10 MG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 81.75,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "DEXAMETHASONE SODIUM PHOS (PF) 10 MG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 81.75,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "DEXAMETHASONE SODIUM PHOS (PF) 10 MG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 81.75,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "MORPHINE (PF) 1 MG/ML INJ SOLN",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 315.66,
+   "discounted_cash": 126.26,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "21 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: pharmacy | NDC EA = 1 ML"
+   ],
+   "line_items": 21,
+   "variants": [
+    {
+     "description": "MORPHINE (PF) 1 MG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 315.66,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "MORPHINE (PF) 1 MG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 315.66,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "MORPHINE (PF) 1 MG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 507.72,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "Fentanyl Citrate 0.1mg",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 0.01,
+   "discounted_cash": 0.004,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Fentanyl injection, per 0.1 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "51 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 51,
+   "variants": [
+    {
+     "description": "FENTANYL CITRATE (BULK) 100 % MISC POWD",
+     "setting": "both",
+     "gross": 1335401.51,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CALCIUM CHLORIDE 100 MG/ML (10 %) IV SOLN",
+     "setting": "both",
+     "gross": 1335401.51,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "FENTANYL CITRATE (PF) 50 MCG/ML INJ SOLN",
+     "setting": "both",
+     "gross": 92.65,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "Ceftriaxone Inj per 250mg",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 17.0,
+   "discounted_cash": 6.8,
+   "negotiated_min": 1.67,
+   "negotiated_max": 10.82,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.72,
+   "rates_line": "Ceftriaxone Sodium Injection",
+   "payer_rates": 30,
+   "payer_dollar_rates": 30,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna [10200]",
+     "plan": "Aetna",
+     "dollar": 5.69,
+     "algorithm": "Fee schedule rate ($5.69). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Card (Out Of State) [40000]",
+     "plan": "Anthem Blue Cross",
+     "dollar": 1.9,
+     "algorithm": "Fee schedule rate ($1.90). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "American Specialty Health Plan Alt Payer [971000000]",
+     "plan": "Blue Shield",
+     "dollar": 7.16,
+     "algorithm": "Fee schedule rate ($7.16). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna [11000]",
+     "plan": "Cigna Hmo",
+     "dollar": 1.72,
+     "algorithm": "Fee schedule rate ($1.72). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Uhc West Comm Alt Payer [913600000]",
+     "plan": "United Health Care",
+     "dollar": 2.72,
+     "algorithm": "Fee schedule rate ($2.72). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet [12100]",
+     "plan": "Healthnet",
+     "dollar": 3.7,
+     "algorithm": "Fee schedule rate ($3.70). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ceftriaxone injection, per 250 mg).",
+    "Gross charge is from line 'Ceftriaxone Inj per 250mg'; payer rates are from line 'Ceftriaxone Sodium Injection' (the file lists them separately).",
+    "25 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 25,
+   "variants": [
+    {
+     "description": "CEFTRIAXONE 1 GRAM/10 ML IV PUSH (VIAL ONLY)",
+     "setting": "both",
+     "gross": 16.6,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CEFTRIAXONE 1 GRAM/10 ML IV PUSH (VIAL ONLY)",
+     "setting": "both",
+     "gross": 21.8,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ZICONOTIDE 100 MCG/ML IT SOLN (HARTLEY MEDICAL)",
+     "setting": "both",
+     "gross": 16.6,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "Nacl 0.9% Ns Sol /1000ml",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 24.0,
+   "discounted_cash": 9.6,
+   "negotiated_min": 1.95,
+   "negotiated_max": 7.58,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.22,
+   "rates_line": "Normal Saline Solution Infus",
+   "payer_rates": 30,
+   "payer_dollar_rates": 30,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna [10200]",
+     "plan": "Aetna",
+     "dollar": 6.45,
+     "algorithm": "Fee schedule rate ($6.45). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 8.61
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Card (Out Of State) [40000]",
+     "plan": "Anthem Blue Cross",
+     "dollar": 2.29,
+     "algorithm": "Fee schedule rate ($2.29). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "American Specialty Health Plan Alt Payer [971000000]",
+     "plan": "Blue Shield",
+     "dollar": 7.58,
+     "algorithm": "Fee schedule rate ($7.58). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna [11000]",
+     "plan": "Cigna Hmo",
+     "dollar": 1.95,
+     "algorithm": "Fee schedule rate ($1.95). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "median": 2.47
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Uhc West Comm Alt Payer [913600000]",
+     "plan": "United Health Care",
+     "dollar": 3.22,
+     "algorithm": "Fee schedule rate ($3.22). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet [12100]",
+     "plan": "Healthnet",
+     "dollar": 3.98,
+     "algorithm": "Fee schedule rate ($3.98). If the allowed amount exceeds the billed amount, it will be capped at the billed amount.",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 15-month lookback period."
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Normal saline infusion, 1000 cc).",
+    "Gross charge is from line 'Nacl 0.9% Ns Sol /1000ml'; payer rates are from line 'Normal Saline Solution Infus' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 2
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "Rpr Lac Smp Scalp <2.5 Cm",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2499.0,
+   "discounted_cash": 999.6,
+   "negotiated_min": 295.11,
+   "negotiated_max": 14407.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13026.0,
+   "rates_line": "Rpr s/n/ax/gen/trnk 2.5cm/<",
+   "payer_rates": 6,
+   "payer_dollar_rates": 6,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Commercial Plans",
+     "dollar": 12355.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Cross",
+     "plan": "Anthem All Commercial Plans",
+     "dollar": 13697.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Pos",
+     "dollar": 14407.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Unitedhealthcare",
+     "plan": "All Commercial Plans",
+     "dollar": 5216.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 295.11,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Rpr Lac Smp Scalp <2.5 Cm'; payer rates are from line 'Rpr s/n/ax/gen/trnk 2.5cm/<' (the file lists them separately).",
+    "19 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 19,
+   "variants": [
+    {
+     "description": "Simple Repair Scalp/Neck/Ax/Genit/Trunk 2.5cm/<",
+     "setting": "outpatient",
+     "gross": 597.0
+    },
+    {
+     "description": "Simple Repair Scalp/Neck/Ax/Genit/Trunk 2.5cm/<",
+     "setting": "outpatient",
+     "gross": 597.0
+    },
+    {
+     "description": "Simple Repair Scalp/Neck/Ax/Genit/Trunk 2.5cm/<",
+     "setting": "outpatient",
+     "gross": 597.0,
+     "modifiers": "51"
+    }
+   ]
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "Drain Skin Abscess Smpl",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 3148.0,
+   "discounted_cash": 1259.2,
+   "negotiated_min": 295.11,
+   "negotiated_max": 14407.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13026.0,
+   "rates_line": "Drainage of skin abscess",
+   "payer_rates": 6,
+   "payer_dollar_rates": 6,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Commercial Plans",
+     "dollar": 12355.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Cross",
+     "plan": "Anthem All Commercial Plans",
+     "dollar": 13697.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Pos",
+     "dollar": 14407.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Unitedhealthcare",
+     "plan": "All Commercial Plans",
+     "dollar": 5216.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 295.11,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Drain Skin Abscess Smpl'; payer rates are from line 'Drainage of skin abscess' (the file lists them separately).",
+    "31 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 31,
+   "variants": [
+    {
+     "description": "Incision & Drainage Abscess Simple/Single",
+     "setting": "outpatient",
+     "gross": 542.0
+    },
+    {
+     "description": "Incision & Drainage Abscess Simple/Single",
+     "setting": "outpatient",
+     "gross": 542.0
+    },
+    {
+     "description": "Incision & Drainage Abscess Simple/Single",
+     "setting": "outpatient",
+     "gross": 542.0
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "Apply Forearm Splint Static",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1618.0,
+   "discounted_cash": 647.2,
+   "negotiated_min": 195.7,
+   "negotiated_max": 14407.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9589.0,
+   "rates_line": "Apply forearm splint",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Cross",
+     "plan": "Anthem All Commercial Plans",
+     "dollar": 9589.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Hmo/Pos",
+     "dollar": 14407.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Unitedhealthcare",
+     "plan": "All Commercial Plans",
+     "dollar": 5216.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 195.7,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Apply Forearm Splint Static'; payer rates are from line 'Apply forearm splint' (the file lists them separately).",
+    "18 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 18,
+   "variants": [
+    {
+     "description": "Application Short Arm Splint Forearm-Hand Static",
+     "setting": "outpatient",
+     "gross": 399.0
+    },
+    {
+     "description": "Application Short Arm Splint Forearm-Hand Static",
+     "setting": "outpatient",
+     "gross": 4719.0,
+     "modifiers": "51"
+    },
+    {
+     "description": "Application Short Arm Splint Forearm-Hand Static",
+     "setting": "outpatient",
+     "gross": 399.0,
+     "modifiers": "51"
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "Press/N-Press Inhlj Tx F/Aao/Sptm Indctj",
+   "setting": "outpatient",
+   "billing_class": "professional",
+   "gross": 86.0,
+   "discounted_cash": 43.0,
+   "negotiated_min": 322.09,
+   "negotiated_max": 322.09,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 322.09,
+   "rates_line": "Airway inhalation treatment",
+   "payer_rates": 1,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 322.09,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Press/N-Press Inhlj Tx F/Aao/Sptm Indctj'; payer rates are from line 'Airway inhalation treatment' (the file lists them separately).",
+    "15 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 15,
+   "variants": [
+    {
+     "description": "Press/N-Press Inhlj Tx F/Aao/Sptm Indctj",
+     "setting": "outpatient",
+     "gross": 86.0
+    },
+    {
+     "description": "Nebulizer Tx Initial",
+     "setting": "both",
+     "gross": 1668.0
+    },
+    {
+     "description": "Nebulizer Tx Subsequent",
+     "setting": "both",
+     "gross": 1668.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "Insrt Temp Indwel Bladder Cath",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1208.0,
+   "discounted_cash": 483.2,
+   "negotiated_min": 195.7,
+   "negotiated_max": 12355.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7402.5,
+   "rates_line": "Insert temp bladder cath",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Commercial Plans",
+     "dollar": 12355.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Blue Cross",
+     "plan": "Anthem All Commercial Plans",
+     "dollar": 9589.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Unitedhealthcare",
+     "plan": "All Commercial Plans",
+     "dollar": 5216.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net (Medicare plan)",
+     "payer": "Healthnet",
+     "plan": "Wellcare Medicare Managed Care Plan",
+     "dollar": 195.7,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Insrt Temp Indwel Bladder Cath'; payer rates are from line 'Insert temp bladder cath' (the file lists them separately).",
+    "32 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Gross Charge Type: standard"
+   ],
+   "line_items": 32,
+   "variants": [
+    {
+     "description": "Insj Temp Ndwellg Bldr Cath Smpl",
+     "setting": "outpatient",
+     "gross": 442.0
+    },
+    {
+     "description": "Insj Temp Ndwellg Bldr Cath Smpl",
+     "setting": "outpatient",
+     "gross": 442.0
+    },
+    {
+     "description": "Insj Temp Ndwellg Bldr Cath Smpl",
+     "setting": "outpatient",
+     "gross": 442.0
+    }
+   ]
+  }
+ }
+}

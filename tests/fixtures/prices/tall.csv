@@ -1,0 +1,13 @@
+"hospital_name","last_updated_on","version","location_name","hospital_address","license_number | CA","attester_name"
+"Test Medical Center- Van Ness Campus","2026-04-01","3.0.0","Test Medical Center- Van Ness Campus","1 Test Ave, San Francisco, CA","220000197","A Person"
+"description","code|1","code|1|type","code|2","code|2|type","code|3","code|3|type","billing_class","setting","drug_unit_of_measurement","drug_type_of_measurement","modifiers","standard_charge|gross","standard_charge|discounted_cash","payer_name","plan_name","standard_charge|negotiated_dollar","standard_charge|negotiated_percentage","standard_charge|negotiated_algorithm","median_amount","standard_charge|methodology","standard_charge|min","standard_charge|max","additional_generic_notes"
+"HCHG ED LEVEL 4","55000010","CDM","450","RC","99284","HCPCS","facility","inpatient",,,,"5214","5214",,,,,,,,,,"Gross Charge Type: Standard"
+"HCHG ED LEVEL 4","55000010","CDM","450","RC","99284","HCPCS","facility","outpatient",,,,"5214","5214",,,,,,,,,,"Gross Charge Type: Standard"
+"HCHG ED LEVEL 4 W/PROC","55000036","CDM","450","RC","99284","HCPCS","facility","outpatient",,,"25","5214","5214",,,,,,,,,,
+"HCHG CT ABD & PELVIS W/CON","1234","CDM","350","RC","74177","HCPCS","facility","outpatient",,,,"8287","8287",,,,,,,,,,
+"Ct abd & pelv w/contrast","74177","HCPCS",,,,,"facility","outpatient",,,,,,"Aetna","HMO / PPO","4717",,,,"fee schedule","4717","6302",
+"Ct abd & pelv w/contrast","74177","HCPCS",,,,,"facility","outpatient",,,,,,"Blue Shield","HMO/PPO","6302",,,,"fee schedule","4717","6302",
+"Ct abd & pelv w/contrast","74177","HCPCS",,,,,"facility","outpatient",,,,,,"Medi-Cal Managed Care","All","610",,,,"fee schedule","4717","6302",
+"Ketorolac tromethamine inj","0764","APC",,,,,"facility","outpatient",,,,,,"Aetna","HMO / PPO",,,"[Laboratory (%BC): 75]",,"other",,,
+"ONDANSETRON HCL 4 MG/2ML IJ SOLN","777","CDM","J2405","HCPCS",,,"facility","outpatient","2","ML",,"16.33","16.33",,,,,,,,,,
+"CDM line that happens to look like a code","99285","CDM",,,,,"facility","outpatient",,,,"1","1",,,,,,,,,,

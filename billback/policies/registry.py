@@ -33,6 +33,37 @@ SEED = (
     # added because ZSFG's own site doesn't publish its full policy (it points to HCAI, which Bright Data blocks)
     Hospital("chinese-hospital", "Chinese Hospital", "Chinese Hospital", "San Francisco", ("chinesehospital-sf.org",),
              ("Chinese Hospital San Francisco",), "Chinese Hospital San Francisco financial assistance charity care policy"),
+    # Wider Bay Area: a mix of systems (Sutter, Stanford, county, Dignity/CommonSpirit, Kaiser, district hospitals)
+    Hospital("sutter-alta-bates", "Alta Bates Summit Medical Center", "Sutter Health", "Oakland",
+             ("sutterhealth.org",), ("Alta Bates", "Summit Medical Center", "Sutter Alta Bates Summit",
+                                     "Alta Bates Summit Medical Center Berkeley", "Alta Bates Summit Medical Center Oakland"),
+             "Alta Bates Summit Medical Center Sutter Health financial assistance policy"),
+    Hospital("stanford-health", "Stanford Health Care", "Stanford Medicine", "Palo Alto",
+             ("stanfordhealthcare.org",), ("Stanford Hospital", "Stanford Medical Center", "Stanford Health Care Palo Alto"),
+             "Stanford Health Care financial assistance charity care policy"),
+    Hospital("highland-ahs", "Highland Hospital", "Alameda Health System", "Oakland",
+             ("alamedahealthsystem.org",), ("Alameda Health System", "Highland Hospital Oakland", "AHS Highland"),
+             "Alameda Health System Highland Hospital financial assistance charity care policy"),
+    # Dignity Health sold Saint Francis Memorial to UCSF Health in 2024; Dignity's site and CommonSpirit's price
+    # index no longer list it (a first crawl under the Dignity name found no official page; see docs/brightdata.md).
+    Hospital("ucsf-saint-francis", "UCSF Health Saint Francis Hospital", "UCSF Health", "San Francisco",
+             ("sfcommunityhospitals.ucsfhealth.org",),
+             ("Saint Francis Memorial Hospital", "Saint Francis Memorial", "St. Francis Memorial Hospital",
+              "Dignity Health Saint Francis", "UCSF Saint Francis"),
+             "UCSF Health Saint Francis Hospital San Francisco financial assistance policy"),
+    Hospital("john-muir-wc", "John Muir Medical Center, Walnut Creek", "John Muir Health", "Walnut Creek",
+             ("johnmuirhealth.com",), ("John Muir Medical Center", "John Muir Health", "John Muir Walnut Creek"),
+             "site:johnmuirhealth.com financial assistance policy"),
+    Hospital("kaiser-oakland", "Kaiser Permanente Oakland Medical Center", "Kaiser Permanente", "Oakland",
+             ("healthy.kaiserpermanente.org", "kaiserpermanente.org", "kp.org", "about.kaiserpermanente.org"),
+             ("Kaiser Oakland", "Kaiser Permanente Oakland", "Kaiser Foundation Hospital Oakland"),
+             "Kaiser Permanente Northern California medical financial assistance policy"),
+    Hospital("marinhealth", "MarinHealth Medical Center", "MarinHealth", "Greenbrae",
+             ("mymarinhealth.org",), ("Marin General Hospital", "MarinHealth", "Marin General"),
+             "MarinHealth Medical Center financial assistance charity care policy"),
+    Hospital("el-camino", "El Camino Hospital", "El Camino Health", "Mountain View",
+             ("elcaminohealth.org",), ("El Camino Health", "El Camino Hospital Mountain View", "El Camino Hospital Los Gatos"),
+             "El Camino Hospital financial assistance charity care policy"),
 )
 
 

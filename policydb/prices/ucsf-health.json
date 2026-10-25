@@ -1,0 +1,3441 @@
+{
+ "hospital_id": "ucsf-health",
+ "hospital_name": "Ucsf Medical Center",
+ "location_name": "Ucsf Medical Center | UCSF Mission Bay | UCSF Mt Zion | UCSF Parnassus",
+ "hospital_address": "505 Parnassus Ave, Box 0296, San Francisco, CA 94143 | 1975 4th Street, San Francisco, CA 94158 | 1600 Divisadero, San Francisco, CA 94115 | 505 Parnassus Ave, San Francisco, CA 94143",
+ "last_updated_on": "2026-04-01",
+ "template_version": "3.0.0",
+ "layout": "json",
+ "source": {
+  "cms_hpt_url": "https://www.ucsfhealth.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "UCSF Parnassus",
+  "source_page_url": "https://www.ucsfhealth.org/about/pricing-transparency",
+  "file_url": "https://app.box.com/index.php?rm=box_download_shared_file&shared_name=ldckxfm5nm9wah74gqi7fdhe6mrtpg5e&file_id=f_1959275070690",
+  "via": "https",
+  "fetched_at": "2026-10-25T03:55:17+00:00",
+  "sha256": "024837bb4fd4a3c8c7703fa1b94493deca4ee43ca0864d9548d61e1a02f6125d",
+  "bytes": 90990822
+ },
+ "codes_requested": 67,
+ "codes_found": 67,
+ "missing_codes": [],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "Hc Emerg Level I",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 844.0,
+   "discounted_cash": 253.2,
+   "negotiated_min": 123.35,
+   "negotiated_max": 246.7,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 154.19,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 154.19,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 148.02,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Emerg Level I'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hc Emerg Level I",
+     "setting": "both",
+     "gross": 844.0
+    },
+    {
+     "description": "Hc Er Fac Lev 1 Triage Only/Lwbs",
+     "setting": "both",
+     "gross": 314.0,
+     "modifiers": "52"
+    }
+   ]
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "Hc Emerg Level Ii",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1784.0,
+   "discounted_cash": 535.2,
+   "negotiated_min": 224.61,
+   "negotiated_max": 449.22,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 280.76,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 280.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 269.53,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Emerg Level Ii'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Emerg Level Ii",
+     "setting": "both",
+     "gross": 1784.0
+    }
+   ]
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "Hc Emerg Level Iii",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3297.0,
+   "discounted_cash": 989.1,
+   "negotiated_min": 399.32,
+   "negotiated_max": 798.64,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 499.15,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 499.15,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 479.18,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Emerg Level Iii'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Emerg Level Iii",
+     "setting": "both",
+     "gross": 3297.0
+    }
+   ]
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "Hc Emerg Level Iv",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 8501.0,
+   "discounted_cash": 2550.3,
+   "negotiated_min": 610.38,
+   "negotiated_max": 1220.77,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 762.98,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 762.98,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 732.46,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Emerg Level Iv'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Emerg Level Iv",
+     "setting": "both",
+     "gross": 8501.0
+    }
+   ]
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "Hc Emerg Level V",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11901.0,
+   "discounted_cash": 3570.3,
+   "negotiated_min": 871.16,
+   "negotiated_max": 1742.32,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1088.95,
+   "rates_line": "Emergency dept visit",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 1088.95,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 1045.39,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Emerg Level V'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Emerg Level V",
+     "setting": "both",
+     "gross": 11901.0
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "Hc Emerg Level Vi (C.C.)",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 14433.0,
+   "discounted_cash": 4329.9,
+   "negotiated_min": 1208.34,
+   "negotiated_max": 2416.68,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1510.43,
+   "rates_line": "Critical care first hour",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 1510.43,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 1450.01,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Emerg Level Vi (C.C.)'; payer rates are from line 'Critical care first hour' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Emerg Level Vi (C.C.)",
+     "setting": "both",
+     "gross": 14433.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "Hc X-Ray Exam Chest 1 View",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 511.0,
+   "discounted_cash": 153.3,
+   "negotiated_min": 127.3,
+   "negotiated_max": 254.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.13,
+   "rates_line": "X-ray exam chest 1 view",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 159.13,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 152.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Chest 1 View'; payer rates are from line 'X-ray exam chest 1 view' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "Hc X-Ray Exam Chest 2 Views",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 531.0,
+   "discounted_cash": 159.3,
+   "negotiated_min": 127.3,
+   "negotiated_max": 254.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.13,
+   "rates_line": "X-ray exam chest 2 views",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 159.13,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 152.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Chest 2 Views'; payer rates are from line 'X-ray exam chest 2 views' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "Hc Ct - Head/Brain Wo Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3288.0,
+   "discounted_cash": 986.4,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "Ct head/brain w/o dye",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct - Head/Brain Wo Contrast'; payer rates are from line 'Ct head/brain w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "Hc Ct, Cerv Spine Wo Contr",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4734.0,
+   "discounted_cash": 1420.2,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "Ct neck spine w/o dye",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct, Cerv Spine Wo Contr'; payer rates are from line 'Ct neck spine w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "Hc Ct, Thorax; Wo Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3912.0,
+   "discounted_cash": 1173.6,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "Ct thorax w/o dye",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct, Thorax; Wo Contrast'; payer rates are from line 'Ct thorax w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "Hc Ct Thorax; W Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 5779.0,
+   "discounted_cash": 1733.7,
+   "negotiated_min": 256.58,
+   "negotiated_max": 513.16,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 320.73,
+   "rates_line": "Ct thorax w/dye",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 320.73,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 307.9,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct Thorax; W Contrast'; payer rates are from line 'Ct thorax w/dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "Hc Ct Angiography, Chest",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 7425.0,
+   "discounted_cash": 2227.5,
+   "negotiated_min": 256.58,
+   "negotiated_max": 513.16,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 320.73,
+   "rates_line": "Ct angiography chest",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 320.73,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 307.9,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct Angiography, Chest'; payer rates are from line 'Ct angiography chest' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "Hc Ct Abd & Pelvis W/O Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 6803.0,
+   "discounted_cash": 2040.9,
+   "negotiated_min": 349.03,
+   "negotiated_max": 698.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 436.29,
+   "rates_line": "Ct abd & pelvis w/o contrast",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 436.29,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 418.84,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct Abd & Pelvis W/O Contrast'; payer rates are from line 'Ct abd & pelvis w/o contrast' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "Hc Ct Abdomen & Pelvis W/Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 8272.0,
+   "discounted_cash": 2481.6,
+   "negotiated_min": 510.34,
+   "negotiated_max": 1020.69,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 637.93,
+   "rates_line": "Ct abd & pelv w/contrast",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 637.93,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 612.41,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct Abdomen & Pelvis W/Contrast'; payer rates are from line 'Ct abd & pelv w/contrast' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "Hc Ct Abd&Pelvis 1+Section/Regns",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 10498.0,
+   "discounted_cash": 3149.4,
+   "negotiated_min": 510.34,
+   "negotiated_max": 1020.69,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 637.93,
+   "rates_line": "Ct abd & pelv 1/> regns",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 637.93,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 612.41,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Ct Abd&Pelvis 1+Section/Regns'; payer rates are from line 'Ct abd & pelv 1/> regns' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "Hc Mri, Brain Wo Contrast",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 5730.0,
+   "discounted_cash": 1719.0,
+   "negotiated_min": 349.03,
+   "negotiated_max": 698.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 436.29,
+   "rates_line": "Mri brain stem w/o dye",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 436.29,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 418.84,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Mri, Brain Wo Contrast'; payer rates are from line 'Mri brain stem w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "Hc Mri, Spine, Lumbar Wo Contr",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 7392.0,
+   "discounted_cash": 2217.6,
+   "negotiated_min": 349.03,
+   "negotiated_max": 698.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 436.29,
+   "rates_line": "Mri lumbar spine w/o dye",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 436.29,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 418.84,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Mri, Spine, Lumbar Wo Contr'; payer rates are from line 'Mri lumbar spine w/o dye' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "Hc X-Ray Exam Of Lower Spine",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1057.0,
+   "discounted_cash": 317.1,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "X-ray exam l-s spine 2/3 vws",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Of Lower Spine'; payer rates are from line 'X-ray exam l-s spine 2/3 vws' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "Hc X-Ray Exam Of Shoulder",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1670.0,
+   "discounted_cash": 501.0,
+   "negotiated_min": 127.3,
+   "negotiated_max": 254.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.13,
+   "rates_line": "X-ray exam of shoulder",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 159.13,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 152.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Of Shoulder'; payer rates are from line 'X-ray exam of shoulder' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "Hc X-Ray Exam Of Wrist",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1046.0,
+   "discounted_cash": 313.8,
+   "negotiated_min": 127.3,
+   "negotiated_max": 254.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.13,
+   "rates_line": "X-ray exam of wrist",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 159.13,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 152.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Of Wrist'; payer rates are from line 'X-ray exam of wrist' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "Hc X-Ray Exam Of Ankle",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1150.0,
+   "discounted_cash": 345.0,
+   "negotiated_min": 127.3,
+   "negotiated_max": 254.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.13,
+   "rates_line": "X-ray exam of ankle",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 159.13,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 152.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Of Ankle'; payer rates are from line 'X-ray exam of ankle' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "Hc X-Ray Exam Of Foot",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1078.0,
+   "discounted_cash": 323.4,
+   "negotiated_min": 127.3,
+   "negotiated_max": 254.61,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.13,
+   "rates_line": "X-ray exam of foot",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 159.13,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 152.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc X-Ray Exam Of Foot'; payer rates are from line 'X-ray exam of foot' (the file lists them separately).",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, excl…"
+   ],
+   "line_items": 2
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "Hc Us Exam, Abdom, Complete",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1251.0,
+   "discounted_cash": 375.3,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "Us exam abdom complete",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Us Exam, Abdom, Complete'; payer rates are from line 'Us exam abdom complete' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, exclu…"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hc Us Exam, Abdom, Complete",
+     "setting": "both",
+     "gross": 2159.0,
+     "modifiers": "TC"
+    },
+    {
+     "description": "Hc Us Exam, Abdom, Complete",
+     "setting": "both",
+     "gross": 2229.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "Hc Echo Exam Of Abdomen",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 927.0,
+   "discounted_cash": 278.1,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "Echo exam of abdomen",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Echo Exam Of Abdomen'; payer rates are from line 'Echo exam of abdomen' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, exclu…"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hc Echo Exam Of Abdomen",
+     "setting": "both",
+     "gross": 1546.0,
+     "modifiers": "TC"
+    },
+    {
+     "description": "Hc Echo Exam Of Abdomen",
+     "setting": "both",
+     "gross": 1546.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "Hc Us Exam, Pelvic, Complete",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1081.0,
+   "discounted_cash": 324.3,
+   "negotiated_min": 152.93,
+   "negotiated_max": 305.87,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 191.17,
+   "rates_line": "Us exam pelvic complete",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 191.17,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 183.52,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Us Exam, Pelvic, Complete'; payer rates are from line 'Us exam pelvic complete' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, exclu…"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hc Us Exam, Pelvic, Complete",
+     "setting": "both",
+     "gross": 1633.0,
+     "modifiers": "TC"
+    },
+    {
+     "description": "Hc Us Exam, Pelvic, Complete",
+     "setting": "both",
+     "gross": 1633.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "Hc 12 Lead Ekg; Tracing Only",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 443.0,
+   "discounted_cash": 132.9,
+   "negotiated_min": 86.3,
+   "negotiated_max": 172.59,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 107.87,
+   "rates_line": "Electrocardiogram tracing",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 107.87,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 103.55,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc 12 Lead Ekg; Tracing Only'; payer rates are from line 'Electrocardiogram tracing' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc 12 Lead Ekg; Tracing Only",
+     "setting": "both",
+     "gross": 443.0
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "Hc Tte W/Doppler, Complete",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 7940.0,
+   "discounted_cash": 2382.0,
+   "negotiated_min": 799.31,
+   "negotiated_max": 1598.63,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 999.14,
+   "rates_line": "Tte w/doppler complete",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 999.14,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 959.18,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "modifiers": "TC",
+   "notes": [
+    "Gross charge is from line 'Hc Tte W/Doppler, Complete'; payer rates are from line 'Tte w/doppler complete' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule | The modified price is presented in the standard charge value. | Modifier TC: Technical Component; represents the costs of equipment, supplies, and technician personnel for a procedure, exclu…"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Tte W/Doppler, Complete",
+     "setting": "both",
+     "gross": 7940.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "Hc Venipnct For Lab Spec",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 69.0,
+   "discounted_cash": 20.7,
+   "negotiated_min": 9.34,
+   "negotiated_max": 18.68,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 11.68,
+   "rates_line": "Routine venipuncture",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 11.68,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 11.21,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Venipnct For Lab Spec'; payer rates are from line 'Routine venipuncture' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Hc Venipnct For Lab Spec",
+     "setting": "both",
+     "gross": 69.0
+    },
+    {
+     "description": "Hc Collection Venous Blood Venipuncture",
+     "setting": "both",
+     "gross": 69.0
+    },
+    {
+     "description": "Hc Collection Venous Blood Venipuncture",
+     "setting": "both",
+     "gross": 69.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "Hc Basic Metabolic Panel Calcium Total",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 455.0,
+   "discounted_cash": 136.5,
+   "negotiated_min": 8.46,
+   "negotiated_max": 16.92,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.58,
+   "rates_line": "Metabolic panel total ca",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 10.58,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 10.15,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Basic Metabolic Panel Calcium Total'; payer rates are from line 'Metabolic panel total ca' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Basic Metabolic Panel (Cbmp)",
+     "setting": "both",
+     "gross": 455.0
+    },
+    {
+     "description": "Hc Basic Metabolic Panel, Fasting",
+     "setting": "both",
+     "gross": 510.0
+    },
+    {
+     "description": "Hc Basic Metabolic Panel, Random",
+     "setting": "both",
+     "gross": 510.0
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "Hc Comprehensive Metabolic Panel",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 667.0,
+   "discounted_cash": 200.1,
+   "negotiated_min": 10.56,
+   "negotiated_max": 21.12,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.2,
+   "rates_line": "Comprehen metabolic panel",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 13.2,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 12.67,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Comprehensive Metabolic Panel'; payer rates are from line 'Comprehen metabolic panel' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Hc Comprehensive Metabolic Panel (Cmp)",
+     "setting": "both",
+     "gross": 667.0
+    },
+    {
+     "description": "Hc Comprehensive Metabolic Panel, Fasting",
+     "setting": "both",
+     "gross": 410.0
+    },
+    {
+     "description": "Hc Comprehensive Metabolic Panel, Random",
+     "setting": "both",
+     "gross": 410.0
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "Hc Lipid Panel 003",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 338.0,
+   "discounted_cash": 101.4,
+   "negotiated_min": 13.39,
+   "negotiated_max": 26.78,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.74,
+   "rates_line": "Lipid panel",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 16.74,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 16.07,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Lipid Panel 003'; payer rates are from line 'Lipid panel' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Lipid Panel",
+     "setting": "both",
+     "gross": 338.0
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "Hc Cbc W/Auto Diff & Plt Co",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 232.0,
+   "discounted_cash": 69.6,
+   "negotiated_min": 7.77,
+   "negotiated_max": 15.54,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.71,
+   "rates_line": "Complete cbc w/auto diff wbc",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 9.71,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 9.32,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Cbc W/Auto Diff & Plt Co'; payer rates are from line 'Complete cbc w/auto diff wbc' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Blood Count Complete Auto&Auto Difrntl Wbc",
+     "setting": "both",
+     "gross": 232.0
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "Hc Cbc Auto W/Plt Count",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 217.0,
+   "discounted_cash": 65.1,
+   "negotiated_min": 6.47,
+   "negotiated_max": 12.94,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.09,
+   "rates_line": "Complete cbc automated",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 8.09,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 7.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Cbc Auto W/Plt Count'; payer rates are from line 'Complete cbc automated' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Blood Count Complete Automated",
+     "setting": "both",
+     "gross": 217.0
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "Hc Prothrombin Time",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 148.0,
+   "discounted_cash": 44.4,
+   "negotiated_min": 4.29,
+   "negotiated_max": 8.58,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.36,
+   "rates_line": "Prothrombin time",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 5.36,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 5.15,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Prothrombin Time'; payer rates are from line 'Prothrombin time' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Prothrombin Time",
+     "setting": "both",
+     "gross": 148.0
+    },
+    {
+     "description": "Hc Prothrombin Time 1",
+     "setting": "both",
+     "gross": 113.0
+    },
+    {
+     "description": "Hc Prothrombin Time 2",
+     "setting": "both",
+     "gross": 113.0
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "Hc Ptt, Activated",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 309.0,
+   "discounted_cash": 92.7,
+   "negotiated_min": 6.01,
+   "negotiated_max": 12.02,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.51,
+   "rates_line": "Thromboplastin time partial",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 7.51,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 7.21,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Ptt, Activated'; payer rates are from line 'Thromboplastin time partial' (the file lists them separately).",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "Hc Thromboplastin Time Partial Plasma/Whole Blood",
+     "setting": "both",
+     "gross": 309.0
+    },
+    {
+     "description": "Hc Thromboplastin Time Partial Plasma/Whole Blood 128",
+     "setting": "both",
+     "gross": 265.0
+    },
+    {
+     "description": "Hc Ptt, Activated 1",
+     "setting": "both",
+     "gross": 236.0
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "Hc Troponin I Quant",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 325.0,
+   "discounted_cash": 97.5,
+   "negotiated_min": 12.47,
+   "negotiated_max": 24.94,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 15.59,
+   "rates_line": "Assay of troponin quant",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 15.59,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 14.96,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Troponin I Quant'; payer rates are from line 'Assay of troponin quant' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Assay Of Troponin Quantitative",
+     "setting": "both",
+     "gross": 325.0
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "Hc Lipase",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 263.0,
+   "discounted_cash": 78.9,
+   "negotiated_min": 6.89,
+   "negotiated_max": 13.78,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.61,
+   "rates_line": "Assay of lipase",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 8.61,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 8.27,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Lipase'; payer rates are from line 'Assay of lipase' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Assay Of Lipase",
+     "setting": "both",
+     "gross": 263.0
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "Hc B Type Natriuretic Peptide",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 492.0,
+   "discounted_cash": 147.6,
+   "negotiated_min": 39.26,
+   "negotiated_max": 78.52,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 49.08,
+   "rates_line": "Assay of natriuretic peptide",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 49.08,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 47.11,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc B Type Natriuretic Peptide'; payer rates are from line 'Assay of natriuretic peptide' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Natriuretic Peptide",
+     "setting": "both",
+     "gross": 363.0
+    },
+    {
+     "description": "Hc Natriuretic Peptide 916",
+     "setting": "both",
+     "gross": 492.0
+    },
+    {
+     "description": "Hc Pro-B-Type Natriuretic Peptide, N-Terminal",
+     "setting": "both",
+     "gross": 363.0
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "Hc Ck (Cpk) Total",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 173.0,
+   "discounted_cash": 51.9,
+   "negotiated_min": 6.51,
+   "negotiated_max": 13.02,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.14,
+   "rates_line": "Assay of ck (cpk)",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 8.14,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 7.81,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Ck (Cpk) Total'; payer rates are from line 'Assay of ck (cpk)' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Creatine Kinase Total",
+     "setting": "both",
+     "gross": 173.0
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "Hc Thyrotropin (Tsh)",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 407.0,
+   "discounted_cash": 122.1,
+   "negotiated_min": 16.8,
+   "negotiated_max": 33.6,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 21.0,
+   "rates_line": "Assay thyroid stim hormone",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 21.0,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 20.16,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Thyrotropin (Tsh)'; payer rates are from line 'Assay thyroid stim hormone' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hc Assay Of Thyroid Stimulating Hormone Tsh",
+     "setting": "both",
+     "gross": 407.0
+    },
+    {
+     "description": "Hc #252 Tsh",
+     "setting": "both",
+     "gross": 18.25,
+     "modifiers": "90"
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "Hc Hemoglobin A1C",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 153.0,
+   "discounted_cash": 45.9,
+   "negotiated_min": 9.71,
+   "negotiated_max": 19.42,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.14,
+   "rates_line": "Glycosylated hemoglobin test",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 12.14,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 11.65,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Hemoglobin A1C'; payer rates are from line 'Glycosylated hemoglobin test' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Hemoglobin Glycosylated A1C",
+     "setting": "both",
+     "gross": 153.0
+    },
+    {
+     "description": "Hc Hemoglobin Glycosylated A1C So",
+     "setting": "both",
+     "gross": 9.59,
+     "modifiers": "90"
+    },
+    {
+     "description": "Hc #011 Hemoglobin A1C (Alt Method)",
+     "setting": "both",
+     "gross": 5.0,
+     "modifiers": "90"
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "Hc Urinalysis Auto W/Micro",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 133.0,
+   "discounted_cash": 39.9,
+   "negotiated_min": 3.17,
+   "negotiated_max": 6.34,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.96,
+   "rates_line": "Urinalysis auto w/scope",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 3.96,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 3.8,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Urinalysis Auto W/Micro'; payer rates are from line 'Urinalysis auto w/scope' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Urnls Dip Stick/Tablet Reagent Auto Microscopy",
+     "setting": "both",
+     "gross": 133.0
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "Hc Urinalysis Auto Routine",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 98.0,
+   "discounted_cash": 29.4,
+   "negotiated_min": 2.25,
+   "negotiated_max": 4.5,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.81,
+   "rates_line": "Urinalysis auto w/o scope",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 2.81,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 2.7,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Urinalysis Auto Routine'; payer rates are from line 'Urinalysis auto w/o scope' (the file lists them separately).",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Hc Poct Urinalysis W/O Microscopy Point Of Care",
+     "setting": "both",
+     "gross": 85.0
+    },
+    {
+     "description": "Hc Urnls Dip Stick/Tablet Rgnt Auto W/O Microscopy, Poct",
+     "setting": "both",
+     "gross": 85.0
+    },
+    {
+     "description": "Hc Urnls Dip Stick/Tablet Rgnt Auto W/O Microscopy",
+     "setting": "both",
+     "gross": 98.0
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "Hc Hcg,Urine, >18 Yrs Old(Adult)",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 267.0,
+   "discounted_cash": 80.1,
+   "negotiated_min": 8.61,
+   "negotiated_max": 17.22,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.76,
+   "rates_line": "Urine pregnancy test",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 10.76,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 10.33,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Hcg,Urine, >18 Yrs Old(Adult)'; payer rates are from line 'Urine pregnancy test' (the file lists them separately).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hc Hcg,Urine, <18 Yrs Old(Peds)",
+     "setting": "both",
+     "gross": 267.0
+    },
+    {
+     "description": "Hc Urine Pregnancy Test Visual Color Cmprsn Meths",
+     "setting": "both",
+     "gross": 267.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "Urine culture/colony count",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "negotiated_min": 8.07,
+   "negotiated_max": 16.14,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.09,
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 10.09,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 9.68,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "line_items": 1
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "Hc Pharmacy Csp Sterility",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 727.0,
+   "discounted_cash": 218.1,
+   "negotiated_min": 10.32,
+   "negotiated_max": 20.64,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.9,
+   "rates_line": "Blood culture for bacteria",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 12.9,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 12.38,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Pharmacy Csp Sterility'; payer rates are from line 'Blood culture for bacteria' (the file lists them separately).",
+    "9 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "Hc Usp Sterility Test-Aer &",
+     "setting": "both",
+     "gross": 788.0
+    },
+    {
+     "description": "Hc Blood Culture",
+     "setting": "both",
+     "gross": 788.0
+    },
+    {
+     "description": "Hc Peripheral Blood Culture",
+     "setting": "both",
+     "gross": 788.0
+    }
+   ]
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "Hc Covid-19 Rna, Qualitative",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 200.0,
+   "discounted_cash": 60.0,
+   "negotiated_min": 51.31,
+   "negotiated_max": 102.62,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 64.14,
+   "rates_line": "Sars-cov-2 covid-19 amp prb",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 64.14,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 61.57,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Covid-19 Rna, Qualitative'; payer rates are from line 'Sars-cov-2 covid-19 amp prb' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Covid-19 Rna, Qualitative",
+     "setting": "both",
+     "gross": 200.0
+    },
+    {
+     "description": "Hc Iadna Sars-Cov-2 Covid-19 Amplified Probe Tq",
+     "setting": "both",
+     "gross": 200.0
+    },
+    {
+     "description": "Hc Poct Covid 19 Rna, Qualitative - Abbott Id Now",
+     "setting": "both",
+     "gross": 200.0,
+     "modifiers": "QW"
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "Hc Hydration Iv Infusion, Init",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 934.0,
+   "discounted_cash": 280.2,
+   "negotiated_min": 311.15,
+   "negotiated_max": 622.3,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 388.94,
+   "rates_line": "Hydration iv infusion init",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 388.94,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 373.38,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Hydration Iv Infusion, Init'; payer rates are from line 'Hydration iv infusion init' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Hydration Iv Infusion, Init",
+     "setting": "both",
+     "gross": 934.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "Hc Hydrate Iv Infusion, Add-On",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 525.0,
+   "discounted_cash": 157.5,
+   "negotiated_min": 68.5,
+   "negotiated_max": 137.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 85.62,
+   "rates_line": "Hydrate iv infusion add-on",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 85.62,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 82.2,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Hydrate Iv Infusion, Add-On'; payer rates are from line 'Hydrate iv infusion add-on' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Hydrate Iv Infusion, Add-On",
+     "setting": "both",
+     "gross": 525.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "Hc Ther/Proph/Diag Iv Inf, Init",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1159.0,
+   "discounted_cash": 347.7,
+   "negotiated_min": 311.15,
+   "negotiated_max": 622.3,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 388.94,
+   "rates_line": "Ther/proph/diag iv inf init",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 388.94,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 373.38,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Ther/Proph/Diag Iv Inf, Init'; payer rates are from line 'Ther/proph/diag iv inf init' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Ther/Proph/Diag Iv Inf, Init",
+     "setting": "both",
+     "gross": 1159.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "Hc Ther/Proph/Diag Iv Inf Addon",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 539.0,
+   "discounted_cash": 161.7,
+   "negotiated_min": 68.5,
+   "negotiated_max": 137.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 85.62,
+   "rates_line": "Ther/proph/diag iv inf addon",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 85.62,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 82.2,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Ther/Proph/Diag Iv Inf Addon'; payer rates are from line 'Ther/proph/diag iv inf addon' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Ther/Proph/Diag Iv Inf Addon",
+     "setting": "both",
+     "gross": 539.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "Hc Ther/Proph/Diag Inj, Sc/Im",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 305.0,
+   "discounted_cash": 91.5,
+   "negotiated_min": 105.32,
+   "negotiated_max": 210.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 131.66,
+   "rates_line": "Ther/proph/diag inj sc/im",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 131.66,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 126.39,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Ther/Proph/Diag Inj, Sc/Im'; payer rates are from line 'Ther/proph/diag inj sc/im' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Ther/Proph/Diag Inj, Sc/Im",
+     "setting": "both",
+     "gross": 305.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "Hc Ther/Proph/Diag Inj, Iv Push",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 671.0,
+   "discounted_cash": 201.3,
+   "negotiated_min": 311.15,
+   "negotiated_max": 622.3,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 388.94,
+   "rates_line": "Ther/proph/diag inj iv push",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 388.94,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 373.38,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Ther/Proph/Diag Inj, Iv Push'; payer rates are from line 'Ther/proph/diag inj iv push' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Ther/Proph/Diag Inj, Iv Push",
+     "setting": "both",
+     "gross": 671.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "Hc Tx/Pro/Dx Inj New Drug Addon",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 438.0,
+   "discounted_cash": 131.4,
+   "negotiated_min": 68.5,
+   "negotiated_max": 137.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 85.62,
+   "rates_line": "Tx/pro/dx inj new drug addon",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 85.62,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 82.2,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Tx/Pro/Dx Inj New Drug Addon'; payer rates are from line 'Tx/pro/dx inj new drug addon' (the file lists them separately).",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Hc Tx/Pro/Dx Inj New Drug Addon",
+     "setting": "both",
+     "gross": 504.0
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "ONDANSETRON HCL (PF) 4 MG/2 ML INJECTION SOLUTION",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2.95,
+   "discounted_cash": 0.88,
+   "negotiated_min": 0.24,
+   "negotiated_max": 0.24,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.24,
+   "rates_line": "Ondansetron hcl injection",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 0.24,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "Gross charge is from line 'ONDANSETRON HCL (PF) 4 MG/2 ML INJECTION SOLUTION'; payer rates are from line 'Ondansetron hcl injection' (the file lists them separately).",
+    "18 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 18,
+   "variants": [
+    {
+     "description": "NDC Description Not Available",
+     "setting": "both",
+     "gross": 3.69,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ONDANSETRON HCL (PF) 4 MG/2 ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 4.41,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ONDANSETRON HCL (PF) 4 MG/2 ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 3.64,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "KETOROLAC 15 MG/ML INJECTION SOLUTION",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 19.44,
+   "discounted_cash": 5.83,
+   "negotiated_min": 0.3,
+   "negotiated_max": 1.72,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.61,
+   "rates_line": "Ketorolac tromethamine inj",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 1.72,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 0.36,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ketorolac (Toradol) injection, per 15 mg).",
+    "Gross charge is from line 'KETOROLAC 15 MG/ML INJECTION SOLUTION'; payer rates are from line 'Ketorolac tromethamine inj' (the file lists them separately).",
+    "44 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 44,
+   "variants": [
+    {
+     "description": "KETOROLAC 15 MG/ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 20.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "KETOROLAC 30 MG/ML (1 ML) INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 14.07,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "KETOROLAC 15 MG/ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 27.48,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "DEXAMETHASONE SODIUM PHOSPHATE 10 MG/ML INJECTION SOLUTION",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1.45,
+   "discounted_cash": 0.44,
+   "negotiated_min": 0.26,
+   "negotiated_max": 0.26,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.26,
+   "rates_line": "Dexamethasone sodium phos",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 0.26,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Dexamethasone injection, per 1 mg).",
+    "Gross charge is from line 'DEXAMETHASONE SODIUM PHOSPHATE 10 MG/ML INJECTION SOLUTION'; payer rates are from line 'Dexamethasone sodium phos' (the file lists them separately).",
+    "46 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 46,
+   "variants": [
+    {
+     "description": "DEXAMETHASONE SODIUM PHOSPHATE 10 MG/ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 1.43,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "DEXAMETHASONE SODIUM PHOSPHATE 10 MG/ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 2.86,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "DEXAMETHASONE SODIUM PHOSPHATE 10 MG/ML INJECTION SOLUTION",
+     "setting": "both",
+     "gross": 2.0,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "MORPHINE 2 MG/ML INJECTION SYRINGE (WRAPPER)",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 40.0,
+   "discounted_cash": 12.0,
+   "negotiated_min": 5.8,
+   "negotiated_max": 5.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.8,
+   "rates_line": "Morphine sulfate injection",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 5.8,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "Gross charge is from line 'MORPHINE 2 MG/ML INJECTION SYRINGE (WRAPPER)'; payer rates are from line 'Morphine sulfate injection' (the file lists them separately).",
+    "9 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "MORPHINE 2 MG/ML INJECTION SYRINGE (WRAPPER)",
+     "setting": "both",
+     "gross": 40.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "MORPHINE 2 MG/ML INJECTION SYRINGE (WRAPPER)",
+     "setting": "both",
+     "gross": 53.86,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "MORPHINE 2 MG/ML INJECTION SYRINGE (WRAPPER)",
+     "setting": "both",
+     "gross": 40.0,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "NDC Description Not Available",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 40.0,
+   "discounted_cash": 12.0,
+   "negotiated_min": 3.18,
+   "negotiated_max": 3.18,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.18,
+   "rates_line": "Fentanyl citrate injeciton",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 3.18,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Fentanyl injection, per 0.1 mg).",
+    "Gross charge is from line 'NDC Description Not Available'; payer rates are from line 'Fentanyl citrate injeciton' (the file lists them separately).",
+    "32 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 32,
+   "variants": [
+    {
+     "description": "FENTANYL (1:1) 50 MCG/ML (SKIN TEST)",
+     "setting": "both",
+     "gross": 34.83,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "FENTANYL (1:1) 50 MCG/ML (SKIN TEST)",
+     "setting": "both",
+     "gross": 34.74,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "FENTANYL (PF) 50 MCG/ML INFUSION 20 ML (PEDI)",
+     "setting": "both",
+     "gross": 8.76,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "CEFTRIAXONE 2 GRAM SOLUTION FOR INJECTION",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 12.03,
+   "discounted_cash": 3.61,
+   "negotiated_min": 1.27,
+   "negotiated_max": 1.27,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.27,
+   "rates_line": "Ceftriaxone sodium injection",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 1.27,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ceftriaxone injection, per 250 mg).",
+    "Gross charge is from line 'CEFTRIAXONE 2 GRAM SOLUTION FOR INJECTION'; payer rates are from line 'Ceftriaxone sodium injection' (the file lists them separately).",
+    "22 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 22,
+   "variants": [
+    {
+     "description": "CEFTRIAXONE 2 GRAM SOLUTION FOR INJECTION",
+     "setting": "both",
+     "gross": 12.12,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CEFTRIAXONE 2 GRAM SOLUTION FOR INJECTION",
+     "setting": "both",
+     "gross": 15.83,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CEFTRIAXONE 2 GRAM SOLUTION FOR INJECTION",
+     "setting": "both",
+     "gross": 12.01,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "SODIUM CHLORIDE 0.9 % INTRAVENOUS SOLUTION",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 50.62,
+   "discounted_cash": 15.19,
+   "negotiated_min": 7.33,
+   "negotiated_max": 7.33,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.33,
+   "rates_line": "Normal saline solution infus",
+   "payer_rates": 4,
+   "payer_dollar_rates": 4,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 7.33,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Normal saline infusion, 1000 cc).",
+    "Gross charge is from line 'SODIUM CHLORIDE 0.9 % INTRAVENOUS SOLUTION'; payer rates are from line 'Normal saline solution infus' (the file lists them separately).",
+    "17 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Default Fee Schedule | NDC EA = 1 EA | Price is variable based on underlying billing methodology - especially, for drug and supply items."
+   ],
+   "line_items": 17,
+   "variants": [
+    {
+     "description": "SODIUM CHLORIDE 0.9 % DIALYSIS CIRCUIT",
+     "setting": "both",
+     "gross": 58.63,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "SODIUM CHLORIDE 0.9 % INTRAVENOUS SOLUTION",
+     "setting": "both",
+     "gross": 58.73,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "SODIUM CHLORIDE 0.9 % INTRAVENOUS SOLUTION",
+     "setting": "both",
+     "gross": 58.26,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "Hc Lac Smpl 2.5Cm/Less",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 371.0,
+   "discounted_cash": 111.3,
+   "negotiated_min": 293.49,
+   "negotiated_max": 2596.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 586.99,
+   "rates_line": "Rpr s/n/ax/gen/trnk 2.5cm/<",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 2207.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 352.19,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Lac Smpl 2.5Cm/Less'; payer rates are from line 'Rpr s/n/ax/gen/trnk 2.5cm/<' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Lac Smpl 2.5Cm/Less",
+     "setting": "both",
+     "gross": 803.0
+    },
+    {
+     "description": "Hc Lac Smpl 2.5Cm/Less",
+     "setting": "both",
+     "gross": 1359.0
+    },
+    {
+     "description": "Hc Simple Repair Scalp/Neck/Ax/Genit/Trunk 2.5Cm/<",
+     "setting": "both",
+     "gross": 803.0
+    }
+   ]
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "Hc Drain Abscess,Simp/Sngl",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 675.0,
+   "discounted_cash": 202.5,
+   "negotiated_min": 293.49,
+   "negotiated_max": 2596.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 586.99,
+   "rates_line": "Drainage of skin abscess",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 2207.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 352.19,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Drain Abscess,Simp/Sngl'; payer rates are from line 'Drainage of skin abscess' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Drain Abscess,Simp/Sngl",
+     "setting": "both",
+     "gross": 1467.0
+    },
+    {
+     "description": "Hc Drain Abscess,Simp/Sngl",
+     "setting": "both",
+     "gross": 1467.0
+    },
+    {
+     "description": "Hc Drainage Of Skin Abscess",
+     "setting": "both",
+     "gross": 1467.0
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "Hc App Splnt Shrt Arm Sta",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 300.0,
+   "discounted_cash": 90.0,
+   "negotiated_min": 194.63,
+   "negotiated_max": 2596.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 389.25,
+   "rates_line": "Apply forearm splint",
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "Covered California Other Commercial Plan",
+     "dollar": 2207.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 233.55,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc App Splnt Shrt Arm Sta'; payer rates are from line 'Apply forearm splint' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc App Splnt Shrt Arm Sta",
+     "setting": "both",
+     "gross": 1048.0
+    },
+    {
+     "description": "Hc App Splnt Shrt Arm Sta",
+     "setting": "both",
+     "gross": 1048.0
+    },
+    {
+     "description": "Hc Application Short Arm Splint Forearm-Hand Static",
+     "setting": "both",
+     "gross": 1048.0
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "Hc Mdi Tx",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 431.0,
+   "discounted_cash": 129.3,
+   "negotiated_min": 320.33,
+   "negotiated_max": 640.65,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 400.41,
+   "rates_line": "Airway inhalation treatment",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 400.41,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 384.39,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Mdi Tx'; payer rates are from line 'Airway inhalation treatment' (the file lists them separately).",
+    "17 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule"
+   ],
+   "line_items": 17,
+   "variants": [
+    {
+     "description": "Hc Mdi Tx",
+     "setting": "both",
+     "gross": 544.0
+    },
+    {
+     "description": "Hc Mdi Tx",
+     "setting": "both",
+     "gross": 1224.0
+    },
+    {
+     "description": "Hc Ippb Tx",
+     "setting": "both",
+     "gross": 436.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "Hc Insert Cath Temp Indwllng",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 255.0,
+   "discounted_cash": 76.5,
+   "negotiated_min": 194.63,
+   "negotiated_max": 389.25,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 243.28,
+   "rates_line": "Insert temp bladder cath",
+   "payer_rates": 5,
+   "payer_dollar_rates": 5,
+   "payers": [
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 243.28,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Unitedhealthcare",
+     "plan": "Medicare Managed Care Plan",
+     "dollar": 233.55,
+     "methodology": "fee schedule",
+     "notes": "APC"
+    }
+   ],
+   "notes": [
+    "Gross charge is from line 'Hc Insert Cath Temp Indwllng'; payer rates are from line 'Insert temp bladder cath' (the file lists them separately).",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Ucsf Hb Clinic Fee Schedule"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Hc Insert Cath Temp Indwllng",
+     "setting": "both",
+     "gross": 426.0
+    },
+    {
+     "description": "Hc Insert Cath Temp Indwllng",
+     "setting": "both",
+     "gross": 1168.0
+    },
+    {
+     "description": "Hc Catheterization",
+     "setting": "both",
+     "gross": 426.0
+    }
+   ]
+  }
+ }
+}

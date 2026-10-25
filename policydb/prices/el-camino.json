@@ -1,0 +1,1549 @@
+{
+ "hospital_id": "el-camino",
+ "hospital_name": "El Camino Hospital",
+ "location_name": "El Camino Hospital | El Camino Hospital Los Gatos | El Camino Inpatient Psych | El Camino Inpatient Rehabilitation Center",
+ "hospital_address": "2500 Grant Road, Mountain View, CA 94040 | 815 Pollard Road, Los Gatos, CA 95032 | 2590 Grant Road, Mountain View, CA 94040 | 355 Dardanelli Lane, Los Gatos, CA 95032",
+ "last_updated_on": "2026-04-01",
+ "template_version": "3.0.0",
+ "layout": "json",
+ "source": {
+  "cms_hpt_url": "https://www.elcaminohealth.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "El Camino Hospital (Mountain View)",
+  "source_page_url": "https://www.elcaminohealth.org/patients-visitors-guide/before-you-arrive/pricing-estimates/price-transparency",
+  "file_url": "https://www.elcaminohealth.org/sites/default/files/2026-05/943167314_el-camino-hospital_standardcharges.json",
+  "via": "https",
+  "fetched_at": "2026-10-25T04:06:07+00:00",
+  "sha256": "2cce85d6ac66af81fcac3d336cee9fef48c3ee6dc4f10677857d7b80d240e298",
+  "bytes": 57914281
+ },
+ "codes_requested": 67,
+ "codes_found": 63,
+ "missing_codes": [
+  "81025",
+  "12001",
+  "10060",
+  "29125"
+ ],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "HC EMERGENCY SERVICE-LEVEL 1",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1556.0,
+   "discounted_cash": 389.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "HC EMERGENCY SERVICE-LEVEL 2",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2803.0,
+   "discounted_cash": 700.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "HC EMERGENCY SERVICE-LEVEL 3",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4841.0,
+   "discounted_cash": 1210.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "HC EMERGENCY SERVICE-LEVEL 4",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 7938.0,
+   "discounted_cash": 1984.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "HC EMERGENCY SERVICE-LEVEL 5",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11450.0,
+   "discounted_cash": 2862.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "HC EMERGNCY SVC-CRITICAL 1ST 74 MIN",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 16850.0,
+   "discounted_cash": 4212.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "HC RADIOLOGIC EXAMINATION,CHEST,SINGLE VIEW",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 847.0,
+   "discounted_cash": 211.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "HC RADIOLOGIC EXAMINATION,CHEST 2 VIEWS",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1195.0,
+   "discounted_cash": 298.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "HC CT HEAD SCAN W/O CONTRAST",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4837.0,
+   "discounted_cash": 1209.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "HC CT C SPINE-COMPLETE",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 8913.0,
+   "discounted_cash": 2228.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "HC CT THORAX W/O CONTRAST",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4442.0,
+   "discounted_cash": 1110.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "HC CT THORAX W/CONTRAST",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11726.0,
+   "discounted_cash": 2931.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "HC CT ANGIO CHEST W/CONTRAST",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 17751.0,
+   "discounted_cash": 4437.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "HC CT ABDOMEN + PELVIS W/O CONT",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 16410.0,
+   "discounted_cash": 4102.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "HC CT ABDOMEN + PELVIS W/CONT",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 18531.0,
+   "discounted_cash": 4632.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "HC CT ABDOMEN + PELVIS W/WO CONT",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 20914.0,
+   "discounted_cash": 5228.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "HC MRI HEAD W/O CONT",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 10432.0,
+   "discounted_cash": 2608.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "HC MRI LUMBAR SPINE W/O CONTRAST",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11301.0,
+   "discounted_cash": 2825.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "HC L SPINE AP/LAT",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1623.0,
+   "discounted_cash": 405.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "HC SHOULDER MIN 2 VIEWS",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1926.0,
+   "discounted_cash": 481.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC SHOULDER MIN 2 VIEWS",
+     "setting": "both",
+     "gross": 3371.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "HC WRIST MIN 3 VIEWS",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1728.0,
+   "discounted_cash": 432.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC WRIST MIN 3 VIEWS",
+     "setting": "both",
+     "gross": 3024.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "HC ANKLE MIN 3 VIEWS",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1826.0,
+   "discounted_cash": 456.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC ANKLE MIN 3 VIEWS",
+     "setting": "both",
+     "gross": 3196.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "HC FOOT MIN 3 VIEWS",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1903.0,
+   "discounted_cash": 475.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC FOOT MIN 3 VIEWS",
+     "setting": "both",
+     "gross": 3330.0,
+     "modifiers": "50"
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "HC US ABDOMEN-GENERAL SURVEY",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4142.0,
+   "discounted_cash": 1035.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "HC US ABDOMINAL REAL TIME W/IMAGE LIMITED",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3132.0,
+   "discounted_cash": 783.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "HC US PELVIC SURVEY",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 3143.0,
+   "discounted_cash": 785.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "HC EKG - HOSPITAL",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1998.0,
+   "discounted_cash": 499.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "HC TTE W/DOPPLER, COMPLETE",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 12986.0,
+   "discounted_cash": 3246.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "HC PHLEBOTOMY/VENIPUNCTURE",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 26.0,
+   "discounted_cash": 6.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC CDHP PRENATAL SCREENING DRAW FEE *2",
+     "setting": "both",
+     "gross": 6.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "HC CHEM BASIC",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1149.0,
+   "discounted_cash": 287.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "HC CHEM COMPREHENSIVE",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1381.0,
+   "discounted_cash": 345.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "HC NMR LIPOPROFILE LIPID PAN 1/2*3",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 11.3,
+   "discounted_cash": 2.82,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC LIPID PROFILE",
+     "setting": "both",
+     "gross": 257.0
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "HC CBC, WITH AUTO DIFFERENTIAL",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 246.0,
+   "discounted_cash": 61.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "HC CBC, WITHOUT DIFFERENTIAL (HEMOGRAM)",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 210.0,
+   "discounted_cash": 52.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "HC PT INHIBITOR SCREEN, PROTHROMBIN TIME *5 1/3",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 18.9,
+   "discounted_cash": 4.72,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC PRO TIME",
+     "setting": "both",
+     "gross": 147.0
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "HC PTT INHIBITOR SCREEN, APTT PTTINH THROMPLAS *5 1/6",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 30.45,
+   "discounted_cash": 7.61,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC PTT INHIBITOR SCREEN, 5 MIN NORM PTT (1:1 INCUBATED MIX W/ NP) *5 4/6",
+     "setting": "both",
+     "gross": 30.45
+    },
+    {
+     "description": "HC 31102493 LABACLPTT THROMBOPLASTIN PTT *5",
+     "setting": "both",
+     "gross": 28.35
+    },
+    {
+     "description": "HC PTT",
+     "setting": "both",
+     "gross": 459.0
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "HC TROPONIN",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1042.0,
+   "discounted_cash": 260.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC TROPONIN 91",
+     "setting": "both",
+     "gross": 1042.0
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "HC LIPASE",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 800.0,
+   "discounted_cash": 200.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "HC 143000 NT-PROBNP *3",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 45.0,
+   "discounted_cash": 11.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HC NT-PROBNP*3",
+     "setting": "both",
+     "gross": 45.0
+    },
+    {
+     "description": "HC BNP",
+     "setting": "both",
+     "gross": 410.0
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "HC CK TOTAL PLUS ISOENZYME*3",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 8.5,
+   "discounted_cash": 2.12,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HC CPK-ENZYME",
+     "setting": "both",
+     "gross": 112.0
+    },
+    {
+     "description": "HC CPK-ENZYME 91",
+     "setting": "both",
+     "gross": 112.0
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "HC TSH",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 290.0,
+   "discounted_cash": 72.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HC HEMOGLOBIN A1C",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 172.0,
+   "discounted_cash": 43.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "HC UA W/MICROSCOPIC",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 669.0,
+   "discounted_cash": 167.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "HC URINALYSIS, BY DIP STICK OR TABLET REAGENT",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 428.0,
+   "discounted_cash": 107.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HC UROGRAM, POCT-STATUS",
+     "setting": "both",
+     "gross": 428.0
+    },
+    {
+     "description": "HC UROGRAM",
+     "setting": "both",
+     "gross": 428.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "HC CULT URINE",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 599.0,
+   "discounted_cash": 149.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "HC CULT BLOOD",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1623.0,
+   "discounted_cash": 405.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "HC ECH RAPID SARS-COV-2 RT-PCR 2019 NOVEL CORONA VIRUS",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 346.0,
+   "discounted_cash": 86.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HC 139900 LABCORP - COVID-19",
+     "setting": "both",
+     "gross": 51.31
+    },
+    {
+     "description": "HC ECH LOS GATOS KIT RAPID SARS-COV-2 RT-PCR 2019 NOVEL CORONA VIRUS",
+     "setting": "both",
+     "gross": 346.0
+    },
+    {
+     "description": "HC POCT SARS-COV2 LIAT",
+     "setting": "both",
+     "gross": 200.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "HC INFUSION,HYDRATION,INIT,31-60 MIN",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1827.0,
+   "discounted_cash": 456.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INFUSION,HYDRATION,INIT,31-60 MIN OBED",
+     "setting": "both",
+     "gross": 1827.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "HC INFUSION,HYDRATION,EA ADD HR",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1146.0,
+   "discounted_cash": 286.5,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INFUSION,HYDRATION,EA ADD HR OBED",
+     "setting": "both",
+     "gross": 1146.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "HC INFUSION,INITIAL,UP TO 1 HR",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1904.0,
+   "discounted_cash": 476.0,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INFUSION,INITIAL,UP TO 1 HR OBED",
+     "setting": "both",
+     "gross": 1904.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "HC INFUSION,EA ADD HR",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 707.0,
+   "discounted_cash": 176.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INFUSION,EA ADD HR OBED",
+     "setting": "both",
+     "gross": 707.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "HC INJECTION IM/SQ",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 559.0,
+   "discounted_cash": 139.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INJECTION IM/SQ OBED",
+     "setting": "both",
+     "gross": 559.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "HC INJECTION IV PUSH, SINGLE/INITIAL",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1299.0,
+   "discounted_cash": 324.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INJECTION IV PUSH, SINGLE/INITIAL OBED",
+     "setting": "both",
+     "gross": 1299.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "HC INJECTION IV PUSH,EA SEQ-NEW MED",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 963.0,
+   "discounted_cash": 240.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HC INJECTION IV PUSH,EA SEQ-NEW MED OBED",
+     "setting": "both",
+     "gross": 963.0
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "ondansetron per 1 mg",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1.41,
+   "discounted_cash": 0.35,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 0.05,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 0.05 ML as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "28 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 28,
+   "variants": [
+    {
+     "description": "ondansetron per 1 mg",
+     "setting": "both",
+     "gross": 1.36,
+     "drug_unit": 0.05
+    },
+    {
+     "description": "ondansetron per 1 mg",
+     "setting": "both",
+     "gross": 0.44,
+     "drug_unit": 0.05
+    },
+    {
+     "description": "ondansetron per 1 mg",
+     "setting": "both",
+     "gross": 0.45,
+     "drug_unit": 0.05
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "ketorolac per 15 mg",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 101.56,
+   "discounted_cash": 25.39,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 1.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Ketorolac (Toradol) injection, per 15 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "50 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 50,
+   "variants": [
+    {
+     "description": "ketorolac per 15 mg",
+     "setting": "both",
+     "gross": 6.66,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ketorolac per 15 mg",
+     "setting": "both",
+     "gross": 6.66,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ketorolac per 15 mg",
+     "setting": "both",
+     "gross": 14.7,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "dexamethasone per 1 mg",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 4.64,
+   "discounted_cash": 1.16,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 1.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Dexamethasone injection, per 1 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "28 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 28,
+   "variants": [
+    {
+     "description": "dexamethasone per 1 mg",
+     "setting": "both",
+     "gross": 5.73,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "dexamethasone per 1 mg",
+     "setting": "both",
+     "gross": 6.32,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "dexamethasone per 1 mg",
+     "setting": "both",
+     "gross": 7.05,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "morphine 25 mg/mL solution 20 mL Vial",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 2391.76,
+   "discounted_cash": 597.94,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 1.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "34 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 34,
+   "variants": [
+    {
+     "description": "morphine 25 mg/mL solution 10 mL Vial",
+     "setting": "both",
+     "gross": 50.56,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "morphine in 0.9% sodium chloride 100 mg/100 mL solution 100 mL Bag",
+     "setting": "both",
+     "gross": 88.09,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "morphine in 0.9% sodium chloride 100 mg/100 mL solution 100 mL Bag",
+     "setting": "both",
+     "gross": 65.11,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "fentaNYL citrate (PF)-0.9%NaCl 10 mcg/mL solution 250 mL Bag",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 128.31,
+   "discounted_cash": 32.08,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 1.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Fentanyl injection, per 0.1 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "34 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 34,
+   "variants": [
+    {
+     "description": "fentaNYL citrate (PF)-0.9%NaCl 10 mcg/mL solution 250 mL Bag",
+     "setting": "both",
+     "gross": 212.57,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "fentaNYL PF per 0.1 mg",
+     "setting": "both",
+     "gross": 191.5,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "fentaNYL PF per 0.1 mg",
+     "setting": "both",
+     "gross": 108.93,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "cefTRIAXone per 250 mg",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 161.24,
+   "discounted_cash": 40.31,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 1.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Ceftriaxone injection, per 250 mg).",
+    "No payer-specific negotiated rates listed for this code.",
+    "36 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 36,
+   "variants": [
+    {
+     "description": "cefTRIAXone per 250 mg",
+     "setting": "both",
+     "gross": 176.5,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "cefTRIAXone per 250 mg",
+     "setting": "both",
+     "gross": 84.64,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "cefTRIAXone per 250 mg",
+     "setting": "both",
+     "gross": 132.37,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "sodium chloride 0.9 % amnioinfusion 0.9 % solution 1,000 mL Flex Cont",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 25.0,
+   "discounted_cash": 6.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "drug_unit": 0.25,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 0.25 ML as listed; compare billed units with the HCPCS unit (Normal saline infusion, 1000 cc).",
+    "No payer-specific negotiated rates listed for this code.",
+    "17 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Pharmacy"
+   ],
+   "line_items": 17,
+   "variants": [
+    {
+     "description": "sodium chloride 0.9 % amnioinfusion 0.9 % solution 1,000 mL Bag",
+     "setting": "both",
+     "gross": 25.0,
+     "drug_unit": 0.25
+    },
+    {
+     "description": "sodium chloride 0.9 % amnioinfusion 0.9 % solution 1,000 mL Flex Cont",
+     "setting": "both",
+     "gross": 100.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "sodium chloride 0.9 % amnioinfusion 0.9 % solution 1,000 mL Bag",
+     "setting": "both",
+     "gross": 100.0,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "HC HHN W/PEAK FLOW INITIAL",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 729.0,
+   "discounted_cash": 182.25,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "17 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 17,
+   "variants": [
+    {
+     "description": "HC HHN W/PEAK FLOW SUBSEQUENT",
+     "setting": "both",
+     "gross": 729.0
+    },
+    {
+     "description": "HC HAND NEB SUB",
+     "setting": "both",
+     "gross": 729.0
+    },
+    {
+     "description": "HC ULTRA NEB INITIAL",
+     "setting": "both",
+     "gross": 729.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "HC FOLEY CATHETER PROCEDURE INTERVENTIONAL SERVICES",
+   "setting": "both",
+   "billing_class": "facility",
+   "gross": 1011.0,
+   "discounted_cash": 252.75,
+   "payer_rates": 0,
+   "payer_dollar_rates": 0,
+   "notes": [
+    "No payer-specific negotiated rates listed for this code.",
+    "File note: Gross Charge Type: Standard"
+   ],
+   "line_items": 1
+  }
+ }
+}

@@ -1,0 +1,2047 @@
+{
+ "hospital_id": "kaiser-oakland",
+ "hospital_name": "KAISER FOUNDATION HOSPITAL - OAKLAND/RICHMOND",
+ "location_name": "OAKLAND MEDICAL CENTER",
+ "hospital_address": "\"275 W MacArthur Blvd, Oakland, CA 94611\"",
+ "last_updated_on": "4/1/2026",
+ "template_version": "3.0.1",
+ "layout": "csv-wide",
+ "source": {
+  "cms_hpt_url": "https://healthy.kaiserpermanente.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "Oakland Medical Center",
+  "source_page_url": "https://healthy.kaiserpermanente.org/northern-california/doctors-locations/price-transparency",
+  "file_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/health-plan-documents/coverage-information/machine-readable/941105628-oakland-medical-center-standard-charges-ncal-en.csv",
+  "via": "https",
+  "fetched_at": "2026-10-25T04:04:35+00:00",
+  "sha256": "75fad07830841d56598d3ae9fd8a6ea927f24ce790be8ed7aba9242cbee1cc2c",
+  "bytes": 215533889
+ },
+ "codes_requested": 67,
+ "codes_found": 67,
+ "missing_codes": [],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "EMERGENCY DEPARTMENT VISIT MAY NOT REQ PHYS/QHP",
+   "setting": "both",
+   "gross": 843.0,
+   "discounted_cash": 472.08,
+   "negotiated_min": 655.0,
+   "negotiated_max": 655.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 655.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 655.0,
+     "methodology": "Case Rate",
+     "notes": "Emergency Room - case rate is inclusive of all ancillary services except for radiology, which is separately payable. Reimbursement is included in case rate if …"
+    }
+   ],
+   "line_items": 1
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "EMERGENCY DEPARTMENT VISIT STRAIGHTFORWARD MDM",
+   "setting": "both",
+   "gross": 1558.0,
+   "discounted_cash": 872.48,
+   "negotiated_min": 1175.0,
+   "negotiated_max": 1175.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1175.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1175.0,
+     "methodology": "Case Rate",
+     "notes": "Emergency Room - case rate is inclusive of all ancillary services except for radiology, which is separately payable. Reimbursement is included in case rate if …"
+    }
+   ],
+   "line_items": 1
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "EMERGENCY DEPARTMENT VISIT LOW MDM",
+   "setting": "both",
+   "gross": 2896.0,
+   "discounted_cash": 1621.76,
+   "negotiated_min": 2055.0,
+   "negotiated_max": 2055.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2055.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 2055.0,
+     "methodology": "Case Rate",
+     "notes": "Emergency Room - case rate is inclusive of all ancillary services except for radiology, which is separately payable. Reimbursement is included in case rate if …"
+    }
+   ],
+   "line_items": 1
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "EMERGENCY DEPARTMENT VISIT MODERATE MDM",
+   "setting": "both",
+   "gross": 4844.0,
+   "discounted_cash": 2712.64,
+   "negotiated_min": 3165.0,
+   "negotiated_max": 3165.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3165.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 3165.0,
+     "methodology": "Case Rate",
+     "notes": "Emergency Room - case rate is inclusive of all ancillary services except for radiology, which is separately payable. Reimbursement is included in case rate if …"
+    }
+   ],
+   "line_items": 1
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "EMERGENCY DEPARTMENT VISIT HIGH MDM",
+   "setting": "both",
+   "gross": 7536.0,
+   "discounted_cash": 4220.16,
+   "negotiated_min": 4555.0,
+   "negotiated_max": 4555.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4555.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 4555.0,
+     "methodology": "Case Rate",
+     "notes": "Emergency Room - case rate is inclusive of all ancillary services except for radiology, which is separately payable. Reimbursement is included in case rate if …"
+    }
+   ],
+   "line_items": 1
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "CRITICAL CARE ILL/INJURED PATIENT INIT 30-74 MIN",
+   "setting": "both",
+   "gross": 10553.0,
+   "discounted_cash": 5909.68,
+   "negotiated_min": 6260.0,
+   "negotiated_max": 6260.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6260.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 6260.0,
+     "methodology": "Case Rate",
+     "notes": "Emergency Room - case rate is inclusive of all ancillary services except for radiology, which is separately payable. Reimbursement is included in case rate if …"
+    }
+   ],
+   "line_items": 1
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "RADIOLOGIC EXAM CHEST SINGLE VIEW",
+   "setting": "both",
+   "gross": 850.0,
+   "discounted_cash": 476.0,
+   "negotiated_min": 118.0,
+   "negotiated_max": 370.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 370.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "RADIOLOGIC EXAM CHEST 2 VIEWS",
+   "setting": "both",
+   "gross": 900.0,
+   "discounted_cash": 504.0,
+   "negotiated_min": 118.0,
+   "negotiated_max": 370.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 370.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "CT HEAD/BRAIN W/O CONTRAST MATERIAL",
+   "setting": "both",
+   "gross": 4790.0,
+   "discounted_cash": 2682.4,
+   "negotiated_min": 145.0,
+   "negotiated_max": 455.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 455.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "CT CERVICAL SPINE W/O CONTRAST MATERIAL",
+   "setting": "both",
+   "gross": 5770.0,
+   "discounted_cash": 3231.2,
+   "negotiated_min": 184.0,
+   "negotiated_max": 575.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 193.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 575.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "DIAGNOSTIC COMPUTED TOMOGRAPHY THORAX W/O CNTRST",
+   "setting": "both",
+   "gross": 5080.0,
+   "discounted_cash": 2844.8,
+   "negotiated_min": 180.0,
+   "negotiated_max": 565.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 190.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 565.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "DIAGNOSTIC COMPUTED TOMOGRAPHY THORAX W/CONTRAST",
+   "setting": "both",
+   "gross": 6720.0,
+   "discounted_cash": 3763.2,
+   "negotiated_min": 244.0,
+   "negotiated_max": 765.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 257.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 765.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "CT ANGIOGRAPHY CHEST W/CONTRAST/NONCONTRAST",
+   "setting": "both",
+   "gross": 8700.0,
+   "discounted_cash": 4872.0,
+   "negotiated_min": 394.0,
+   "negotiated_max": 1235.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 414.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1235.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "CT ABDOMEN & PELVIS W/O CONTRAST MATERIAL",
+   "setting": "both",
+   "gross": 7770.0,
+   "discounted_cash": 4351.2,
+   "negotiated_min": 323.0,
+   "negotiated_max": 1010.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 339.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1010.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "CT ABDOMEN & PELVIS W/CONTRAST MATERIAL",
+   "setting": "both",
+   "gross": 8490.0,
+   "discounted_cash": 4754.4,
+   "negotiated_min": 476.0,
+   "negotiated_max": 1490.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 500.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1490.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "CT ABDOMEN & PELVIS W/O CONTRST 1/> BODY RE",
+   "setting": "both",
+   "gross": 11790.0,
+   "discounted_cash": 6602.4,
+   "negotiated_min": 533.0,
+   "negotiated_max": 1670.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 560.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1670.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "MRI BRAIN BRAIN STEM W/O CONTRAST MATERIAL",
+   "setting": "both",
+   "gross": 6480.0,
+   "discounted_cash": 3628.8,
+   "negotiated_min": 323.0,
+   "negotiated_max": 1010.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 339.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1010.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "MRI SPINAL CANAL LUMBAR W/O CONTRAST MATERIAL",
+   "setting": "both",
+   "gross": 5860.0,
+   "discounted_cash": 3281.6,
+   "negotiated_min": 323.0,
+   "negotiated_max": 1010.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 339.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1010.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "RADEX SPINE LUMBOSACRAL 2/3 VIEWS",
+   "setting": "both",
+   "gross": 990.0,
+   "discounted_cash": 554.4,
+   "negotiated_min": 142.0,
+   "negotiated_max": 445.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 149.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 445.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "RADEX SHOULDER COMPLETE MINIMUM 2 VIEWS",
+   "setting": "both",
+   "gross": 1170.0,
+   "discounted_cash": 655.2,
+   "negotiated_min": 118.0,
+   "negotiated_max": 370.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 370.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "RADEX WRIST COMPLETE MINIMUM 3 VIEWS",
+   "setting": "both",
+   "gross": 1130.0,
+   "discounted_cash": 632.8,
+   "negotiated_min": 118.0,
+   "negotiated_max": 370.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 370.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "RADEX ANKLE COMPLETE MINIMUM 3 VIEWS",
+   "setting": "both",
+   "gross": 1080.0,
+   "discounted_cash": 604.8,
+   "negotiated_min": 118.0,
+   "negotiated_max": 370.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 370.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "RADEX FOOT COMPLETE MINIMUM 3 VIEWS",
+   "setting": "both",
+   "gross": 1010.0,
+   "discounted_cash": 565.6,
+   "negotiated_min": 118.0,
+   "negotiated_max": 370.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 124.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 370.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "US ABDOMINAL REAL TIME W/IMAGE DOCUMENTATION",
+   "setting": "both",
+   "gross": 1770.0,
+   "discounted_cash": 991.2,
+   "negotiated_min": 142.0,
+   "negotiated_max": 445.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 149.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 445.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "US ABDOMINAL REAL TIME W/IMAGE LIMITED",
+   "setting": "both",
+   "gross": 1480.0,
+   "discounted_cash": 828.8,
+   "negotiated_min": 142.0,
+   "negotiated_max": 445.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 149.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 445.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "US PELVIC NONOBSTETRIC REAL-TIME IMAGE COMPLETE",
+   "setting": "both",
+   "gross": 1680.0,
+   "discounted_cash": 940.8,
+   "negotiated_min": 142.0,
+   "negotiated_max": 445.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 149.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 445.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "ECG ROUTINE ECG W/LEAST 12 LDS TRCG ONLY W/O I&R",
+   "setting": "both",
+   "gross": 680.0,
+   "discounted_cash": 380.8,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 311.5,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "ECHO TTHRC R-T 2D W/WOM-MODE COMPL SPEC&COLR D",
+   "setting": "both",
+   "gross": 6830.0,
+   "discounted_cash": 3824.8,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 3219.5,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "COLLECTION VENOUS BLOOD VENIPUNCTURE",
+   "setting": "both",
+   "gross": 71.0,
+   "discounted_cash": 39.76,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 90.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 61.2,
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "line_items": 1
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "BASIC METABOLIC PANEL CALCIUM TOTAL",
+   "setting": "both",
+   "gross": 345.0,
+   "discounted_cash": 193.2,
+   "negotiated_min": 8.0,
+   "negotiated_max": 25.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 25.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "COMPREHENSIVE METABOLIC PANEL",
+   "setting": "both",
+   "gross": 456.0,
+   "discounted_cash": 255.36,
+   "negotiated_min": 10.0,
+   "negotiated_max": 30.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 30.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "LIPID PANEL",
+   "setting": "both",
+   "gross": 279.0,
+   "discounted_cash": 156.24,
+   "negotiated_min": 13.0,
+   "negotiated_max": 40.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 40.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "BLOOD COUNT COMPLETE AUTO&AUTO DIFRNTL WBC",
+   "setting": "both",
+   "gross": 220.0,
+   "discounted_cash": 123.2,
+   "negotiated_min": 8.0,
+   "negotiated_max": 25.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 25.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "BLOOD COUNT COMPLETE AUTOMATED",
+   "setting": "both",
+   "gross": 160.0,
+   "discounted_cash": 89.6,
+   "negotiated_min": 6.0,
+   "negotiated_max": 20.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 20.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "PROTHROMBIN TIME",
+   "setting": "both",
+   "gross": 160.0,
+   "discounted_cash": 89.6,
+   "negotiated_min": 3.0,
+   "negotiated_max": 10.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 10.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "THROMBOPLASTIN TIME PARTIAL PLASMA/WHOLE BLOOD",
+   "setting": "both",
+   "gross": 253.0,
+   "discounted_cash": 141.68,
+   "negotiated_min": 5.0,
+   "negotiated_max": 15.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 15.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "ASSAY OF TROPONIN QUANTITATIVE",
+   "setting": "both",
+   "gross": 510.0,
+   "discounted_cash": 285.6,
+   "negotiated_min": 11.0,
+   "negotiated_max": 35.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 35.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "ASSAY OF LIPASE",
+   "setting": "both",
+   "gross": 331.0,
+   "discounted_cash": 185.36,
+   "negotiated_min": 6.0,
+   "negotiated_max": 20.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 20.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "NATRIURETIC PEPTIDE",
+   "setting": "both",
+   "gross": 540.0,
+   "discounted_cash": 302.4,
+   "negotiated_min": 37.0,
+   "negotiated_max": 115.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 39.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 115.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "CREATINE KINASE TOTAL",
+   "setting": "both",
+   "gross": 246.0,
+   "discounted_cash": 137.76,
+   "negotiated_min": 6.0,
+   "negotiated_max": 20.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 20.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "ASSAY OF THYROID STIMULATING HORMONE TSH",
+   "setting": "both",
+   "gross": 277.0,
+   "discounted_cash": 155.12,
+   "negotiated_min": 16.0,
+   "negotiated_max": 50.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 17.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 50.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HEMOGLOBIN GLYCOSYLATED A1C",
+   "setting": "both",
+   "gross": 142.0,
+   "discounted_cash": 79.52,
+   "negotiated_min": 10.0,
+   "negotiated_max": 30.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 30.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "URNLS DIP STICK/TABLET REAGENT AUTO MICROSCOPY",
+   "setting": "both",
+   "gross": 148.0,
+   "discounted_cash": 82.88,
+   "negotiated_min": 3.0,
+   "negotiated_max": 10.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 10.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "URNLS DIP STICK/TABLET RGNT AUTO W/O MICROSCOPY",
+   "setting": "both",
+   "gross": 100.0,
+   "discounted_cash": 56.0,
+   "negotiated_min": 2.0,
+   "negotiated_max": 7.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 7.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "URINE PREGNANCY TEST VISUAL COLOR CMPRSN METHS",
+   "setting": "both",
+   "gross": 157.0,
+   "discounted_cash": 87.92,
+   "negotiated_min": 8.0,
+   "negotiated_max": 25.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 25.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "CULTURE BACTERIAL QUANTTATIVE COLONY COUNT URINE",
+   "setting": "both",
+   "gross": 282.0,
+   "discounted_cash": 157.92,
+   "negotiated_min": 8.0,
+   "negotiated_max": 25.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 25.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "CULTURE BACTERIAL BLOOD AEROBIC W/ID ISOLATES",
+   "setting": "both",
+   "gross": 486.0,
+   "discounted_cash": 272.16,
+   "negotiated_min": 10.0,
+   "negotiated_max": 30.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 30.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "IADNA SARS-COV-2 COVID-19 AMPLIFIED PROBE TQ",
+   "setting": "both",
+   "gross": 202.0,
+   "discounted_cash": 113.12,
+   "negotiated_min": 48.0,
+   "negotiated_max": 150.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 50.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 150.0,
+     "methodology": "Fee Schedule",
+     "notes": "For Lab -reimbursement is included in the case rate if service is part of Outpatient Surgery, ER, or inpatient stay. For Radiology - reimbursement is included …"
+    }
+   ],
+   "line_items": 1
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "IV INFUSION HYDRATION INITIAL 31 MIN-1 HOUR",
+   "setting": "both",
+   "gross": 1320.0,
+   "discounted_cash": 739.2,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 623.0,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "IV INFUSION HYDRATION EACH ADDITIONAL HOUR",
+   "setting": "both",
+   "gross": 660.0,
+   "discounted_cash": 369.6,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 313.0,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "IV INFUSION THERAPY/PROPHYLAXIS /DX 1ST TO 1 HR",
+   "setting": "both",
+   "gross": 1500.0,
+   "discounted_cash": 840.0,
+   "negotiated_min": 255.0,
+   "negotiated_max": 797.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 267.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 797.0,
+     "methodology": "Case Rate",
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "notes": [
+    "8 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "\"INTRAVENOUS INFUSION PAIN MEDICATIONS, INITIAL UP TO 1HR\"",
+     "setting": "both",
+     "gross": 1260.0
+    },
+    {
+     "description": "\"INTRAVENOUS INFUSION PENTAMIDINE, INITIAL UP TO 1HR\"",
+     "setting": "both",
+     "gross": 1260.0
+    },
+    {
+     "description": "\"INTRAVENOUS INFUSION IMMUNOGLOBULIN, INITIAL UP TO 1HR\"",
+     "setting": "both",
+     "gross": 1260.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "IV INFUSION THERAPY PROPHYLAXIS/DX EA HOUR",
+   "setting": "both",
+   "gross": 790.0,
+   "discounted_cash": 442.4,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 334.0,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "\"INTRAVENOUS INFUSION OF STEROIDS, EACH ADDL HOUR\"",
+     "setting": "both",
+     "gross": 286.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "THERAPEUTIC PROPHYLACTIC/DX INJECTION SUBQ/IM",
+   "setting": "both",
+   "gross": 404.0,
+   "discounted_cash": 226.24,
+   "negotiated_min": 86.0,
+   "negotiated_max": 269.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 90.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 269.0,
+     "methodology": "Case Rate",
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "INTRAMUSCULAR INJECTION OF VITAMIN B12",
+     "setting": "both",
+     "gross": 423.0
+    },
+    {
+     "description": "\"INJECTION, LUPRON SUBCUTANEOUS OR INTRAMUSCULAR\"",
+     "setting": "both",
+     "gross": 423.0
+    },
+    {
+     "description": "\"INJECTION, HUMAN CHORIONIC GONADOTROPHIN, SUBCUTANEOUS OR INTRAMUSCULAR\"",
+     "setting": "both",
+     "gross": 423.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "THER PROPH/DX NJX IV PUSH SINGLE/1ST SBST/DRUG",
+   "setting": "both",
+   "gross": 930.0,
+   "discounted_cash": 520.8,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 398.0,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "THERAPEUTIC INJECTION IV PUSH EACH NEW DRUG",
+   "setting": "both",
+   "gross": 540.0,
+   "discounted_cash": 302.4,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 256.0,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "ondansetron 2 mg/mL Soln 20 mL VIAL",
+   "setting": "both",
+   "gross": 6.47,
+   "discounted_cash": 3.62,
+   "negotiated_min": 0.09,
+   "negotiated_max": 0.15,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.09,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 0.15,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "ondansetron (PF) 4 mg/2 mL Soln 2 mL VIAL",
+     "setting": "both",
+     "gross": 7.45,
+     "drug_unit": 2.0
+    },
+    {
+     "description": "ondansetron (PF) 4 mg/2 mL Syringe 2 mL SYRINGE",
+     "setting": "both",
+     "gross": 12.55,
+     "drug_unit": 2.0
+    },
+    {
+     "description": "Ondansetron hcl injection",
+     "setting": "both",
+     "gross": null
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "ketorolac 30 mg/mL (1 mL) Soln 1 mL VIAL",
+   "setting": "both",
+   "gross": 8.57,
+   "discounted_cash": 4.8,
+   "negotiated_min": 0.35,
+   "negotiated_max": 0.58,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.35,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 0.58,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 0.5,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 0.5 ML as listed; compare billed units with the HCPCS unit (Ketorolac (Toradol) injection, per 15 mg).",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "ketorolac 15 mg/mL Soln 1 mL VIAL",
+     "setting": "both",
+     "gross": 17.28,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "ketorolac 30 mg/mL Soln 10 mL VIAL",
+     "setting": "both",
+     "gross": 13.83,
+     "drug_unit": 0.5
+    },
+    {
+     "description": "ketorolac 60 mg/2 mL Soln 2 mL VIAL",
+     "setting": "both",
+     "gross": 13.16,
+     "drug_unit": 2.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "dexAMETHasone Sodium Phosphate 10 mg/mL Soln 1 mL VIAL",
+   "setting": "both",
+   "gross": 7.33,
+   "discounted_cash": 4.1,
+   "negotiated_min": 0.12,
+   "negotiated_max": 0.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.12,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 0.2,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 0.4,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 0.4 ML as listed; compare billed units with the HCPCS unit (Dexamethasone injection, per 1 mg).",
+    "12 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "dexAMETHasone sodium phosphate 4 mg/mL Soln 5 mL VIAL",
+     "setting": "both",
+     "gross": 9.49,
+     "drug_unit": 5.0
+    },
+    {
+     "description": "dexAMETHasone Sodium Phosphate 4 mg/mL Soln 5 mL VIAL",
+     "setting": "both",
+     "gross": 10.64,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "dexAMETHasone Sodium Phosphate 4 mg/mL Soln 30 mL VIAL",
+     "setting": "both",
+     "gross": 11.31,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "morphine 50 mg/mL Soln 20 mL VIAL",
+   "setting": "both",
+   "gross": 68.51,
+   "discounted_cash": 38.37,
+   "negotiated_min": 4.55,
+   "negotiated_max": 7.64,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4.55,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 7.64,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 20.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 20 ML as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "23 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 23,
+   "variants": [
+    {
+     "description": "morphine 50 mg/mL Soln 50 mL VIAL",
+     "setting": "both",
+     "gross": 139.81,
+     "drug_unit": 50.0
+    },
+    {
+     "description": "morphine 2 mg/ml 1 mL CARTRIDGE",
+     "setting": "both",
+     "gross": 13.69,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "morphine 2 mg/mL Syringe 1 mL CARTRIDGE",
+     "setting": "both",
+     "gross": 9.34,
+     "drug_unit": 0.5
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "fentaNYL (PF) 50 mcg/mL Soln 2 mL VIAL",
+   "setting": "both",
+   "gross": 7.86,
+   "discounted_cash": 4.4,
+   "negotiated_min": 0.96,
+   "negotiated_max": 1.62,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.96,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 1.62,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 0.5,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 0.5 ML as listed; compare billed units with the HCPCS unit (Fentanyl injection, per 0.1 mg).",
+    "36 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 36,
+   "variants": [
+    {
+     "description": "fentaNYL (PF) 50 mcg/mL Soln 5 mL VIAL",
+     "setting": "both",
+     "gross": 6.39,
+     "drug_unit": 0.5
+    },
+    {
+     "description": "fentaNYL (PF) 50 mcg/mL Soln 10 mL VIAL",
+     "setting": "both",
+     "gross": 6.39,
+     "drug_unit": 0.5
+    },
+    {
+     "description": "fentaNYL (PF) 50 mcg/mL Soln 20 mL VIAL",
+     "setting": "both",
+     "gross": 6.07,
+     "drug_unit": 0.5
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "cefTRIAXone 2 G/20 mL Recon soln 1 Each VIAL",
+   "setting": "both",
+   "gross": 17.24,
+   "discounted_cash": 9.65,
+   "negotiated_min": 0.48,
+   "negotiated_max": 0.81,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.48,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 0.81,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "EA",
+   "notes": [
+    "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ceftriaxone injection, per 250 mg).",
+    "19 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 19,
+   "variants": [
+    {
+     "description": "cefTRIAXone 1 gram 1 Each VIAL",
+     "setting": "both",
+     "gross": 13.16,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "cefTRIAXone 500 mg 1 Each VIAL",
+     "setting": "both",
+     "gross": 10.1,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "cefTRIAXone in dextrose 1 gram/50 mL Piggyback 1 Each BAG",
+     "setting": "both",
+     "gross": 85.29,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "sodium chloride 0.9 % 0.9% Solp soln 50 mL BAG",
+   "setting": "both",
+   "gross": 70.25,
+   "discounted_cash": 39.34,
+   "negotiated_min": 2.28,
+   "negotiated_max": 3.83,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.28,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 3.83,
+     "methodology": "Other",
+     "notes": "Allowed charges based on HCPCS code and quantity/dosage. Included in the case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpati…"
+    }
+   ],
+   "drug_unit": 250.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 250 ML as listed; compare billed units with the HCPCS unit (Normal saline infusion, 1000 cc).",
+    "18 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+   ],
+   "line_items": 18,
+   "variants": [
+    {
+     "description": "sodium chloride 0.9% Solp soln 50 mL BAG",
+     "setting": "both",
+     "gross": 26.05,
+     "drug_unit": 50.0
+    },
+    {
+     "description": "sodium chloride 0.9 % 0.9% Solp soln 100 mL BAG",
+     "setting": "both",
+     "gross": 43.05,
+     "drug_unit": 250.0
+    },
+    {
+     "description": "sodium chloride 0.9% Solp soln 100 mL BAG",
+     "setting": "both",
+     "gross": 26.22,
+     "drug_unit": 100.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "SIMPLE REPAIR SCALP/NECK/AX/GENIT/TRUNK 2.5CM/<",
+   "setting": "both",
+   "gross": 1420.0,
+   "discounted_cash": 795.2,
+   "negotiated_min": 240.0,
+   "negotiated_max": 752.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 252.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 752.0,
+     "methodology": "Case Rate",
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "line_items": 1
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "INCISION & DRAINAGE ABSCESS SIMPLE/SINGLE",
+   "setting": "both",
+   "gross": 1780.0,
+   "discounted_cash": 996.8,
+   "negotiated_min": 240.0,
+   "negotiated_max": 752.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 252.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 752.0,
+     "methodology": "Case Rate",
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "line_items": 1
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "APPLICATION SHORT ARM SPLINT FOREARM-HAND STATIC",
+   "setting": "both",
+   "gross": 1000.0,
+   "discounted_cash": 560.0,
+   "negotiated_min": 156.0,
+   "negotiated_max": 488.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 164.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 488.0,
+     "methodology": "Case Rate",
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "line_items": 1
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "PRESSURIZED/NONPRESSURIZED INHALATION TREATMENT",
+   "setting": "both",
+   "gross": 830.0,
+   "discounted_cash": 464.8,
+   "payer_rates": 3,
+   "payer_dollar_rates": 0,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "percentage": 50.0,
+     "algorithm": "percent of total billed charges",
+     "methodology": "percent of total billed charges",
+     "median": 405.5,
+     "notes": "Reimbursement is included in case rate if service is part of an Outpatient Surgery, Emergency Room visit, or Inpatient stay. For Radiology - reimbursement is i…"
+    }
+   ],
+   "line_items": 1
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "INSJ TEMP NDWELLG BLADDER CATHETER SIMPLE",
+   "setting": "both",
+   "gross": 830.0,
+   "discounted_cash": 464.8,
+   "negotiated_min": 156.0,
+   "negotiated_max": 488.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 164.0,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Kaiser",
+     "payer": "[KAISER FOUNDATION HEALTH PLAN, INC.]",
+     "plan": "[COMMERCIAL]",
+     "dollar": 488.0,
+     "methodology": "Case Rate",
+     "notes": "Oupatient Surgery - case rate is inclusive of all ancillary services. If multiple surgeries - Most expensive surgery is reimbursed at 100% of the plan rate; Ad…"
+    }
+   ],
+   "line_items": 1
+  }
+ }
+}
