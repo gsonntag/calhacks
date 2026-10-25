@@ -28,7 +28,7 @@ import httpx  # noqa: E402
 import uvicorn  # noqa: E402
 from websockets.asyncio.client import connect  # noqa: E402
 
-from billback import config, finance, orchestrator  # noqa: E402
+from billback import billcheck, config, finance, orchestrator  # noqa: E402
 from billback.agents import caller  # noqa: E402
 from billback.agents.policy import SAMPLE_TIERS  # noqa: E402
 from billback.app import app  # noqa: E402
@@ -55,7 +55,7 @@ def demo_brief(case: dict) -> dict:
     rec = finance.reconcile(case["bill"], case["eob"], txns)
     inc = finance.income(txns, today=finance._d(case["today"]))
     elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], SAMPLE_TIERS["tiers"],
-                                    insured=True, out_of_pocket=float(case["eob"]["patient_responsibility"]))
+                                    insured=billcheck.insured(case), out_of_pocket=float(case["eob"]["patient_responsibility"]))
     st = finance.settle(rec["patient_responsibility"], rec["paid"], elig["discount_pct"])
     pol = {"policy": SAMPLE_TIERS, "eligibility": elig, "income": inc, "source": "sample policy",
            "target": st["balance"], "refund": st["refund"]}

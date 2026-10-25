@@ -33,7 +33,7 @@ from functools import lru_cache
 from pathlib import Path
 from statistics import median
 
-from . import config, finance, prices
+from . import billcheck, config, finance, prices
 from .policies import registry
 from .policies.store import PolicyStore
 
@@ -55,7 +55,7 @@ SPECS: dict[str, dict] = {
     "rosa-real": {
         "seed": 1101,
         "story": "Rosa's ER visit at CPMC Van Ness (abdominal pain, CT with contrast), rebuilt from CPMC's real "
-                 "price file. Insured, about 233% of the poverty line. The bill ignores her insurance, misses her "
+                 "price file. Insured, about 228% of the poverty line. The bill ignores her insurance, misses her "
                  "$500 payment and lists the IV push twice.",
         "hospital_id": "sutter-cpmc",
         "patient": {"first_name": "Rosa", "last_name": "Martinez", "household_size": 1, "dob": "1991-05-22",
@@ -497,7 +497,7 @@ def build(name: str) -> dict:
 
 def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -> dict:
     errs = spec.get("errors", {})
-    bill, eob, insured = case["bill"], case["eob"], bool(case["eob"])
+    bill, eob, insured = case["bill"], case["eob"], billcheck.insured(case)
     txns = mirror_ids(case["transactions"])
 
     # --- the waterfall: hospital's amount due -> correct amount owed before any discount

@@ -9,11 +9,12 @@ from datetime import date, datetime, timedelta
 
 from . import billcheck
 
-# HHS poverty guidelines, 48 contiguous states. 2025 values; update when the
-# 2026 guidelines are confirmed.
-FPL_BASE = 15_650
-FPL_PER_EXTRA = 5_500
-FPL_YEAR = 2025
+# HHS poverty guidelines, 48 contiguous states and D.C., 2026 (91 FR 1797, Jan 15 2026):
+# https://www.govinfo.gov/content/pkg/FR-2026-01-15/html/2026-00755.htm
+# https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines
+FPL_BASE = 15_960
+FPL_PER_EXTRA = 5_680
+FPL_YEAR = 2026
 
 
 def fpl(household_size: int) -> int:

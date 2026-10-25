@@ -295,9 +295,9 @@
     "deposits_counted": 6
   },
   "discount": {
-    "fpl_pct": 515.0,
-    "fpl_amount": 15650,
-    "fpl_year": 2025,
+    "fpl_pct": 505.0,
+    "fpl_amount": 15960,
+    "fpl_year": 2026,
     "household_size": 1,
     "insured": true,
     "oop_pct_income": 1.2,

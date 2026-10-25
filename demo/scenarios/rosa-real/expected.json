@@ -4,7 +4,7 @@
   "generator_version": 1,
   "seed": 1101,
   "as_of": "2026-10-25",
-  "story": "Rosa's ER visit at CPMC Van Ness (abdominal pain, CT with contrast), rebuilt from CPMC's real price file. Insured, about 233% of the poverty line. The bill ignores her insurance, misses her $500 payment and lists the IV push twice.",
+  "story": "Rosa's ER visit at CPMC Van Ness (abdominal pain, CT with contrast), rebuilt from CPMC's real price file. Insured, about 228% of the poverty line. The bill ignores her insurance, misses her $500 payment and lists the IV push twice.",
   "real": {
     "hospital_id": "sutter-cpmc",
     "hospital": "California Pacific Medical Center",
@@ -302,9 +302,9 @@
     "deposits_counted": 7
   },
   "discount": {
-    "fpl_pct": 232.6,
-    "fpl_amount": 15650,
-    "fpl_year": 2025,
+    "fpl_pct": 228.1,
+    "fpl_amount": 15960,
+    "fpl_year": 2026,
     "household_size": 1,
     "insured": true,
     "oop_pct_income": 5.7,

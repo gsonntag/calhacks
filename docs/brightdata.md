@@ -182,11 +182,11 @@ re-crawled again (cap reached); with the fix, Saint Francis's Spanish form would
 offered no English policy in its results either.
 
 Same bill, different hospitals (`GET /api/compare`, `web/hospitals.html`, which defaults to Marcus), across
-all 12: Marcus (insured, 174% FPL, out-of-pocket 12.1% of income, $5,600 share) gets $0 at 7 hospitals (CPMC,
+all 12: Marcus (insured, 170% FPL, out-of-pocket 12.1% of income, $5,600 share) gets $0 at 7 hospitals (CPMC,
 Alta Bates Summit, UCSF, John Muir via their high-medical-cost rules; Kaiser, MarinHealth, El Camino via
 all-patient tiers) and owes $5,600 at the other 5: Chinese Hospital (free-care tier is self-pay only; a
 Medicare-rate cap may apply but isn't a fixed percent), Highland (uninsured-only tier), and ZSFG, Stanford and
-Saint Francis (no verified tier). Rosa (insured, 233% FPL, out-of-pocket 3% of income, $1,100 share, $500 paid)
+Saint Francis (no verified tier). Rosa (insured, 228% FPL, out-of-pocket 3% of income, $1,100 share, $500 paid)
 owes $600 at 9 hospitals, $50 at Kaiser (50% award for 201-400% FPG) and $0 at MarinHealth and El Camino, whose
 <= 400% tiers Claude read as applying to all patients (see limitations). At CPMC, Sutter's billing policy
 gives her an interest-free plan: 6 × $100/month.

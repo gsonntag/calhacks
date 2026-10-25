@@ -244,7 +244,6 @@ From the audit, roughly in priority order. Details and sources are in `docs/idea
 - Split "$7,600 insurance" into the two real errors: $3,660 paid but not credited, $3,940 network discount.
 - 12-month medical spending from the bank for the high-medical-cost write-off (today only this bill counts).
 - Medicare-rate cap for low-income/uninsured patients (also unlocks Chinese Hospital's "% of Medicare" tiers).
-- Insurance status is guessed (`insured=bool(eob)`); 2025 poverty-line figures → 2026.
 - Say in the UI that the plan's "under 4% of income" cap is our choice, not the hospital's policy or law.
 - SF General has no discount tiers in the policy DB, so it always says "no discount".
 - Verify before showing anything legal: 501(r) for UCSF/SF General, NCCI on facility claims, 180-day
