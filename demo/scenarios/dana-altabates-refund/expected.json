@@ -1,0 +1,427 @@
+{
+  "scenario": "dana-altabates-refund",
+  "generator": "billback/scenarios.py",
+  "generator_version": 1,
+  "seed": 1103,
+  "as_of": "2026-10-25",
+  "story": "Dana's abdominal-pain visit at Alta Bates Summit (ultrasound, then CT), real Sutter prices. Insured, household of 2 at about 184% of the poverty line. The bill applies her insurance and credits the $750 she has paid, but her share is over 10% of her income, so Sutter's policy writes it off and the $750 must come back. Also a gym double charge in her bank.",
+  "real": {
+    "hospital_id": "sutter-alta-bates",
+    "hospital": "Alta Bates Summit Medical Center",
+    "price_file": {
+      "hospital_name": "Alta Bates Summit Medical Center",
+      "location": "Alta Bates Summit Medical Center",
+      "address": "350 Hawthorne Avenue, Oakland, CA 94609",
+      "last_updated_on": "2026-04-01",
+      "template_version": "3.0.0",
+      "file_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/costs-and-charges/940562680-1295181477_alta-bates-summit-medical-center-summit-campus_standardcharges.csv",
+      "fetched_at": "2026-10-25T03:55:12+00:00",
+      "sha256": "779a137da57a4ba272d959c890b1069884ba9f5049dc0e2dd8d712f98b8455c9",
+      "table": "policydb/prices/sutter-alta-bates.json"
+    },
+    "policy": {
+      "version": 1,
+      "fetched_at": "2026-10-25T03:38:30+00:00",
+      "status": "ok",
+      "source_urls": [
+        "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+        "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+      ],
+      "tiers": [
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 100.0,
+          "applies_to": "uninsured",
+          "min_oop_pct_income": null,
+          "quote": "Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).",
+          "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance"
+        },
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 100.0,
+          "applies_to": "insured",
+          "min_oop_pct_income": 10.0,
+          "quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+          "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance"
+        }
+      ],
+      "payment_plan": {
+        "interest_free": true,
+        "max_pct_monthly_income": 10.0,
+        "quote": "All payment plans shall be interest-free.",
+        "cap_quote": "If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make a monthly payment of not more than ten percent (10%) of the Patient’s monthly family income after excluding essential living expenses."
+      }
+    }
+  },
+  "synthetic": [
+    "patient",
+    "insurer and insurance terms",
+    "bank history",
+    "account and claim numbers",
+    "the planted errors"
+  ],
+  "planted_errors": [
+    {
+      "type": "duplicate_bank_charge",
+      "what": "Lakeshore Fitness charged $39.99 twice (not part of the hospital bill: dispute with the bank)",
+      "effect_on_amount_owed": 0.0,
+      "txn_ids": [
+        "mirror-021",
+        "mirror-024"
+      ],
+      "amount": 39.99
+    },
+    {
+      "type": "refund_owed",
+      "what": "Payments of $750.00 exceed her discounted share of $0.00: the hospital owes $750.00 back",
+      "effect_on_amount_owed": 0.0,
+      "refund": 750.0,
+      "credited_payments": [
+        {
+          "amount": 250.0,
+          "date": "2026-08-12",
+          "credited": true
+        },
+        {
+          "amount": 250.0,
+          "date": "2026-09-12",
+          "credited": true
+        },
+        {
+          "amount": 250.0,
+          "date": "2026-10-02",
+          "credited": true
+        }
+      ]
+    }
+  ],
+  "bill_lines": [
+    {
+      "line": 1,
+      "code": "99284",
+      "units": 1,
+      "description_from_file": "HCHG ED LEVEL 4",
+      "common_name": "ED visit, level 4 (high-moderate)",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 5214.0,
+      "posted_gross": 5214.0,
+      "billed": 5214.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 593.3,
+      "payer_dollar_rates": 1,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG ED LEVEL 4'; payer rates are from line 'Emergency dept visit' (the file lists them separately).",
+        "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 2,
+      "code": "76705",
+      "units": 1,
+      "description_from_file": "HCHG US ABD LTD",
+      "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 1656.0,
+      "posted_gross": 1656.0,
+      "billed": 1656.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 148.65,
+      "payer_dollar_rates": 1,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG US ABD LTD'; payer rates are from line 'Echo exam of abdomen' (the file lists them separately).",
+        "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 3,
+      "code": "74176",
+      "units": 1,
+      "description_from_file": "HCHG CT ABD & PELVIS W/O CON",
+      "common_name": "CT abdomen and pelvis without contrast",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 6374.0,
+      "posted_gross": 6374.0,
+      "billed": 6374.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 4352.5,
+      "payer_dollar_rates": 6,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG CT ABD & PELVIS W/O CON'; payer rates are from line 'Ct abd & pelvis w/o contrast' (the file lists them separately).",
+        "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 4,
+      "code": "80053",
+      "units": 1,
+      "description_from_file": "HCHG CORE COMPR MET PNL",
+      "common_name": "Comprehensive metabolic panel",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 471.0,
+      "posted_gross": 471.0,
+      "billed": 471.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 10.56,
+      "payer_dollar_rates": 1,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG CORE COMPR MET PNL'; payer rates are from line 'Comprehen metabolic panel' (the file lists them separately).",
+        "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 5,
+      "code": "85025",
+      "units": 1,
+      "description_from_file": "HCHG CORE CBC AUTO W AUTO DIFF WBC",
+      "common_name": "Complete blood count with differential",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 217.0,
+      "posted_gross": 217.0,
+      "billed": 217.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 7.77,
+      "payer_dollar_rates": 1,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG CORE CBC AUTO W AUTO DIFF WBC'; payer rates are from line 'Complete cbc w/auto diff wbc' (the file lists them separately).",
+        "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 6,
+      "code": "83690",
+      "units": 1,
+      "description_from_file": "HCHG CORE LIPASE",
+      "common_name": "Lipase",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 275.0,
+      "posted_gross": 275.0,
+      "billed": 275.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 6.89,
+      "payer_dollar_rates": 1,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG CORE LIPASE'; payer rates are from line 'Assay of lipase' (the file lists them separately).",
+        "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 7,
+      "code": "81003",
+      "units": 1,
+      "description_from_file": "HCHG CORE URNALYSIS AUTO W/O MICRO",
+      "common_name": "Urinalysis, automated without microscopy",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 102.0,
+      "posted_gross": 102.0,
+      "billed": 102.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 2.25,
+      "payer_dollar_rates": 1,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG CORE URNALYSIS AUTO W/O MICRO'; payer rates are from line 'Urinalysis auto w/o scope' (the file lists them separately).",
+        "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 8,
+      "code": "96360",
+      "units": 1,
+      "description_from_file": "HCHG INFUSION HYDRATION INITIAL UP TO 1 HR",
+      "common_name": "IV hydration, first hour",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 1160.0,
+      "posted_gross": 1160.0,
+      "billed": 1160.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 462.7,
+      "payer_dollar_rates": 2,
+      "file_notes": [
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'HCHG INFUSION HYDRATION INITIAL UP TO 1 HR'; payer rates are from line 'Hydration iv infusion init' (the file lists them separately).",
+        "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Standard"
+      ]
+    },
+    {
+      "line": 9,
+      "code": "J2405",
+      "units": 1,
+      "description_from_file": "ONDANSETRON HCL 40 MG/20ML IJ SOLN",
+      "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 4.84,
+      "posted_gross": 4.84,
+      "billed": 4.84,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 0.2,
+      "payer_dollar_rates": 3,
+      "file_notes": [
+        "Drug priced per 1 EA as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+        "Discounted cash price equals the gross charge in this file.",
+        "Gross charge is from line 'ONDANSETRON HCL 40 MG/20ML IJ SOLN'; payer rates are from line 'Ondansetron hcl injection' (the file lists them separately).",
+        "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: Gross Charge Type: Pharmacy | NDC EA = 0.507759 ML"
+      ]
+    }
+  ],
+  "eob_basis": {
+    "insurer": "Fogline Health Plan (fictional)",
+    "allowed_statistic": "median of the payer-specific dollar rates the hospital's file lists for the code (price table field `negotiated_median_of_payers`) x billed units",
+    "fallback_statistic": "the file lists no payer rate for this code: estimated as gross x this hospital's median (payer median / gross) ratio across every code in its table that has both",
+    "hospital_ratio": 0.1161,
+    "lines_using_fallback": [],
+    "allowed_never_exceeds": "the line's posted gross charge",
+    "terms": {
+      "deductible_remaining": 4000.0,
+      "coinsurance_pct": 25,
+      "oop_max_remaining": 6500.0
+    },
+    "order": "deductible first, then coinsurance on the rest, line by line in bill order, capped at the out-of-pocket max; coinsurance rounded half up to the cent per line"
+  },
+  "totals": {
+    "total_charges": 15473.84,
+    "correct_charges": 15473.84,
+    "insurance_adjustments_on_bill": 11077.64,
+    "patient_payments_on_bill": 750.0,
+    "amount_due": 3646.2,
+    "allowed": 5584.82,
+    "plan_paid": 1188.62,
+    "patient_responsibility": 4396.2,
+    "paid_uncredited": 0.0,
+    "paid_total": 750.0
+  },
+  "waterfall": {
+    "start": {
+      "label": "Hospital says you owe",
+      "amount": 3646.2
+    },
+    "steps": [],
+    "owed_before_discount": 3646.2
+  },
+  "income": {
+    "annual": 39000.0,
+    "monthly": 3250.0,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,500 x 26)",
+    "deposits_counted": 6
+  },
+  "discount": {
+    "fpl_pct": 184.4,
+    "fpl_amount": 21150,
+    "fpl_year": 2025,
+    "household_size": 2,
+    "insured": true,
+    "oop_pct_income": 11.3,
+    "discount_pct": 100.0,
+    "tier_quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income)."
+  },
+  "settle": {
+    "discounted_share": 0.0,
+    "balance": 0.0,
+    "refund": 750.0
+  },
+  "correct": {
+    "balance": 0.0,
+    "refund": 750.0,
+    "discount_pct": 100.0,
+    "plan_months": 0,
+    "plan_monthly": 0.0
+  },
+  "plan": {
+    "months": 0,
+    "monthly": 0.0,
+    "reason": "nothing owed"
+  },
+  "finance_reconcile": {
+    "billed_due": 3646.2,
+    "patient_responsibility": 4396.2,
+    "insurance_adjustment": 11077.64,
+    "paid": 750.0,
+    "owed": 3646.2,
+    "overbilled_by": 0.0,
+    "payment_txn_ids": [
+      "mirror-011",
+      "mirror-027",
+      "mirror-038"
+    ],
+    "duplicate_txn_ids": [
+      [
+        "mirror-021",
+        "mirror-024"
+      ]
+    ]
+  },
+  "findings": [
+    {
+      "id": "dupe",
+      "agent": "nessie",
+      "title": "Double charge at Lakeshore Fitness",
+      "money": 0,
+      "bank_amount": 39.99,
+      "proof": "Nessie txns mirror-021 + mirror-024"
+    },
+    {
+      "id": "discount",
+      "agent": "bright_data",
+      "title": "Free care under their policy",
+      "money": 4396.2,
+      "quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+      "source": "https://www.sutterhealth.org/billing-insurance/financial-assistance"
+    },
+    {
+      "id": "refund",
+      "agent": "bright_data",
+      "title": "Refund owed",
+      "money": 750.0,
+      "proof": "bank txn mirror-011 $250.00 on 2026-08-12; bank txn mirror-027 $250.00 on 2026-09-12; bank txn mirror-038 $250.00 on 2026-10-02"
+    }
+  ],
+  "must_not_report": [
+    {
+      "what": "Payment mirror-011 ($250.00 on 2026-08-12) as 'missed'",
+      "why": "the bill credits it under 'Patient payments'"
+    },
+    {
+      "what": "Payment mirror-027 ($250.00 on 2026-09-12) as 'missed'",
+      "why": "the bill credits it under 'Patient payments'"
+    },
+    {
+      "what": "Payment mirror-038 ($250.00 on 2026-10-02) as 'missed'",
+      "why": "the bill credits it under 'Patient payments'"
+    },
+    {
+      "what": "a duplicate line on the bill",
+      "why": "every bill line is distinct"
+    },
+    {
+      "what": "a line above the posted price",
+      "why": "every line equals the posted gross charge"
+    }
+  ],
+  "app_notes": [
+    "The app's payment match (finance._matches_payee) counts every payment to the hospital as 'not credited'. Its money is still right here (finance uses the EOB share, not the bill's amount due), but today it would also report the credited payments as missed."
+  ]
+}

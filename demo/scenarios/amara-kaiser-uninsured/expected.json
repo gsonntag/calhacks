@@ -1,0 +1,348 @@
+{
+  "scenario": "amara-kaiser-uninsured",
+  "generator": "billback/scenarios.py",
+  "generator_version": 1,
+  "seed": 1104,
+  "as_of": "2026-10-25",
+  "story": "Amara, uninsured, twisted her ankle and was seen at Kaiser's Oakland emergency department (real Kaiser prices). Household of 2 at about 300% of the poverty line: Kaiser's policy gives 50% off. The bill charges the ankle X-ray above Kaiser's own posted price, lists the foot X-ray twice, and misses the $300 she paid at discharge. Also a double charge in her bank.",
+  "real": {
+    "hospital_id": "kaiser-oakland",
+    "hospital": "Kaiser Permanente Oakland Medical Center",
+    "price_file": {
+      "hospital_name": "KAISER FOUNDATION HOSPITAL - OAKLAND/RICHMOND",
+      "location": "OAKLAND MEDICAL CENTER",
+      "address": "\"275 W MacArthur Blvd, Oakland, CA 94611\"",
+      "last_updated_on": "4/1/2026",
+      "template_version": "3.0.1",
+      "file_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/health-plan-documents/coverage-information/machine-readable/941105628-oakland-medical-center-standard-charges-ncal-en.csv",
+      "fetched_at": "2026-10-25T04:04:35+00:00",
+      "sha256": "75fad07830841d56598d3ae9fd8a6ea927f24ce790be8ed7aba9242cbee1cc2c",
+      "table": "policydb/prices/kaiser-oakland.json"
+    },
+    "policy": {
+      "version": 1,
+      "fetched_at": "2026-10-25T03:42:47+00:00",
+      "status": "ok",
+      "source_urls": [
+        "https://healthy.kaiserpermanente.org/help-paying-your-bill",
+        "https://healthy.kaiserpermanente.org/help-paying-your-bill/medical-financial-assistance",
+        "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf"
+      ],
+      "tiers": [
+        {
+          "max_fpl_pct": 200.0,
+          "discount_pct": 100.0,
+          "applies_to": "all",
+          "min_oop_pct_income": null,
+          "quote": "100% award for gross monthly household income at or below 200% of FPG",
+          "source_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf"
+        },
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 50.0,
+          "applies_to": "all",
+          "min_oop_pct_income": null,
+          "quote": "50% award for gross monthly household income between 201% and 400% of FPG",
+          "source_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf"
+        }
+      ],
+      "payment_plan": {
+        "interest_free": null,
+        "max_pct_monthly_income": null,
+        "quote": null,
+        "cap_quote": null
+      }
+    }
+  },
+  "synthetic": [
+    "patient",
+    "no insurer (uninsured)",
+    "bank history",
+    "account and claim numbers",
+    "the planted errors"
+  ],
+  "planted_errors": [
+    {
+      "type": "duplicate_line",
+      "what": "Line 4 repeats line 3 (73630 RADEX FOOT COMPLETE MINIMUM 3 VIEWS, $1,010.00)",
+      "effect_on_amount_owed": -1010.0,
+      "lines": [
+        3,
+        4
+      ],
+      "code": "73630",
+      "amount": 1010.0
+    },
+    {
+      "type": "price_above_posted",
+      "what": "Line 2 (73610 RADEX ANKLE COMPLETE MINIMUM 3 VIEWS) billed $1,350.00; the hospital's own posted gross charge is $1,080.00",
+      "effect_on_amount_owed": -270.0,
+      "line": 2,
+      "code": "73610",
+      "billed": 1350.0,
+      "posted": 1080.0,
+      "overcharge": 270.0,
+      "price_source": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/health-plan-documents/coverage-information/machine-readable/941105628-oakland-medical-center-standard-charges-ncal-en.csv"
+    },
+    {
+      "type": "uncredited_payment",
+      "what": "$300.00 paid on 2026-08-22 is not on the bill",
+      "effect_on_amount_owed": -300.0,
+      "txn_id": "mirror-016",
+      "date": "2026-08-22",
+      "amount": 300.0
+    },
+    {
+      "type": "duplicate_bank_charge",
+      "what": "StreamBox Video charged $17.99 twice (not part of the hospital bill: dispute with the bank)",
+      "effect_on_amount_owed": 0.0,
+      "txn_ids": [
+        "mirror-028",
+        "mirror-030"
+      ],
+      "amount": 17.99
+    }
+  ],
+  "bill_lines": [
+    {
+      "line": 1,
+      "code": "99283",
+      "units": 1,
+      "description_from_file": "EMERGENCY DEPARTMENT VISIT LOW MDM",
+      "common_name": "ED visit, level 3 (moderate)",
+      "setting": "both",
+      "posted_gross_per_unit": 2896.0,
+      "posted_gross": 2896.0,
+      "billed": 2896.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 2055.0,
+      "payer_dollar_rates": 1,
+      "file_notes": []
+    },
+    {
+      "line": 2,
+      "code": "73610",
+      "units": 1,
+      "description_from_file": "RADEX ANKLE COMPLETE MINIMUM 3 VIEWS",
+      "common_name": "X-ray ankle, 3+ views",
+      "setting": "both",
+      "posted_gross_per_unit": 1080.0,
+      "posted_gross": 1080.0,
+      "billed": 1350.0,
+      "planted_error": "price_above_posted",
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 124.0,
+      "payer_dollar_rates": 3,
+      "file_notes": []
+    },
+    {
+      "line": 3,
+      "code": "73630",
+      "units": 1,
+      "description_from_file": "RADEX FOOT COMPLETE MINIMUM 3 VIEWS",
+      "common_name": "X-ray foot, 3+ views",
+      "setting": "both",
+      "posted_gross_per_unit": 1010.0,
+      "posted_gross": 1010.0,
+      "billed": 1010.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 124.0,
+      "payer_dollar_rates": 3,
+      "file_notes": []
+    },
+    {
+      "line": 4,
+      "code": "73630",
+      "units": 1,
+      "description_from_file": "RADEX FOOT COMPLETE MINIMUM 3 VIEWS",
+      "common_name": "X-ray foot, 3+ views",
+      "setting": "both",
+      "posted_gross_per_unit": 1010.0,
+      "posted_gross": 1010.0,
+      "billed": 1010.0,
+      "planted_error": "duplicate_line",
+      "duplicate_of_line": 3,
+      "negotiated_median_of_payers": 124.0,
+      "payer_dollar_rates": 3,
+      "file_notes": []
+    },
+    {
+      "line": 5,
+      "code": "96372",
+      "units": 1,
+      "description_from_file": "THERAPEUTIC PROPHYLACTIC/DX INJECTION SUBQ/IM",
+      "common_name": "Injection under skin or into muscle",
+      "setting": "both",
+      "posted_gross_per_unit": 404.0,
+      "posted_gross": 404.0,
+      "billed": 404.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 90.0,
+      "payer_dollar_rates": 3,
+      "file_notes": [
+        "7 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+      ]
+    },
+    {
+      "line": 6,
+      "code": "J1885",
+      "units": 1,
+      "description_from_file": "ketorolac 30 mg/mL (1 mL) Soln 1 mL VIAL",
+      "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+      "setting": "both",
+      "posted_gross_per_unit": 8.57,
+      "posted_gross": 8.57,
+      "billed": 8.57,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 0.35,
+      "payer_dollar_rates": 3,
+      "file_notes": [
+        "Drug priced per 0.5 ML as listed; compare billed units with the HCPCS unit (Ketorolac (Toradol) injection, per 15 mg).",
+        "8 line items carry this code (settings, modifiers, package sizes); showing the both-setting line."
+      ]
+    }
+  ],
+  "eob_basis": null,
+  "totals": {
+    "total_charges": 6678.57,
+    "correct_charges": 5398.57,
+    "insurance_adjustments_on_bill": 0.0,
+    "patient_payments_on_bill": 0.0,
+    "amount_due": 6678.57,
+    "allowed": null,
+    "plan_paid": null,
+    "patient_responsibility": 5398.57,
+    "paid_uncredited": 300.0,
+    "paid_total": 300.0
+  },
+  "waterfall": {
+    "start": {
+      "label": "Hospital says you owe",
+      "amount": 6678.57
+    },
+    "steps": [
+      {
+        "error": "duplicate_line",
+        "label": "Duplicated line removed",
+        "amount": -1010.0
+      },
+      {
+        "error": "price_above_posted",
+        "label": "Line charged above the hospital's posted price",
+        "amount": -270.0
+      },
+      {
+        "error": "uncredited_payment",
+        "label": "Payment the bill doesn't show",
+        "amount": -300.0
+      }
+    ],
+    "owed_before_discount": 5098.57
+  },
+  "income": {
+    "annual": 63360.0,
+    "monthly": 5280.0,
+    "source": "6 Nessie payroll deposits, paid twice a month (avg $2,640 x 24)",
+    "deposits_counted": 6
+  },
+  "discount": {
+    "fpl_pct": 299.6,
+    "fpl_amount": 21150,
+    "fpl_year": 2025,
+    "household_size": 2,
+    "insured": false,
+    "oop_pct_income": 0.0,
+    "discount_pct": 50.0,
+    "tier_quote": "50% award for gross monthly household income between 201% and 400% of FPG"
+  },
+  "settle": {
+    "discounted_share": 2699.28,
+    "balance": 2399.28,
+    "refund": 0.0
+  },
+  "correct": {
+    "balance": 2399.28,
+    "refund": 0.0,
+    "discount_pct": 50.0,
+    "plan_months": 12,
+    "plan_monthly": 200.0
+  },
+  "plan": {
+    "months": 12,
+    "monthly": 200.0,
+    "reason": "$200/mo stays under 4% of monthly income ($5,280)"
+  },
+  "finance_reconcile": {
+    "billed_due": 6678.57,
+    "patient_responsibility": 5398.57,
+    "insurance_adjustment": 1280.0,
+    "paid": 300.0,
+    "owed": 5098.57,
+    "overbilled_by": 1580.0,
+    "payment_txn_ids": [
+      "mirror-016"
+    ],
+    "duplicate_txn_ids": [
+      [
+        "mirror-028",
+        "mirror-030"
+      ]
+    ]
+  },
+  "findings": [
+    {
+      "id": "duplicate_line",
+      "agent": "nessie",
+      "title": "73630 billed twice",
+      "money": 1010.0,
+      "proof": "bill lines 3 and 4"
+    },
+    {
+      "id": "price_above_posted",
+      "agent": "bright_data",
+      "title": "73610 charged above the hospital's posted price",
+      "money": 270.0,
+      "overcharge": 270.0,
+      "proof": "bill line 2 $1,350.00 vs posted $1,080.00 (KAISER FOUNDATION HOSPITAL - OAKLAND/RICHMOND price file, 4/1/2026)"
+    },
+    {
+      "id": "paid-mirror-016",
+      "agent": "nessie",
+      "title": "A payment you made was missed",
+      "money": 300.0,
+      "proof": "bank txn mirror-016 on 2026-08-22"
+    },
+    {
+      "id": "dupe",
+      "agent": "nessie",
+      "title": "Double charge at StreamBox Video",
+      "money": 0,
+      "bank_amount": 17.99,
+      "proof": "Nessie txns mirror-028 + mirror-030"
+    },
+    {
+      "id": "discount",
+      "agent": "bright_data",
+      "title": "50% discount under their policy",
+      "money": 2699.29,
+      "quote": "50% award for gross monthly household income between 201% and 400% of FPG",
+      "source": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf"
+    },
+    {
+      "id": "plan",
+      "agent": "bright_data",
+      "title": "Interest-free payment plan",
+      "money": 0,
+      "value": "12 x $200/mo"
+    }
+  ],
+  "must_not_report": [],
+  "app_notes": [
+    "Uninsured: case.json has \"eob\": {}. finance.reconcile here was given a self-pay pseudo-EOB whose patient_responsibility is the corrected charges. The app's Nessie agent (agents/auditor.py) reads eob['patient_responsibility'] directly, so it cannot run this case until it handles a missing EOB.",
+    "Not modeled: California caps charges for uninsured patients at or under 400% FPL at the greater of Medicare or Medi-Cal (HSC 127405(d)); a real audit could argue more off."
+  ]
+}

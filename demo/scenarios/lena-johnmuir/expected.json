@@ -1,0 +1,379 @@
+{
+  "scenario": "lena-johnmuir",
+  "generator": "billback/scenarios.py",
+  "generator_version": 1,
+  "seed": 1105,
+  "as_of": "2026-10-25",
+  "story": "Lena's chest-pain workup at John Muir Walnut Creek (CT angiogram, troponins, ECG), real John Muir prices. Insured, single, about 515% of the poverty line: no charity discount. The bill ignores her insurance and charges the CT angiogram above John Muir's posted price. Also a double charge in her bank.",
+  "real": {
+    "hospital_id": "john-muir-wc",
+    "hospital": "John Muir Medical Center, Walnut Creek",
+    "price_file": {
+      "hospital_name": "John Muir Health",
+      "location": "John Muir Health | Walnut Creek Medical Center",
+      "address": "1601 Ygnacio Valley Road, Walnut Creek, CA 94598",
+      "last_updated_on": "2026-03-23",
+      "template_version": "3.0.0",
+      "file_url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/payments-and-insurance/machine-readable-files/94-1461843-1740215219_John-Muir-Health-Walnut-Creek-Medical-Center_standardcharges.zip",
+      "fetched_at": "2026-10-25T04:02:32+00:00",
+      "sha256": "30c4b2fde633f39bf82841f1266d2f16a723a81c9267230bfdf5145d85dc5af1",
+      "table": "policydb/prices/john-muir-wc.json"
+    },
+    "policy": {
+      "version": 3,
+      "fetched_at": "2026-10-25T03:49:12+00:00",
+      "status": "ok",
+      "source_urls": [
+        "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/AD-Patient-Financial-Assistance-Policy.pdf"
+      ],
+      "tiers": [
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 100.0,
+          "applies_to": "uninsured",
+          "min_oop_pct_income": null,
+          "quote": "A patient without third-party coverage (and ineligible for coverage under State, County, and other programs), will be entitled to free Medically- Necessary Services under this Policy if the sum of the following is at or below 400% of the Federal Poverty Level:",
+          "source_url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/AD-Patient-Financial-Assistance-Policy.pdf"
+        },
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 100.0,
+          "applies_to": "insured",
+          "min_oop_pct_income": 10.0,
+          "quote": "JMH will waive any out-of-pocket fees for Medically-Necessary Hospital Services furnished to an Underinsured Patient if the sum of the following is at or below 400% of the Federal Poverty level and patient has out-of- pocket medical expenses in the prior twelve (12) months that exceed 10% of Family Income.",
+          "source_url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/AD-Patient-Financial-Assistance-Policy.pdf"
+        }
+      ],
+      "payment_plan": {
+        "interest_free": true,
+        "max_pct_monthly_income": 10.0,
+        "quote": "A Reasonable Payment Plan is one that incorporates monthly payments to the Hospital that are not more than 10 percent of a patient’s Family income for a month (after Essential Living Expenses have been deducted from such income) and precludes any interest charge on the unpaid balance.",
+        "cap_quote": "A Reasonable Payment Plan is one that incorporates monthly payments to the Hospital that are not more than 10 percent of a patient’s Family income for a month (after Essential Living Expenses have been deducted from such income) and precludes any interest charge on the unpaid balance."
+      }
+    }
+  },
+  "synthetic": [
+    "patient",
+    "insurer and insurance terms",
+    "bank history",
+    "account and claim numbers",
+    "the planted errors"
+  ],
+  "planted_errors": [
+    {
+      "type": "price_above_posted",
+      "what": "Line 2 (71275 HC Cta Chest) billed $6,200.00; the hospital's own posted gross charge is $5,377.50",
+      "effect_on_amount_owed": -822.5,
+      "line": 2,
+      "code": "71275",
+      "billed": 6200.0,
+      "posted": 5377.5,
+      "overcharge": 822.5,
+      "price_source": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/payments-and-insurance/machine-readable-files/94-1461843-1740215219_John-Muir-Health-Walnut-Creek-Medical-Center_standardcharges.zip"
+    },
+    {
+      "type": "insurance_not_applied",
+      "what": "The bill asks for full charges; the EOB says her share is $967.52",
+      "effect_on_amount_owed": -25829.55,
+      "eob_claim": "C-2026-0905-11873",
+      "correct_charges": 26797.07
+    },
+    {
+      "type": "duplicate_bank_charge",
+      "what": "Gregory Lane Cleaners charged $26.50 twice (not part of the hospital bill: dispute with the bank)",
+      "effect_on_amount_owed": 0.0,
+      "txn_ids": [
+        "mirror-033",
+        "mirror-034"
+      ],
+      "amount": 26.5
+    }
+  ],
+  "bill_lines": [
+    {
+      "line": 1,
+      "code": "99284",
+      "units": 1,
+      "description_from_file": "HC Emergency Rm Level 4",
+      "common_name": "ED visit, level 4 (high-moderate)",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 14134.47,
+      "posted_gross": 14134.47,
+      "billed": 14134.47,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 589.21,
+      "payer_dollar_rates": 68,
+      "file_notes": [
+        "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: other"
+      ]
+    },
+    {
+      "line": 2,
+      "code": "71275",
+      "units": 1,
+      "description_from_file": "HC Cta Chest",
+      "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+      "setting": "both",
+      "posted_gross_per_unit": 5377.5,
+      "posted_gross": 5377.5,
+      "billed": 6200.0,
+      "planted_error": "price_above_posted",
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 270.91,
+      "payer_dollar_rates": 105,
+      "file_notes": [
+        "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+        "File note: fee schedule"
+      ]
+    },
+    {
+      "line": 3,
+      "code": "84484",
+      "units": 2,
+      "description_from_file": "HC Troponin I-Stat",
+      "common_name": "Troponin, quantitative",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 1639.3,
+      "posted_gross": 3278.6,
+      "billed": 3278.6,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 257.36,
+      "payer_dollar_rates": 111,
+      "file_notes": [
+        "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: fee schedule"
+      ]
+    },
+    {
+      "line": 4,
+      "code": "93005",
+      "units": 1,
+      "description_from_file": "HC Ekg Complete",
+      "common_name": "ECG tracing (12-lead), technical",
+      "setting": "both",
+      "posted_gross_per_unit": 695.0,
+      "posted_gross": 695.0,
+      "billed": 695.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 349.45,
+      "payer_dollar_rates": 114,
+      "file_notes": [
+        "6 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+        "File note: percent of total billed charges"
+      ]
+    },
+    {
+      "line": 5,
+      "code": "85025",
+      "units": 1,
+      "description_from_file": "Lab Cbc W/Auto Diff",
+      "common_name": "Complete blood count with differential",
+      "setting": "both",
+      "posted_gross_per_unit": 356.6,
+      "posted_gross": 356.6,
+      "billed": 356.6,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 104.89,
+      "payer_dollar_rates": 111,
+      "file_notes": [
+        "4 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+        "File note: percent of total billed charges"
+      ]
+    },
+    {
+      "line": 6,
+      "code": "80048",
+      "units": 1,
+      "description_from_file": "Lab Basic Metabolic Panel",
+      "common_name": "Basic metabolic panel",
+      "setting": "both",
+      "posted_gross_per_unit": 960.4,
+      "posted_gross": 960.4,
+      "billed": 960.4,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 114.15,
+      "payer_dollar_rates": 111,
+      "file_notes": [
+        "3 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+        "File note: percent of total billed charges"
+      ]
+    },
+    {
+      "line": 7,
+      "code": "96374",
+      "units": 1,
+      "description_from_file": "HC Injection IV Push Initial",
+      "common_name": "IV push, single or first drug",
+      "setting": "both",
+      "posted_gross_per_unit": 938.5,
+      "posted_gross": 938.5,
+      "billed": 938.5,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 471.88,
+      "payer_dollar_rates": 111,
+      "file_notes": [
+        "File note: percent of total billed charges"
+      ]
+    },
+    {
+      "line": 8,
+      "code": "J2270",
+      "units": 1,
+      "description_from_file": "MORPHINE 2 MG/ML INTRAVENOUS SYRINGE",
+      "common_name": "Morphine injection, up to 10 mg",
+      "setting": "both",
+      "posted_gross_per_unit": 1056.0,
+      "posted_gross": 1056.0,
+      "billed": 1056.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 422.4,
+      "payer_dollar_rates": 67,
+      "file_notes": [
+        "Drug priced per 1 ML as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+        "8 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+        "File note: percent of total billed charges"
+      ]
+    }
+  ],
+  "eob_basis": {
+    "insurer": "Tidewater Arc Health (fictional)",
+    "allowed_statistic": "median of the payer-specific dollar rates the hospital's file lists for the code (price table field `negotiated_median_of_payers`) x billed units",
+    "fallback_statistic": "the file lists no payer rate for this code: estimated as gross x this hospital's median (payer median / gross) ratio across every code in its table that has both",
+    "hospital_ratio": 0.2037,
+    "lines_using_fallback": [],
+    "allowed_never_exceeds": "the line's posted gross charge",
+    "terms": {
+      "deductible_remaining": 500.0,
+      "coinsurance_pct": 20,
+      "oop_max_remaining": 4000.0
+    },
+    "order": "deductible first, then coinsurance on the rest, line by line in bill order, capped at the out-of-pocket max; coinsurance rounded half up to the cent per line"
+  },
+  "totals": {
+    "total_charges": 27619.57,
+    "correct_charges": 26797.07,
+    "insurance_adjustments_on_bill": 0.0,
+    "patient_payments_on_bill": 0.0,
+    "amount_due": 27619.57,
+    "allowed": 2837.61,
+    "plan_paid": 1870.09,
+    "patient_responsibility": 967.52,
+    "paid_uncredited": 0.0,
+    "paid_total": 0.0
+  },
+  "waterfall": {
+    "start": {
+      "label": "Hospital says you owe",
+      "amount": 27619.57
+    },
+    "steps": [
+      {
+        "error": "price_above_posted",
+        "label": "Line charged above the hospital's posted price",
+        "amount": -822.5
+      },
+      {
+        "error": "insurance_not_applied",
+        "label": "Insurance applied (EOB patient responsibility)",
+        "amount": -25829.55
+      }
+    ],
+    "owed_before_discount": 967.52
+  },
+  "income": {
+    "annual": 80600.0,
+    "monthly": 6716.67,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $3,100 x 26)",
+    "deposits_counted": 6
+  },
+  "discount": {
+    "fpl_pct": 515.0,
+    "fpl_amount": 15650,
+    "fpl_year": 2025,
+    "household_size": 1,
+    "insured": true,
+    "oop_pct_income": 1.2,
+    "discount_pct": 0,
+    "tier_quote": null
+  },
+  "settle": {
+    "discounted_share": 967.52,
+    "balance": 967.52,
+    "refund": 0.0
+  },
+  "correct": {
+    "balance": 967.52,
+    "refund": 0.0,
+    "discount_pct": 0,
+    "plan_months": 6,
+    "plan_monthly": 162.0
+  },
+  "plan": {
+    "months": 6,
+    "monthly": 162.0,
+    "reason": "$162/mo stays under 4% of monthly income ($6,717); the hospital's policy caps it at 10%"
+  },
+  "finance_reconcile": {
+    "billed_due": 27619.57,
+    "patient_responsibility": 967.52,
+    "insurance_adjustment": 26652.05,
+    "paid": 0,
+    "owed": 967.52,
+    "overbilled_by": 26652.05,
+    "payment_txn_ids": [],
+    "duplicate_txn_ids": [
+      [
+        "mirror-033",
+        "mirror-034"
+      ]
+    ]
+  },
+  "findings": [
+    {
+      "id": "price_above_posted",
+      "agent": "bright_data",
+      "title": "71275 charged above the hospital's posted price",
+      "money": 822.5,
+      "overcharge": 822.5,
+      "proof": "bill line 2 $6,200.00 vs posted $5,377.50 (John Muir Health price file, 2026-03-23)"
+    },
+    {
+      "id": "insurance_not_applied",
+      "agent": "nessie",
+      "title": "Insurance wasn't applied",
+      "money": 25829.55,
+      "proof": "EOB claim C-2026-0905-11873: patient responsibility $967.52",
+      "note": "Excludes the duplicate line and overcharge, reported separately. The app's current auditor reports amount_due - responsibility as one number ($26,652.05)."
+    },
+    {
+      "id": "dupe",
+      "agent": "nessie",
+      "title": "Double charge at Gregory Lane Cleaners",
+      "money": 0,
+      "bank_amount": 26.5,
+      "proof": "Nessie txns mirror-033 + mirror-034"
+    },
+    {
+      "id": "plan",
+      "agent": "bright_data",
+      "title": "Interest-free payment plan",
+      "money": 0,
+      "value": "6 x $162/mo"
+    }
+  ],
+  "must_not_report": [
+    {
+      "what": "a duplicate line on the bill",
+      "why": "every bill line is distinct"
+    }
+  ],
+  "app_notes": []
+}
