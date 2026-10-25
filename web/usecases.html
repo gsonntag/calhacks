@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BillBack Use Cases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="m3.css">
+<!-- One-slide map of everything BillBack does (16:9, 1920x1080 stage scaled to the window).
+     Left: what the patient sees and controls. Middle: the agent runtime. Right: real results from today's runs. -->
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0F110E; }
+  .stage {
+    position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center;
+    background: #F7F8F3; color: #1A1C18; overflow: hidden; font-family: var(--md-font); letter-spacing: 0;
+    --line: #D8DDD0; --ink: #1A1C18; --muted: #4F5548; --green: #2E7D32; --green-soft: #E3F1DF; --green-line: #9CCB95;
+  }
+  .swoosh { position: absolute; inset: 0; pointer-events: none; }
+  .tile {
+    position: absolute; background: rgba(255,255,255,.82); border: 1.5px solid var(--line); border-radius: 22px;
+    padding: 20px 22px; text-align: center; box-shadow: 0 10px 30px -22px rgba(30,60,20,.45); backdrop-filter: blur(2px);
+  }
+  .tile h3 { margin: 0 0 6px; font: 600 25px/1.2 var(--md-font); letter-spacing: -.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .tile p { margin: 0; font: 400 17px/1.36 var(--md-font); color: var(--muted); }
+  .tile { display: flex; flex-direction: column; } .tile .tags { margin-top: auto; padding-top: 8px; }
+  .tile .material-symbols-rounded { font-size: 26px; color: var(--green); }
+  .tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .tag { font: 600 13.5px/1 var(--md-font); padding: 7px 11px; border-radius: 99px; background: #EEF1E8; color: #33402B; letter-spacing: .2px; }
+  .tag.sp { background: #E3F1DF; color: #1D4D22; }
+  .h { position: absolute; font: 400 46px/1 var(--md-font); letter-spacing: -1px; color: var(--ink); white-space: nowrap; }
+  .h small { font-size: 24px; color: var(--muted); letter-spacing: 0; margin-left: 10px; }
+  .runtime { position: absolute; left: 600px; top: 222px; width: 900px; height: 796px; border: 3px dashed var(--green-line); border-radius: 34px; }
+  .divider { position: absolute; left: 600px; width: 900px; top: 428px; border-top: 3px dashed var(--green-line); }
+  .zone { position: absolute; font: 500 17px/1 var(--md-font); color: #5C7A55; }
+  .core {
+    position: absolute; left: 862px; top: 620px; width: 330px; height: 178px; border-radius: 22px; text-align: center;
+    background: #CFEBC4; border: 2px solid #7CB86F; padding: 22px 20px; box-shadow: 0 18px 40px -24px rgba(46,125,50,.7);
+  }
+  .core h2 { margin: 0; font: 600 34px/1.1 var(--md-font); letter-spacing: -.6px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .core p { margin: 8px 0 6px; font: 400 21px/1.3 var(--md-font); color: #24361F; }
+  .core small { font: 500 15px/1 var(--md-font); color: #3E5C37; }
+  .shot { position: absolute; border-radius: 16px; border: 1.5px solid var(--line); box-shadow: 0 14px 34px -18px rgba(0,0,0,.35); background: #fff; overflow: hidden; }
+  .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .done { position: absolute; padding: 16px 20px; border-radius: 20px; background: rgba(255,255,255,.86); border: 1.5px solid var(--line); text-align: center; box-shadow: 0 10px 30px -22px rgba(30,60,20,.45); }
+  .done h3 { margin: 0 0 4px; font: 600 25px/1.2 var(--md-font); letter-spacing: -.3px; }
+  .done h3 b { color: var(--green); font-weight: 700; }
+  .done p { margin: 0; font: 400 17px/1.36 var(--md-font); color: var(--muted); }
+  .brand { position: absolute; right: 64px; bottom: 44px; display: flex; align-items: center; gap: 16px; font: 700 64px/1 var(--md-font); letter-spacing: -2px; }
+  .brand .mark { width: 74px; height: 74px; border-radius: 20px; display: grid; place-items: center; background: #B8F397; color: #072100; }
+  .brand .mark .material-symbols-rounded { font-size: 48px; }
+  .foot { position: absolute; left: 40px; bottom: 16px; font: 400 14px/1.35 var(--md-font); color: #6A7062; max-width: 540px; }
+  .title { position: absolute; left: 40px; top: 52px; }
+  .title h1 { margin: 0; font: 400 58px/1.05 var(--md-font); letter-spacing: -1.5px; }
+  .title h1 b { font-weight: 700; color: var(--green); }
+  .title p { margin: 10px 0 0; font: 400 24px/1.3 var(--md-font); color: var(--muted); }
+  .loop { position: absolute; pointer-events: none; }
+  .label-mid { position: absolute; left: 600px; width: 900px; top: 814px; text-align: center; font: 400 22px/1 var(--md-font); color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <svg class="swoosh" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path d="M-80 260 C 380 40, 860 120, 1180 360 S 1760 760, 2020 520" fill="none" stroke="#DCEBD4" stroke-width="64" stroke-linecap="round"/>
+    <path d="M-60 900 C 420 700, 900 1040, 1360 860 S 1880 620, 2020 700" fill="none" stroke="#E6F0E0" stroke-width="44" stroke-linecap="round"/>
+  </svg>
+
+  <div class="title">
+    <h1>Everything <b>BillBack</b> does</h1>
+    <p>An AI agent that fights hospital bills, from the upload to the follow-up call.</p>
+  </div>
+
+  <!-- LEFT: what the patient sees and controls -->
+  <div class="h" style="left:40px;top:250px;font-size:34px">You stay in control</div>
+  <div class="tile" style="left:40px;top:308px;width:258px;height:178px">
+    <h3><span class="material-symbols-rounded">upload_file</span>Drop &amp; Go</h3>
+    <p>Upload the bill and insurance statement, or chat with Billie. Claude reads them. No forms.</p>
+  </div>
+  <div class="tile" style="left:316px;top:308px;width:258px;height:178px">
+    <h3><span class="material-symbols-rounded">verified_user</span>Approval gate</h3>
+    <p>Calls and payment plans wait for your OK. It never agrees to pay on a call.</p>
+  </div>
+  <div class="tile" style="left:40px;top:504px;width:258px;height:196px">
+    <h3><span class="material-symbols-rounded">record_voice_over</span>Pick the voice</h3>
+    <p>American, British, Indian English or Spanish caller. Money, claim IDs and drug names said right.</p>
+    <div class="tags"><span class="tag sp">Cartesia</span></div>
+  </div>
+  <div class="tile" style="left:316px;top:504px;width:258px;height:196px">
+    <h3><span class="material-symbols-rounded">dashboard</span>Your cases</h3>
+    <p>Every call, promise and follow-up date in one place. Ask "what's the status?"</p>
+  </div>
+  <div class="shot" style="left:40px;top:722px;width:258px;height:240px"><img src="img/usecases/upload-phone.png" alt="Upload screen"></div>
+  <div class="shot" style="left:316px;top:722px;width:258px;height:240px"><img src="img/usecases/case-phone.png" alt="Case page: hospital says $8,700, you actually owe $600"></div>
+
+  <!-- MIDDLE: agent runtime -->
+  <div class="h" style="left:820px;top:166px">Agent runtime<small>powered by Claude</small></div>
+  <div class="runtime"></div>
+  <div class="divider"></div>
+
+  <div class="tile" style="left:626px;top:244px;width:276px;height:170px">
+    <h3><span class="material-symbols-rounded">local_hospital</span>Hospital policy DB</h3>
+    <p>Each hospital's own policy and PDFs. Every quote verified word for word.</p>
+    <div class="tags"><span class="tag sp">Bright Data SERP + Unlocker</span></div>
+  </div>
+  <div class="tile" style="left:914px;top:244px;width:276px;height:170px">
+    <h3><span class="material-symbols-rounded">account_balance</span>Your bank</h3>
+    <p>Payroll deposits give income. Finds payments the hospital missed and double charges.</p>
+    <div class="tags"><span class="tag sp">Capital One Nessie</span></div>
+  </div>
+  <div class="tile" style="left:1202px;top:244px;width:276px;height:170px">
+    <h3><span class="material-symbols-rounded">history</span>Audit log</h3>
+    <p>Every tool call, approval and result, append-only. Recheck catches policy changes.</p>
+  </div>
+
+  <div class="tile" style="left:626px;top:446px;width:276px;height:146px">
+    <h3><span class="material-symbols-rounded">receipt_long</span>Auditor</h3>
+    <p>Bill vs insurance statement vs bank: what you actually owe.</p>
+  </div>
+  <div class="tile" style="left:914px;top:446px;width:276px;height:146px">
+    <h3><span class="material-symbols-rounded">policy</span>Policy agent</h3>
+    <p>Income vs poverty line vs the hospital's rules: free care, discounts, plan terms.</p>
+  </div>
+  <div class="tile" style="left:1202px;top:446px;width:276px;height:146px">
+    <h3><span class="material-symbols-rounded">calculate</span>Money engine</h3>
+    <p>Deterministic math, never the model. Every number cites its source.</p>
+  </div>
+
+  <div class="core">
+    <h2><span class="material-symbols-rounded" style="font-size:36px">ecg_heart</span>BillBack Agent</h2>
+    <p>Fights your hospital bill so you don't have to.</p>
+    <small>Own harness · approval gate</small>
+  </div>
+  <svg class="loop" style="left:1150px;top:596px" width="140" height="120" viewBox="0 0 140 120" aria-hidden="true">
+    <path d="M10 40 C 40 -10, 120 0, 128 50" fill="none" stroke="#7CB86F" stroke-width="3"/>
+    <path d="M128 50 l-9 -8 m9 8 l4 -11" fill="none" stroke="#7CB86F" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="tile" style="left:1222px;top:642px;width:256px;height:150px">
+    <h3><span class="material-symbols-rounded">event_repeat</span>Follow-up loop</h3>
+    <p>"5 business days" becomes a date. It calls back until it's done.</p>
+  </div>
+  <div class="tile" style="left:626px;top:642px;width:216px;height:150px">
+    <h3 style="font-size:23px"><span class="material-symbols-rounded">description</span>Intake</h3>
+    <p>Claude vision reads the PDFs: patient, bill lines, EOB.</p>
+  </div>
+  <div class="label-mid">Hands the work to its own agents</div>
+  <div class="tile" style="left:640px;top:850px;width:440px;height:150px">
+    <h3><span class="material-symbols-rounded">call</span>Phone caller</h3>
+    <p>Real phone calls with barge-in: it listens, thinks, speaks. Gets a case number every time.</p>
+    <div class="tags"><span class="tag sp">Twilio</span><span class="tag sp">Cartesia Ink + Sonic</span><span class="tag sp">Claude</span></div>
+  </div>
+  <div class="tile" style="left:1100px;top:850px;width:360px;height:150px">
+    <h3><span class="material-symbols-rounded">savings</span>Planner</h3>
+    <p>Writes an interest-free plan to your bank as a recurring bill.</p>
+    <div class="tags"><span class="tag sp">Capital One Nessie</span></div>
+  </div>
+
+  <!-- RIGHT: real results -->
+  <div class="h" style="left:1530px;top:170px;font-size:37px">Things BillBack has done!</div>
+  <div class="done" style="left:1530px;top:236px;width:350px">
+    <h3>Cut an ER bill <b>$8,700 → $600</b></h3>
+    <p>Insurance never applied, plus a $500 payment the hospital missed.</p>
+  </div>
+  <div class="shot" style="left:1530px;top:372px;width:168px;height:262px"><img src="img/usecases/call-phone.png" alt="Live call transcript with billing"></div>
+  <div class="done" style="left:1712px;top:372px;width:168px;padding:14px 14px">
+    <h3 style="font-size:21px">Called billing</h3>
+    <p style="font-size:15.5px">Got case FA 20931 and collections paused.</p>
+  </div>
+  <div class="done" style="left:1712px;top:520px;width:168px;padding:14px 14px">
+    <h3 style="font-size:21px">0% plan</h3>
+    <p style="font-size:15.5px">6 × $100, saved to the bank.</p>
+  </div>
+  <div class="done" style="left:1530px;top:652px;width:350px">
+    <h3>Got free care <b>$5,600 → $0</b></h3>
+    <p>UCSF's own policy: under 400% of poverty, bills over 10% of income.</p>
+  </div>
+  <div class="done" style="left:1530px;top:788px;width:350px">
+    <h3>Crawled <b>4</b> SF hospitals' policies</h3>
+    <p>CPMC, UCSF, Chinese Hospital, ZSFG. Same bill, different answers.</p>
+  </div>
+
+  <div class="foot">Demo patients, bills and bank history are synthetic. Hospitals and their policies are real (crawled live via Bright Data). In the demo, a teammate plays hospital billing.</div>
+  <div class="brand"><span class="mark"><span class="material-symbols-rounded">ecg_heart</span></span>BillBack</div>
+</div>
+<script>
+  const stage = document.getElementById('stage');
+  const fit = () => stage.style.transform = `translate(-50%,-50%) scale(${Math.min(innerWidth / 1920, innerHeight / 1080)})`;
+  addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>
