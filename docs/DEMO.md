@@ -128,7 +128,7 @@ Sutter's write-off doesn't apply (it says so). The planner proposes Sutter's int
 $100/month; she decides at the end and sets up the payments herself (nothing is written to her bank).
 
 ## If asked: the Cases-page mic
-Each case on Cases (`/`) has a hold-to-talk mic: "Where are we with UCSF?" or "Call them." An action is said
+The Ask Remy chat panel has a hold-to-talk mic: "Where are we with UCSF?" or "Call them." An action is said
 back first ("I'll call UCSF Medical Center billing now with plan v1…") and runs only after a spoken yes. It
 transcribes with Cartesia Ink's batch STT (never run live; credits ran out) or the browser's own speech
 recognition.

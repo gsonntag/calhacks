@@ -840,7 +840,6 @@ function historyHTML(c) {
     `<dt>Opened</dt><dd>${day(c.created)}</dd>`,
     `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}` : '<span class="muted">not called yet</span>'}</dd>`,
   ];
-  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${esc(c.plan.text || `${c.plan.months} × ${money(c.plan.monthly)}/mo`)} <span class="muted">interest-free</span></dd>`);
   const calls = c.calls.length ? `<ul class="m3-list">${c.calls.map((x) => `<li class="m3-list-item">
       <span class="li-leading">${sym('call')}</span>
       <span class="li-text"><span class="li-headline">${day(x.date)} · ${x.kind === 'followup' ? 'Follow-up call' : 'Call'} with ${esc(x.rep || 'billing')}${x.case_number ? ` · case ${esc(x.case_number)}` : ''}</span>
@@ -885,7 +884,11 @@ $('viewHistory').addEventListener('click', async (e) => {
   if (b && b.dataset.hist === 'approve') { const ui = uiOf(id); ui.open.add(2); ui.touched.add(2); setView('progress'); render(); scrollToEl($('planArea')); return; }
   if (b && b.dataset.hist === 'call') {
     b.disabled = true;
-    try { await fetch(`/api/cases/${id}/call-again`, { method: 'POST' }); setView('progress'); } finally { b.disabled = false; Rail.refresh().then(renderHistory); }
+    try {
+      const r = await fetch(`/api/cases/${id}/call-again`, { method: 'POST' });
+      if (!r.ok) { const j = await r.json().catch(() => ({})); alert(j.error || `Couldn't start the call (${r.status})`); }
+      else setView('progress');
+    } finally { b.disabled = false; Rail.refresh().then(renderHistory); }
     return;
   }
   const clk = e.target.closest('[data-clock]'); if (!clk) return;
