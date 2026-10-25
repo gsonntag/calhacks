@@ -414,6 +414,7 @@ async def run_case(case: dict) -> None:
         set_status(case, "reviewing")
         loop = asyncio.get_running_loop()
         txns_ready, owed_ready = loop.create_future(), loop.create_future()
+        bus.emit(cid, "review_started", agents=[auditor.report(cid, bank_label).card(), policy.report(cid).card()])
         audit, pol = await asyncio.gather(
             auditor.run(case, bank, account_id, bank_label, txns_ready, owed_ready),
             policy.run(case, txns_ready, owed_ready))

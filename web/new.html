@@ -177,6 +177,7 @@ async function sendText(override) {
     state.history.push({ role: 'user', content: (text || '(sent files)') + note });
     if (r.reply) state.history.push({ role: 'assistant', content: r.reply });
     if (r.case_id) state.caseId = r.case_id;
+    if (r.started) { location.href = `case.html?id=${r.case_id}`; return; }  // watch the review from its first step
     done(); addBot(r.reply);
   } catch (e) { done(); addBot("Sorry, I couldn't reach the server. Try again in a moment."); }
 }

@@ -72,27 +72,44 @@
   .row-detail p { margin: 0; }
   .sub-h { margin: 0; color: var(--md-on-surface-variant); }
 
-  /* Review details */
-  .agents { display: flex; flex-wrap: wrap; gap: 24px 32px; }
-  .agent { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-  .agent-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
-  .agent ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .agent li { display: flex; align-items: flex-start; gap: 10px; }
-  .agent li .ic { width: 20px; height: 22px; flex: none; display: flex; align-items: center; justify-content: center; }
-  .agent li .ic .material-symbols-rounded { font-size: 20px; }
-  .agent li .ic .m3-spinner { width: 16px; height: 16px; border-width: 2px; }
-  .agent li .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-  .agent li .lb { font: 400 15px/22px var(--md-font); }
-  .agent li .rs { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); overflow-wrap: anywhere; }
-  .rs.flag { color: var(--md-error) !important; font-weight: 500 !important; }
-  .rs.win { color: var(--st-success) !important; font-weight: 500 !important; }
-  .rs.wait { color: var(--st-warn) !important; }
-  .ic-ok, .ic-win { color: var(--st-success); } .ic-flag { color: var(--md-error); } .ic-wait { color: var(--st-warn); } .ic-clear { color: var(--md-on-surface-variant); }
-  .sum-list { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
-  .sum-list dt { color: var(--md-on-surface-variant); } .sum-list dd { margin: 0; min-width: 0; overflow-wrap: anywhere; } .sum-list dd span { color: var(--md-on-surface-variant); }
-  .ev-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .ev-list li { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); min-width: 0; }
-  .ev-src { overflow-wrap: anywhere; color: var(--md-on-surface-variant); }
+  /* Review: one live terminal per app agent (dark in both themes) */
+  .terms { --t-bg: #191b18; --t-line: #2c2f2a; --t-fg: #e4e6de; --t-dim: #9da396; --t-ok: #8fd17a; --t-flag: #ff8f85; --t-win: #f2c04d; --t-wait: #e8b860;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; align-items: start; }
+  .term { background: var(--t-bg); color: var(--t-fg); border-radius: var(--md-shape-l); overflow: hidden; min-width: 0; border: 1px solid var(--t-line); }
+  .t-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px 2px; }
+  .t-head b { flex: 1; min-width: 0; font: 600 15px/22px var(--md-font); letter-spacing: .1px; }
+  .t-state { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/16px var(--md-font); color: var(--t-dim); }
+  .t-state i { width: 8px; height: 8px; border-radius: 50%; background: var(--t-dim); }
+  .t-state.working i { background: var(--t-wait); animation: nowdot 1.2s ease-in-out infinite; } .t-state.working { color: var(--t-wait); }
+  .t-state.done i { background: var(--t-ok); } .t-state.done { color: var(--t-ok); }
+  .t-state.stopped i { background: var(--t-flag); } .t-state.stopped { color: var(--t-flag); }
+  .t-covers { padding: 0 16px 10px; font: 400 12px/18px var(--md-font); color: var(--t-dim); border-bottom: 1px solid var(--t-line); }
+  .t-body { margin: 0; padding: 10px 16px 14px; list-style: none; display: flex; flex-direction: column; gap: 10px;
+    font: 400 13px/19px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  .t-line { display: flex; gap: 10px; align-items: flex-start; }
+  .t-ic { width: 16px; height: 19px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .t-ic .material-symbols-rounded { font-size: 16px; }
+  .t-ic .m3-spinner { width: 12px; height: 12px; border-width: 2px; border-color: var(--t-wait); border-right-color: transparent; }
+  .t-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .t-lb { color: var(--t-fg); }
+  .t-line.ok .t-lb, .t-line.clear .t-lb { color: var(--t-dim); }
+  .t-rs { color: var(--t-fg); }
+  .t-line.clear .t-rs { color: var(--t-dim); }
+  .t-line.flag .t-rs { color: var(--t-flag); font-weight: 600; } .t-line.win .t-rs { color: var(--t-win); font-weight: 600; } .t-line.wait .t-rs { color: var(--t-wait); }
+  .t-line.ok .t-ic { color: var(--t-ok); } .t-line.flag .t-ic { color: var(--t-flag); } .t-line.win .t-ic { color: var(--t-win); }
+  .t-line.clear .t-ic, .t-line.wait .t-ic { color: var(--t-dim); }
+  .caret { display: inline-block; width: 7px; height: 14px; margin-left: 4px; vertical-align: -2px; background: var(--t-wait); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .t-proof { margin: 4px 0 0; padding: 0 0 0 10px; list-style: none; border-left: 2px solid var(--t-line); display: flex; flex-direction: column; gap: 3px; }
+  .t-proof li { color: var(--t-fg); opacity: .9; }
+  .t-src { display: block; color: var(--t-dim); font-size: 12px; line-height: 16px; }
+  .t-src a { color: inherit; }
+  .t-idle { color: var(--t-dim); }
+  .t-done { padding: 10px 16px; border-top: 1px solid var(--t-line); font: 500 13px/19px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--t-ok); overflow-wrap: anywhere; }
+  .t-done span { color: var(--t-dim); font-weight: 400; }
+  .t-line.re { animation: reline .6s var(--md-ease); }
+  @keyframes reline { from { background: rgba(255, 255, 255, .08); } to { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) { .caret, .t-state.working i, .t-line.re { animation: none; } }
   .quote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--md-primary); display: flex; flex-direction: column; gap: 8px; }
   .quote q { quotes: "“" "”"; }
   .quote .m3-row { gap: 8px; }
@@ -178,7 +195,9 @@
   .finds summary::-webkit-details-marker { display: none; }
   .finds summary::after { content: "expand_more"; font-family: "Material Symbols Rounded"; font-size: 20px; color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
   .finds details[open] summary::after { transform: rotate(180deg); }
-  .finds .fl { flex: 1; min-width: 0; font: 500 16px/24px var(--md-font); }
+  .finds .fl { flex: 1; min-width: 0; font: 500 16px/24px var(--md-font); display: flex; flex-direction: column; }
+  .finds .fl small { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .finds .src { color: var(--md-on-surface-variant); }
   .finds b { font: 600 18px/24px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .finds b.plain { font-weight: 500; font-size: 16px; color: var(--md-on-surface); }
   .finds .fd { display: flex; flex-direction: column; gap: 6px; padding: 0 0 14px; overflow-wrap: anywhere; }
@@ -208,7 +227,7 @@
   <a class="m3-chip new-case" id="newCase" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
 </nav>
 
-<main class="m3-page narrow">
+<main class="m3-page">
   <div id="caseError" class="m3-card error" role="alert" hidden></div>
   <div id="caseWarnings" class="body-m" aria-live="polite"></div>
 
@@ -276,15 +295,13 @@
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail1" hidden>
-          <span class="body-m muted" id="reviewMeta" hidden></span>
-          <ul class="finds" id="findings" hidden></ul>
-          <details class="more" id="checksBox"><summary class="body-m" id="checksSum">Show every check</summary>
-            <div class="m3-stack">
-              <div class="agents" id="agents"></div>
-              <dl class="sum-list body-m" id="reviewSummary"></dl>
-              <div class="m3-stack" id="evidenceBox" hidden><h3 class="title-s sub-h">Evidence</h3><ul class="ev-list" id="evidenceList"></ul></div>
-              <div class="m3-stack" id="quoteBox" hidden><h3 class="title-s sub-h">From the hospital’s own policy</h3><div class="m3-stack" id="quoteList"></div></div>
-            </div>
+          <div class="terms" id="agents"></div>
+          <div class="m3-stack" id="findBox" hidden>
+            <h3 class="title-s sub-h">What they found · biggest saving first</h3>
+            <ul class="finds" id="findings"></ul>
+          </div>
+          <details class="more" id="quoteBox" hidden><summary class="body-m">The hospital’s own policy, word for word</summary>
+            <div class="m3-stack" id="quoteList"></div>
           </details>
         </div>
       </li>
@@ -383,7 +400,7 @@ const fresh = (key, i) => (i >= (seen[key] || 0) ? ' class="in"' : '');
 const sym = (name, label, cls = '') => `<span class="material-symbols-rounded ${cls}"${label ? ` role="img" aria-label="${label}"` : ' aria-hidden="true"'}>${name}</span>`;
 const ICON = {
   running: '<span class="m3-spinner" role="img" aria-label="In progress"></span>',
-  wait: sym('pause_circle', 'Waiting', 'ic-wait'),
+  wait: sym('hourglass_top', 'Waiting', 'ic-wait'),
   ok: sym('check_circle', 'Done', 'ic-ok'),
   flag: sym('error', 'Issue found', 'ic-flag'),
   clear: sym('remove', 'Nothing found', 'ic-clear'),
@@ -395,24 +412,36 @@ const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } 
 
 // ---------- case model, built from the event stream ----------
 function blankModel() {
-  return { bill: null, docs: [], steps: { auditor: [], policy: [] }, agent: {}, review: null, approvals: {},
+  return { bill: null, docs: [], steps: {}, agent: {}, order: [], findings: [], review: null, approvals: {},
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
            warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1 };
 }
-const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {} };
+const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
 
 function apply(m, e) {
   switch (e.kind) {
     case 'case_started': m.bill = e.bill; m.docs = e.documents || m.docs; m.mode = e.modes; break;
-    case 'agent_started': (m.agent[e.agent] ||= {}).started = true; break;
+    case 'review_started':
+      for (const a of e.agents || []) { Object.assign((m.agent[a.agent] ||= {}), { name: a.name, covers: a.covers }); if (!m.order.includes(a.agent)) m.order.push(a.agent); }
+      break;
+    case 'agent_started': {
+      const a = (m.agent[e.agent] ||= {}); a.started = true;
+      if (e.covers) { Object.assign(a, { name: e.name, covers: e.covers }); if (!m.order.includes(e.agent)) m.order.push(e.agent); }
+      break;
+    }
     case 'agent_finished': Object.assign((m.agent[e.agent] ||= {}), { done: true, summary: e.summary, note: e.note }); break;
     case 'step': {
-      const list = m.steps[e.agent]; if (!list) break;
+      const list = (m.steps[e.agent] ||= []);
       const i = list.findIndex((s) => s.key === e.key);
-      const s = { key: e.key, label: e.label, status: e.status, result: e.result };
+      const s = { key: e.key, label: e.label, status: e.status, result: e.result, proof: e.proof || [] };
       if (i < 0) list.push(s); else list[i] = s;
+      break;
+    }
+    case 'finding': {
+      const i = m.findings.findIndex((f) => f.key === e.key);
+      if (i < 0) m.findings.push(e); else m.findings[i] = e;
       break;
     }
     case 'reconciliation': m.rec = e; break;
@@ -464,21 +493,44 @@ function rowStage(m) {
 }
 
 // ---------- rendering ----------
-function renderAgent(key, name, role, m) {
-  const steps = m.steps[key], a = m.agent[key] || {};
-  const waiting = steps.some((s) => s.status === 'wait');
+// Every app agent that reports in the shared format (billback/agents/report.py) gets a live panel, in the
+// order they started. Recordings made before agents named themselves fall back to these two.
+const LEGACY_AGENTS = { auditor: ['Nessie agent', 'Your own records: bank, the bill, your insurance statement'],
+                        policy: ['Bright Data agent', 'Public rules: the hospital’s own financial-assistance policy'] };
+function reviewAgents(m) {
+  if (m.order.length) return m.order;
+  const legacy = Object.keys(LEGACY_AGENTS).filter((k) => (m.steps[k] || []).length);
+  return legacy.length ? legacy : Object.keys(LEGACY_AGENTS);  // not started yet: show where they'll run
+}
+const agentName = (m, k) => (m.agent[k] && m.agent[k].name) || (LEGACY_AGENTS[k] || [k])[0];
+function srcHTML(src) {
+  if (!/^https?:/.test(src || '')) return esc(src || '');
+  let short = src; try { const u = new URL(src); short = u.hostname.replace(/^www\./, '') + (u.pathname.length > 1 ? u.pathname : ''); } catch (e) {}
+  return `<a href="${esc(src)}" target="_blank" rel="noopener">${esc(short.length > 60 ? short.slice(0, 57) + '…' : short)}</a>`;
+}
+function renderAgent(key, m) {
+  const steps = m.steps[key] || [], a = m.agent[key] || {};
+  const covers = a.covers || (LEGACY_AGENTS[key] || [])[1] || '';
   const stopped = m.error && !a.done;
-  const status = a.done ? 'Done' : stopped ? 'Stopped' : waiting ? 'Waiting' : a.started ? 'Working…' : 'Queued';
-  const cls = a.done ? 'success' : stopped ? '' : waiting ? 'warn' : a.started ? 'warn live' : '';
+  const [status, cls] = a.done ? ['Done', 'done'] : stopped ? ['Stopped', 'stopped'] : steps.some((s) => s.status === 'wait') ? ['Waiting', 'working']
+    : a.started ? ['Working', 'working'] : ['Queued', ''];
   const sk = state.active + '-' + key;
-  const items = steps.map((s, i) => {
-    const res = s.status === 'running' ? '' : `<span class="rs ${['flag', 'win', 'wait'].includes(s.status) ? s.status : ''}">${esc(s.result)}</span>`;
-    return `<li${fresh(sk, i)}><span class="ic">${(stopped && s.status === 'running') ? ICON.clear : (ICON[s.status] || ICON.ok)}</span><div class="tx"><span class="lb">${esc(s.label)}</span>${res}</div></li>`;
+  const lines = steps.map((s) => {
+    // a line is "re-written" when its check resolves: flash it once so the eye catches the change
+    const was = seen[sk + s.key], cls = was === undefined ? ' in' : was !== s.status ? ' re' : '';
+    seen[sk + s.key] = s.status;
+    const running = s.status === 'running' && !stopped;
+    const ic = stopped && s.status === 'running' ? ICON.clear : ICON[s.status] || ICON.ok;
+    const proof = running || !s.proof.length ? '' : `<ul class="t-proof">${s.proof.map((p) =>
+      `<li>${esc(p.text)}${p.source ? `<span class="t-src">${srcHTML(p.source)}</span>` : ''}</li>`).join('')}</ul>`;
+    return `<li class="t-line ${s.status}${cls}"><span class="t-ic">${ic}</span><div class="t-tx">
+      <span class="t-lb">${esc(s.label)}${running ? '<i class="caret"></i>' : ''}</span>${!running && s.result ? `<span class="t-rs">${esc(s.result)}</span>` : ''}${proof}</div></li>`;
   }).join('');
-  seen[sk] = steps.length;
-  return `<div class="agent"><div style="display:flex;flex-direction:column;gap:2px">
-      <div class="agent-head"><b class="title-m">${name}</b><span class="m3-status ${cls}">${a.done ? sym('check', '') : ''}${status}</span></div>
-      ${role ? `<span class="body-m muted">${role}</span>` : ''}</div><ol>${items}</ol></div>`;
+  const done = a.done ? `<div class="t-done">✓ ${esc(a.summary || 'Done')}${a.note ? ` <span>· ${esc(a.note)}</span>` : ''}</div>` : '';
+  return `<section class="term" aria-label="${esc(agentName(m, key))}">
+      <div class="t-head"><b>${esc(agentName(m, key))}</b><span class="t-state ${cls}"><i></i>${status}</span></div>
+      <div class="t-covers">${esc(covers)}</div>
+      <ol class="t-body">${lines || `<li class="t-idle">${m.error ? 'Did not start' : 'Waiting to start…'}</li>`}</ol>${done}</section>`;
 }
 
 function renderTabs() {
@@ -528,29 +580,29 @@ function planOf(m) {
   return m.plan && m.plan.months > 0 ? m.plan : null;
 }
 
-// what the review found, as money: bill corrections from the reconciliation, then the policy's discount, then the plan
-const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+// what the agents found, biggest saving first (things that aren't money off the bill, like a plan, go last)
 function findingsOf(m) {
-  const out = [], quote = (topic) => m.quotes.find((q) => q.matched && q.quote && (!topic || q.topic === topic)) || null;
-  const qline = (q) => q ? `“${esc(q.quote)}” <span class="muted">· ${esc(host(q.source || ''))}</span>` : '';
-  const NAMES = [[/^insurance/i, 'Insurance wasn’t applied'], [/^payment already made/i, 'A payment you made was missed'], [/duplicate/i, 'Duplicate charge']];
+  const list = m.findings.length ? m.findings : m.review ? legacyFindings(m) : [];
+  return [...list].sort((a, b) => b.saved - a.saved);
+}
+// Recordings made before agents reported findings (demo/replay_*.json): rebuilt from the reconciliation and
+// the policy result. Drop once the recordings are re-made.
+function legacyFindings(m) {
+  const out = [], pol = (m.review && m.review.policy) || {};
   for (const l of (m.rec && m.rec.lines) || []) {
     if (l.total || !(l.amount < 0)) continue;
-    const name = (NAMES.find(([re]) => re.test(l.label)) || [, l.label])[1];
-    const ev = m.evidence.find((e) => /payment/i.test(e.label) && /payment/i.test(l.label));
-    out.push({ label: name, amount: -l.amount, value: '−' + money(-l.amount), detail: [ev ? `${esc(ev.value)} <span class="muted">· ${esc(ev.source)}</span>` : `<span class="muted">${esc(l.source || '')}</span>`] });
+    const title = /^insurance/i.test(l.label) ? 'Insurance wasn’t applied' : /^payment already made/i.test(l.label) ? 'A payment you made was missed' : l.label;
+    out.push({ key: l.label, agent: 'auditor', title, saved: -l.amount, value: '−' + money(-l.amount), proof: [], source: l.source || '' });
   }
   const owed = m.rec ? m.rec.owed : null, now = correctedBalance(m);
-  if (owed != null && now != null && now < owed) {
-    const inc = m.evidence.find((e) => /income/i.test(e.label));
-    out.push({ label: now === 0 ? 'Free care under their policy' : 'Discount under their policy', amount: owed - now, value: '−' + money(owed - now),
-      detail: [esc(cap((m.review.policy || {}).note || '')), inc ? `<span class="muted">${esc(inc.label)}: ${esc(inc.value)}</span>` : '', qline(quote())].filter(Boolean) });
-  }
-  out.sort((a, b) => b.amount - a.amount);
-  const pm = /(\d+)\s*×\s*\$([\d,]+)\/mo/.exec((m.review.policy || {}).result || '');
-  if (pm) out.push({ label: 'Interest-free payment plan', amount: 0, value: `${pm[1]} × $${pm[2]}/mo`, detail: [qline(quote('payment_plan')) || 'Their billing policy allows an interest-free plan.'] });
+  if (owed != null && now != null && now < owed)
+    out.push({ key: 'discount', agent: 'policy', title: now === 0 ? 'Free care under their policy' : 'Discount under their policy',
+               saved: owed - now, value: '−' + money(owed - now), proof: pol.note ? [cap(pol.note)] : [], source: '' });
+  const pm = /(\d+)\s*×\s*\$([\d,]+)\/mo/.exec(pol.result || '');
+  if (pm) out.push({ key: 'plan', agent: 'policy', title: 'Interest-free payment plan', saved: 0, value: `${pm[1]} × $${pm[2]}/mo`, proof: [], source: '' });
   return out;
 }
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 
 function rowStatusHTML(i, ds, m) {
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
@@ -583,13 +635,13 @@ function assistantLine(m, ds, tab) {
   if (m.error) return { text: 'I hit a problem: ' + m.error, chip: 'Stopped', cls: 'error' };
   if (ds === 0) return { text: 'I’m reading your documents.', chip: 'Reviewing', cls: 'warn' };
   if (ds === 1) {
-    const run = [...m.steps.auditor, ...m.steps.policy].filter((s) => s.status === 'running').pop();
+    const run = Object.values(m.steps).flat().filter((s) => s.status === 'running').pop();
     return { text: run ? `I’m checking your ${prov} bill: ${run.label.toLowerCase()}…` : `I’m checking your ${prov} bill.`, chip: 'Reviewing', cls: 'warn' };
   }
   const saved = orig != null && now != null ? orig - now : 0;
   const found = saved > 0 ? `I found ${money(saved)} ${prov} shouldn’t be charging you.` : '';
-  const ra = (m.review && m.review.auditor) || {}, rp = (m.review && m.review.policy) || {};
-  const reviewed = [ra.result && `Auditor: ${ra.result}`, rp.result && `Policy: ${rp.result}`].filter(Boolean).join('; ');
+  const reviewed = reviewAgents(m).map((k) => { const r = (m.review && m.review[k]) || {}; return r.result && `${agentName(m, k)}: ${r.result}`; })
+    .filter(Boolean).join('; ');
   if (ds === 2) return { text: (found || (reviewed ? `I checked your bill. ${reviewed}.` : '')) + ` Want me to call ${prov} billing?`, chip: 'Voice agent ready' };
   if (ds === 3) {
     const mine = m.lines.filter((l) => l.who !== 'rep').pop();
@@ -662,8 +714,10 @@ function render() {
   const key = state.active || '_';
   const ui = (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1 });
   if (ds !== ui.last) {
-    if (ui.last >= 0 && !ui.touched.has(ui.last)) ui.open.delete(ui.last);
-    if (ds !== 2 && !(ds === 0 && !m.bill)) ui.open.add(ds);   // approval lives in the top card
+    // open the current row; while you decide on the call, Review stays open so its findings sit under the approval card
+    ui.open = new Set([...ui.open].filter((i) => ui.touched.has(i)));
+    if (ds === 2) ui.open.add(1);
+    else if (!(ds === 0 && !m.bill)) ui.open.add(ds);
     ui.last = ds;
   }
   document.querySelectorAll('.step').forEach((el) => {
@@ -685,32 +739,19 @@ function render() {
     ? `<p><strong>${esc(prov)}, ${money(m.bill.amount_due)}</strong>${m.bill.notice ? ' · ' + esc(m.bill.notice) : ''}</p><p class="muted">${esc((m.docs || []).join(', '))}</p>`
     : '<p class="muted">Waiting for your documents.</p>');
 
-  // 2 · Review
-  $('reviewMeta').textContent = ds === 1 && !m.error ? 'Two agents are on it' : '';
-  setHTML($('agents'), renderAgent('auditor', 'Auditor', '', m) +
-                       renderAgent('policy', 'Policy', '', m));
-  const ra = (m.review && m.review.auditor) || m.agent.auditor || {}, rp = (m.review && m.review.policy) || m.agent.policy || {};
-  const ares = ra.result || ra.summary, pres = rp.result || rp.summary;
-  setText($('reviewLine'), (ares || pres) ? `Auditor: ${ares || 'working…'} · Policy: ${pres || 'working…'}`
-    : ds >= 1 && m.bill ? 'Auditor and Policy are checking your bill' : 'Two agents check what you owe and the hospital’s policy');
-  $('reviewSummary').hidden = !(ares || pres);
-  setHTML($('reviewSummary'),
-    `<dt>Auditor</dt><dd><b>${esc(ares || '')}</b>${ra.note ? ` <span>· ${esc(ra.note)}</span>` : ''}</dd>` +
-    `<dt>Policy</dt><dd><b>${esc(pres || '')}</b>${rp.note ? ` <span>· ${esc(rp.note)}</span>` : ''}</dd>`);
-  $('evidenceBox').hidden = !m.evidence.length;
-  // finished review: the findings, biggest saving first; every check sits in one fold (open while it runs)
-  const finds = m.review ? findingsOf(m) : [];
-  $('findings').hidden = !finds.length;
-  setHTML($('findings'), finds.map((f) => `<li><details><summary><span class="fl">${esc(f.label)}</span><b class="${f.amount ? '' : 'plain'}">${esc(f.value)}</b></summary>
-    <div class="fd body-m">${f.detail.map((d) => `<p>${d}</p>`).join('')}</div></details></li>`).join(''));
-  const box = $('checksBox'), phase = state.active + (m.review ? ':done' : ':run');
-  if (box.dataset.phase !== phase) { box.open = !m.review; box.dataset.phase = phase; }
-  $('checksSum').hidden = !m.review;
-  const nChecks = m.steps.auditor.length + m.steps.policy.length;
-  setText($('checksSum'), `Show all ${nChecks} checks, evidence and policy quotes`);
-  $('reviewSummary').hidden = true;
-  setHTML($('evidenceList'), m.evidence.map((e) =>
-    `<li><span class="title-s">${esc(e.label)}</span><span class="body-l">${esc(e.value)}</span><span class="body-s ev-src">${esc(e.source || '')}</span></li>`).join(''));
+  // 2 · Review: a live panel per app agent, then what they found
+  const panels = reviewAgents(m);
+  setHTML($('agents'), panels.map((k) => renderAgent(k, m)).join(''));
+  const sums = panels.map((k) => [agentName(m, k), ((m.review && m.review[k]) || {}).result || (m.agent[k] || {}).summary]);
+  setText($('reviewLine'), sums.some(([, r]) => r) ? sums.map(([n, r]) => `${n}: ${r || 'working…'}`).join(' · ')
+    : ds >= 1 && m.bill ? `${sums.map(([n]) => n).join(' and ')} are checking your bill` : 'Two agents check your records and the hospital’s own rules');
+  const finds = findingsOf(m), fk = state.active + '-finds';
+  $('findBox').hidden = !finds.length;
+  setHTML($('findings'), finds.map((f) => {
+    const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
+    return `<li${isNew ? ' class="in"' : ''}><details><summary><span class="fl">${esc(f.title)}<small>${esc(agentName(m, f.agent))}</small></span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
+    <div class="fd body-m">${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}</div></details></li>`;
+  }).join(''));
   const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
   $('quoteBox').hidden = !quotes.some((q) => q.quote);
   setHTML($('quoteList'), quotes.map(quoteHTML).join(''));
@@ -806,11 +847,11 @@ function nowText(m, ds, a) {
   if (m.error) return a.text;
   if (ds === 0) return 'Claude is reading your bill and insurance statement…';
   if (ds === 1) {
-    const doing = ['auditor', 'policy'].map((k) => {
-      const st = m.steps[k], who = k === 'auditor' ? 'Auditor' : 'Policy';
+    const doing = reviewAgents(m).map((k) => {
+      const st = m.steps[k] || [], who = agentName(m, k);
       const run = st.filter((x) => x.status === 'running' || x.status === 'wait').pop();
       if (run) return `${who}: ${run.label}…`;
-      return m.agent[k] && m.agent[k].done ? `${who}: done` : `${who}: starting…`;
+      return m.agent[k] && m.agent[k].done ? `${who}: done` : st.length ? `${who}: ${st[st.length - 1].label}` : `${who}: starting…`;
     });
     return doing.join(' · ');
   }
@@ -841,6 +882,77 @@ function renderNow(m, ds, tab, a) {
   });
 }
 
+// ---------- watch pacing ----------
+// Each event waits at least long enough to be seen: a running step spins ~1.5s before it resolves, findings
+// land one at a time, a transcript line stays up long enough to read. Used by the replay and by live cases.
+const words = (t) => String(t || '').split(/\s+/).filter(Boolean).length;
+function minGap(e, prev, live) {
+  switch (e.kind) {
+    case 'agent_finished': return e.agent === 'intake' ? 2.5 : 1.0;
+    case 'case_started': return 0.6;
+    case 'balance': return 1.2;
+    case 'agent_started': return 0.6;
+    case 'step': return e.status === 'running' ? 0.35 : 1.5;
+    case 'review_started': return 0.6;
+    case 'finding': return 1.0;
+    case 'evidence': case 'policy_quote': return live ? 0.2 : 0.7;   // live: they don't show in the panels
+    case 'review_done': return 1.2;
+    case 'approval_requested': return 1.0;
+    case 'approval_resolved': return live ? 0 : 3.0;                 // replay: time to read what you are approving
+    case 'call_ready': return 1.2;
+    case 'transcript': return prev && prev.kind === 'transcript' ? Math.min(Math.max(1.4, words(prev.text) / 3.2), 6) : 1.6;
+    case 'call_ended': return 1.5;
+    case 'plan_proposed': return 1.5;
+    case 'tool_result': return 1.5;
+    case 'case_done': return 1.2;
+    default: return 0.3;
+  }
+}
+// The Review's agents run in parallel, so each gets its own track: its steps and findings are paced against
+// its own previous event and the terminals move together. Everything else (the review result, the approval
+// card, the call) waits until every track has played. Returns when each event should show, given when it
+// arrived (both in seconds on the caller's clock).
+function scheduler(live) {
+  const lanes = new Set(Object.keys(LEGACY_AGENTS)), last = {}, prevOf = {};
+  let all = 0, floor = 0, prev = null;
+  return (e, arrival) => {
+    if (e.kind === 'review_started') (e.agents || []).forEach((a) => lanes.add(a.agent));
+    let t;
+    if (lanes.has(e.agent)) {
+      t = Math.max(arrival, (last[e.agent] ?? floor) + minGap(e, prevOf[e.agent], live));
+      last[e.agent] = t; prevOf[e.agent] = e;
+    } else {
+      t = Math.max(arrival, all + minGap(e, prev, live));
+      floor = t; for (const k in last) last[k] = t;
+    }
+    all = Math.max(all, t); prev = e;
+    return t;
+  };
+}
+// A live case can finish its whole Review in ~3s. When you open it as it starts (straight from the chat),
+// its events play at watch pacing until the approval card is up; from then on they apply as they arrive
+// (the call is real time anyway). Older history, and a reconnect, apply at once.
+function liveFeed(id) {
+  const m = state.models[id], pending = [], at = scheduler(true), t0 = performance.now() / 1000;
+  let timer = null, startTs = null, pacing = !state.watched[id];
+  const now = () => performance.now() / 1000 - t0;
+  function flush() {
+    timer = null;
+    let changed = false;
+    while (pending.length && pending[0].t <= now()) { apply(m, pending.shift().e); changed = true; }
+    if (changed && state.models[id] === m) render();
+    if (pending.length) timer = setTimeout(flush, (pending[0].t - now()) * 1000);
+  }
+  return (e) => {
+    if (startTs == null) startTs = e.ts;
+    if (pacing && startTs < Date.now() / 1000 - 120) pacing = false;
+    const t = pacing ? at(e, now()) : Math.max(now(), ...pending.map((x) => x.t));
+    if (pacing && e.kind === 'approval_requested') { pacing = false; state.watched[id] = true; }
+    pending.push({ e, t }); pending.sort((a, b) => a.t - b.t);  // stable: same time keeps arrival order
+    clearTimeout(timer); flush();
+  };
+}
+
 // ---------- data ----------
 async function loadTabs() {
   const list = await (await fetch('/api/cases')).json();
@@ -850,10 +962,12 @@ function openCase(id) {
   state.active = id;
   history.replaceState(null, '', `case.html?id=${id}`);
   if (state.ws) { state.ws.onclose = null; state.ws.close(); }
+  if (state.models[id]) state.watched[id] = true;  // seen it on this page already: no second slow play
   state.models[id] = blankModel();
+  const feed = liveFeed(id);
   const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}`);
-  ws.onmessage = (msg) => { apply(model(id), JSON.parse(msg.data)); render(); };
-  ws.onclose = () => setTimeout(() => state.active === id && openCase(id), 1500);
+  ws.onmessage = (msg) => feed(JSON.parse(msg.data));
+  ws.onclose = () => { state.watched[id] = true; setTimeout(() => state.active === id && openCase(id), 1500); };
   state.ws = ws;
   render();
 }
@@ -925,36 +1039,12 @@ async function startReplay(params) {
   const jumpBtn = $('jumpCall');
   let next = 0;
   const show = (e, at) => { apply(model(id), { ...e, ts: at }); state.now = Date.now() / 1000; };
-  // Watch pacing: each event waits at least long enough to be seen (a step's spinner, a finding, a
-  // transcript line you can read), and long human pauses (approvals, the rep thinking) are capped.
-  // The real recorded gaps are kept when they are already longer; "Real time" (speed 0) plays them as recorded.
-  const words = (t) => String(t || '').split(/\s+/).filter(Boolean).length;
-  function minGap(e, prev) {
-    switch (e.kind) {
-      case 'agent_finished': return e.agent === 'intake' ? 2.5 : 1.0;
-      case 'case_started': return 0.6;
-      case 'balance': return 1.2;
-      case 'agent_started': return 0.6;
-      case 'step': return e.status === 'running' ? 0.35 : 1.5;   // a running step spins for ~1.5s before it resolves
-      case 'evidence': case 'policy_quote': return 0.7;
-      case 'review_done': return 1.2;
-      case 'approval_requested': return 1.0;
-      case 'approval_resolved': return 3.0;                       // time to read what you are approving
-      case 'call_ready': return 1.2;
-      case 'transcript': return prev && prev.kind === 'transcript' ? Math.min(Math.max(1.4, words(prev.text) / 3.2), 6) : 1.6;
-      case 'call_ended': return 1.5;
-      case 'plan_proposed': return 1.5;
-      case 'tool_result': return 1.5;
-      case 'case_done': return 1.2;
-      default: return 0.3;
-    }
-  }
-  const sched = [0], rec = [0];  // virtual seconds at which events[i] fires: watch pacing / as recorded
-  for (let i = 1; i < events.length; i++) {
-    const gap = Math.max(0, events[i].ts - events[i - 1].ts);
-    sched[i] = sched[i - 1] + Math.max(Math.min(gap, 4), minGap(events[i], events[i - 1]));
-    rec[i] = rec[i - 1] + Math.min(gap, 4);
-  }
+  // virtual seconds at which events[i] fires: as recorded (gaps capped at 4s) / at watch pacing
+  const rec = [0];
+  for (let i = 1; i < events.length; i++) rec[i] = rec[i - 1] + Math.min(Math.max(0, events[i].ts - events[i - 1].ts), 4);
+  const pace = scheduler(false), sched = events.map((e, i) => pace(e, rec[i]));
+  const seq = events.map((_, i) => i).sort((a, b) => sched[a] - sched[b]);  // the agents' tracks interleave
+  const callPos = seq.indexOf(callIdx);
   let rate = speed || 1, realtime = speed === 0, paused = false, vclock = 0, last = performance.now();
   const at = (i) => (realtime ? rec : sched)[i];
   function tick() {
@@ -962,18 +1052,18 @@ async function startReplay(params) {
     if (!paused) vclock += ((t - last) / 1000) * rate;
     last = t;
     let changed = false;
-    while (next < events.length && at(next) <= vclock) { show(events[next], Date.now() / 1000); next++; changed = true; }
-    if (changed) { render(); if (callIdx >= 0 && next > callIdx) jumpBtn.hidden = true; }
-    if (next < events.length) setTimeout(tick, 50);
+    while (next < seq.length && at(seq[next]) <= vclock) { show(events[seq[next]], Date.now() / 1000); next++; changed = true; }
+    if (changed) { render(); if (callIdx >= 0 && next > callPos) jumpBtn.hidden = true; }
+    if (next < seq.length) setTimeout(tick, 50);
     else { $('nowPause').hidden = true; setText($('nowReplayNote'), 'Replay finished'); }
   }
   $('nowCtl').hidden = false;
   if (speed !== 1) { const o = [...$('nowSpeed').options].find((x) => +x.value === speed); if (o) o.selected = true; }
   if (realtime) setText($('nowReplayNote'), 'Replay · recorded timing');
   $('nowSpeed').onchange = () => {
-    const v = +$('nowSpeed').value, was = at(Math.max(next - 1, 0));
+    const v = +$('nowSpeed').value, was = at(seq[Math.max(next - 1, 0)]);
     realtime = v === 0; rate = realtime ? 1 : v;
-    vclock = Math.max(vclock - was, 0) + at(Math.max(next - 1, 0));  // keep our place in the new timeline
+    vclock = Math.max(vclock - was, 0) + at(seq[Math.max(next - 1, 0)]);  // keep our place in the new timeline
     setText($('nowReplayNote'), realtime ? 'Replay · recorded timing' : 'Replay');
   };
   $('nowPause').onclick = () => {
@@ -982,7 +1072,7 @@ async function startReplay(params) {
     $('nowPause').setAttribute('aria-label', paused ? 'Resume' : 'Pause');
   };
   function jumpToCall() {
-    if (callIdx < 0 || next > callIdx) return;
+    if (callIdx < 0 || next > callPos) return;
     vclock = at(callIdx);  // the next tick applies everything up to and including the call
     jumpBtn.hidden = true;
     setTimeout(() => {  // bring the call step (and its transcript) into view

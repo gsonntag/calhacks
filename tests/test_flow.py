@@ -13,7 +13,7 @@ from billback.events import bus
 # Kinds web/case.html renders from the /ws/cases/{id} stream.
 CASE_HTML_KINDS = {"case_started", "agent_started", "agent_finished", "step", "review_done", "balance",
                    "approval_requested", "approval_resolved", "call_ready", "transcript", "call_outcome",
-                   "call_ended", "plan_proposed", "tool_result", "policy_quote", "case_done"}
+                   "call_ended", "plan_proposed", "tool_result", "policy_quote", "case_done", "finding"}
 
 
 class _Today(date):
@@ -78,6 +78,20 @@ async def test_offline_end_to_end(client):
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
     assert CASE_HTML_KINDS <= kinds, CASE_HTML_KINDS - kinds
+
+    # both app agents report in the shared format (agents/report.py): named panels, steps with proof, findings
+    started = {e["agent"]: e for e in hist if e["kind"] == "agent_started" and e["agent"] in ("auditor", "policy")}
+    assert started["auditor"]["name"] == "Nessie agent" and started["policy"]["name"] == "Bright Data agent"
+    assert all(started[a]["covers"] for a in started)
+    steps = [e for e in hist if e["kind"] == "step"]
+    assert all(e["status"] in {"running", "ok", "flag", "clear", "win", "wait"} and isinstance(e["proof"], list) for e in steps)
+    paid = next(e for e in steps if e["key"] == "auditor:payments" and e["status"] != "running")
+    assert paid["status"] == "flag" and any("$500.00" in p["text"] and p["source"] for p in paid["proof"])
+    finds = {e["title"]: e for e in hist if e["kind"] == "finding"}
+    assert finds["Insurance wasn’t applied"]["saved"] == 7600
+    assert finds["A payment you made was missed"]["saved"] == 500
+    assert finds["Interest-free payment plan"]["saved"] == 0 and finds["Interest-free payment plan"]["value"] == "6 × $100/mo"
+    assert all(f["proof"] and f["source"] for f in finds.values())
     assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600]
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
@@ -86,14 +100,16 @@ async def test_offline_end_to_end(client):
 
 async def test_chat_starts_exactly_one_case(client):
     c = client
-    case_id, history = None, []
+    case_id, history, started = None, [], []
     for msg in ["hi", "4000", "yes", "thanks!"]:
         r = (await c.post("/api/chat", data={"history": json.dumps(history), "message": msg,
                                              "case_id": case_id or ""})).json()
         assert r["reply"]
+        started.append(r.get("started", False))
         history += [{"role": "user", "content": msg}, {"role": "assistant", "content": r["reply"]}]
         case_id = r.get("case_id") or case_id
     assert case_id and list(orchestrator.cases) == [case_id]
+    assert started.count(True) == 1  # only the turn that starts the case sends the chat to the case page
     # an old client that doesn't send case_id still can't start a second one
     hist = '[{"role":"user","content":"a"},{"role":"assistant","content":"b"},{"role":"user","content":"c"},' \
            '{"role":"assistant","content":""},{"role":"user","content":"d"}]'

@@ -148,7 +148,8 @@ async def mode():
 @app.post("/api/chat")
 async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str = Form(""),
                files: list[UploadFile] = File(default=[])):
-    """history: JSON list of {role, content} (text only). Returns {reply, case_id?}.
+    """history: JSON list of {role, content} (text only). Returns {reply, case_id?, started?}; started is
+    set on the turn that starts the case, so the chat can open the case page right away.
     Once a case exists, or when someone asks for an update, Billie answers from the case's stored history."""
     if case_id in orchestrator.cases:  # one chat, one case: never start a second pipeline
         case = orchestrator.cases[case_id]
@@ -183,13 +184,13 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
             if use:
                 hh = use.input.get("household_size") if isinstance(use.input, dict) else None
                 case = await launch(hh if isinstance(hh, int) else None)
-                return {"reply": reply or CANNED[-1], "case_id": case["id"]}
+                return {"reply": reply or CANNED[-1], "case_id": case["id"], "started": True}
             return {"reply": reply or "Sorry, could you say that again?"}
 
     turn = sum(1 for m in msgs if m["role"] == "user") - 1
     if turn == len(CANNED) - 1:
         case = await launch()
-        return {"reply": CANNED[-1], "case_id": case["id"]}
+        return {"reply": CANNED[-1], "case_id": case["id"], "started": True}
     return {"reply": CANNED[turn] if turn < len(CANNED) else ALREADY}
 
 

@@ -173,8 +173,8 @@ const $ = (x) => document.getElementById(x);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const money = (n) => '$' + Number(n).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
 const LANES = {
-  auditor: ['receipt_long', 'Auditor', 'Checks payments & duplicates in your bank (Nessie)'],
-  policy: ['travel_explore', 'Policy', "Finds the hospital's own discount rules (Bright Data)"],
+  auditor: ['receipt_long', 'Nessie agent', 'Your records: bill vs insurance, payments & duplicates in your bank (Nessie)'],
+  policy: ['travel_explore', 'Bright Data agent', "The hospital's own discount and payment-plan rules (Bright Data)"],
   caller: ['call', 'Caller', 'Calls billing and argues with the evidence (Cartesia)'],
   planner: ['calendar_month', 'Planner', 'Sets up an affordable plan — only with your OK'],
 };
