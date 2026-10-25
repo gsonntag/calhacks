@@ -15,6 +15,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from .. import config
+from ..auth import ADMIN
 from ..integrations import cartesia, twilio
 from . import calls, desk, pronounce, voices
 from .media import MediaSession
@@ -66,7 +67,7 @@ class Line(BaseModel):
     pronounce: bool = True
 
 
-@router.post("/api/voices/sample")
+@router.post("/api/voices/sample", dependencies=ADMIN)
 async def sample(line: Line):
     if not config.CARTESIA_API_KEY:
         return JSONResponse({"error": "no cartesia key"}, 404)
@@ -83,6 +84,6 @@ class DeskTurn(BaseModel):
     rep_said: str | None = None
 
 
-@router.post("/api/calls/{call_id}/turn/stream")
+@router.post("/api/calls/{call_id}/turn/stream", dependencies=ADMIN)
 async def desk_turn_stream(call_id: str, t: DeskTurn):
     return await desk.turn_stream(call_id, t.rep_said)
