@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import config, events, followups, llm, orchestrator
-from .agents import caller, decide, intake
+from .agents import caller, decide, intake, policy
 from .integrations import cartesia
 from .events import bus
 from .harness import gate
@@ -142,7 +142,7 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
 
 @app.get("/api/mode")
 async def mode():
-    return config.mode()
+    return {**config.mode(), "live_crawl": policy.can_crawl()}
 
 
 @app.post("/api/chat")
@@ -345,6 +345,31 @@ async def undo_correction(case_id: str, correction_id: str):
     if not case:
         return JSONResponse({"error": "not found"}, 404)
     out = await _decide_call(decide.undo_correction(case, correction_id))
+    orchestrator.save(case)
+    return out
+
+
+_rechecks: dict[str, asyncio.Lock] = {}
+MAX_RECHECKS_PER_CASE = 5  # each is capped at policy.LIVE_MAX_REQUESTS Bright Data requests
+
+
+@app.post("/api/cases/{case_id}/policy/recheck")
+async def policy_recheck(case_id: str):
+    """"Recheck now" on the Bright Data agent's panel: check the case's hospital live and stream every request
+    into the panel. Needs Bright Data + Claude keys; one at a time per case, at most MAX_RECHECKS_PER_CASE."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    lock = _rechecks.setdefault(case_id, asyncio.Lock())
+    if lock.locked():
+        return JSONResponse({"error": "A recheck is already running"}, 409)
+    if len(case.get("policy_rechecks") or []) >= MAX_RECHECKS_PER_CASE:
+        return JSONResponse({"error": f"This case already used its {MAX_RECHECKS_PER_CASE} live rechecks"}, 429)
+    async with lock:
+        try:
+            out = await policy.recheck_case(case)
+        except policy.RecheckRefused as e:
+            return JSONResponse({"error": str(e)}, 409 if "Review" in str(e) else 503)
     orchestrator.save(case)
     return out
 

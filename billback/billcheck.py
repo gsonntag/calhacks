@@ -4,8 +4,9 @@
   after the date of service), not to anything that merely shares a word like "Medical" or "Pacific";
 - which of those payments the bill already credits ("Patient payments"), so only the rest are reported as
   payments the hospital may not see;
-- for a self-pay bill (no insurance statement to set the patient's share), the bill's own line errors:
-  a line billed twice, and a line above the hospital's posted gross charge (its CMS price file, policydb/prices).
+- the bill's own line errors, insured or not: a line billed twice, and a line above the hospital's posted gross
+  charge (its CMS price file, policydb/prices), with drug lines compared only when the file's unit converts to
+  the HCPCS unit. Self-pay, they set the share; insured, they are reported apart from the insurance gap.
 """
 import re
 from datetime import date, datetime
@@ -112,14 +113,51 @@ def split_credited(bill: dict, payments: list[dict]) -> tuple[list[dict], list[d
     return credited, missing
 
 
-def line_corrections(bill: dict, hospital_name: str | None = None) -> list[dict]:
-    """Errors on the bill's own lines, each with the amount to take off and its proof: a line identical to an
-    earlier one (same code, units and amount), and a line above the hospital's posted gross charge x units."""
+# A drug's HCPCS code is billed per a fixed dose (J2405: 1 mg of ondansetron), but a price file lists the drug
+# per whatever the hospital stocks: a 2 mL vial, 12.25 mL, "1 each". Its drug_unit / drug_unit_type
+# (CMS: ME milligram, GR gram, ML milliliter, UN unit, EA each, F2 international unit) say which. A posted drug
+# price is compared only when it converts to the HCPCS dose without knowing the concentration: mass to mass,
+# volume to volume. Anything else (a mg dose priced per mL, per "each") is skipped and said so, never guessed.
+HCPCS_DOSE = {"J2405": (1, "mg"), "J1885": (15, "mg"), "J1100": (1, "mg"), "J2270": (10, "mg"),
+              "J3010": (0.1, "mg"), "J0696": (250, "mg"), "J7030": (1000, "ml")}
+FILE_UNITS = {"ME": (1, "mg"), "GR": (1000, "mg"), "ML": (1, "ml")}  # file unit type -> (factor, measure)
+UNIT_NAMES = {"ME": "mg", "GR": "g", "ML": "mL", "UN": "unit", "EA": "each", "F2": "international unit"}
+
+
+def posted_unit_price(code: str, entry: dict) -> tuple[float | None, str]:
+    """The posted gross charge for one HCPCS unit of this code, and how it was worked out. None (with the reason)
+    when the file's unit can't be converted to the code's unit."""
+    gross = entry.get("gross")
+    if gross is None:
+        return None, "no posted gross charge"
+    dose = HCPCS_DOSE.get(code)
+    if not dose and not code.startswith("J"):
+        return float(gross), "per service"
+    common = entry.get("common_name") or code
+    qty, typ = entry.get("drug_unit"), (entry.get("drug_unit_type") or "").upper()
+    per = f"{qty:g} {UNIT_NAMES.get(typ, typ.lower() or 'unit')}" if qty else (UNIT_NAMES.get(typ) or "an unstated unit")
+    if not dose or not qty or typ not in FILE_UNITS:
+        return None, f"the price file prices {code} per {per}; HCPCS {code} is {common.split(', ', 1)[-1]}"
+    factor, measure = FILE_UNITS[typ]
+    amount, want = dose
+    if measure != want:
+        return None, (f"the price file prices {code} per {per} but HCPCS {code} is per {amount:g} {want}: "
+                      f"converting needs the concentration")
+    per_unit = float(gross) * amount / (float(qty) * factor)
+    how = "per HCPCS unit" if abs(amount - float(qty) * factor) < 1e-9 else (
+        f"${float(gross):,.2f} per {per} = ${per_unit:,.2f} per {amount:g} {want} (the HCPCS unit)")
+    return round(per_unit, 2), how
+
+
+def line_review(bill: dict, hospital_name: str | None = None) -> dict:
+    """Every line of the bill against itself and the hospital's posted prices. Returns
+    {corrections, compared, skipped}: the errors (as line_corrections), how many lines were compared with a
+    posted price, and the lines that couldn't be (each {line, code, why})."""
     h = hospital(hospital_name or bill.get("provider", "")) or hospital(bill.get("provider", ""))
     table = prices.table(h.id) if h else {}
     posted_prices = table.get("prices", {})
     acct = f"bill · acct {bill.get('account_number', '?')}"
-    out, seen = [], {}
+    out, seen, skipped, compared = [], {}, [], 0
     for i, li in enumerate(bill.get("line_items") or [], 1):
         code = str(li.get("code") or "").strip().upper()
         units = li.get("units") or 1
@@ -132,16 +170,32 @@ def line_corrections(bill: dict, hospital_name: str | None = None) -> list[dict]
             continue
         seen.setdefault(key, i)
         posted = posted_prices.get(code)
-        gross = posted.get("gross") if posted else None
-        if gross:
-            cap = round(float(gross) * units, 2)
-            if _cents(amt) > _cents(cap):
-                src = f"{table.get('hospital_name') or h.name} price file, {table.get('last_updated_on', '?')}"
-                out.append({"kind": "price_above_posted", "line": i, "code": code, "amount": round(amt - cap, 2),
-                            "billed": amt, "posted": cap, "label": f"{code} charged above the posted price",
-                            "source": src, "url": (table.get("source") or {}).get("file_url", ""),
-                            "detail": f"Line {i} charges ${amt:,.2f}; the hospital's posted price is ${cap:,.2f}."})
-    return out
+        if not posted:
+            continue
+        unit_price, how = posted_unit_price(code, posted)
+        if unit_price is None:
+            skipped.append({"line": i, "code": code, "why": how})
+            continue
+        compared += 1
+        cap = round(unit_price * units, 2)
+        if _cents(amt) > _cents(cap):
+            src = f"{table.get('hospital_name') or h.name} price file, {table.get('last_updated_on', '?')}"
+            note = "" if how in ("per service", "per HCPCS unit") else f" ({how})"
+            each = f" ({units:g} × ${unit_price:,.2f})" if units != 1 else ""
+            out.append({"kind": "price_above_posted", "line": i, "code": code, "amount": round(amt - cap, 2),
+                        "billed": amt, "posted": cap, "label": f"{code} charged above the posted price",
+                        "source": src, "url": (table.get("source") or {}).get("file_url", ""),
+                        "detail": f"Line {i} charges ${amt:,.2f}; the hospital's posted price is ${cap:,.2f}"
+                                  f"{each}{note}."})
+    return {"corrections": out, "compared": compared, "skipped": skipped,
+            "table": table.get("hospital_name") or (h.name if h and table else None)}
+
+
+def line_corrections(bill: dict, hospital_name: str | None = None) -> list[dict]:
+    """Errors on the bill's own lines, each with the amount to take off and its proof: a line identical to an
+    earlier one (same code, units and amount), and a line above the hospital's posted gross charge x units
+    (drug lines only when the file's unit converts to the HCPCS unit: posted_unit_price)."""
+    return line_review(bill, hospital_name)["corrections"]
 
 
 def insured(case: dict) -> bool:

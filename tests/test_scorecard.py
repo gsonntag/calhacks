@@ -64,14 +64,14 @@ async def test_after_the_call_the_plan_keeps_only_whats_left(client):
     marks = {m["id"]: m["status"] for m in sc["marks"]}
     # Diane opened a review, put the account on hold, promised a corrected statement, gave a case number
     assert marks == {"insurance": "later", "payment": "later", "discount": "later", "refund": "later",
-                     "hold": "got", "case_number": "got"}
+                     "bill_line-3": "later", "hold": "got", "case_number": "got"}
     case = orchestrator.cases[cid]
     assert case["calls"][0]["scorecard"] == sc["marks"] and case["calls"][0]["plan_v"] == 1
 
     v2 = _plans(cid)[-1]
     assert v2["v"] == 2 and v2["round"] == 2 and v2["reason"]["kind"] == "call_result"
     assert [d["kind"] for d in v2["done"]] == ["hold"]
-    assert [a["kind"] for a in v2["asks"]] == ["insurance", "discount", "payment", "refund", "case_number"]
+    assert [a["kind"] for a in v2["asks"]] == ["insurance", "discount", "payment", "refund", "bill_line", "case_number"]
     assert all(a["text"].startswith("Check it was done: ") for a in v2["asks"][:-1])
     assert "promised" in v2["asks"][0]["goal"] and "Diane" in v2["asks"][0]["goal"]
     assert v2["next"]["kind"] == "wait" and v2["next"]["when"] == "2026-10-30"

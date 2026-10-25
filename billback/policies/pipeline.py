@@ -1,7 +1,7 @@
 """discover -> fetch -> extract/verify -> store, for one hospital. Used by the CLI, the HTTP router and the
 Policy agent (live crawl of a hospital that isn't in the database yet)."""
 from . import discover, extract, fetch
-from .crawl import Crawl, OnEvent
+from .crawl import HARD_CAP, Crawl, OnEvent
 from .registry import Hospital
 from .store import PolicyStore, sha256
 
@@ -28,18 +28,23 @@ async def extract_verified(crawl: Crawl, docs: list[fetch.Document], hospital: s
         crawl.note("verify", f"{c['what']} {'VERIFIED in ' + str(c['source_url']) if c['verified'] else 'REJECTED: ' + (c.get('reason') or 'not found')}"
                              f" | {c['quote'][:160]!r}")
     v = verification
+    proof = [(f"{'Verified' if c['verified'] else 'Rejected'} {c['what'].replace('_', ' ')}: “{c['quote'][:220]}”",
+              c.get("source_url") or ("" if c["verified"] else (c.get("reason") or "not in the fetched text")))
+             for c in v["checks"] if c.get("quote")]
     crawl.stage("verify", "ok" if policy["tiers"] else "flag",
-                f"{v['tiers_verified']} tier quotes verified, {v['tiers_rejected']} rejected")
+                f"{v['tiers_verified']} tier quotes verified, {v['tiers_rejected']} rejected", proof[:8])
     return policy, verification
 
 
 async def crawl_hospital(store: PolicyStore, hospital: Hospital, *, run_id: str | None = None,
-                         on_event: OnEvent | None = None, json_out=None, max_requests: int = 20) -> dict:
-    """Full pipeline; returns the stored policy_versions row."""
+                         on_event: OnEvent | None = None, json_out=None, max_requests: int = HARD_CAP,
+                         known: dict | None = None) -> dict:
+    """Full pipeline; returns the stored policy_versions row. known: the discovery on record (a re-crawl), the
+    fallback when Google can't be reached. At most HARD_CAP Bright Data requests, retries included."""
     store.upsert_hospital(hospital)
     run_id = run_id or store.start_run("crawl", [hospital.id])
     crawl = Crawl(store, run_id, hospital.id, on_event, max_requests)
-    found = await discover.run(crawl, hospital)
+    found = await discover.run(crawl, hospital, known)
     if not found["pages"] and not found["regulator_doc"]:
         raise RuntimeError(f"no official policy page found for {hospital.name}")
     docs = await fetch.run(crawl, found)
@@ -49,7 +54,8 @@ async def crawl_hospital(store: PolicyStore, hospital: Hospital, *, run_id: str 
                             discovery=found, extracted=policy, verification=verification,
                             status="ok" if policy["tiers"] else "no_tiers", run_id=run_id)
     store.add_check(hospital.id, row["content_sha256"], True, row["id"], f"initial crawl: version {row['version']}", run_id)
-    crawl.stage("store", "ok", f"Saved version {row['version']} ({crawl.requests} Bright Data requests)")
+    crawl.stage("store", "ok", f"Saved version {row['version']} ({crawl.requests} of at most {crawl.max_requests} "
+                                f"Bright Data requests)")
     return row
 
 

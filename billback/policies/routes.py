@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 from .. import llm
 from ..integrations import brightdata
 from . import compare as compare_mod
-from . import monitor
+from . import monitor, pipeline
 from .store import PolicyStore
 
 router = APIRouter(prefix="/api", tags=["policies"])
@@ -71,18 +71,28 @@ async def compare(scenario: str = "default"):
 
 @router.post("/hospitals/{hospital_id}/recheck")
 async def recheck(hospital_id: str):
-    """Refetch through Bright Data Web Unlocker, compare content hashes, re-extract only if changed."""
+    """Refetch through Bright Data Web Unlocker, compare content hashes, re-extract only if changed. A hospital
+    stored with no verified tiers is crawled again from Google instead (refetching the same documents would find
+    nothing new), with its URLs on record as the fallback."""
     if not (brightdata.live() and llm.available()):
         raise HTTPException(503, "Bright Data / Anthropic keys not configured on this server")
     db = PolicyStore()
-    if not db.current(hospital_id):
+    cur = db.current(hospital_id)
+    if not cur:
         raise HTTPException(404, "hospital not crawled yet")
+    if cur["status"] == "no_tiers" and not brightdata.serp_live():
+        raise HTTPException(503, "a hospital with no tiers is crawled again from Google: SERP zone not configured")
     lock = _locks.setdefault(hospital_id, asyncio.Lock())
     if lock.locked():
         raise HTTPException(409, "a recheck is already running for this hospital")
     async with lock:
         try:
-            out = await monitor.recheck(db, hospital_id)
+            if cur["status"] == "no_tiers":
+                row = await pipeline.crawl_hospital(db, db.hospital(hospital_id), known=cur["discovery"])
+                out = {"hospital_id": hospital_id, "recrawled": True, "changed": row["version"] != cur["version"],
+                       "version": row["version"], "status": row["status"], "tiers": len(row["extracted"]["tiers"])}
+            else:
+                out = await monitor.recheck(db, hospital_id)
         except Exception as e:
             raise HTTPException(502, f"recheck failed: {type(e).__name__}: {e}")
         db.write_export()

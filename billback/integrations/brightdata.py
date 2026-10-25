@@ -95,10 +95,11 @@ async def request(product: str, url: str, *, fmt: str = "raw", data_format: str 
 async def serp(query: str, attempts: int = 2) -> tuple[list[dict], BDResponse]:
     """Google via the SERP API, parsed: returns ([{title, link, description, rank}], raw response).
     With format=json the reply is {status_code, headers, body}; a failed Google fetch shows up as
-    status_code >= 400 inside a 200 reply, so that is checked (and retried) here."""
+    status_code >= 400 inside a 200 reply, so that is checked (and retried) here. attempts=1: no hidden retry
+    (the crawl session retries visibly instead, policies/crawl.py)."""
     url = f"https://www.google.com/search?q={quote_plus(query)}&hl=en&gl=us"
     for attempt in range(attempts):
-        resp = await request(SERP, url, fmt="json", data_format="parsed", timeout=60)
+        resp = await request(SERP, url, fmt="json", data_format="parsed", timeout=60, attempts=attempts)
         try:
             wrapper = json.loads(resp.text)
             inner = int(wrapper.get("status_code") or 200) if isinstance(wrapper, dict) else 200
@@ -120,12 +121,12 @@ def parse_serp(raw: str) -> list[dict]:
              "rank": o.get("rank", i + 1)} for i, o in enumerate(data.get("organic") or []) if o.get("link")]
 
 
-async def page(url: str) -> BDResponse:
+async def page(url: str, attempts: int = 2) -> BDResponse:
     """A web page through Web Unlocker, converted to markdown by Bright Data (links kept as [text](url))."""
-    return await request(UNLOCKER, url, data_format="markdown")
+    return await request(UNLOCKER, url, data_format="markdown", attempts=attempts)
 
 
-async def document(url: str) -> BDResponse:
+async def document(url: str, attempts: int = 2) -> BDResponse:
     """A file (policy PDF) through Web Unlocker, raw bytes."""
-    return await request(UNLOCKER, url, timeout=90)
+    return await request(UNLOCKER, url, timeout=90, attempts=attempts)
 

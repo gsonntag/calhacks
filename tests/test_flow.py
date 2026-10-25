@@ -88,7 +88,9 @@ async def test_offline_end_to_end(client):
     paid = next(e for e in steps if e["key"] == "auditor:payments" and e["status"] != "running")
     assert paid["status"] == "flag" and any("$500.00" in p["text"] and p["source"] for p in paid["proof"])
     finds = {e["title"]: e for e in hist if e["kind"] == "finding"}
-    assert finds["Insurance wasn’t applied"]["saved"] == 7600
+    assert finds["Insurance wasn’t applied"]["saved"] == 7566  # + $34: 80053 above CPMC's posted price
+    assert finds["80053 charged above the hospital's posted price"]["saved"] == 34
+    assert not any("J2405" in t for t in finds)  # per-12.25 mL file price vs per-1 mg HCPCS unit: not compared
     assert finds["A payment you made was missed"]["saved"] == 500
     assert finds["Interest-free payment plan"]["saved"] == 0 and finds["Interest-free payment plan"]["value"] == "6 × $100/mo"
     assert all(f["proof"] and f["source"] for f in finds.values())

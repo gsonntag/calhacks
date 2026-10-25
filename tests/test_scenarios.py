@@ -182,16 +182,14 @@ async def test_app_agents_reach_expected_balance(name):
         if "missed" in m["what"]:
             txn = m["what"].split()[1]
             assert f"paid-{txn}" not in found and txn not in missed, m
-    # the bill's own line errors are reported with their money, insured or not. Insured: duplicates only for now;
-    # the posted-price check for insured bills (Lena's planted error) waits on per-unit drug prices (PLAN item 5).
-    kinds = ("duplicate_line",) if case["eob"] else ("duplicate_line", "price_above_posted")
+    # the bill's own line errors (duplicates and charges above the posted price) are reported with their money,
+    # insured or not
+    kinds = ("duplicate_line", "price_above_posted")
     lines = {k.split("-")[0]: f["saved"] for k, f in found.items() if k.split("-")[0] in kinds}
     assert lines == {f["id"]: f["money"] for f in exp["findings"] if f["id"] in kinds}
-    if case["eob"]:  # insured: the insurance finding is the gap left once the reported line errors are taken out
+    if case["eob"]:  # insured: the insurance finding is the gap left once the line errors are taken out
         ins = next((f["money"] for f in exp["findings"] if f["id"] == "insurance_not_applied"), None)
-        unreported = sum(f["money"] for f in exp["findings"] if f["id"] == "price_above_posted")
-        want = round((ins or 0) + unreported, 2) or None  # None: the bill already applies the insurance
-        assert (found["insurance"]["saved"] if "insurance" in found else None) == want
+        assert (found["insurance"]["saved"] if "insurance" in found else None) == ins
     else:  # self-pay: the line errors set the share
         assert "insurance" not in found
         assert not any(ln["label"].startswith("Insurance") for ln in aud["reconciliation"]["lines"])

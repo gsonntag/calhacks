@@ -28,6 +28,7 @@ async def recheck(store: PolicyStore, hospital_id: str, *, run_id: str | None = 
     crawl = Crawl(store, run_id, hospital_id, on_event, max_requests)
     crawl.stage("recheck", "running", f"Refetching {len(cur['documents'])} documents from version {cur['version']}")
     docs = await fetch.run(crawl, cur["discovery"])
+    crawl.stage("fetch", "ok", f"Fetched {len(docs)} documents ({sum(d.nbytes for d in docs) // 1024} KB)")
     digest = content_hash(docs)
     if digest == cur["content_sha256"]:
         store.add_check(hospital_id, digest, False, cur["id"], "unchanged", run_id)
