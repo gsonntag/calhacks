@@ -251,7 +251,7 @@ def whole_case(case: dict) -> dict:
     return ctx
 
 
-def comparison(case: dict, top: int = 6) -> dict | None:
+def comparison(case: dict, top: int | None = 6) -> dict | None:
     """What each hospital's own policy would give for this same bill (compare.evaluate, the Hospitals tab's math)."""
     from .policies import compare
     from .policies.store import PolicyStore
@@ -274,7 +274,8 @@ def comparison(case: dict, top: int = 6) -> dict | None:
             if cur:
                 r = compare.evaluate(facts, cur["extracted"])
                 rows.append({"hospital": h.name, "balance": r["balance"], "refund": r["refund"],
-                             "discount_pct": r["discount_pct"], "rule": r["rule"]})
+                             "discount_pct": r["discount_pct"], "rule": r["rule"], "why_not": r["why_not"],
+                             "sources": (cur.get("source_urls") or [])[:2]})
     except Exception as e:
         print("same-bill comparison failed:", type(e).__name__)
         return None
@@ -372,7 +373,7 @@ def activity(case_id: str | None = None, n: int = 20) -> list[dict]:
         evs += [(e, name) for e in bus.history(cid) if e["kind"] in NOTABLE]
     evs.sort(key=lambda x: x[0]["ts"])
     names = {**decide.AGENTS, "caller": "Call agent", "orchestrator": "Remy"}
-    return [{"when": datetime.fromtimestamp(e["ts"]).strftime("%b %d %H:%M"), "case": name,
+    return [{"when": datetime.fromtimestamp(e["ts"]).strftime("%b %d %H:%M"), "case": name, "kind": e["kind"],
              "agent": names.get(str(e.get("agent")).split(":")[0], e.get("agent")), "what": _what(e)}
             for e, name in evs[-n:]]
 
@@ -388,6 +389,44 @@ def profiles(n: int = 5) -> list[dict]:
             continue
         out.append({k: row.get(k) for k in ("household_size", "insured", "income", "medical_oop", "hospital", "onboarded_at")})
     return out
+
+
+# ---------------------------------------------------------------- who and which hospital a question names
+
+def named_cases(question: str) -> list[dict]:
+    """Cases whose patient the question names (first or last name, whole word)."""
+    words = set(re.findall(r"[a-z]+", question.lower()))
+    return [c for c in all_cases() if {str((c.get("patient") or {}).get(k) or "").lower()
+                                       for k in ("first_name", "last_name")} & words - {""}]
+
+
+GENERIC = {"hospital", "medical", "center", "health", "the", "saint", "university", "mount", "general"}
+
+
+def named_hospitals(question: str) -> list:
+    """Hospitals in the policy DB the question names: a name or alias, or a health system's own word ("Sutter")."""
+    from .policies import registry
+    from .policies.store import PolicyStore
+    q = f" {registry.norm(question)} "
+    out = []
+    try:
+        hs = PolicyStore().hospitals()
+    except Exception:
+        return []
+    for h in hs:
+        keys = [registry.norm(a) for a in registry.names(h)]
+        first = registry.norm(h.system).split(" ")[0] if h.system else ""
+        if first and len(first) >= 5 and first not in GENERIC:
+            keys.append(first)
+        if any(k and len(k) >= 3 and f" {k} " in q for k in keys):
+            out.append(h)
+    return out
+
+
+def _sources_of(h) -> list[str]:
+    from .policies.store import PolicyStore
+    cur = PolicyStore().current(h.id)
+    return list((cur or {}).get("source_urls") or [])
 
 
 # ---------------------------------------------------------------- the context
@@ -410,20 +449,46 @@ def _shrink(ctx: dict) -> dict:
     return ctx
 
 
-def remy_context(case_id: str | None, page: str, question: str = "") -> dict:
-    """What Remy sees, from any tab: (a) the open case, (b) every case, (c) the hospitals, (d) recent agent
-    activity, (e) the Get started profile, and how Remy works when asked. Small: summarized, never dumped."""
-    page = page if page in PAGES else "cases"
+PAGE_ALIASES = {"under-the-hood": "ops", "get-started": "start", "onboarding": "start", "dashboard": "cases"}
+PRIVATE = re.compile(r"name|dob|birth|ssn|social|card|account|routing|phone|email|address", re.I)
+
+
+def page_of(page: str | None) -> str:
+    p = PAGE_ALIASES.get(page or "", page or "")
+    return p if p in PAGES else "cases"
+
+
+def clean_profile(profile: dict | None) -> dict | None:
+    """An onboarding profile for the context: the answers only, never a name, DOB, SSN, card or account."""
+    if not isinstance(profile, dict):
+        return None
+    return {k: v for k, v in profile.items() if not PRIVATE.search(k) and isinstance(v, (int, float, str, bool, type(None)))}
+
+
+def remy_context(case_id: str | None, page: str, question: str = "", profile: dict | None = None) -> dict:
+    """What Remy sees, from any tab: (a) the open case, (b) every case, (c) the hospitals (with the same-bill
+    comparison for the open case or a patient the question names), (d) recent agent activity, (e) the Get started
+    profile, and how Remy works when asked. Small: summarized, never dumped."""
+    page = page_of(page)
     case = _o().cases.get(case_id) if case_id else None
     ctx: dict = {"page": page, "page_is": PAGES[page], "today": followups.fmt(date.today().isoformat())}
     if case:
         ctx["case"] = whole_case(case)
-        if (cmp := comparison(case)) and page in ("case", "hospitals"):
-            ctx["same_bill_elsewhere"] = cmp
+    if case:
+        cmp_case = case if page in ("case", "hospitals") else None
+    else:  # no case open: a patient the question names, on the Hospitals tab or about policies
+        named = named_cases(question) if (page == "hospitals" or POLICY.search(question)) else []
+        cmp_case = named[0] if named else None
+    if cmp_case and (cmp := comparison(cmp_case)):
+        ctx["same_bill_elsewhere"] = cmp
     ctx["all_cases"] = bills_summary(all_cases())
     ctx["hospitals"] = hospitals_summary()
+    for h in named_hospitals(question)[:2]:
+        row = next((x for x in ctx["hospitals"] if x["name"] == h.name), None)
+        if row is not None:
+            row["sources"] = _sources_of(h)[:4]
     ctx["under_the_hood"] = activity(case["id"] if case and page == "ops" else None)
-    ctx["get_started"] = profiles()
+    ctx["get_started"] = [p for p in [clean_profile(profile)] if p] + profiles()
     if question and (knowledge.is_how_question(question) or page == "ops"):
         ctx["how_it_works"] = knowledge.relevant(question)
         ctx["code_map"] = knowledge.CODE_MAP
@@ -431,15 +496,57 @@ def remy_context(case_id: str | None, page: str, question: str = "") -> dict:
 
 
 def system_for(page: str) -> str:
-    return REMY_SYSTEM + f"\nThe patient is on {PAGES.get(page, PAGES['cases'])}."
+    return REMY_SYSTEM + f"\nThe patient is on {PAGES[page_of(page)]}."
+
+
+# ---------------------------------------------------------------- guardrails in code
+
+CARD = re.compile(r"(?:\d[ -]?){13,19}")
+SSN = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
+REFUSE_PAY = re.compile(r"\b(agree to pay|just pay|go ahead and pay|and pay \$|pay (the|this|my|it|them|that)\b[^?]{0,30}"
+                        r"\b(now|today|off|in full)|pay \$[\d,.]+ (now|today)|authori[sz]ed to (agree to )?pay|"
+                        r"(give|use|charge|read) (them |billing )?my (card|bank|account)|card (number|details)|"
+                        r"bank (details|account number)|routing number)\b", re.I)
+REFUSE_PRIVATE = re.compile(r"\b(ssn|social security)\b", re.I)
+REFUSE_HIDE = re.compile(r"pretend (to be|you'?re) (me|a (real )?(person|human))|\bnot a (bot|robot)\b|"
+                         r"say (you'?re|you are) (a )?(human|person|me)\b", re.I)
+INJECTION = re.compile(r"\bignore (all |your |any |the |previous |prior )*(instructions|rules|guardrails)\b|"
+                       r"\byou are now (authori[sz]ed|allowed)\b", re.I)
+
+
+def redact(text: str) -> str:
+    """Card and Social Security numbers never reach the log, the memory or the model."""
+    return SSN.sub("[redacted]", CARD.sub("[redacted]", text or ""))
+
+
+def refusal(question: str) -> str | None:
+    """Requests Remy refuses in code, before any model: paying, card / SSN / bank details, hiding that it's
+    automated, and instructions to drop its rules."""
+    q = question or ""
+    if CARD.search(q) or SSN.search(q) or REFUSE_PRIVATE.search(q):
+        return ("I can't take or repeat card, Social Security or bank details, and I never give them to billing. "
+                "Please don't share them here; I never agree to pay anything on your behalf.")
+    if decide.HIDE.search(q) or REFUSE_HIDE.search(q):
+        return "I can't do that: Remy always says it's an automated assistant calling for you, never a person."
+    if decide.PAY.search(q) or REFUSE_PAY.search(q) or INJECTION.search(q):
+        return ("I can't do that: I never agree to pay or give payment details, and any payment decision comes back "
+                "to you. I'm only here to get the bill corrected.")
+    return None
 
 
 # ---------------------------------------------------------------- sources, routing, answering
 
+def _doc_source(h: dict) -> str:
+    """"README.md › How it works › Money is computed": the file, then the heading below its title."""
+    parts = h["heading"].split(" › ")
+    return " › ".join([h["doc"], *parts[1:]]) if len(parts) > 1 else f"{h['doc']} › {h['heading']}"
+
+
 def sources(ctx: dict) -> list[str]:
     """What the answer could rest on, from the context it was given: the how-it-works sections, the policy
-    (URL and fetch date), the insurance claim, the bank transactions behind matched payments, the contact page."""
-    out = [h["heading"] for h in (ctx.get("how_it_works") or [])[:2]]
+    (URL and fetch date), the insurance claim, the bank transactions behind matched payments, the contact page,
+    a hospital the question named."""
+    out = [_doc_source(h) for h in (ctx.get("how_it_works") or [])[:2]]
     c = ctx.get("case") or {}
     pol = c.get("policy") or {}
     if str(pol.get("source") or "").startswith("http"):
@@ -456,60 +563,190 @@ def sources(ctx: dict) -> list[str]:
             if not any(s.split(" · ")[0] == url for s in out):
                 out.append(url)
             break
+    for h in ctx.get("hospitals") or []:
+        out += (h.get("sources") or [])[:1]
     return list(dict.fromkeys(out))[:4]
 
 
-BANK = re.compile(r"\b(bank|payments?|paid|insurance|insurer|eob|claim|nessie)\b", re.I)
-POLICY = re.compile(r"\b(polic(y|ies)|discounts?|qualif\w*|income|bright ?data|prices?|pricing|charity|"
-                    r"financial assistance|free care|poverty)\b", re.I)
-QUESTION = re.compile(r"\?\s*$|^\s*(what|how|which|why|when|where|who|do|does|did|is|are|can|could|should|will)\b", re.I)
+BANK = re.compile(r"\b(bank|payments?|paid|insurance|insurer|eob|claim|nessie|charged|card)\b", re.I)
+PRICE = re.compile(r"\b(prices?d?|pricing|posted|charge master|chargemaster|overcharg\w*|cost)\b", re.I)
+POLICY = re.compile(r"\b(polic(y|ies)|discounts?|qualif\w*|income|bright ?data|charity|financial assistance|"
+                    r"free care|poverty|cover|tiers?)\b", re.I)
+QUESTION = re.compile(r"\?\s*$|^\s*(what|how|which|why|when|where|who|does|did|is|are|can|could|should|will)\b", re.I)
 BILLS = re.compile(r"\b(which (bill|one)|first|in total|total|all (my|of my|the) bills|other bills|owe altogether)\b", re.I)
+OWE = re.compile(r"\b(how much|what) do i (still |actually )?owe\b|\bmy balance\b|\bwhat'?s (my|the) balance\b", re.I)
+COLLECT = re.compile(r"\b(collections?|collection agency|deadlines?|due|overdue|late)\b", re.I)
+ACTIVITY = re.compile(r"\b(agents?|activity|doing|happened|audit|log)\b", re.I)
 
 
-async def routed(case: dict | None, question: str, ctx: dict) -> tuple[str, list[str]]:
+def owe_text(case: dict) -> str:
+    r = bill_row(case)
+    who_ = (case.get("patient") or {}).get("first_name") or "You"
+    out = f"For {r['label']}, billing shows {_money(r['billing_shows_now'])} now."
+    if r["expected_after_corrections"] is not None:
+        out += f" Once billing applies the corrections it should be {_money(r['expected_after_corrections'])}"
+        out += ", and billing confirmed it." if r["confirmed_balance"] is not None else "; billing hasn't confirmed that yet."
+    if r["refund_expected"]:
+        out += f" {who_} should get {_money(r['refund_expected'])} back."
+    return out
+
+
+def price_text(case: dict, question: str) -> str | None:
+    """A bill line against the hospital's posted price (billcheck.line_table), for "is X priced above ...?"."""
+    rows = billcheck.line_table(case["bill"], case["hospital"].get("name"))
+    words = set(re.findall(r"[a-z0-9]+", question.lower())) - {"the", "on", "my", "bill", "is", "a", "of", "above", "price"}
+    hit = [r for r in rows if r["code"].lower() in words or words & set(re.findall(r"[a-z0-9]+", str(r["description"]).lower()))]
+    if not hit:
+        return None
+    out = []
+    for r in hit[:2]:
+        if not r["posted"]:
+            out.append(f"Line {r['line']}, {r['description']} ({r['code']}), is billed {_money(r['billed'])}; "
+                       f"I couldn't compare it with a posted price: {r['why']}.")
+            continue
+        p = r["posted"]["gross"]
+        rel = "above" if r["billed"] > p else "not above (it's below)" if r["billed"] < p else "the same as"
+        out.append(f"Line {r['line']}, {r['description']} ({r['code']}), is billed {_money(r['billed'])}; the "
+                   f"hospital's posted price is {_money(p)}, so it's {rel} the posted price.")
+    return " ".join(out)
+
+
+def collections_text(rows: list[dict], cases: list[dict]) -> str:
+    out = []
+    for c in cases:
+        b = c["bill"]
+        if b.get("due_date") or "collection" in str(b.get("notice") or "").lower():
+            due = followups.fmt(b["due_date"]) if b.get("due_date") else None
+            line = f"{label(c)} is due {due}" if due else label(c)
+            if "collection" in str(b.get("notice") or "").lower():
+                line += (" and its notice says it may go to a collection agency if not paid by then" if due
+                         else ": its notice mentions a collection agency")
+            out.append(line + ".")
+    if not out:
+        return "None of the bills has a due date or a collections notice on it."
+    return " ".join(out) + " Every call plan asks billing to pause collections while the bill is corrected."
+
+
+def _row_text(case: dict, r: dict) -> str:
+    first = (case.get("patient") or {}).get("first_name") or "the patient"
+    s = f"At {r['hospital']}, {first}'s bill would come to {_money(r['balance'])}"
+    if r["refund"]:
+        s += f" with {_money(r['refund'])} back"
+    s += f" ({r['discount_pct']:g}% off: {r['rule']})." if r["discount_pct"] else f": no discount ({r.get('why_not') or 'no tier fits'})."
+    return s
+
+
+def hospitals_text(question: str, ctx: dict) -> tuple[str, list[str]]:
+    """The offline answer about the policy database: a named hospital, a named patient's bill elsewhere, sources."""
+    low, hs, people = question.lower(), named_hospitals(question), named_cases(question)
+    summary = {h["name"]: h for h in ctx.get("hospitals") or hospitals_summary()}
+    if people and (cmp := comparison(people[0], top=None)):
+        rows, c = cmp["results"], people[0]
+        if hs:
+            pick = [r for r in rows if r["hospital"] in {h.name for h in hs}]
+            if pick:
+                return " ".join(_row_text(c, r) for r in pick[:2]), [s for r in pick[:2] for s in r["sources"][:1]]
+        if re.search(r"\bfree\b|100%|nothing|\$0\b", low):
+            free = [r for r in rows if r["discount_pct"] >= 100]
+            if free:
+                return (f"Under their own policies, {', '.join(r['hospital'] for r in free[:6])} would give "
+                        f"{c['patient']['first_name']} free care for this bill."), [s for r in free[:2] for s in r["sources"][:1]]
+            return f"None of the hospitals' policies would give {c['patient']['first_name']} free care for this bill.", []
+        return " ".join(_row_text(c, r) for r in rows[:3]), [s for r in rows[:2] for s in r["sources"][:1]]
+    if hs and re.search(r"\b(where|source|sources|from|fetched|link|url|document)\b", low):
+        out, srcs = [], []
+        for h in hs[:2]:
+            urls = _sources_of(h)
+            row = summary.get(h.name) or {}
+            out.append(f"{h.name}'s policy comes from its own documents" + (f", fetched {row['fetched']}" if row.get("fetched") else "")
+                       + (f": {urls[0]}" if urls else " (no source on record)") + ".")
+            srcs += urls[:2]
+        return " ".join(out), srcs[:4]
+    if re.search(r"\b(no|don'?t|doesn'?t|without|not)\b.{0,30}\btiers?\b|\bno tiers\b", low):
+        none = [n for n, h in summary.items() if h.get("status") == "no tiers"]
+        return ((f"These hospitals don't state a fixed discount tier in what we crawled: {', '.join(none)}." if none
+                 else "Every hospital in the database states at least one discount tier."), [])
+    if hs:
+        out, srcs = [], []
+        for h in hs[:2]:
+            row = summary.get(h.name) or {}
+            tiers = "; ".join(row.get("tiers") or []) or "no fixed discount tier stated"
+            out.append(f"{h.name}: {tiers}" + (f"; payment plans {row['plan_terms']}" if row.get("plan_terms") else "") + ".")
+            srcs += _sources_of(h)[:1]
+        return " ".join(out), srcs
+    with_tiers = [n for n, h in summary.items() if h.get("status") == "tiers"]
+    return (f"The policy database has {len(summary)} hospitals; {len(with_tiers)} have verified discount tiers"
+            + (f", for example {', '.join(with_tiers[:3])}." if with_tiers else "."), [])
+
+
+def activity_text(ctx: dict) -> str:
+    """The latest thing each agent did."""
+    last: dict = {}
+    for e in ctx.get("under_the_hood") or []:
+        last[e["agent"]] = e
+    if not last:
+        return "The agents haven't done anything yet: start a case and the Nessie and Bright Data agents review it."
+    return "Latest from each agent: " + "; ".join(f"{a}: {e['what']} ({e['when']})" for a, e in list(last.items())[-5:]) + "."
+
+
+async def routed(case: dict | None, question: str, ctx: dict) -> tuple[str, list[str], str]:
     """Without Claude (or when its answer can't be used): refusals by rule, then the agent whose evidence answers
-    the question, then the bills / status templates. Returns (answer, sources)."""
+    the question, then the bills / status templates, all from code. Returns (answer, sources, route)."""
+    if said := refusal(question):
+        return said, [], "refused"
     kind, said = decide._offline_intent(question)
-    asking = bool(QUESTION.search(question))  # "what do I owe?" is a question, not a change to the facts
-    if kind == "refused" and (decide.PAY.search(question) or decide.HIDE.search(question) or not asking):
-        return said, []
+    if kind == "refused" and not QUESTION.search(question):  # "what do I owe?" is a question, not a change of facts
+        return said, [], "refused"
     if case is None:
-        return general_text(question, ctx), sources(ctx)
+        return general(question, ctx)
     if kind == "change":
-        return "Your plan isn't ready yet. Once the Review is done, the planner can change it.", []
+        return "Your plan isn't ready yet. Once the Review is done, the planner can change it.", [], "remy"
+    if PRICE.search(question) and (text := price_text(case, question)):
+        return text, [r["posted"]["source"] for r in billcheck.line_table(case["bill"], case["hospital"].get("name"))
+                      if r["posted"]][:1], "policy"
+    if OWE.search(question) and not BILLS.search(question):
+        return owe_text(case), sources(ctx), "remy"
     agent = "auditor" if BANK.search(question) else "policy" if POLICY.search(question) else None
     if agent and case.get("facts"):
         out = await decide.answer_agent(case, agent, question, emit=False, use_llm=False)
-        return out["answer"], out["sources"]
+        return out["answer"], out["sources"], agent
     if BILLS.search(question):
         if ctx.get("case", {}).get("other_bills"):
-            return bills_text(ctx["case"]["other_bills"]), []
+            return bills_text(ctx["case"]["other_bills"]), [], "remy"
         if ctx["all_cases"]["totals"]["bills"] > 1:
-            return bills_text(ctx["all_cases"]), []
-    return followups.fallback_status(_o().summary(case)), sources(ctx)
+            return bills_text(ctx["all_cases"]), [], "remy"
+    return followups.fallback_status(_o().summary(case)), sources(ctx), "remy"
 
 
-def general_text(question: str, ctx: dict) -> str:
-    """The offline answer on a page with no case open."""
+def general(question: str, ctx: dict) -> tuple[str, list[str], str]:
+    """The offline answer on a page with no case open. Returns (answer, sources, route)."""
     page, low = ctx["page"], question.lower()
-    if decide._offline_intent(question)[0] == "change":
-        return "Open the bill on the Cases tab and ask there: plan changes go to that case's planner."
+    if decide._offline_intent(question)[0] == "change" and not QUESTION.search(question):
+        return "Open the bill on the Cases tab and ask there: plan changes go to that case's planner.", [], "remy"
     if ctx.get("how_it_works") and knowledge.is_how_question(question):
         h = ctx["how_it_works"][0]
-        return f"From {h['heading']}: {h['text'][:400].strip()}"
-    if page == "hospitals" or POLICY.search(question):
-        hs = ctx.get("hospitals") or []
-        with_tiers = [h["name"] for h in hs if h.get("status") == "tiers"]
-        return (f"The policy database has {len(hs)} hospitals; {len(with_tiers)} have verified discount tiers"
-                + (f", for example {', '.join(with_tiers[:3])}." if with_tiers else "."))
-    if page == "ops" and ctx.get("under_the_hood"):
-        e = ctx["under_the_hood"][-1]
-        return f"Latest: {e['what']} ({e['case']}, {e['when']})."
+        return f"From {_doc_source(h)}: {h['text'][:400].strip()}", sources(ctx), "remy"
+    if page == "hospitals" or named_hospitals(question) or (POLICY.search(question) and not named_cases(question)):
+        text, srcs = hospitals_text(question, ctx)
+        return text, srcs or sources(ctx), "policy"
+    if COLLECT.search(question):
+        return collections_text(ctx["all_cases"]["bills"], all_cases()), [], "remy"
+    if people := named_cases(question):
+        if OWE.search(question):
+            return owe_text(people[0]), [], "remy"
+        return f"{label(people[0])}: " + followups.fallback_status(_o().summary(people[0])), [], "remy"
+    if page == "ops" or (ACTIVITY.search(question) and not BILLS.search(question)):
+        return activity_text(ctx), [], "remy"
     if page == "start" or re.search(r"\b(household|profile|onboarding)\b", low):
         p = (ctx.get("get_started") or [None])[0]
-        return (f"Your saved profile: household of {p.get('household_size')}." if p and p.get("household_size")
-                else "No household profile is saved yet. Fill in Get started and I'll use it on your next bill.")
-    return bills_text(ctx["all_cases"])
+        if not p:
+            return "No household profile is saved yet. Fill in Get started and I'll use it on your next bill.", [], "remy"
+        bits = [f"household of {p['household_size']}" if p.get("household_size") else "",
+                f"income {_money(p['income'])} a year before taxes" if isinstance(p.get("income"), (int, float)) else "",
+                ("insured" if p["insured"] else "uninsured") if isinstance(p.get("insured"), bool) else ""]
+        return ("From Get started: " + ", ".join(b for b in bits if b) + ". I use these for the hospital's "
+                "financial-assistance rules on your next bill; the Hospitals tab shows each policy."), [], "remy"
+    return bills_text(ctx["all_cases"]), [], "remy"
 
 
 async def _claude(system: str, ctx_json: str, history: list[dict], question: str,
@@ -533,25 +770,58 @@ async def _claude(system: str, ctx_json: str, history: list[dict], question: str
     return answer, handoff, "claude" if answer or handoff else ""
 
 
-async def ask_remy(case: dict, question: str, page: str = "case") -> dict:
+def as_turns(history: list[dict] | None) -> list[dict] | None:
+    """A history sent with the request ([{role, content}]) as memory turns: the last MEMORY question + answer pairs."""
+    if history is None:
+        return None
+    out, q = [], None
+    for m in history:
+        if not isinstance(m, dict) or not isinstance(m.get("content"), str):
+            continue
+        if m.get("role") == "user":
+            q = redact(m["content"])
+        elif m.get("role") == "assistant" and q is not None:
+            out.append({"q": q, "a": m["content"]})
+            q = None
+    return out[-decide.MEMORY:]
+
+
+NAMES = {"remy": "Remy", "auditor": "Nessie agent", "policy": "Bright Data agent", "decide": "Planner", "refused": "Remy"}
+
+
+def _out(answer: str, srcs: list[str], route: str, src: str, **extra) -> dict:
+    return {"answer": answer, "agent": "remy" if route == "refused" else route, "route": route, "agent_name": NAMES[route],
+            "sources": srcs, "source": src, **({"refused": True} if route == "refused" else {}), **extra}
+
+
+async def ask_remy(case: dict, question: str, page: str = "case", history: list[dict] | None = None,
+                   profile: dict | None = None) -> dict:
     """The agent chat's default: Remy answers about the whole case (and every tab), and hands plan changes to
-    the planner."""
-    ctx = remy_context(case["id"], page, question)
-    answer, handoff, src = await _claude(system_for(page), json.dumps(ctx, default=str), decide.turns(case),
-                                         question, [HANDOFF_TOOL])
-    if not answer and not handoff and decide._offline_intent(question)[0] == "change":
-        handoff = True  # offline, or Claude failed: the planner's own rules still take the change
+    the planner. history: the conversation so far, when the caller keeps it (else the case's stored chat)."""
+    q = redact(question)
+    if said := refusal(question):
+        bus.emit(case["id"], "agent_qa", "remy", question=q, answer=said, sources=[])
+        return _out(said, [], "refused", "code")
+    intent = decide._offline_intent(question)[0]
+    handoff = intent == "change" and not QUESTION.search(question)  # a plain change request: the planner's rules
+    ctx = remy_context(case["id"], page, question, profile)
+    turns = as_turns(history) if history is not None else decide.turns(case)
+    answer, src = "", ""
+    if not handoff:
+        answer, handoff, src = await _claude(system_for(page), json.dumps(ctx, default=str), turns, q, [HANDOFF_TOOL])
+        handoff = handoff or (not answer and intent == "change")  # offline, or Claude failed
     if handoff and decide.latest(case):
-        out = await decide.chat(case, question, via="remy")
-        return {**out, "answer": out["reply"], "agent": "decide", "agent_name": "Planner", "via": "remy"}
+        out = await decide.chat(case, q, via="remy", prior=turns)
+        return {**out, "answer": out["reply"], "agent": "decide", "route": "decide", "agent_name": "Planner",
+                "via": "remy", "sources": []}
     if handoff:
         answer = "Your plan isn't ready yet. Once the Review is done, the planner can change it."
-    srcs = sources(ctx)
+    route, srcs = "remy", sources(ctx)
     if not answer:
-        answer, srcs = await routed(case, question, ctx)
+        answer, srcs, route = await routed(case, question, ctx)
         src = "code"
-    bus.emit(case["id"], "agent_qa", "remy", question=question, answer=answer, sources=srcs)
-    return {"answer": answer, "agent": "remy", "agent_name": "Remy", "sources": srcs, "source": src}
+    bus.emit(case["id"], "agent_qa", "remy", question=q, answer=answer, sources=srcs)
+    return _out(answer, srcs, route, src)
 
 
 # ---------------------------------------------------------------- the chat on pages with no case open
@@ -560,16 +830,21 @@ def _log_path():
     return events.DATA_DIR / "remy_chat.json"
 
 
-def chat_log(page: str | None = None, n: int = 50) -> list[dict]:
+def chat_log(page: str | None = None, n: int = 50, session_id: str | None = None) -> list[dict]:
+    """Case-less turns, oldest first: one session's (session_id), else one page's."""
     try:
         rows = json.loads(_log_path().read_text())
     except (OSError, json.JSONDecodeError):
         rows = []
-    return [r for r in rows if page is None or r.get("page") == page][-n:]
+    if session_id:
+        rows = [r for r in rows if r.get("session_id") == session_id]
+    elif page:
+        rows = [r for r in rows if r.get("page") == page_of(page)]
+    return rows[-n:]
 
 
 def _keep(row: dict) -> None:
-    rows = (chat_log(None, 199) + [row])
+    rows = chat_log(None, 199) + [row]
     tmp = _log_path().with_suffix(".tmp")
     tmp.write_text(json.dumps(rows, default=str))
     tmp.replace(_log_path())
@@ -579,15 +854,23 @@ def clear_log() -> None:
     _log_path().unlink(missing_ok=True)
 
 
-async def ask_general(question: str, page: str) -> dict:
-    """Remy on a tab with no case open: same context builder and rules; its turns are kept per page."""
-    page = page if page in PAGES else "cases"
-    ctx = remy_context(None, page, question)
-    hist = [{"q": r["question"], "a": r["answer"]} for r in chat_log(page, decide.MEMORY)]
-    answer, _, src = await _claude(system_for(page), json.dumps(ctx, default=str), hist, question)
-    srcs = sources(ctx)
-    if not answer:
-        answer, srcs = await routed(None, question, ctx)
-        src = "code"
-    _keep({"ts": time.time(), "page": page, "question": question, "answer": answer, "sources": srcs})
-    return {"answer": answer, "agent": "remy", "agent_name": "Remy", "sources": srcs, "source": src, "page": page}
+async def ask_general(question: str, page: str, history: list[dict] | None = None, session_id: str | None = None,
+                      profile: dict | None = None) -> dict:
+    """Remy on a tab with no case open: same context builder and rules. Memory: the history sent with the request,
+    else the stored turns of this session (session_id) or this page."""
+    page, q = page_of(page), redact(question)
+    if said := refusal(question):
+        out = _out(said, [], "refused", "code", page=page)
+    else:
+        ctx = remy_context(None, page, question, profile)
+        hist = as_turns(history) if history is not None else [
+            {"q": r["question"], "a": r["answer"]} for r in chat_log(page, decide.MEMORY, session_id)]
+        answer, _, src = await _claude(system_for(page), json.dumps(ctx, default=str), hist, q)
+        route, srcs = "remy", sources(ctx)
+        if not answer:
+            answer, srcs, route = await routed(None, question, ctx)
+            src = "code"
+        out = _out(answer, srcs, route, src, page=page)
+    _keep({"ts": time.time(), "page": page, "session_id": session_id, "question": q, "answer": out["answer"],
+           "sources": out["sources"]})
+    return out

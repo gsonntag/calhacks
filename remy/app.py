@@ -379,19 +379,26 @@ class RemyQuestion(BaseModel):
     question: str = "What's the status?"
     page: str = "cases"
     case_id: str | None = None
+    history: list[dict] | None = None  # [{role, content}]: overrides the stored memory for this call
+    session_id: str | None = None  # keys the case-less memory
+    profile: dict | None = None  # an onboarding profile, for Get started questions
 
 
 @app.post("/api/remy/ask", dependencies=ADMIN)
 async def ask_remy_anywhere(q: RemyQuestion):
     """Ask Remy from any tab. With an open case, the same answer path as the case page's chat; without one,
-    Remy answers from every tab's data and keeps the turns per page (data/remy_chat.json)."""
+    Remy answers from every tab's data and keeps the turns per session or page (data/remy_chat.json).
+    Returns {answer, agent (the route used: remy | auditor | policy | decide), route, sources}, plus
+    refused: true when Remy refused."""
     question = q.question.strip()[:500] or "What's the status?"
     case = _case_or_404(q.case_id) if q.case_id else None
+    if q.case_id and not case:
+        return JSONResponse({"error": "not found"}, 404)
     if case:
-        out = await _decide_call(orchestrator.ask_remy(case, question, q.page))
+        out = await _decide_call(orchestrator.ask_remy(case, question, q.page, q.history, q.profile))
         orchestrator.save(case)
         return out
-    return await orchestrator.ask_general(question, q.page)
+    return await orchestrator.ask_general(question, q.page, q.history, q.session_id, q.profile)
 
 
 @app.get("/api/remy/chat")

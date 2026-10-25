@@ -645,7 +645,7 @@ def _offline_intent(msg: str) -> tuple[str, dict | str]:
                          r"discount|free care|refund|supervisor|case number)\b", low)
         if skip:
             patch["skip"] = [KIND_WORDS.get(skip.group(2), skip.group(2).replace(" ", "_"))]
-    first = re.search(r"\b(refund|insurance|payment|discount|free care|plan|hold|collections)\b\s+first|"
+    first = re.search(r"\b(refund|insurance|payment|discount|free care|plan|hold|collections)\b(?:\s+(?:one|ask|part))?\s+first|"
                       r"\bfirst\b.{0,15}\b(refund|insurance|payment|discount|free care|plan|hold|collections)\b", low)
     if first:
         patch["first"] = [KIND_WORDS[first.group(1) or first.group(2)]]
@@ -672,9 +672,10 @@ def _offline_answer(case: dict, msg: str) -> str:
     return f"{d['path']}. The math: {' '.join(d['math'])}. {d['call']}."
 
 
-async def chat(case: dict, message: str, via: str = "") -> dict:
+async def chat(case: dict, message: str, via: str = "", prior: list[dict] | None = None) -> dict:
     """One planner-chat turn. Questions get an answer; change requests become a new version via the rules.
-    via="remy": Remy handed the patient's message over from the agent chat."""
+    via="remy": Remy handed the patient's message over from the agent chat; prior: that chat's recent turns
+    ([{q, a}]), so the planner knows what "that one" means."""
     if not latest(case):
         raise Refused("The plan isn't ready yet")
     msg = message.strip()[:1000]
@@ -686,6 +687,9 @@ async def chat(case: dict, message: str, via: str = "") -> dict:
     if llm.available():
         history = [{"role": "assistant" if m["role"] == "planner" else "user",
                     "content": m["text"] + (f" [this made plan v{m['v']}]" if m.get("v") else "")} for m in p["chat"][-9:-1]]
+        while history and history[0]["role"] == "assistant":  # keep the roles alternating after "Got it."
+            history.pop(0)
+        history = as_messages(prior or []) + history
         try:
             resp = await llm.create(system=PLANNER_SYSTEM, max_tokens=2000, **_fast(),
                                     tools=[STRATEGY_TOOL], messages=[
