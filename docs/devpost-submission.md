@@ -277,7 +277,20 @@ whichever case the video leads with.
 Say "the first patient-side agent we know of", **not** "the only AI that calls hospitals": Pine AI and Avelis
 Health place AI calls too.
 
-**At this event:** another Cal Hacks 13.0 team,
+**Hospital-bill teams at Cal Hacks 13.0** (found on GitHub on Oct 25, 1 AM: 310 repos mentioning Cal Hacks
+created this week; READMEs searched for hospital, medical bill, patient, charity care and similar):
+
+| Team | What it does | Overlap with us | How BillBack differs |
+|---|---|---|---|
+| [**Switchboard**](https://github.com/navinagrawalchung07/switchboard) | "An AI advocate that makes the phone calls you dread, and cites federal law when the rep says no." Uses **Cartesia + Claude**. Claims a **real recorded outbound call** to a (role-played) hospital: No Surprises Act dispute ($14,730 bill vs a $6,200 estimate), collections hold, reference number. Legal claims come only from a fixed "rights pack" of 12 clauses. | **Highest.** Same Cartesia prize, same "AI calls billing" story, and they have the recorded call we don't. | We find the money first: we check the bill against the insurance statement and bank records, and work out the hospital's own charity-care discount from its crawled policy. Then the plan, the call, the scorecard and the follow-up call. Switchboard argues one federal rule (the $400 estimate dispute); we ask for everything the evidence backs. |
+| [**Recount**](https://github.com/VolodymyrLinuxovich/recount) | Reads a photo of a California hospital bill, checks each line against the hospital's published prices, applies California charity-care law, flags hospital policies that conflict with state law (all 470 CA hospitals on a map), and **drafts letters**. "Nothing is sent for you." Live site, Android app, English and Spanish. Tracks: Microsoft, Anthropic Public Benefit, Apify, Convex, People-First. | **High** on the Anthropic and Microsoft prizes: the same California charity-care angle, with more polish and a much wider hospital map. | We act: we call billing and follow up. We use the patient's bank records and insurance statement to catch missed payments and unapplied insurance. Recount stops at letters for the patient to send. |
+| [**Halcyon Bay**](https://github.com/batyrkhan9/halcyon-bay) | "Runs the patient billing office of a nonprofit hospital." Simulated hospital. README is still a stub. | **Opposite side** of the same call. | We work for the patient, not the hospital. |
+
+In the pitch, a judge may well have seen Switchboard or Recount. Have one line ready for each: "Switchboard
+makes the call, Recount finds the discount; BillBack does both, checks your own payments, and follows up
+until it's done."
+
+**Also at this event:** another Cal Hacks 13.0 team,
 [Docket](https://github.com/AnushaAgarwal27/Docket), has a very similar pitch: "proves every rule with the
 exact official clause, and follows up until the problem is fixed". Docket is a caseworker for F-1 students
 (tax withholding, forms, work-hour caps), not hospital bills. It targets the same sponsors (Anthropic,
@@ -400,7 +413,7 @@ judges preferred Marcus because the hospital's policy decides his case), use thi
 | Don't say | Why | Say instead |
 |---|---|---|
 | "80% of medical bills have errors" | Comes from advocates paid by results; no published method | "4 in 10 adults say they've received a bill they believe had an error (KFF, 2022)" |
-| "The only AI that calls hospitals" | Pine AI and Avelis place AI calls | "The first patient-side agent we know of that does the whole loop" |
+| "The only AI that calls hospitals" | Pine AI and Avelis place AI calls, and Switchboard does at this very event | "The first patient-side agent we know of that does the whole loop" |
 | "No credit reporting before 180 days" | Since 2025 California bans it outright | "California bans medical debt on credit reports" |
 | "AB 1020 took effect in 2024" | It took effect in 2022; enforcement began in 2024 | "Enforced since 2024" |
 | "Marcus qualifies for Medi-Cal" | His income is probably just over the limit | Don't mention Medi-Cal |
