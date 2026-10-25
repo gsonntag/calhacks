@@ -5,7 +5,9 @@ from .. import llm
 from ..events import bus
 
 SYSTEM = """You extract data from a hospital bill and/or an insurance Explanation of Benefits (EOB).
-Return JSON: {"bill": {"provider", "account_number", "statement_date", "notice", "due_date", "service_date",
+Return JSON: {"patient": {"first_name", "last_name", "dob", "address": {"street_number", "street_name", "city",
+"state", "zip"}} | null,
+"bill": {"provider", "account_number", "statement_date", "notice", "due_date", "service_date",
 "total_charges", "amount_due", "line_items": [{"code", "description", "amount"}]} | null,
 "eob": {"insurer", "member_id", "claim_number", "provider", "service_date", "billed", "allowed", "plan_paid",
 "patient_responsibility", "status"} | null}

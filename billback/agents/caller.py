@@ -28,7 +28,7 @@ granted. Only bring up evidence when it supports the current goal.
 
 If the rep needs to verify identity, give the patient's date of birth and insurance member ID from the brief.
 If they insist the patient must call personally, ask them to note the account (disputed / assistance review
-requested) and for a reference number, and ask what the patient should say when she calls.
+requested) and for a reference number, and ask what the patient should say when they call.
 
 If the rep asks whether the patient authorized this, answer from "patient_authorization" in the brief: say
 how and when the patient agreed. If it says the patient is on the line, ask the patient to confirm to the rep.
@@ -42,8 +42,13 @@ Rules:
 - Use only the facts in the CASE BRIEF. Never invent numbers, policies, or laws.
 - Be polite, calm, and persistent. If the rep says no, restate the evidence once more, then ask for a
   supervisor or a written review instead of arguing in circles.
-- NEVER agree to pay anything, set up a payment plan, or give card or bank details on the call. If the rep
-  asks for payment, say the patient will review any payment arrangement and you'll follow up.
+- NEVER pay anything or give card or bank details on the call. If the rep asks for payment today, say the
+  patient will set up any payments themselves.
+- Payment plans: only if "proposed_payment_plan" is in the brief, ask for that interest-free plan (months x
+  monthly amount). If the rep offers it or something no costlier, thank them and ask them to note it on the
+  account; the patient confirms it and sets up the payments. Never accept interest or a higher monthly
+  amount. Without "proposed_payment_plan" in the brief, don't agree to any plan.
+- Refer to the patient by name or as "the patient"; don't guess their pronouns.
 - When the rep gives a case/reference number, call record_outcome. When the goals are done or the rep
   ends it, call end_call and say a short goodbye. If the rep says goodbye or wants to end the call, never push
   another request: record what you have, thank them, say goodbye and call end_call.
@@ -65,6 +70,13 @@ def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
         if policy.get("refund"):
             goals.append(f"Ask for the ${policy['refund']:,.0f} the patient already paid to be refunded once "
                          f"the assistance is applied.")
+    plan = policy.get("plan") or {}
+    if not elig["discount_pct"] and plan.get("months") and policy["target"] > 0:
+        terms = policy.get("plan_terms") or {}
+        why = " Their own billing policy says payment plans are interest-free." if terms.get("interest_free") else ""
+        goals.append(f"Once the balance is corrected to ${policy['target']:,.0f}, set up an interest-free payment plan: "
+                     f"{plan['months']} monthly payments of ${plan['monthly']:,.0f}.{why} Don't give card details; "
+                     f"the patient sets up the payments.")
     goals.append("Ask for the account to be placed on hold so it isn't sent to collections while this is reviewed.")
     goals.append("Get a case or reference number and the rep's name; repeat the case number back to confirm.")
     return goals
@@ -90,6 +102,8 @@ def build_brief(case: dict, audit: dict, policy: dict) -> dict:
         "policy_tier": elig["tier"],
         "policy_quotes": [t.get("quote") for t in policy["policy"].get("tiers", [])],
         "collections_quote": policy["policy"].get("collections_quote"),
+        "payment_plan_quotes": [q for q in ((policy.get("plan_terms") or {}).get(k) for k in ("quote", "cap_quote")) if q],
+        "proposed_payment_plan": policy.get("plan") if not elig["discount_pct"] else None,
         "policy_source": policy["source"],
         "balance_after_assistance": policy["target"],
         "refund_due_after_assistance": policy.get("refund", 0),

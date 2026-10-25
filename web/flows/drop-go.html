@@ -42,6 +42,8 @@
   @keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(190,51,55,.35),0 18px 40px -16px rgba(190,51,55,.8)}50%{box-shadow:0 0 0 18px rgba(190,51,55,0),0 18px 40px -16px rgba(190,51,55,.8)}}
   .go.working{pointer-events:none}
   .below{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .hh{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;font-weight:600}
+  .hh input{width:64px;padding:6px 8px;font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px;text-align:center}
   .link{background:none;border:0;padding:8px;color:var(--muted);font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
   .link:hover{color:var(--accent)}
   .link.small{font-size:13px;color:var(--muted-2);padding:2px 8px;margin-top:-8px}
@@ -89,7 +91,7 @@
         <span class="ok" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
         <span class="ph" aria-hidden="true"></span>
         <h3>Insurance statement</h3>
-        <p class="hint">Often called an EOB. Optional</p>
+        <p class="hint">Often called an EOB. Shows what insurance covered</p>
         <span class="fname"></span>
         <button class="x" type="button" data-clear="eob">Remove</button>
       </label>
@@ -97,6 +99,7 @@
   </section>
 
   <div class="below">
+    <label class="hh">People in your household <input id="hh" type="number" min="1" max="20" value="1" inputmode="numeric"></label>
     <button class="btn go" id="go" type="button" disabled>Go<small id="goSub">add your bill</small></button>
     <div class="progress" id="progress" aria-live="polite">
       <span class="chip" data-p="0">Reading your documents</span>
@@ -159,7 +162,7 @@ document.querySelectorAll('[data-clear]').forEach((b) => b.addEventListener('cli
   e.preventDefault(); e.stopPropagation(); files[b.dataset.clear] = null; render();
 }));
 
-async function start(withFiles, scenario) {
+async function start(withFiles, scenario, hh) {
   if (busy) return;
   busy = true; err.textContent = '';
   document.body.classList.add('working-on'); go.classList.add('working'); render();
@@ -169,7 +172,9 @@ async function start(withFiles, scenario) {
   try {
     const fd = new FormData();
     if (withFiles) for (const f of [files.bill, files.eob]) if (f) fd.append('files', f, f.name);
-    const r = await fetch('/api/cases' + (scenario ? '?scenario=' + encodeURIComponent(scenario) : ''), { method: 'POST', body: fd });
+    const q = new URLSearchParams({ household_size: String(hh || Math.max(1, parseInt($('hh').value, 10) || 1)) });
+    if (scenario) q.set('scenario', scenario);
+    const r = await fetch('/api/cases?' + q, { method: 'POST', body: fd });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const { case_id } = await r.json();
     if (!case_id) throw new Error('no case id');
@@ -186,7 +191,7 @@ async function start(withFiles, scenario) {
 }
 go.addEventListener('click', () => start(true));
 $('sample').addEventListener('click', () => start(false));
-$('freecare').addEventListener('click', () => start(false, 'freecare'));
+$('freecare').addEventListener('click', () => start(false, 'freecare', 3));  // Marcus's household: 3
 render();
 </script>
 </body>

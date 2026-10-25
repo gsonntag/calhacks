@@ -6,8 +6,9 @@ policy requires it to give you, calls billing to get it fixed, and follows up un
 arrives. Nothing is said or paid on your behalf without your approval.
 
 Demo arc (synthetic patient, real hospital policy): **$8,700 final notice from California Pacific Medical
-Center → $2,100 actually owed → $0 under Sutter Health's own financial-assistance policy, plus the $500 she
-already paid back → case number, account on hold, follow-up scheduled.**
+Center → $1,100 after the insurance the hospital never applied → $600 after the $500 she already paid →
+an interest-free plan (6 × $100/month) under Sutter Health's own billing policy, collections paused, case
+number, follow-up scheduled.**
 
 ## How it works
 
@@ -31,13 +32,13 @@ the UI and appended to `data/<case>.audit.jsonl`.
 
 **Money is computed, not generated** (`billback/finance.py`): reconciliation, duplicate detection, income
 annualisation from payroll deposits, % of the federal poverty line, discount tiers (including the insured
-high-medical-cost rule), refunds, payment plan. Claude extracts policy text with verbatim quotes, which the
+high-medical-cost rule), payment plan within the policy's income cap. Claude extracts policy text with verbatim quotes, which the
 code verifies against the fetched document, and does the talking; it never invents a number.
 
 ## Sponsor map (where to look)
 | Sponsor | What it does here | Code | Docs |
 |---|---|---|---|
-| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts tiers whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 4 San Francisco hospitals; same bill → different answers. | `billback/policies/`, `billback/integrations/brightdata.py`, `scripts/crawl_policies.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
+| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts discount tiers, collections rules and payment-plan terms (interest-free, income cap) whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 4 San Francisco hospitals; same bill → different answers. | `billback/policies/`, `billback/integrations/brightdata.py`, `scripts/crawl_policies.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
 | **Cartesia** | Our own voice pipeline: Twilio Media Streams ↔ Cartesia Ink streaming STT + Sonic TTS ↔ Claude call brain, barge-in, voice/accent picker (American, British, Indian English, Spanish), pronunciation normalizer for money, IDs, CPT codes and medical terms. Managed Agents path kept as an alternative. | `billback/voice/`, `billback/integrations/cartesia.py`, `scripts/sim_twilio_stream.py` | [`docs/voice.md`](docs/voice.md); voice demo at `/voice.html` |
 | **Capital One Nessie** | The patient's bank: payroll deposits → income, the $500 payment the hospital missed, a duplicate charge, and a payment plan written back as a recurring bill when something is still owed. | `billback/integrations/nessie.py`, `billback/agents/auditor.py`, `scripts/seed_nessie.py` | [`docs/feasibility.md`](docs/feasibility.md) (how real bank data is obtained) |
 | **Anthropic Claude** | Intake (vision on bill/EOB), policy extraction with quotes, the call brain, outcome/follow-up extraction, status answers. | `billback/agents/`, `billback/followups.py` | |
@@ -52,7 +53,7 @@ uv sync
 cp .env.example .env            # fill what you have; blanks run in a labelled offline mode
 uv run uvicorn billback.app:app --port 8000
 # open http://localhost:8000   (or /flows/ for the intake designs, /dashboard.html, /hospitals.html)
-uv run pytest -q                # 116 tests, fully offline
+uv run pytest -q                # 117 tests, fully offline
 ```
 
 Setup scripts (once):
@@ -73,6 +74,10 @@ scripted caller so the whole flow still runs offline. `case.html?replay=1` repla
   Claude reasoning, Cartesia STT/TTS, the approval gate and audit log.
 - **Simulated:** the patient, bill, EOB and bank history are synthetic (PDFs are watermarked SAMPLE);
   "hospital billing" is a teammate; the Gmail button loads a demo inbox.
+- **Live mode builds the case only from the uploaded documents:** Claude reads the patient's name, DOB,
+  bill and EOB; the bank account is found in Nessie by the patient's name; the policy comes from the Bright
+  Data policy DB. "Use the sample bill" sends the sample PDFs through the same reading. The sample case data
+  is only used by the offline mock (no API keys).
 - BillBack says it's an automated assistant and that the call is transcribed, never agrees to pay on a
   call, and gets the patient's verbal authorization (HIPAA 45 CFR 164.510(b)); see `docs/feasibility.md`.
 

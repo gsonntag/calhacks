@@ -4,7 +4,8 @@
     uv run python scripts/seed_nessie.py freecare   # second demo patient
 
 Creates customer, checking account, merchants, deposits, purchases and the hospital bill,
-then writes the ids to data/nessie_ids.json (the app reads the account id from there).
+then writes the ids to data/nessie_ids.json for reference. The app finds the account by the patient's name
+on the uploaded bill. Re-seeding deletes the patient's earlier account first.
 """
 import asyncio
 import json
@@ -26,6 +27,9 @@ async def main() -> None:
     n = NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL)
     p = case["patient"]
 
+    while old := await n.find_account(p["first_name"], p["last_name"]):  # re-seed: retire the old account
+        await n.delete_account(old["account_id"])
+        print("deleted old account", old["account_id"])
     cust = await n.create_customer(p["first_name"], p["last_name"], p["address"])
     acct = await n.create_account(cust["_id"], f"{p['first_name']} checking", 2400)
     print("customer", cust["_id"], "account", acct["_id"])

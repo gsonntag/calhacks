@@ -27,7 +27,10 @@ Anything consequential — placing the call, agreeing to a payment plan — wait
 and the call agent is instructed never to agree to pay or give card details.
 
 **"Does this only work on your example?"**
-Upload any bill + EOB: Claude extracts the fields; the auditor works from whatever bank history exists.
+No. In live mode the case is built only from the uploaded bill + EOB: Claude reads the patient's name,
+date of birth, the bill and the EOB. The bank account is found in Nessie by the patient's name, and the
+policy comes from our Bright Data policy database. "Use the sample bill" sends the sample PDFs through the
+same reading; the built-in sample data only feeds the offline mock (no API keys).
 (Second demo case: Marcus at UCSF, where the bill is already correct but he qualifies for free care → $0.)
 
 **"Do hospitals really have to give discounts?"**

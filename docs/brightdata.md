@@ -16,7 +16,7 @@ this repo (`policydb/`) as evidence of the crawls.
                                          │
                                          ▼
  registry.py ──► discover.py ──────────► fetch.py ───────────────────► extract.py ──────────► store.py
- hospitals,      Bright Data SERP API    Bright Data Web Unlocker       Claude: tiers + quotes  SQLite + raw/
+ hospitals,      Bright Data SERP API    Bright Data Web Unlocker       Claude: tiers, plans    SQLite + raw/
  aliases,        Google results, parsed  page as markdown -> links ->   code: every quote must  policydb/policies.sqlite3
  domains         rank + explain choice   policy PDFs as bytes -> pypdf  appear in fetched text  policydb/raw/<hospital>/
                  (official > regulator   (English, not forms/notices)   and state its FPL limit policydb/policies.json
@@ -111,7 +111,8 @@ bytes and converted with `pypdf`. If the page links to no policy document, the n
 
 **Extract and verify** (`extract.py`). Claude gets the documents (labelled, with URLs) and returns JSON: income
 tiers (`max_fpl_pct`, `discount_pct`, `applies_to`, `min_oop_pct_income` for high-medical-cost rules),
-non-percentage relief, collections protection and how to apply, each with a verbatim quote. Then code checks:
+non-percentage relief, collections protection, payment-plan terms (interest-free, monthly cap as a percent of
+income) and how to apply, each with a verbatim quote. Then code checks:
 
 1. **The quote exists.** Both quote and document are normalized (`squash`: NFKC, lowercase, letters and digits
    only, so PDF line breaks, hyphenation, curly quotes and markdown don't matter) and the quote must be a
@@ -122,7 +123,11 @@ non-percentage relief, collections protection and how to apply, each with a verb
 
 Tiers that fail are rejected and logged (`crawl_log` stage `verify`, `policy_versions.verification`). Only verified
 tiers are stored in `extracted.tiers`, and only those reach `finance.charity_discount`. Each stored tier carries the
-URL of the document its quote was found in. Unverified collections/apply quotes are blanked.
+URL of the document its quote was found in. Unverified collections/apply quotes are blanked. Payment-plan terms
+are kept only if their quote is found: "interest-free" needs its own quote, and the income cap's number must
+appear in a second verified quote. For CPMC both come from Sutter's billing and collections PDF: "All payment
+plans shall be interest-free." and a monthly payment of "not more than ten percent (10%) of the Patient's
+monthly family income".
 
 **Store** (`store.py`). Tables: `hospitals`, `policy_versions` (hospital, version, fetched_at, content_sha256,
 source_urls, documents with per-document sha256 + artifact paths, discovery, extracted, verification,
@@ -139,16 +144,17 @@ per-request tokens (UCSF's Cloudflare email links changed on every fetch).
 
 | Hospital | Sources fetched via Web Unlocker | Verified tiers |
 |---|---|---|
-| California Pacific Medical Center (Sutter Health) | sutterhealth.org financial-assistance page; Hospital Financial Assistance Policy PDF (46 pp); Billing/Collections Policy PDF (21 pp) | uninsured <= 400% FPL: 100%; insured <= 400% FPL with out-of-pocket > 10% of income: 100% |
+| California Pacific Medical Center (Sutter Health) | sutterhealth.org financial-assistance page; Hospital Financial Assistance Policy PDF (46 pp); Billing/Collections Policy PDF (21 pp) | uninsured <= 400% FPL: 100%; insured <= 400% FPL with out-of-pocket > 10% of income: 100%. Payment plans: interest-free, capped at 10% of monthly family income |
 | UCSF Medical Center | ucsfhealth.org help-paying-your-bill page; Patient Financial Assistance Policy PDF (12 pp); Self-Pay Discount Policy PDF (5 pp) | self-pay <= 400% FPL: 100%; insured with out-of-pocket > 10% of income (and <= 400% FPL via `limit_quote`): 100% |
 | Chinese Hospital | chinesehospital-sf.org financial-assistance page; Financial Assistance Policy PDF (11 pp, dated 9-26-26) | self-pay <= 200% FPL: 100%. 200-400% FPL and high-medical-cost help are capped at Medicare rates (stored as verified "other relief", not a fixed %) |
 | Zuckerberg San Francisco General | three zuckerbergsanfranciscogeneral.org pages | none: the site gives a 138% FPL limit for charity care and says discounts "depend on FPL" without percentages; the full policy is only on HCAI (see limitations) |
 
-Same bill, different hospitals (`GET /api/compare`, `web/hospitals.html`): Rosa (insured, 149.5% FPL,
-out-of-pocket 11.1% of income, $2,600 share, $500 paid) gets $0 plus $500 back under CPMC's and UCSF's
-policies, and owes $2,100 under Chinese Hospital's (its free-care tier is self-pay only; a Medicare-rate cap may
-apply but isn't a fixed percent) and ZSFG's (no fixed-percent tier published). Marcus (174% FPL, out-of-pocket
-12.1%) gets $0 at CPMC and UCSF.
+Same bill, different hospitals (`GET /api/compare`, `web/hospitals.html`, which defaults to Marcus): Marcus
+(insured, 174% FPL, out-of-pocket 12.1% of income, $5,600 share) gets $0 under CPMC's and UCSF's policies, and
+owes $5,600 under Chinese Hospital's (its free-care tier is self-pay only; a Medicare-rate cap may apply but
+isn't a fixed percent) and ZSFG's (no fixed-percent tier published). Rosa (insured, 233% FPL, out-of-pocket 3%
+of income, $1,100 share, $500 paid) owes $600 at every hospital: none of the high-medical-cost rules apply
+below 10% of income. At CPMC, Sutter's billing policy then gives her an interest-free plan: 6 × $100/month.
 
 ## Reproduce
 

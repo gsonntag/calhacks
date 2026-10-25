@@ -74,7 +74,7 @@ def bill(out: Path) -> None:
     c.setFillColor(colors.black)
     c.setFont("Helvetica", 11)
     y = H - 150
-    for k, v in [("Patient", name), ("Address", addr), ("Account number", b["account_number"]),
+    for k, v in [("Patient", name), ("Date of birth", p["dob"]), ("Address", addr), ("Account number", b["account_number"]),
                  ("Statement date", b["statement_date"]), ("Date of service", b["service_date"]),
                  ("Payment due by", b["due_date"])]:
         c.drawString(50, y, f"{k}:"); c.drawString(170, y, v); y -= 16

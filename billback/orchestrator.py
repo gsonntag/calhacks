@@ -30,9 +30,25 @@ def demo_case(scenario: str = "default") -> dict:
     return json.loads((config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")).read_text())
 
 
-def new_case(overrides: dict | None = None, scenario: str = "default") -> dict:
+def _blank(v):
+    """Same shape as the sample case, no values: a live case is filled only from the patient's documents."""
+    if isinstance(v, dict):
+        return {k: _blank(x) for k, x in v.items()}
+    return [] if isinstance(v, list) else 0.0 if isinstance(v, float) else ""
+
+
+def blank_case() -> dict:
+    base = {k: _blank(v) for k, v in demo_case().items() if k in ("patient", "hospital", "bill", "eob")}
+    base["patient"]["household_size"] = 1  # not on a bill or EOB; the patient can correct it
+    return base
+
+
+def new_case(overrides: dict | None = None, scenario: str = "default", from_documents: bool = False) -> dict:
+    """from_documents: live mode. The case starts empty and is filled from the uploaded bill/EOB (intake);
+    bank history comes from Nessie and the policy from the policy DB. Otherwise (offline/mock) it starts
+    from the sample case."""
     scenario = scenario if scenario in SCENARIOS else "default"
-    base = demo_case(scenario)
+    base = blank_case() if from_documents else demo_case(scenario)
     base.update({k: v for k, v in (overrides or {}).items() if v})
     case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": date.today().isoformat(),
             "created_at": time.time(), "result": {}, "call_outcome": {}, "calls": [], "followups": [], "clock_days": 0}
@@ -104,8 +120,12 @@ def policy_summary(pol: dict) -> dict:
     result = (f"Free care → ${pol['target']:,.0f}" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}") if d else "No discount"
     if pol.get("refund"):
         result += f" + ${pol['refund']:,.0f} back"
+    plan = pol.get("plan") or {}
+    if not d and plan.get("months"):
+        result = f"${pol['target']:,.0f} · {plan['months']} × ${plan['monthly']:,.0f}/mo, 0% interest"
     return {"result": result,
-            "note": "charity-care discount" if d else "income is above the policy's limits"}
+            "note": "charity-care discount" if d else "no discount tier fits; interest-free plan under their policy"
+            if plan.get("months") else "income is above the policy's limits"}
 
 
 def call_asks(audit: dict, pol: dict) -> list[str]:
@@ -119,7 +139,11 @@ def call_asks(audit: dict, pol: dict) -> list[str]:
         refund = f" and refunding ${pol['refund']:,.0f} you overpaid" if pol.get("refund") else ""
         asks.append(f"Ask for the {'free care' if d == 100 else f'{d:.0f}% charity-care discount'} under their own policy, "
                     f"bringing the bill to ${pol['target']:,.0f}{refund}")
-    asks.append("Ask them to pause collections while it's reviewed, and get a case number")
+    plan = pol.get("plan") or {}
+    if plan.get("months") and pol["target"] > 0:
+        asks.append(f"Set up an interest-free payment plan for the ${pol['target']:,.0f}: "
+                    f"{plan['months']} × ${plan['monthly']:,.0f}/month, as their own billing policy allows")
+    asks.append("Ask them to pause collections while it's corrected, and get a case number")
     return asks
 
 
@@ -379,7 +403,7 @@ async def end_call(case: dict) -> None:
 async def run_case(case: dict) -> None:
     cid = case["id"]
     try:
-        bank, account_id, bank_label = get_bank(case)
+        bank, account_id, bank_label = await get_bank(case)
         bus.emit(cid, "case_started", modes=config.mode(), bank=bank_label, documents=case.get("documents", []),
                  bill={k: case["bill"][k] for k in ("provider", "amount_due", "notice", "due_date")})
         bus.emit(cid, "balance", amount=case["bill"]["amount_due"], label="Hospital says")
@@ -414,7 +438,8 @@ async def run_case(case: dict) -> None:
         balance = target if outcome.get("assistance_review_opened") or outcome.get("account_on_hold") else owed
         if balance != target:
             bus.emit(cid, "balance", amount=balance, label="Still owed")
-        plan = await planner.run(case, bank, account_id, balance, pol["income"]["monthly"])
+        plan = await planner.run(case, bank, account_id, balance, pol["income"]["monthly"],
+                                 policy_cap_pct=(pol.get("plan_terms") or {}).get("max_pct_monthly_income"))
 
         c = plan.get("created") or {}
         plan_created = bool(c) and not c.get("blocked") and not c.get("error")

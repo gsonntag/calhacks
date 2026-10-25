@@ -1,8 +1,8 @@
 {
- "exported_at": "2026-10-24T22:35:35+00:00",
+ "exported_at": "2026-10-25T00:11:22+00:00",
  "bright_data_requests": {
-  "serp": 6,
-  "unlocker": 22
+  "serp": 7,
+  "unlocker": 25
  },
  "runs": [
   {
@@ -123,6 +123,30 @@
      "version": 1,
      "content_sha256": "42b07c096fa5428164521e990f9d5e03608a4e3d5da0fa0daedb47af5b8cdbc3",
      "requests": 3
+    }
+   }
+  },
+  {
+   "id": "crawl-20261025T001046-40cf0b",
+   "kind": "crawl",
+   "started_at": "2026-10-25T00:10:46+00:00",
+   "finished_at": "2026-10-25T00:11:22+00:00",
+   "hospitals": [
+    "sutter-cpmc"
+   ],
+   "summary": {
+    "sutter-cpmc": {
+     "version": 2,
+     "status": "ok",
+     "tiers": 2,
+     "tiers_verified": 2,
+     "tiers_rejected": 0,
+     "sources": [
+      "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+     ],
+     "fetched_at": "2026-10-25T00:11:22+00:00"
     }
    }
   }
@@ -931,6 +955,346 @@
    "query": "California Pacific Medical Center San Francisco financial assistance policy",
    "versions": [
     {
+     "id": 5,
+     "hospital_id": "sutter-cpmc",
+     "version": 2,
+     "fetched_at": "2026-10-25T00:11:22+00:00",
+     "content_sha256": "256d542b4c32a00543f99fd79cfda5ef62d6b6487aef13408093e7c80b0a75db",
+     "source_urls": [
+      "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+      "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+     ],
+     "documents": [
+      {
+       "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "53cf44b77138896d6328839142b2ccc0c8fede27b5fb84e382829ebe02e76a5d",
+       "nbytes": 47859,
+       "via": "unlocker",
+       "title": "Help paying your bill (financial assistance)",
+       "pages": null,
+       "artifacts": [
+        "raw/sutter-cpmc/page-53cf44b77138.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain sutterhealth.org",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'help paying' (+3)",
+        "mentions 'financial-assistance' (+4)",
+        "mentions 'billing' (+1)",
+        "Google rank 1 (-0.25)"
+       ],
+       "text_sha256": "2fcb705916cce86a21947b02809b02a60d900ed76563ee052aca07925e5717c9"
+      },
+      {
+       "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "de8f2a9a21a480740f9ba9b7f53de1b071db6dde4b7c75a4b382f818fbdd0da9",
+       "nbytes": 1286168,
+       "via": "unlocker",
+       "title": "Financial Assistance Policy and Application - English (PDF)",
+       "pages": 46,
+       "artifacts": [
+        "raw/sutter-cpmc/pdf-de8f2a9a21a4.pdf",
+        "raw/sutter-cpmc/pdf-de8f2a9a21a4.txt"
+       ],
+       "found_on": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial assistance' (+3)",
+        "English (+1)",
+        "policy + application packet (-1)"
+       ],
+       "text_sha256": "00a47a1ff28429d17d09ee82e68afc18ae907b4ed0beb84cc0f0e11ff61c6d3c"
+      },
+      {
+       "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "9a00bfd6ccfd603a2ea1088c92ec3e5185aa4fea0a69fcee5df50ae6e66054b9",
+       "nbytes": 563661,
+       "via": "unlocker",
+       "title": "Hospital Billing/Collections Policy - English (PDF)",
+       "pages": 21,
+       "artifacts": [
+        "raw/sutter-cpmc/pdf-9a00bfd6ccfd.pdf",
+        "raw/sutter-cpmc/pdf-9a00bfd6ccfd.txt"
+       ],
+       "found_on": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial-assistance' (+3)",
+        "English (+1)",
+        "collections policy (-1)"
+       ],
+       "text_sha256": "0f3f8e44df77b1080b9ccfadecc7f0e1ad5cca40ce80f575d74fc1aa087dd4ad"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "California Pacific Medical Center San Francisco financial assistance policy"
+      ],
+      "serp_artifacts": [
+       "raw/sutter-cpmc/serp-da57ff06f434.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "title": "Help paying your bill (financial assistance)",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 21.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain sutterhealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'billing' (+1)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194",
+        "title": "Policy on Financial Assistance for Sutter Hospitals (Charity ...",
+        "serp_rank": 7,
+        "kind": "regulator",
+        "score": 10.25,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'polic' (+2)",
+         "Google rank 7 (-1.75)"
+        ]
+       },
+       {
+        "url": "https://www.pacificmedicalcenters.org/wp-content/uploads/2023/04/2023-PACMED-FA-APPLICATION-2023.pdf",
+        "title": "Charity Care/Financial Assistance Application Form ...",
+        "serp_rank": 8,
+        "kind": "other",
+        "score": 6.0,
+        "is_pdf": true,
+        "reasons": [
+         "other domain pacificmedicalcenters.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "mentions 'discount' (+1)",
+         "mentions 'application' (-3)",
+         "Google rank 8 (-2)"
+        ]
+       },
+       {
+        "url": "https://www.careroute.ai/hospital-financial-assistance/sutter-health",
+        "title": "Sutter Health Financial Assistance: Free Care, Income ...",
+        "serp_rank": 3,
+        "kind": "aggregator",
+        "score": -1.75,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain careroute.ai",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'discount' (+1)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://dollarfor.org/medical-debt-help-san-francisco-california-pacific-medical-center---st.-lukes-campus/",
+        "title": "Medical Bill Help from California Pacific Medical Center",
+        "serp_rank": 4,
+        "kind": "aggregator",
+        "score": -7.0,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dollarfor.org",
+         "names the hospital (4 words)",
+         "Google rank 4 (-1)"
+        ]
+       },
+       {
+        "url": "https://www.sfserviceguide.org/services/6379",
+        "title": "Hospital Financial Assistance",
+        "serp_rank": 5,
+        "kind": "aggregator",
+        "score": -7.25,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain sfserviceguide.org",
+         "mentions 'financial assistance' (+4)",
+         "Google rank 5 (-1.25)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "title": "Help paying your bill (financial assistance)",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 21.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain sutterhealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'help paying' (+3)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'billing' (+1)",
+         "Google rank 1 (-0.25)"
+        ]
+       }
+      ],
+      "regulator_doc": {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194",
+       "title": "Policy on Financial Assistance for Sutter Hospitals (Charity ...",
+       "serp_rank": 7,
+       "kind": "regulator",
+       "score": 10.25,
+       "is_pdf": true,
+       "reasons": [
+        "regulator domain api.hdc.hcai.ca.gov",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'charity' (+2)",
+        "mentions 'polic' (+2)",
+        "Google rank 7 (-1.75)"
+       ]
+      }
+     },
+     "extracted": {
+      "tiers": [
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "uninsured",
+        "min_oop_pct_income": null,
+        "doc": 1,
+        "quote": "Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).",
+        "limit_quote": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "source_role": "policy_page",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "insured",
+        "min_oop_pct_income": 10.0,
+        "doc": 1,
+        "quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+        "limit_quote": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "source_role": "policy_page",
+        "verified": true
+       }
+      ],
+      "other_relief": [
+       {
+        "what": "Uninsured patients above 400% of FPL receive a 40% reduction of billed charges for inpatient services and 20% for outpatient services.",
+        "quote": "Standard Uninsured Discount is a 40% reduction of Billed Charges for inpatient services and 20% reduction of Billed Charges for outpatient services.",
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+        "verified": true,
+        "applies_to": "uninsured",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": null
+       }
+      ],
+      "no_collections_while_pending": true,
+      "collections_quote": "Hospital and Collection Agencies shall not pursue collection from a Patient who has submitted an application for Financial Assistance and shall return any amount received from the Patient before or during the time the Patient\u2019s application is pending.",
+      "collections_source": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+      "payment_plan": {
+       "interest_free": true,
+       "quote": "All payment plans shall be interest-free.",
+       "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+       "max_pct_monthly_income": 10.0,
+       "cap_quote": "If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make a monthly payment of not more than ten percent (10%) of the Patient\u2019s monthly family income after excluding essential living expenses.",
+       "cap_source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+      },
+      "apply_how": "Apply using the application form from Patient Financial Services at the hospital, by calling 855-398-1633, or through the Sutter Health website.",
+      "apply_quote": "You may apply for Financial Assistance using the application form that is available from Patient Financial Services, which is located at the Patient Access/Registration Departments at the Hospital, or by calling Patient Financial Services at 855-398-1633, or on the Sutter Health or Hospital website below.",
+      "notes": "The policy covers hospital services only; separately billed physicians (e.g., emergency doctors, anesthesiologists, radiologists, hospitalists, pathologists) and elective services like cosmetic procedures are excluded."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "tier",
+        "quote": "Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "uninsured",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "insured",
+         "min_oop_pct_income": 10
+        }
+       },
+       {
+        "what": "other_relief",
+        "quote": "Standard Uninsured Discount is a 40% reduction of Billed Charges for inpatient services and 20% reduction of Billed Charges for outpatient services.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+        "summary": "Uninsured patients above 400% of FPL receive a 40% reduction of billed charges for inpatient services and 20% for outpatient services."
+       },
+       {
+        "what": "collections",
+        "quote": "Hospital and Collection Agencies shall not pursue collection from a Patient who has submitted an application for Financial Assistance and shall return any amount received from the Patient before or during the time the Patient\u2019s application is pending.",
+        "verified": true,
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+       },
+       {
+        "what": "payment_plan",
+        "quote": "All payment plans shall be interest-free.",
+        "verified": true,
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+       },
+       {
+        "what": "payment_plan_cap",
+        "quote": "If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make a monthly payment of not more than ten percent (10%) of the Patient\u2019s monthly family income after excluding essential living expenses.",
+        "verified": true,
+        "source_url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf"
+       },
+       {
+        "what": "apply",
+        "quote": "You may apply for Financial Assistance using the application form that is available from Patient Financial Services, which is located at the Patient Access/Registration Departments at the Hospital, or by calling Patient Financial Services at 855-398-1633, or on the Sutter Health or Hospital website below.",
+        "verified": true,
+        "source_url": "https://www.sutterhealth.org/billing-insurance/financial-assistance"
+       }
+      ],
+      "tiers_verified": 2,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 2,
+     "tiers_rejected": 0,
+     "status": "ok",
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "is_current": 1
+    },
+    {
      "id": 1,
      "hospital_id": "sutter-cpmc",
      "version": 1,
@@ -1328,10 +1692,20 @@
      "tiers_rejected": 0,
      "status": "ok",
      "run_id": "crawl-20261024T223009-5a66f0",
-     "is_current": 1
+     "is_current": 0
     }
    ],
    "checks": [
+    {
+     "id": 9,
+     "hospital_id": "sutter-cpmc",
+     "checked_at": "2026-10-25T00:11:22+00:00",
+     "content_sha256": "256d542b4c32a00543f99fd79cfda5ef62d6b6487aef13408093e7c80b0a75db",
+     "changed": 1,
+     "version_id": 5,
+     "note": "initial crawl: version 2",
+     "run_id": "crawl-20261025T001046-40cf0b"
+    },
     {
      "id": 6,
      "hospital_id": "sutter-cpmc",
@@ -1689,6 +2063,258 @@
      "latency_ms": null,
      "ok": 1,
      "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194"
+    },
+    {
+     "id": 97,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:02+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: California Pacific Medical Center San Francisco financial assistance policy",
+     "status": 200,
+     "bytes": 26386,
+     "latency_ms": 12303,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 98,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:02+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.sutterhealth.org/billing-insurance/financial-assistance \u2014 score 21.75: official domain sutterhealth.org; mentions 'financial assistance' (+4); mentions 'help paying' (+3); mentions 'financial-assistance' (+4); mentions 'billing' (+1); Google rank 1 (-0.25)"
+    },
+    {
+     "id": 99,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:02+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194 \u2014 score 10.25: regulator domain api.hdc.hcai.ca.gov; mentions 'financial assistance' (+4); mentions 'charity' (+2); mentions 'polic' (+2); Google rank 7 (-1.75)"
+    },
+    {
+     "id": 100,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:02+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.careroute.ai/hospital-financial-assistance/sutter-health"
+    },
+    {
+     "id": 101,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:02+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://dollarfor.org/medical-debt-help-san-francisco-california-pacific-medical-center---st.-lukes-campus/"
+    },
+    {
+     "id": 102,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:02+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.sfserviceguide.org/services/6379"
+    },
+    {
+     "id": 103,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:09+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.sutterhealth.org/billing-insurance/financial-assistance",
+     "status": 200,
+     "bytes": 47859,
+     "latency_ms": 6427,
+     "ok": 1,
+     "note": "text/html; charset=utf-8"
+    },
+    {
+     "id": 104,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:09+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.sutterhealth.org/billing-insurance/financial-assistance: 126 links, policy documents: https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3), English (+1), policy + application packet (-1)]; https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf [PDF (+2), says policy (+3), 'financial-assistance' (+3), English (+1), collections policy (-1)]"
+    },
+    {
+     "id": 105,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:10+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/hospital-financial-assistance-policy-english.pdf",
+     "status": 200,
+     "bytes": 1286168,
+     "latency_ms": 1432,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 106,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:15+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf",
+     "status": 200,
+     "bytes": 563661,
+     "latency_ms": 2458,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 107,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:16+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "state-filed copy kept as a reference, not fetched (Bright Data blocks government domains): https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=84ad6a2f-80cf-4497-8991-46ba21eec194"
+    },
+    {
+     "id": 108,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'Full charity care to uninsured patients earning 400% or less of the Federal Poverty Income Guideline (FPIG).'"
+    },
+    {
+     "id": 109,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical'"
+    },
+    {
+     "id": 110,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'Standard Uninsured Discount is a 40% reduction of Billed Charges for inpatient services and 20% reduction of Billed Charges for outpatient services.'"
+    },
+    {
+     "id": 111,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'Hospital and Collection Agencies shall not pursue collection from a Patient who has submitted an application for Financial Assistance and shall return any amoun'"
+    },
+    {
+     "id": 112,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "payment_plan VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'All payment plans shall be interest-free.'"
+    },
+    {
+     "id": 113,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "payment_plan_cap VERIFIED in https://edge.sitecorecloud.io/sutterhealt962c-sutterhealt8fce-production57cc-4860/media/Project/SutterHealth/SutterHealth/Files/billing-insurance/financial-assistance/billing-and-collection-policy-english.pdf | 'If a hospital and Patient are unable to agree on the terms of the payment plan, the hospital shall extend a payment plan option under which the Patient may make'"
+    },
+    {
+     "id": 114,
+     "run_id": "crawl-20261025T001046-40cf0b",
+     "hospital_id": "sutter-cpmc",
+     "ts": "2026-10-25T00:11:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://www.sutterhealth.org/billing-insurance/financial-assistance | 'You may apply for Financial Assistance using the application form that is available from Patient Financial Services, which is located at the Patient Access/Regi'"
     }
    ]
   },

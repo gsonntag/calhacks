@@ -17,6 +17,8 @@ from .agents import caller, intake
 from .integrations import cartesia
 from .events import bus
 from .harness import gate
+from .policies import registry
+from .policies.store import PolicyStore
 
 
 @asynccontextmanager
@@ -36,12 +38,14 @@ it checks what was already paid, finds duplicate charges, looks up the hospital'
 policy, calls billing on the patient's behalf, and never pays anything without the patient's approval.
 Talk like a calm, warm friend. 1-3 short sentences. Ask at most one question per reply.
 Gather: who the bill is from, the amount and any deadline/collections notice, whether insurance paid part,
-and ask them to attach the bill and the insurance EOB if they haven't.
+how many people are in their household (it decides charity-care eligibility), and ask them to attach the bill
+and the insurance EOB if they haven't.
 As soon as you have the bill (attached or described) and the patient says go or has nothing to add,
 call start_case. Don't give legal advice."""
 
 START_TOOL = {"name": "start_case", "description": "Open a case and start working on the bill",
-              "input_schema": {"type": "object", "properties": {"summary": {"type": "string"}}}}
+              "input_schema": {"type": "object", "properties": {"summary": {"type": "string"},
+                                                                "household_size": {"type": "integer"}}}}
 
 CANNED = [
     "Got it. How much is the hospital asking for, and is there a deadline or a collections notice?",
@@ -61,34 +65,79 @@ def _launch(case: dict, coro=None) -> dict:
     return case
 
 
-def _start() -> dict:
-    return _launch(orchestrator.new_case())
+SAMPLE_DOCS = {"default": ("sample-hospital-bill.pdf", "sample-insurance-eob.pdf"),
+               "freecare": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf")}
+REQUIRED = (("patient", "first_name"), ("patient", "last_name"), ("bill", "provider"), ("bill", "amount_due"),
+            ("eob", "patient_responsibility"))
+
+
+class IntakeError(RuntimeError):
+    pass
+
+
+def _merge(base: dict, part: dict) -> dict:
+    """Known keys only; skips missing/null values; nested dicts merged the same way."""
+    out = dict(base)
+    for f, v in part.items():
+        if f not in base or v in (None, "", []):
+            continue
+        out[f] = _merge(base[f], v) if isinstance(base[f], dict) and isinstance(v, dict) else v
+    return out
 
 
 async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
-    """Merge Claude's reading of the uploads into the case field by field. Missing, null or non-numeric
-    values keep the sample values, unknown keys are ignored, and a failed parse falls back to the sample."""
+    """Live mode: the case is filled only from Claude's reading of the patient's documents. Anything required
+    that the documents don't show is an error the patient sees, never a silent sample value."""
     try:
         parsed = await intake.parse(case["id"], uploads)
     except Exception as e:
-        bus.emit(case["id"], "warning", "intake", text=f"Couldn't read the files, using the sample bill ({type(e).__name__})")
-        return
+        raise IntakeError(f"Couldn't read the documents ({type(e).__name__}: {e})") from e
     if not isinstance(parsed, dict):
-        return
-    for key in ("bill", "eob"):
+        raise IntakeError("Couldn't read the documents")
+    for key in ("patient", "bill", "eob"):
         part = parsed.get(key)
         if not isinstance(part, dict):
             continue
-        clean = {f: v for f, v in part.items() if f in case[key] and v not in (None, "", [])}
-        for f in NUMERIC[key]:
-            if f in clean:
-                try:
-                    clean[f] = float(str(clean[f]).replace("$", "").replace(",", ""))
-                except ValueError:
-                    clean.pop(f)
-        case[key] = {**case[key], **clean}
-    if isinstance(parsed.get("bill"), dict) and parsed["bill"].get("provider"):
-        case["hospital"] = {**case["hospital"], "name": case["bill"]["provider"]}
+        clean = _merge(case[key], part)
+        for f in NUMERIC.get(key, ()):
+            try:
+                clean[f] = float(str(clean[f]).replace("$", "").replace(",", ""))
+            except ValueError:
+                clean[f] = case[key][f]
+        case[key] = clean
+    missing = [f"{k}.{f}" for k, f in REQUIRED if case[k].get(f) in (None, "", 0.0)]
+    if missing:
+        raise IntakeError("These weren't on the documents: " + ", ".join(missing) +
+                          ". Upload the hospital bill and the insurance statement (EOB).")
+    db = PolicyStore()
+    h = registry.match(case["bill"]["provider"], db.hospitals())
+    case["hospital"] = {**case["hospital"], "name": h.name if h else case["bill"]["provider"],
+                        "system": h.system if h else "", "city": h.city if h else ""}
+    orchestrator.save(case)
+
+
+def _sample_uploads(scenario: str) -> list[tuple[str, bytes]]:
+    return [(n, (config.DEMO_DIR / n).read_bytes()) for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
+
+
+async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default", household_size: int | None = None) -> dict:
+    """Live (Claude available): an empty case filled from the documents; "use the sample bill" sends the sample
+    PDFs through the same reading. Offline: the sample case. Starts the pipeline unless intake failed."""
+    live = llm.available()
+    case = orchestrator.new_case(scenario=scenario, from_documents=live)
+    if household_size and 1 <= household_size <= 20:  # not on a bill or EOB: the patient tells us
+        case["patient"]["household_size"] = int(household_size)
+    if live and not uploads:
+        uploads = _sample_uploads(scenario)
+    case["documents"] = [n for n, _ in uploads] or list(SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"]))
+    if live:
+        try:
+            await _apply_uploads(case, uploads)
+        except IntakeError as e:
+            orchestrator.set_status(case, "error")
+            bus.emit(case["id"], "error", text=str(e))
+            return case
+    return _launch(case)
 
 
 @app.get("/api/mode")
@@ -119,13 +168,8 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
     note = f" [attached: {', '.join(n for n, _ in uploads)}]" if uploads else ""
     msgs.append({"role": "user", "content": (message or "(sent files)") + note})
 
-    async def launch() -> dict:
-        case = orchestrator.new_case()
-        if uploads:
-            case["documents"] = [n for n, _ in uploads]
-            if llm.available():
-                await _apply_uploads(case, uploads)
-        return _launch(case)
+    async def launch(household_size: int | None = None) -> dict:
+        return await _new_case(uploads, household_size=household_size)
 
     if llm.available():
         try:
@@ -135,8 +179,10 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
             resp = None
         if resp is not None:
             reply = " ".join(b.text for b in resp.content if b.type == "text").strip()
-            if any(b.type == "tool_use" for b in resp.content):
-                case = await launch()
+            use = next((b for b in resp.content if b.type == "tool_use"), None)
+            if use:
+                hh = use.input.get("household_size") if isinstance(use.input, dict) else None
+                case = await launch(hh if isinstance(hh, int) else None)
                 return {"reply": reply or CANNED[-1], "case_id": case["id"]}
             return {"reply": reply or "Sorry, could you say that again?"}
 
@@ -157,15 +203,12 @@ async def gmail_scan():
 
 
 @app.post("/api/cases")
-async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default"):
+async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default",
+                     household_size: int | None = None):
     """Start a case from uploaded bill/EOB files, or the sample bill when none are sent.
     ?scenario=freecare picks the second demo patient (bank history + sample policy)."""
-    case = orchestrator.new_case(scenario=scenario)
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
-    case["documents"] = [n for n, _ in uploads] or ["sample-hospital-bill.pdf", "sample-insurance-eob.pdf"]
-    if uploads and llm.available():
-        await _apply_uploads(case, uploads)
-    _launch(case)
+    case = await _new_case(uploads, scenario, household_size)
     return {"case_id": case["id"]}
 
 

@@ -61,21 +61,21 @@ const $ = (id) => document.getElementById(id);
 const msgs = $('msgs'), quick = $('quick');
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const BILL = '<div class="pic"><span class="h">CALIFORNIA PACIFIC MED CTR</span><i></i><i style="width:70%"></i><i style="width:85%"></i><span class="a">$8,700.00</span></div>';
-const EOB = '<div class="pic"><span class="h" style="color:#2F5B34">GOLDEN STATE HEALTH PLAN</span><i></i><i style="width:60%"></i><i style="width:80%"></i><span class="a" style="font-size:11px">Your share $2,600</span></div>';
+const EOB = '<div class="pic"><span class="h" style="color:#2F5B34">GOLDEN STATE HEALTH PLAN</span><i></i><i style="width:60%"></i><i style="width:80%"></i><span class="a" style="font-size:11px">Your share $1,100</span></div>';
 // Each beat: what "me" sends (quick reply), then BillBack's replies.
 const BEATS = [
   { me: { label: 'Send photo of bill', html: BILL, photo: true },
     them: ["Got it, Rosa. <b>California Pacific Medical Center</b>, $8,700, final notice due Nov 3.", "Do you have the insurance letter (EOB)? Snap that too."] },
   { me: { label: 'Send photo of EOB', html: EOB, photo: true },
-    them: ["Insurance says your share is <b>$2,600</b>, not $8,700. Checking your bank for payments…",
-           "Found <b>$500</b> you paid CPMC on Sep 14. So you owe <span class=\"g\">$2,100</span>.",
-           "Good news: your paychecks add up to $23,400 a year, 150% of the poverty line. Your $2,600 share is 11% of that, and Sutter's own policy writes it off when it's over 10%. That's <b>$0</b>, and your <b>$500</b> comes back. Want me to apply and call them for you? Reply YES"] },
+    them: ["Insurance says your share is <b>$1,100</b>, not $8,700. Checking your bank for payments…",
+           "Found <b>$500</b> you paid CPMC on Sep 14. So you owe <span class=\"g\">$600</span>.",
+           "Your paychecks add up to $36,400 a year, 233% of the poverty line. Sutter's write-off needs medical bills over 10% of income; yours are 3%, so no write-off. But Sutter's own billing policy says all payment plans are interest-free: <b>$100 a month for 6 months</b>, no interest. Want me to call them and set it up? Reply YES"] },
   { me: { label: 'YES', html: 'YES', primary: true },
-    them: ["Asked for the write-off and a hold on your account, so no collections. Calling CPMC billing now. I'll text you when I'm off the phone.",
-           { delay: 2600, html: '<span style="font-size:12px;color:var(--muted-2);font-weight:600">CPMC AGREED · CASE FA 20931</span><span class="big">$0</span><span>and your $500 comes back to you</span>', card: true },
-           "Reply OK to approve. Nothing is paid until you do."] },
+    them: ["Asking for the interest-free plan and a pause on collections. Calling CPMC billing now. I'll text you when I'm off the phone.",
+           { delay: 2600, html: '<span style="font-size:12px;color:var(--muted-2);font-weight:600">CPMC AGREED · CASE FA 20931</span><span class="big">$600</span><span>6 × $100 a month, 0% interest, collections paused</span>', card: true },
+           "Reply OK to approve and I'll save the plan to your Capital One account. Nothing is paid until you do."] },
   { me: { label: 'OK', html: 'OK', primary: true },
-    them: ["Approved. You owe <b>$0</b> and $500 is on its way back. I'll check back by Fri Oct 30 if the corrected statement hasn't arrived. Take care, Rosa."] },
+    them: ["Approved. You owe <b>$600</b>, $100 a month starting next month, and the plan is in your Capital One account. I'll check back by Fri Oct 30 if the corrected statement hasn't arrived. Take care, Rosa."] },
 ];
 let beat = 0, busy = false;
 const scroll = () => requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
