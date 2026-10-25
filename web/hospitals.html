@@ -100,6 +100,7 @@
   code { font: 400 12px/16px ui-monospace, monospace; background: var(--md-surface-container-high); padding: 1px 5px; border-radius: var(--md-shape-xs); overflow-wrap: anywhere; }
   #err { padding: 12px 16px; }
   @media (max-width: 520px) { .kv { grid-template-columns: 1fr; gap: 0; } .kv b { margin-top: 6px; } }
+  @media (pointer: coarse), (max-width: 640px) { summary { min-height: 44px; } }
 </style>
 </head>
 <body>
@@ -263,7 +264,7 @@ function hospitalCard(h) {
       <p class="small">Google queries via Bright Data SERP API: ${(disc.queries || []).map((q) => `<code>${esc(q)}</code>`).join(', ')} · raw results: ${serp}</p>
       <ul class="small">${chosen}</ul>${reg}</details>
     <details><summary>Bright Data request log (${h.crawl_log.filter((l) => l.product).length})</summary>
-      <div class="logwrap"><table class="log"><thead><tr><th>time</th><th>stage</th><th>product</th><th>status</th><th>size</th><th>latency</th><th>url</th></tr></thead><tbody>${log}</tbody></table></div>
+      <div class="logwrap" tabindex="0" role="region" aria-label="Bright Data request log for ${esc(h.name)}"><table class="log"><thead><tr><th>time</th><th>stage</th><th>product</th><th>status</th><th>size</th><th>latency</th><th>url</th></tr></thead><tbody>${log}</tbody></table></div>
       <ul class="small">${decisions}</ul></details>
     <details><summary>Versions (${h.versions.length}) and checks (${h.checks.length})</summary>
       <ul class="small">${versions}</ul><ul class="small">${checks}</ul></details>`;
