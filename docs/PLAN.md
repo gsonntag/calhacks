@@ -3,7 +3,7 @@
 Working branch: `master` on GitHub `gsonntag/calhacks` (the only remote). Gavin said so on 2026-10-25:
 `after-david-takeover` was squashed onto master (d2a5b45), and fixes now go straight to master. The 6 PM
 submission is tag `submitted-2026-10-24`. `after-david-takeover` is no longer updated. Backups: tag
-`submitted-2026-10-24`, branch `pre-david-work`, local branch `backup/old-billback-master`.
+`submitted-2026-10-24`, branch `pre-david-work`, local branch `backup/old-master`.
 
 ## Judges' review (2026-10-25): what to fix before judging
 
