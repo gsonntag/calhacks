@@ -13,6 +13,7 @@ import uuid
 from .. import config, finance, llm
 from ..events import bus
 from ..harness import ToolRegistry, Tool
+from . import mandate
 
 INTERRUPTED = "—[interrupted]"  # ends a remembered reply the rep talked over (voice/heard.py)
 
@@ -60,6 +61,10 @@ Rules:
 - An automated phone menu ("press 1 for billing") is not a person: don't talk to it. Call press_keys with the
   option for billing / patient accounts (or the operator), with no spoken text.
 - A line of yours ending in "—[interrupted]" was cut off: the rep only heard the part before it.
+- Before you agree to ANYTHING the rep offers or asks for (a payment plan, a balance, a settlement, paying
+  today) or give any piece of information (date of birth, member ID, SSN, card, anything), call check_offer
+  FIRST, with no spoken text, and follow its decision. If it's allowed, go ahead. If it's refused, the
+  refusal is spoken for you; then continue with the next goal.
 """
 
 
@@ -203,7 +208,10 @@ class CallSession:
         self.reg.add(Tool("press_keys", "Press phone keypad keys to answer an automated phone menu", {
             "type": "object", "properties": {"digits": {"type": "string", "description": "e.g. \"2\" or \"0\""}},
             "required": ["digits"]}, self._press, tier="act"))
+        self.reg.add(Tool("check_offer", "Check an offer or request from the rep against what the patient approved, "
+                          "before agreeing to it or giving information", mandate.TOOL_SPEC, self._check, tier="act"))
         self.keys = ""  # keypad presses the phone transport hasn't sent yet (take_keys)
+        self.refused: list[dict] = []  # check_offer refusals this call (agents/mandate.py)
 
     async def _record(self, **kw) -> dict:
         self.outcome.update({k: v for k, v in kw.items() if v not in (None, "")})
@@ -218,6 +226,17 @@ class CallSession:
                         "and call record_outcome again once the rep confirms.")
         bus.emit(self.case_id, "call_outcome", "caller", outcome=self.outcome)
         return {"ok": True, **({"note": note} if note else {})}
+
+    async def _check(self, kind: str = "", **kw) -> dict:
+        """The mandate decides, not the model (agents/mandate.py). Every decision goes to the case page and
+        the audit log; a refusal is spoken in the code's own words (_reply)."""
+        d = mandate.evaluate(self.brief, kind, **{k: v for k, v in kw.items()
+                                                  if k in ("monthly", "months", "total", "interest_pct", "info")})
+        out = {"offer": kind, **{k: v for k, v in kw.items() if v not in (None, "")}, **d.as_dict()}
+        if not d.allowed:
+            self.refused.append(out)
+        bus.emit(self.case_id, "guardrail", "caller", **out)
+        return out
 
     async def _press(self, digits: str = "") -> dict:
         keys = re.sub(r"[^0-9*#]", "", digits)
@@ -396,6 +415,14 @@ class CallSession:
                 if any(c.name == "press_keys" for c in calls):
                     pressed = True
                     break  # the menu answers the tones, not us
+                no = [json.loads(r["content"]) for c, r in zip(calls, results) if c.name == "check_offer"]
+                no = [d for d in no if d.get("decision") == "refused"]
+                if no:  # a refusal is said in the mandate's words, never left to the model
+                    line = " ".join(dict.fromkeys(d["say"] for d in no if d.get("say")))
+                    yield line
+                    parts.append(line)
+                    self.messages.append({"role": "assistant", "content": line})
+                    break
                 if parts and (self.ended or all(c.name == "record_outcome" for c in calls)):
                     break  # already said something this turn: a second model call only repeats it
         except Exception as e:
