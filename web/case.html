@@ -24,7 +24,6 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); flex: none; }
   .dot.live { background: var(--st-warn); animation: m3-pulse 1.4s var(--md-ease) infinite; }
   .dot.amber { background: var(--st-warn); } .dot.green { background: var(--st-success); }
-  .new-case { flex: none; }
 
   main.m3-page { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; }
   #caseError { margin: 0; }
@@ -48,19 +47,6 @@
   .voice-pick .m3-select { width: auto; max-width: 100%; min-width: 0; flex: 0 1 auto; }
   .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .m3-btn.text.muted-btn { color: var(--md-on-surface-variant); }
-
-  /* upload (new case) */
-  .drop { position: relative; border: 1.5px dashed var(--md-outline); background: var(--md-surface-container-lowest); border-radius: var(--md-shape-l);
-    padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; cursor: pointer; transition: background var(--md-dur-s) var(--md-ease); }
-  .drop:hover { background: var(--md-surface-container-low); }
-  .drop.dragging { background: var(--md-primary-container); border-color: var(--md-primary); }
-  .drop:focus-within { outline: 3px solid var(--md-primary); outline-offset: 2px; }
-  .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-  .drop .material-symbols-rounded { color: var(--md-primary); font-size: 32px; }
-  .drop .t span { color: var(--md-primary); text-decoration: underline; }
-  .files { margin: 0; padding: 0; list-style: none; }
-  .files li { display: flex; align-items: center; gap: 12px; min-height: 48px; border-bottom: 1px solid var(--md-outline-variant); }
-  .files li > span:not(.material-symbols-rounded) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 
   /* Steps card */
   .steps-card { padding: 16px 24px 8px; }
@@ -212,15 +198,14 @@
     <span class="m3-brand-name">BillBack</span>
   </a>
   <nav class="m3-tabs" aria-label="Main">
-    <a class="m3-tab" href="/">New case</a>
-    <a class="m3-tab" href="dashboard.html" aria-current="page">Cases</a>
+    <a class="m3-tab" href="/" aria-current="page">Cases</a>
     <a class="m3-tab" href="hospitals.html">Hospitals</a>
     <a class="m3-tab" id="hoodLink" href="ops.html">Under the hood</a>
   </nav>
 </header>
 <nav class="case-tabs" aria-label="Cases">
   <div id="tabList" style="display:contents"></div>
-  <button type="button" class="m3-chip new-case" id="newCase"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</button>
+  <a class="m3-chip new-case" id="newCase" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
 </nav>
 
 <main class="m3-page narrow">
@@ -246,21 +231,6 @@
     </ol>
     <!-- kept for the render code; the line above replaces them -->
     <div hidden><p id="caseSub"></p><span id="statOrig"></span><span id="statOwe"></span><span id="statOweSupport"></span></div>
-  </section>
-
-  <!-- new case: upload -->
-  <section class="m3-card m3-stack" id="uploadPanel" hidden aria-label="Upload your bill">
-    <label class="drop" id="drop">
-      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Upload your bill and insurance statement">
-      <span class="material-symbols-rounded" aria-hidden="true">upload_file</span>
-      <span class="title-m t">Drag files here, or <span>browse</span></span>
-      <span class="body-m muted">PDF, JPG or PNG</span>
-    </label>
-    <ul class="files" id="fileList"></ul>
-    <div class="actions">
-      <button type="button" class="m3-btn filled" id="startBtn" disabled>Start review</button>
-      <button type="button" class="m3-btn text" id="sampleBtn">Try a sample bill</button>
-    </div>
   </section>
 
   <!-- needs you: call approval -->
@@ -383,7 +353,7 @@
             <span class="body-m muted" id="followPromised"></span>
             <div class="actions">
               <button type="button" class="m3-btn filled" id="callAgainBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call again</button>
-              <a class="m3-btn text" href="dashboard.html">See all cases</a>
+              <a class="m3-btn text" href="/">See all cases</a>
             </div>
           </div>
         </div>
@@ -418,8 +388,6 @@ const ICON = {
   flag: sym('error', 'Issue found', 'ic-flag'),
   clear: sym('remove', 'Nothing found', 'ic-clear'),
   win: sym('star', 'Qualifies', 'ic-win icon-fill'),
-  file: sym('description', '', 'muted'),
-  x: sym('close'),
   check: sym('check')
 };
 const DONE_ICON = sym('check_circle', 'Done', 'm3-check icon-fill');
@@ -432,7 +400,7 @@ function blankModel() {
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
            warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1 };
 }
-const state = { tabs: [], active: null, models: {}, drafts: {}, ws: null, now: Date.now() / 1000, ui: {} };
+const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {} };
 const model = (id) => (state.models[id] ||= blankModel());
 
 function apply(m, e) {
@@ -489,8 +457,7 @@ function stageOf(m) {
 }
 
 // which Steps row is "current" (0 Read bill · 1 Review · 2 Approval · 3 Call · 4 Resolved)
-function rowStage(m, draft) {
-  if (draft) return 0;
+function rowStage(m) {
   if (!m.bill) return 0;
   if (m.error) return !m.review ? 1 : !m.call && !m.callDeclined ? 2 : m.call && !m.callEnded ? 3 : 4;
   return stageOf(m);
@@ -516,7 +483,7 @@ function renderAgent(key, name, role, m) {
 
 function renderTabs() {
   const tabs = state.tabs.map((t) => {
-    const stage = t.draft ? 0 : (state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1);
+    const stage = state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1;
     const dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
     return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
       <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${STATUS[stage]}</span></button>`;
@@ -585,18 +552,18 @@ function findingsOf(m) {
   return out;
 }
 
-function rowStatusHTML(i, ds, m, draft) {
+function rowStatusHTML(i, ds, m) {
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
   const chip = (cls, text, extra = '') => `<span class="m3-status ${cls}">${extra}${text}</span>`;
   const spin = '<span class="m3-spinner" aria-hidden="true"></span>';
-  if (m.callDeclined && !draft) {
+  if (m.callDeclined) {
     if (i === 2) return '<span class="muted-status">Not approved</span>';
     if (i === 3) return '<span class="muted-status">Skipped</span>';
   }
   if (i < ds) return DONE_ICON;
   if (i === ds) {
     if (m.error) return chip('error', 'Stopped');
-    if (i === 0) return draft ? chip('warn', 'Waiting for files') : chip('warn', 'Working…', spin);
+    if (i === 0) return chip('warn', 'Working…', spin);
     if (i === 1) return chip('warn live', 'Investigating');
     if (i === 2) return chip('warn live', 'Waiting for you');
     if (i === 3) return chip('warn live', m.call ? 'On the call' : 'Dialing…');
@@ -609,10 +576,9 @@ function rowStatusHTML(i, ds, m, draft) {
   return '';
 }
 
-function assistantLine(m, ds, draft, tab) {
-  const prov = m.bill ? m.bill.provider : (tab && !draft ? tab.name : 'the hospital');
+function assistantLine(m, ds, tab) {
+  const prov = m.bill ? m.bill.provider : (tab ? tab.name : 'the hospital');
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
-  if (draft) return { text: 'Add your bill and insurance statement, and I’ll check what you actually owe.', chip: 'Voice agent ready' };
   if (!tab) return { text: '', chip: 'Voice agent ready' };
   if (m.error) return { text: 'I hit a problem: ' + m.error, chip: 'Stopped', cls: 'error' };
   if (ds === 0) return { text: 'I’m reading your documents.', chip: 'Reviewing', cls: 'warn' };
@@ -642,9 +608,8 @@ function assistantLine(m, ds, draft, tab) {
   return { text: bits.join(' '), chip: 'Done', cls: 'success' };
 }
 
-function headline(m, ds, draft, tab) {
-  const prov = m.bill ? m.bill.provider : (tab && !draft ? tab.name : '');
-  if (draft) return ['Start a new case', 'Add your hospital bill and your insurance statement (EOB). Photos are fine.'];
+function headline(m, ds, tab) {
+  const prov = m.bill ? m.bill.provider : (tab ? tab.name : '');
   if (!tab) return ['Loading your case…', ''];
   if (m.error) return ['Something went wrong', prov];
   if (ds === 0) return ['Reading your bill', prov];
@@ -661,25 +626,23 @@ function headline(m, ds, draft, tab) {
 function render() {
   renderTabs();
   const tab = state.tabs.find((t) => t.id === state.active);
-  const draft = tab && tab.draft ? state.drafts[tab.id] : null;
-  const m = draft ? blankModel() : model(state.active || '_');
-  const ds = rowStage(m, draft);
+  const m = model(state.active || '_');
+  const ds = rowStage(m);
   const prov = m.bill ? m.bill.provider : '';
   const pa = m.approvals.planner;
   const planPending = !!(pa && pa.resolved === undefined);
-  $('hoodLink').href = tab && !draft ? `ops.html?id=${tab.id}` : 'ops.html';
+  $('hoodLink').href = tab ? `ops.html?id=${tab.id}` : 'ops.html';
   $('caseError').hidden = !m.error;
   $('caseError').textContent = m.error ? 'Something went wrong: ' + m.error : '';
   setHTML($('caseWarnings'), m.warnings.map((w) => `<span>${sym('warning', '')}${esc(w)}</span>`).join(''));
-  const phoneUrl = tab && !draft ? `${location.origin}/approve.html?case=${tab.id}` : '';
+  const phoneUrl = tab ? `${location.origin}/approve.html?case=${tab.id}` : '';
   $('phoneApprove').href = phoneUrl || '#'; $('phoneApprove').textContent = phoneUrl;
 
   // ---- TOP: headline, stats, what needs you ----
-  const [h, sub] = headline(m, ds, draft, tab);
+  const [h, sub] = headline(m, ds, tab);
   setText($('caseTitle'), h); setText($('caseSub'), sub);
-  const asking = !!tab && !draft && !m.error && (ds === 2 || planPending);
+  const asking = !!tab && !m.error && (ds === 2 || planPending);
   $('caseTitle').hidden = asking;
-  $('uploadPanel').hidden = !draft;
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   setText($('statOrig'), orig != null ? money(orig) : '—');
   setText($('statOwe'), now != null ? money(now) : '—');
@@ -693,14 +656,14 @@ function render() {
     support = parts.join(' · ');
   } else if (m.error) support = '';
   setText($('statOweSupport'), support);
-  $('approvalCard').hidden = !(tab && !draft && ds === 2 && !m.error);
+  $('approvalCard').hidden = !(tab && ds === 2 && !m.error);
 
   // ---- Steps card: classes, statuses, expand state ----
   const key = state.active || '_';
   const ui = (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1 });
   if (ds !== ui.last) {
     if (ui.last >= 0 && !ui.touched.has(ui.last)) ui.open.delete(ui.last);
-    if (!draft && ds !== 2 && !(ds === 0 && !m.bill)) ui.open.add(ds);   // approval lives in the top card
+    if (ds !== 2 && !(ds === 0 && !m.bill)) ui.open.add(ds);   // approval lives in the top card
     ui.last = ds;
   }
   document.querySelectorAll('.step').forEach((el) => {
@@ -708,20 +671,16 @@ function render() {
     el.classList.toggle('is-active', i === ds);
     el.classList.toggle('is-done', i < ds);
     el.classList.toggle('is-up', i > ds);
-    setHTML($('status' + i), rowStatusHTML(i, ds, m, draft));
+    setHTML($('status' + i), rowStatusHTML(i, ds, m));
     const open = ui.open.has(i);
     const btn = el.querySelector('.row-btn');
     if (btn.getAttribute('aria-expanded') !== String(open)) btn.setAttribute('aria-expanded', String(open));
     $('detail' + i).hidden = !open;
   });
 
-  // 1 · Read your bill (upload)
-  const files = draft ? draft.files : [];
-  setHTML($('fileList'), files.map((f, i) =>
-    `<li class="in">${ICON.file}<span>${esc(f.name)}</span><button type="button" class="m3-icon-btn" data-remove="${i}" aria-label="Remove file">${ICON.x}</button></li>`).join(''));
-  $('startBtn').disabled = !files.length || (draft && draft.sending);
+  // 1 · Read your bill
   setText($('uploadLine'), m.bill ? `${prov} · ${money(m.bill.amount_due)} · ${(m.docs || []).length} document${(m.docs || []).length === 1 ? '' : 's'}`
-    : draft ? 'Add your bill and insurance statement' : tab ? 'Reading your documents…' : '');
+    : tab ? 'Reading your documents…' : '');
   setHTML($('uploadSummary'), m.bill
     ? `<p><strong>${esc(prov)}, ${money(m.bill.amount_due)}</strong>${m.bill.notice ? ' · ' + esc(m.bill.notice) : ''}</p><p class="muted">${esc((m.docs || []).join(', '))}</p>`
     : '<p class="muted">Waiting for your documents.</p>');
@@ -832,12 +791,12 @@ function render() {
   }
 
   // ---- BillBack Assistant ----
-  const a = assistantLine(m, ds, draft, tab);
+  const a = assistantLine(m, ds, tab);
   setText($('asstQuote'), a.text);
   setText($('asstChip'), a.chip);
   $('asstChip').className = 'm3-status' + (a.cls ? ' ' + a.cls : '') + (a.live ? ' live' : '');
   $('asstWave').classList.toggle('live', !!a.live);
-  renderNow(m, ds, draft, tab, a);
+  renderNow(m, ds, tab, a);
 }
 
 // "Now" panel: the current step (1-5), what is happening inside it, and its state
@@ -862,8 +821,8 @@ function nowText(m, ds, a) {
   }
   return a.text;
 }
-function renderNow(m, ds, draft, tab, a) {
-  const live = !!tab && !draft;
+function renderNow(m, ds, tab, a) {
+  const live = !!tab;
   $('nowTrack').hidden = !live;
   $('nowText').hidden = !live;
   setText($('nowStep'), !live ? '' : m.done && !m.error ? 'Done' : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
@@ -885,8 +844,7 @@ function renderNow(m, ds, draft, tab, a) {
 // ---------- data ----------
 async function loadTabs() {
   const list = await (await fetch('/api/cases')).json();
-  const drafts = state.tabs.filter((t) => t.draft);
-  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status })).concat(drafts);
+  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status }));
 }
 function openCase(id) {
   state.active = id;
@@ -899,22 +857,6 @@ function openCase(id) {
   state.ws = ws;
   render();
 }
-function newDraft() {
-  const id = 'draft-' + Date.now();
-  state.drafts[id] = { files: [] };
-  state.tabs.push({ id, name: 'New case', draft: true });
-  state.active = id;
-  if (state.ws) { state.ws.onclose = null; state.ws.close(); state.ws = null; }
-  render();
-}
-async function startCase(files) {
-  const tab = state.tabs.find((t) => t.id === state.active);
-  const d = state.drafts[tab.id]; if (d) d.sending = true; render();
-  const fd = new FormData(); (files || []).forEach((f) => fd.append('files', f));
-  const r = await (await fetch('/api/cases', { method: 'POST', body: fd })).json();
-  state.tabs = state.tabs.filter((t) => t.id !== tab.id); delete state.drafts[tab.id];
-  await loadTabs(); openCase(r.case_id);
-}
 async function decide(agent, ok) {
   const a = model(state.active).approvals[agent]; if (!a) return;
   await fetch(`/api/approvals/${a.id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ approved: ok }) });
@@ -923,8 +865,7 @@ async function decide(agent, ok) {
 // ---------- events ----------
 $('tabList').addEventListener('click', (e) => {
   const b = e.target.closest('[data-tab]'); if (!b || b.dataset.tab === state.active) return;
-  const t = state.tabs.find((x) => x.id === b.dataset.tab);
-  if (t.draft) { state.active = t.id; if (state.ws) { state.ws.onclose = null; state.ws.close(); state.ws = null; } render(); } else openCase(t.id);
+  openCase(b.dataset.tab);
 });
 document.querySelector('.steps').addEventListener('click', (e) => {
   const b = e.target.closest('.row-btn'); if (!b) return;
@@ -934,16 +875,6 @@ document.querySelector('.steps').addEventListener('click', (e) => {
   if (ui.open.has(i)) ui.open.delete(i); else ui.open.add(i);
   render();
 });
-$('newCase').addEventListener('click', newDraft);
-const addFiles = (list) => { const d = state.drafts[state.active]; if (d) { d.files = d.files.concat([...(list || [])]); render(); } };
-$('fileInput').addEventListener('change', (e) => { addFiles(e.target.files); e.target.value = ''; });
-const drop = $('drop');
-drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragging'); });
-drop.addEventListener('dragleave', () => drop.classList.remove('dragging'));
-drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('dragging'); addFiles(e.dataTransfer.files); });
-$('fileList').addEventListener('click', (e) => { const b = e.target.closest('[data-remove]'); const d = state.drafts[state.active]; if (b && d) { d.files.splice(+b.dataset.remove, 1); render(); } });
-$('sampleBtn').addEventListener('click', () => { if (!state.drafts[state.active]) newDraft(); startCase([]); });
-$('startBtn').addEventListener('click', () => { const d = state.drafts[state.active]; if (d && d.files.length) startCase(d.files); });
 // caller voice: Cartesia voices with different accents; the choice is saved on the case
 (async () => {
   try {
@@ -984,7 +915,7 @@ async function startReplay(params) {
   const scenario = params.get('scenario') || 'default', speed = +(params.get('speed') || 1);
   let events;
   try { events = await (await fetch(`/api/replay?scenario=${scenario}`)).json(); } catch (e) { events = null; }
-  if (!Array.isArray(events) || !events.length) { newDraft(); return; }
+  if (!Array.isArray(events) || !events.length) { $('caseTitle').textContent = 'No recording to replay yet: finish one case first.'; return; }
   const id = 'replay';
   state.tabs = [{ id, name: (events.find((e) => e.bill) || {}).bill?.provider || 'Replay', status: 'reviewing' }];
   state.active = id; state.models[id] = blankModel();
@@ -1074,7 +1005,7 @@ async function startReplay(params) {
   const want = new URLSearchParams(location.search).get('id');
   if (want && state.tabs.some((t) => t.id === want)) openCase(want);
   else if (state.tabs.length) openCase(state.tabs[0].id);
-  else newDraft();
+  else location.replace('new.html');  // no cases yet: start one in the chat
 })();
 </script>
 </body>

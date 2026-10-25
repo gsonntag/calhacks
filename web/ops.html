@@ -100,7 +100,7 @@
 <body>
 <header class="m3-top-app-bar">
   <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
-  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">New case</a><a class="m3-tab" href="dashboard.html">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html" aria-current="page">Under the hood</a></nav>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html" aria-current="page">Under the hood</a></nav>
 </header>
 
 <main class="m3-page m3-stack">
@@ -312,7 +312,7 @@ function connect() {
   connect.ws = ws;
 }
 addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
-if (!id) { $('nowLabel').innerHTML = 'No case id. Open a case from <a href="dashboard.html">Cases</a>, then choose Under the hood.'; }
+if (!id) { $('nowLabel').innerHTML = 'No case id. Open a case from <a href="/">Cases</a>, then choose Under the hood.'; }
 else { $('caseLink').href = `case.html?id=${encodeURIComponent(id)}`; $('caseLink').classList.remove('hidden'); connect(); }
 </script>
 </body>

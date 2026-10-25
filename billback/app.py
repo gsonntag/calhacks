@@ -479,7 +479,8 @@ async def replay(scenario: str = "default"):
 
 @app.get("/")
 async def index():
-    return FileResponse(WEB / "index.html")
+    """Cases is home; with no cases yet, home is the chat intake."""
+    return FileResponse(WEB / ("dashboard.html" if orchestrator.cases else "new.html"))
 
 
 # Routers: hospital policy database (Bright Data) and the Twilio/Cartesia voice pipeline.

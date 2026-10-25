@@ -9,15 +9,18 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
 <!--
-  Case dashboard: every saved case (data/cases/), its balance, calls, the follow-up BillBack scheduled and
+  Cases (home, served at /): every saved case (data/cases/), its balance, calls, the follow-up BillBack scheduled and
   when it's due. Polls /api/dashboard. Per-case actions: Ask BillBack (/ask), Call again (/call-again, which
   waits on the patient's approval on the case page), and a demo clock (/clock) to make a follow-up come due.
+  "+ New case" opens the chat intake (new.html); with no cases yet the page goes straight there.
 -->
 <style>
   /* shared top app bar layout (wraps the tabs under the brand on phones) */
   .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
   @media (max-width: 720px) { .m3-top-app-bar .m3-tabs { order: 2; flex-basis: 100%; margin: 0 -16px; padding: 0 8px; gap: 0; } .m3-top-app-bar .m3-tab { padding: 0 10px; } }
 
+  .hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; }
+  .hero > div { flex: 1 1 320px; min-width: 0; }
   .hero h1 { margin: 8px 0 4px; }
   .hero p { margin: 0; }
   .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
@@ -96,9 +99,6 @@
   @media (min-width: 720px) { .clock .lbl { flex-basis: auto; margin-right: 4px; } }
   .clock .m3-chip { height: 40px; }
 
-  .empty { text-align: center; padding: 40px 24px; }
-  .empty .material-symbols-rounded { font-size: 40px; color: var(--md-primary); }
-  .empty p { margin: 8px 0 16px; color: var(--md-on-surface-variant); }
   @media (max-width: 560px) {
     .case-head { padding: 16px; } .case-body { padding: 4px 16px 16px; }
     .facts { grid-template-columns: 1fr; gap: 0; } .facts dt { margin-top: 6px; }
@@ -109,13 +109,16 @@
 <body>
 <header class="m3-top-app-bar">
   <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
-  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">New case</a><a class="m3-tab" href="dashboard.html" aria-current="page">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/" aria-current="page">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 
 <main class="m3-page m3-stack">
   <div class="hero">
-    <h1 class="headline-l">Your billing, handled.</h1>
-    <p class="body-l muted">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+    <div>
+      <h1 class="headline-l">Your billing, handled.</h1>
+      <p class="body-l muted">Every bill BillBack is working on, what billing promised, and when it checks back.</p>
+    </div>
+    <a class="m3-btn filled" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
   </div>
   <div class="stats" id="stats" hidden></div>
   <section class="m3-card attn" id="attention" aria-labelledby="attnTitle" hidden></section>
@@ -293,8 +296,7 @@ function attentionHTML(list) {
 function render(list) {
   const has = list.length > 0;
   $('stats').hidden = $('attention').hidden = $('casesTitle').hidden = !has;
-  if (!has) { Object.keys(cards).forEach((id) => delete cards[id]); setHTML($('cases'), `<div class="m3-card empty">${icon('receipt_long')}<p>No cases yet. Start one and BillBack will keep track of every call and follow-up here.</p><a class="m3-btn filled" href="/">Start a case</a></div>`); return; }
-  if ($('cases').querySelector('.empty')) { $('cases').innerHTML = ''; $('cases')._html = null; }
+  if (!has) { location.replace('new.html'); return; }  // nothing to list yet: start with the chat
   setHTML($('stats'), summaryHTML(list));
   setHTML($('attention'), attentionHTML(list));
   const ids = new Set(list.map((c) => c.id));

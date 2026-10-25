@@ -58,7 +58,7 @@ Also: [`docs/competitors.md`](docs/competitors.md), [`docs/judge-qa.md`](docs/ju
 uv sync
 cp .env.example .env            # fill what you have; blanks run in a labelled offline mode
 uv run uvicorn billback.app:app --port 8000
-# open http://localhost:8000   (or /flows/ for the intake designs, /dashboard.html, /hospitals.html)
+# open http://localhost:8000   (Cases; the chat intake when there are none yet. Also /flows/, /hospitals.html)
 uv run pytest -q                # 117 tests, fully offline
 ```
 
@@ -115,7 +115,7 @@ billback/  app.py orchestrator.py harness.py events.py finance.py followups.py l
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes
            voice/         calls media cartesia_ws pronounce voices authorization audio routes
            integrations/  nessie brightdata cartesia twilio
-web/       index.html (chat)  flows/ (12 intake designs)  case.html (timeline)  dashboard.html
+web/       dashboard.html (Cases, served at /)  new.html (chat intake)  flows/ (12 intake designs)  case.html (timeline)
            hospitals.html (policy DB)  voice.html  approve.html (phone)  rep.html (desk-mode billing)  pitch.html
 demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, offline test fixtures, replays
 policydb/  policies.sqlite3, policies.json, raw/ (real Bright Data crawl artifacts)
