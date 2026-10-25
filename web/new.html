@@ -111,7 +111,7 @@
       <div class="pill" id="pill">
         <div class="pending" id="pending"></div>
         <div class="pill-row">
-          <label class="m3-icon-btn attach" title="Attach a bill or EOB">
+          <label class="m3-icon-btn attach" title="Attach a bill or insurance statement">
             <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Attach a bill or insurance statement">
             <span class="material-symbols-rounded" aria-hidden="true">attach_file</span>
           </label>
@@ -214,7 +214,7 @@ gmailBtn.addEventListener('click', async () => {
     gmailBtn.setAttribute('aria-label', 'Demo inbox loaded. Remove');
     gmailBtn.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">check</span><span>Demo inbox</span>';
     const bill = r.found.find((f) => f.type === 'bill'), eob = r.found.find((f) => f.type === 'eob');
-    const msg = `I found a final notice from ${bill.from} for $${bill.amount.toLocaleString()} and an EOB from ${eob.from}. Want me to start on that bill?`;
+    const msg = `I found a final notice from ${bill.from} for $${bill.amount.toLocaleString()} and an insurance statement from ${eob.from}. Want me to start on that bill?`;
     state.history.push({ role: 'user', content: `[Connected Gmail. Found: ${JSON.stringify(r.found)}]` }, { role: 'assistant', content: msg });
     app.classList.remove('empty'); addBot(msg);
     if (r.simulated) inner.insertAdjacentHTML('beforeend', '<div class="sim body-s muted">Demo inbox (simulated Gmail)</div>');

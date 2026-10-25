@@ -46,6 +46,7 @@
   .ch-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   .ch-who b { font: 500 18px/24px var(--md-font); letter-spacing: 0; overflow-wrap: anywhere; }
   .ch-who span { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .ch-who span b { font: 600 14px/20px var(--md-font); color: var(--md-on-surface); }
   .ch-right { flex: none; display: flex; align-items: center; gap: 4px; }
   .chev { color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
   .case-head[aria-expanded="true"] .chev { transform: rotate(180deg); }
@@ -122,6 +123,7 @@
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const money = (n) => '$' + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
+const money0 = (n) => '$' + Math.round(Number(n || 0)).toLocaleString();  // the collapsed row: whole dollars
 const day = (iso) => { if (!iso) return ''; const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); };
 const setHTML = (el, html) => { if (el._html !== html) { el.innerHTML = html; el._html = html; } };
 const icon = (name, cls = '') => `<span class="material-symbols-rounded ${cls}" aria-hidden="true">${name}</span>`;
@@ -160,7 +162,7 @@ const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0))
 function headHTML(c) {
   const saved = savedOf(c), flag = needsYou(c);
   return `<span class="ch-top">
-      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}${flag ? ` · <span class="m3-status ${flag[1]}">${esc(flag[0])}</span>` : ''}</span></span>
+      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}${c.current_balance != null && c.current_balance !== c.original ? ` · ${money0(c.original)} → <b>${money0(c.current_balance)}</b>` : ''}${flag ? ` · <span class="m3-status ${flag[1]}">${esc(flag[0])}</span>` : ''}</span></span>
       <span class="ch-saved ${saved ? '' : 'zero'}">${saved ? `<b>${money(saved)}</b><span>saved</span>` : '<span>Nothing saved yet</span>'}</span>
       ${icon('expand_more', 'chev')}
     </span>`;

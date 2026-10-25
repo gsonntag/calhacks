@@ -161,7 +161,7 @@ async def test_follow_up_then_call_again_end_to_end(client):
     assert (await c.post(f"/api/cases/{cid}/call-again")).json()["ok"] is True
     assert (await c.post(f"/api/cases/{cid}/call-again")).status_code == 409  # one call at a time
     ask = await _approve(c, cid, after=n)
-    assert ask["title"].endswith("billing again?") and any("refund" in a for a in ask["detail"]["asks"])
+    assert ask["title"].endswith("billing again?") and any("refund" in a.lower() for a in ask["detail"]["asks"])
     ready = await _wait_for(cid, lambda e: e["kind"] == "call_ready", after=n)
     brief = (await c.get(f"/api/calls/{ready['call_id']}")).json()["brief"]
     assert brief["call_type"] == "follow_up"

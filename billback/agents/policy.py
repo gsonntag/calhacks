@@ -135,9 +135,9 @@ async def find_policy(cid: str, r: Report, hosp: dict) -> dict:
                  version=row["version"], fetched_at=row["fetched_at"], sources=row["source_urls"],
                  content_sha256=row["content_sha256"], tiers_verified=row["tiers_verified"])
         r.step("find", "Find assistance policy", "ok",
-               f"From policy DB: fetched {row['fetched_at'][:10]} from {_site(row)} via Bright Data, "
-               f"{row['tiers_verified']} verified quotes",
-               [(_doc_name(u), u) for u in row["source_urls"][:3]])
+               f"Found {h.name}'s policy: {row['tiers_verified']} verified quotes",
+               [(f"Crawled by Bright Data from {_site(row)} on {row['fetched_at'][:10]}", "policy database"),
+                *[(_doc_name(u), u) for u in row["source_urls"][:3]]])
         return got
     if brightdata.live() and brightdata.serp_live() and llm.available():
         r.step("find", "Find assistance policy", "running",
@@ -147,8 +147,9 @@ async def find_policy(cid: str, r: Report, hosp: dict) -> dict:
             bus.emit(cid, "policy_source", "policy", origin="live_crawl", hospital=hosp["name"],
                      version=got["version"], fetched_at=got["fetched_at"], sources=got["sources"])
             r.step("find", "Find assistance policy", "ok" if got["found"]["tiers"] else "clear",
-                   f"Crawled live via Bright Data and saved to the policy DB · {urlparse(got['source']).netloc}",
-                   [(_doc_name(u), u) for u in got["sources"][:3]])
+                   "Found the policy live with Bright Data",
+                   [(f"Crawled {urlparse(got['source']).netloc}, saved to the policy database", "Bright Data"),
+                    *[(_doc_name(u), u) for u in got["sources"][:3]]])
             return got
         r.step("find", "Find assistance policy", "flag", "Live crawl failed: no verified policy")
         return {"found": {"tiers": []}, "source": "live crawl failed", "live": False, "origin": "failed",
@@ -188,7 +189,7 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
            f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr, household of {elig['household_size']})",
            [(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}") for t in inc["deposits"][-3:]])
     bus.emit(cid, "evidence", "policy", label="Income vs poverty line",
-             value=f"{elig['fpl_pct']}% of FPL (household {elig['household_size']}, {elig['fpl_year']} guidelines)",
+             value=f"{elig['fpl_pct']}% of the poverty line (household {elig['household_size']}, {elig['fpl_year']} guidelines)",
              source=inc["source"])
 
     free = [t for t in tiers if t.get("discount_pct") == 100]
@@ -253,8 +254,8 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
         quotes = [(q, qs or source) for q, qs in ((terms.get("quote"), terms.get("source_url")),
                                                    (terms.get("cap_quote"), terms.get("cap_source_url"))) if q]
         r.step("plan", "Payment plan terms", "win" if rules else "ok",
-               (f"Their policy: {', '.join(rules)} → " if rules else "")
-               + f"${target:,.0f} as {plan['months']} × ${plan['monthly']:,.0f}/mo, no interest", quotes)
+               f"{plan['months']} × ${plan['monthly']:,.0f}/mo, no interest"
+               + (f" (their policy: {', '.join(rules)})" if rules else ""), quotes)
         for q, qs in quotes:
             bus.emit(cid, "policy_quote", "policy", quote=q, source=qs, live=live, verified=True,
                      origin=got["origin"], matched=True, topic="payment_plan")
@@ -285,6 +286,6 @@ def _why_not_free(elig: dict, free: list[dict]) -> str:
             return f"Income is above the {t['max_fpl_pct']:.0f}% limit"
         need = t.get("min_oop_pct_income")
         if need is not None and elig["oop_pct_income"] <= need:
-            return (f"Not eligible: the write-off needs medical bills over {need:g}% of income; "
+            return (f"No write-off: it needs medical bills over {need:g}% of income; "
                     f"yours are {elig['oop_pct_income']:.0f}%")
     return f"Income is above the {free[0]['max_fpl_pct']:.0f}% limit"

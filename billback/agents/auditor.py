@@ -11,7 +11,13 @@ from .report import Report
 
 
 def _dup_note(d: dict) -> str:
-    return f"also: possible double charge at {d['duplicate']['merchant']} (${d['amount']:,.2f}), separate from this bill"
+    return f"also a ${d['amount']:,.0f} double charge at {d['duplicate']['merchant']} (not this bill)"
+
+
+def _line_title(c: dict) -> str:
+    """'Billed twice: IV push', not '96374 billed twice': the code stays in the proof."""
+    name = c.get("name") or c["code"]
+    return f"Billed twice: {name}" if c["kind"] == "duplicate_line" else f"Above their posted price: {name}"
 
 
 def report(case_id: str, bank_label: str) -> Report:
@@ -39,7 +45,7 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
         expect = round(resp - credits, 2)  # what the bill should ask for once insurance and its own credits apply
         r.step("read", "Read the bill and insurance statement", "running")
         r.step("read", "Read the bill and insurance statement", "ok",
-               f"{bill['provider']} bills ${billed:,.0f}; your insurer says your share is ${resp:,.0f}",
+               f"Bill says ${billed:,.0f}. Insurance says you owe ${resp:,.0f}",
                [(f"Bill: ${billed:,.2f} due by {bill.get('due_date', '?')}", acct),
                 (f"Insurance statement: plan paid ${float(eob.get('plan_paid') or 0):,.2f}, "
                  f"you owe ${resp:,.2f}", claim)])
@@ -56,10 +62,10 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     else:
         r.step("read", "Read the bill", "running")
         r.step("read", "Read the bill", "ok",
-               f"{bill['provider']} bills ${billed:,.0f}; no insurance statement, so you're self-pay",
+               f"Bill says ${billed:,.0f}. No insurance: you're self-pay",
                [(f"Bill: ${billed:,.2f} due by {bill.get('due_date', '?')}", acct)])
         r.step("insurance", "Check for insurance", "clear",
-               "Uninsured: your share is the bill's own charges, so each line is checked instead")
+               "No insurance, so each bill line is checked instead")
 
         r.step("lines", "Check the bill's lines", "running")
         corrections = billcheck.line_corrections(bill, case.get("hospital", {}).get("name"))
@@ -69,8 +75,7 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
                    f"${sum(c['amount'] for c in corrections):,.0f} too high",
                    [(c["detail"], c["source"]) for c in corrections])
             for c in corrections:
-                title = (f"{c['code']} billed twice" if c["kind"] == "duplicate_line"
-                         else f"{c['code']} charged above the hospital's posted price")
+                title = _line_title(c)
                 r.finding(f"{c['kind']}-{c['line']}", title, c["amount"], [c["detail"]], c.get("url") or c["source"])
         else:
             r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices")
@@ -80,7 +85,8 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     txns_ready.set_result(txns)
     dates = sorted(t["date"][:10] for t in txns if t.get("date"))
     r.step("bank", f"Pull your bank history ({bank_name})", "ok",
-           f"{len(txns)} transactions" + (f", {dates[0]} to {dates[-1]}" if dates else ""))
+           f"{len(txns)} transactions checked",
+           [(f"{dates[0]} to {dates[-1]}", bank_label)] if dates else None)
 
     rec = finance.reconcile(bill, eob, txns, corrections=corrections)
     missed = rec["uncredited_payments"]
@@ -94,7 +100,7 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
         proof = [(f"${p['amount']:,.2f} on {p['date'][:10]}: {p.get('merchant') or p.get('description') or 'payment'}",
                   f"{bank_name} · txn {p['id']}") for p in missed]
         r.step("payments", f"Look for payments to {bill['provider']}", "flag",
-               f"You already paid ${rec['uncredited_paid']:,.0f} and the bill doesn’t show it", proof + credited)
+               f"You paid ${rec['uncredited_paid']:,.0f}. The bill doesn’t show it", proof + credited)
         for p in missed:
             part = "" if p["not_on_bill"] == p["amount"] else f" (${p['not_on_bill']:,.2f} of it isn't credited)"
             r.finding(f"paid-{p['id']}", "A payment you made was missed", p["not_on_bill"],
@@ -110,7 +116,7 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     if rec["duplicates"]:
         d = rec["duplicates"][0]
         r.step("dupes", "Check your bank for duplicate charges", "flag",
-               f"{d['duplicate']['merchant']} charged ${d['amount']:,.2f} twice (separate from this bill, dispute with your bank)",
+               f"{d['duplicate']['merchant']} charged you twice: ${d['amount']:,.0f} (not this bill; ask your bank)",
                [(f"${d['amount']:,.2f} on {t['date'][:10]}", f"{bank_name} · txn {t['id']}") for t in (d["first"], d["duplicate"])])
         bus.emit(cid, "evidence", "auditor", label="Duplicate charge",
                  value=f"{d['duplicate']['merchant']} ${d['amount']:,.2f}", source=d["source"])

@@ -58,7 +58,7 @@ Also: [`docs/competitors.md`](docs/competitors.md), [`docs/judge-qa.md`](docs/ju
 uv sync
 cp .env.example .env            # fill what you have; blanks run in a labelled offline mode
 uv run uvicorn billback.app:app --port 8000
-# open http://localhost:8000   (Cases; the chat intake when there are none yet. Also /flows/, /hospitals.html)
+# open http://localhost:8000   (Cases; the chat intake when there are none yet. Also /hospitals.html)
 uv run pytest -q                # 139 tests, fully offline
 ```
 
@@ -91,7 +91,7 @@ scripted caller so the whole flow still runs offline. `case.html?replay=1` repla
 | Fast replies: Claude streamed into Sonic sentence by sentence, speculative start on Ink eager_end, prompt caching | Done, measured live: first audio 0.44–0.8 s after the rep stops (phone simulator), median 0.93 s (desk mode, was 3.0 s) | `voice/media.py`, `voice/desk.py`, `llm.py`, `docs/voice.md` (Latency), `tests/test_latency.py` |
 | Approval gate, audit log, follow-ups, "call again", status answers | Done | `harness.py`, `followups.py`, `tests/test_followups.py` |
 | Gmail intake | **Not built: the "Demo inbox" chip loads the sample bill** (marked `simulated` by the API and in the UI) | `app.gmail_scan` |
-| 10 of the 12 intake designs in `/flows/` | Clickable mockups (labelled Mock); Drop & Go is the live one | `web/flows/index.html` |
+| Early intake design mockups in `/flows/` | Not part of the app: no menu links to them; kept by URL for reference | `web/flows/index.html` |
 
 ## Real vs simulated (say this to judges)
 - **Real:** Bright Data crawls of real hospital policies (committed in `policydb/`), real prices from the

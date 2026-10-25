@@ -98,6 +98,7 @@
   .t-lb { color: var(--t-fg); }
   .t-line.ok .t-lb, .t-line.clear .t-lb { color: var(--t-dim); }
   .t-rs { color: var(--t-fg); }
+  .t-rs b { font-weight: 700; }
   .t-line.clear .t-rs { color: var(--t-dim); }
   .t-line.flag .t-rs { color: var(--t-flag); font-weight: 600; } .t-line.win .t-rs { color: var(--t-win); font-weight: 600; } .t-line.wait .t-rs { color: var(--t-wait); }
   .t-line.ok .t-ic { color: var(--t-ok); } .t-line.flag .t-ic { color: var(--t-flag); } .t-line.win .t-ic { color: var(--t-win); }
@@ -184,6 +185,15 @@
   .now-dot.live { animation: nowdot 1.4s ease-in-out infinite; }
   @keyframes nowdot { 50% { opacity: .35; } }
   .now-text { margin: 0; color: var(--md-on-surface-variant); min-height: 1.5em; overflow-wrap: anywhere; }
+  /* at a glance: what was wrong, what each mistake costs, what happens next */
+  .now-glance { display: flex; flex-direction: column; gap: 6px; }
+  .now-glance .glance-line { margin: 0; font: 500 16px/24px var(--md-font); color: var(--md-on-surface); overflow-wrap: anywhere; }
+  .now-glance .glance-line b { color: var(--st-money, var(--md-primary)); }
+  .now-glance ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2px; max-width: 520px; }
+  .now-glance li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px; color: var(--md-on-surface-variant); }
+  .now-glance li b { color: var(--md-on-surface); font-weight: 600; white-space: nowrap; }
+  .now-glance .glance-next { margin: 0; font-size: 14px; line-height: 20px; color: var(--md-on-surface-variant); }
+  .now-glance .glance-next b { color: var(--md-on-surface); font-weight: 500; }
   .now-money { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; }
   .now-money s { font-size: 20px; color: var(--md-on-surface-variant); }
   .now-money .material-symbols-rounded { font-size: 20px; color: var(--md-on-surface-variant); align-self: center; }
@@ -333,6 +343,7 @@
     <h1 class="headline-l" id="caseTitle">Loading your case…</h1>
     <p class="body-l now-text" id="nowText"></p>
     <div class="now-money" id="nowMoney" hidden><s id="nowWas"></s><span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span><b id="nowOwe"></b><span class="body-m muted" id="nowSave"></span></div>
+    <div class="now-glance" id="nowGlance" hidden></div>
     <ol class="now-track" id="nowTrack" aria-label="Progress">
       <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Plan</span></li><li><span>Call</span></li><li><span>Resolved</span></li>
     </ol>
@@ -496,6 +507,8 @@ const AGENT_STATUS = {created: 1, reviewing: 1, deciding: 2, awaiting_call_appro
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const money = (n) => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+const money0 = (n) => '$' + Math.round(Number(n)).toLocaleString();  // headlines: whole dollars; the proof keeps cents
+const boldMoney = (t) => esc(t).replace(/[−-]?\$[\d,]+(?:\.\d\d)?/g, (x) => `<b>${x}</b>`);
 const setHTML = (el, html) => { if (el._html !== html) { el.innerHTML = html; el._html = html; } };
 const setText = (el, t) => { if (el.textContent !== t) el.textContent = t; };
 const timer = (sec) => { const s = Math.max(0, Math.floor(sec)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
@@ -655,7 +668,7 @@ function renderAgent(key, m, forceOpen = false) {
     const more = hasProof ? `<span class="t-more">${showProof ? 'hide proof ▴' : `proof (${s.proof.length}) ▾`}</span>` : '';
     const attrs = hasProof ? ` data-act="line" data-key="${esc(s.key)}" role="button" tabindex="0" aria-expanded="${showProof}"` : '';
     return `<li class="t-line ${s.status}${cls}${hasProof ? ' has-proof' : ''}"${attrs}><span class="t-ic">${ic}</span><div class="t-tx">
-      <span class="t-lb">${esc(s.label)}${running ? '<i class="caret"></i>' : ''}</span>${!running && s.result ? `<span class="t-rs">${esc(s.result)}</span>` : ''}${more}${proof}</div></li>`;
+      <span class="t-lb">${esc(s.label)}${running ? '<i class="caret"></i>' : ''}</span>${!running && s.result ? `<span class="t-rs">${boldMoney(s.result)}</span>` : ''}${more}${proof}</div></li>`;
   }).join('');
   const done = a.done ? `<div class="t-done">✓ ${esc(a.summary || 'Done')}${a.note ? ` <span>· ${esc(a.note)}</span>` : ''}</div>` : '';
   const head = a.done && !forceOpen
@@ -886,7 +899,9 @@ function render() {
     return `<div class="agent-col">${renderAgent(k, m)}${found}</div>`;
   }).join(''));
   const sums = panels.map((k) => [agentName(m, k), ((m.review && m.review[k]) || {}).result || (m.agent[k] || {}).summary]);
-  setText($('reviewLine'), sums.some(([, r]) => r) ? sums.map(([n, r]) => `${n}: ${r || 'working…'}`).join(' · ')
+  const reviewDone = !!m.review || panels.every((k) => (m.agent[k] || {}).done);
+  setText($('reviewLine'), reviewDone && finds.length ? foundLine(finds)
+    : sums.some(([, r]) => r) ? sums.map(([n, r]) => `${n}: ${r || 'working…'}`).join(' · ')
     : ds >= 1 && m.bill ? `${sums.map(([n]) => n).join(' and ')} are checking your bill` : 'Two agents check your records and the hospital’s own rules');
   const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
   $('quoteBox').hidden = !quotes.some((q) => q.quote);
@@ -932,7 +947,7 @@ function render() {
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
   const nextV = latestPlan(m, m.round + 1), sc = m.scorecards.filter((x) => x.n === m.round).pop();
   $('finalTitle').textContent = nextV && nextV.next && nextV.next.kind !== 'done' ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
-  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
+  setText($('finalLine'), m.done ? `${money0(m.done.now)} · ${sc ? scoreLine(sc) : outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund;
   $('finalNote').hidden = !refund;
@@ -1151,20 +1166,29 @@ function renderPlan(m, ds, ui) {
   $('approveBtn').innerHTML = `${sym('call')}Call now${cur && m.plans.length > 1 ? ` (v${cur.v})` : ''}`;
   const approvedV = m.approvedV || (cur && cur.v);
   setText($('approveSummary'), ui.planErr ? ui.planErr : m.callDeclined ? 'You chose not to call yet.'
-    : callStarted(m) ? `Approved${cur ? ` v${approvedV}` : ''} · ${m.approvedAt}. Every version stays here.` : '');
+    : callStarted(m) ? `${m.approvedAt || 'Approved'}${cur && m.plans.length > 1 ? ` (v${approvedV})` : ''}. Every version stays here.` : '');
   setText($('approveMeta'), m.callDeclined ? 'You chose not to call yet'
-    : callStarted(m) ? `Approved${cur ? ` v${approvedV}` : ''} · ${m.approvedAt}`
+    : callStarted(m) ? `${m.approvedAt || 'Approved'}${cur && plansOf(m, m.round).length > 1 ? ` (v${approvedV})` : ''}`
     : busy ? 'Building your plan…'
-    : cur ? `v${cur.v} · ${money(cur.money.billed)} → ${money(cur.money.target)} · ${cur.asks.length} asks`
+    : cur ? `${money0(cur.money.billed)} → ${money0(cur.money.target)} · ${cur.asks.length} things to ask${plansOf(m, m.round).length > 1 ? ` · v${cur.v}` : ''}`
     : pending ? 'Waiting for your OK' : 'The Decide agent turns the findings into a call plan');
 }
 
 // ---------- step 5: what the call got, and the Decide agent's plan for what's left (agents/scorecard.py) ----------
+// "Billing did 2 of 5 · 3 still open": what the call got, in words (the marks themselves are below)
+function scoreLine(sc) {
+  const marks = (sc.marks || []).filter((x) => x.status !== 'not_needed'), n = (s) => marks.filter((x) => x.status === s).length;
+  const parts = [`Billing did ${n('got')} of ${marks.length}`];
+  if (n('later')) parts.push(`${n('later')} promised later`);
+  if (n('refused')) parts.push(`${n('refused')} refused`);
+  if (n('unclear')) parts.push(`${n('unclear')} still open`);
+  return marks.length ? parts.join(' · ') : sc.summary;
+}
 function scoreHTML(sc, m) {
   const call = m.calls.find((c) => c.n === sc.n) || {};
   const who = [call.rep, call.case_number && `case ${call.case_number}`].filter(Boolean).join(' · ');
   return `<div class="score-card"><h3 class="title-s sub-h" style="margin:0">What the call got</h3>
-    <span class="body-s muted">Call ${sc.n}${who ? ' · ' + esc(who) : ''} · ${esc(sc.summary)}</span>
+    <span class="body-s muted">Call ${sc.n}${who ? ' · ' + esc(who) : ''} · ${esc(scoreLine(sc))}</span>
     <ul class="score">${sc.marks.map((x) => `<li><span class="m3-status ${SCORE_CLS[x.status] || ''}">${esc(x.label)}</span>
       <span class="tx"><span class="body-m">${esc(x.text)}</span><span class="ev">${x.source === 'rep said' ? `${esc(call.rep || 'Billing')}: “${esc(x.evidence)}”` : esc(x.evidence)}</span></span></li>`).join('')}</ul></div>`;
 }
@@ -1235,13 +1259,48 @@ function nowText(m, ds, a) {
   }
   return a.text;
 }
+// One glance: how many mistakes, what each costs, what you owe now, and what BillBack does next.
+const mistakesOf = (finds) => finds.filter((f) => f.agent === 'auditor' && f.saved > 0);
+function foundLine(finds) {
+  const bad = mistakesOf(finds), relief = finds.filter((f) => f.agent !== 'auditor');
+  const parts = [bad.length ? `${bad.length} mistake${bad.length > 1 ? 's' : ''} on the bill: −${money0(bad.reduce((s, f) => s + f.saved, 0))}`
+    : 'No mistakes on the bill'];
+  for (const f of relief) parts.push(`${f.title}: ${f.saved > 0 ? '−' + money0(f.saved) : f.value}`);
+  return parts.join(' · ');
+}
+function glanceNext(m, ds, prov) {
+  const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
+  if (m.error) return '';
+  if (ds <= 1) return 'Next: your call plan';
+  if (ds === 2) return deciding(m) ? 'Next: your call plan' : `Next: BillBack calls ${prov} billing, once you OK it`;
+  if (ds === 3) return `Now: BillBack is on the phone with ${prov} billing`;
+  if (planPending) return 'Next: your OK on the payment plan';
+  if (m.done && m.followup) return `Next: I check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`;
+  return '';
+}
+function glanceHTML(m, ds) {
+  const prov = m.bill ? m.bill.provider : 'the hospital', finds = findingsOf(m);
+  if (!m.bill || (!finds.length && !m.review)) return '';
+  const bad = mistakesOf(finds), relief = finds.filter((f) => f.agent !== 'auditor' && f.saved > 0);
+  const line = [bad.length ? `${bad.length} mistake${bad.length > 1 ? 's' : ''} found${m.review ? '' : ' so far'}` : m.review ? 'No mistakes on the bill' : '',
+    relief.length ? 'help under their own policy' : ''].filter(Boolean);
+  const rows = [...bad, ...relief].slice(0, 4).map((f) => `<li><span>${esc(f.title)}</span><b>−${money0(f.saved)}</b></li>`).join('');
+  const nx = glanceNext(m, ds, prov);
+  return `${line.length ? `<p class="glance-line">${line.map((x, i) => (i ? x : x.charAt(0).toUpperCase() + x.slice(1))).join(' · ')}</p>` : ''}`
+    + (rows ? `<ul aria-label="What was wrong">${rows}</ul>` : '')
+    + (nx ? `<p class="glance-next"><b>${esc(nx.split(':')[0])}:</b>${esc(nx.slice(nx.indexOf(':') + 1))}</p>` : '');
+}
 function renderNow(m, ds, tab, a) {
   const live = !!tab;
+  const g = live && !m.error ? glanceHTML(m, ds) : '';
+  $('nowGlance').hidden = !g;
+  setHTML($('nowGlance'), g);
   $('nowTrack').hidden = !live;
   $('nowText').hidden = !live;
   setText($('nowStep'), !live ? '' : m.done && !m.error ? 'Done' : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
   $('nowDot').className = 'now-dot ' + (!live ? 'off' : m.error ? 'error' : m.done ? 'success' : a.cls === 'success' || a.live ? 'success live' : 'warn live');
-  $('nowText').hidden = !live || $('caseTitle').hidden || !!(m.done && !m.error);  // done: the Next box says it
+  $('nowText').hidden = !live || $('caseTitle').hidden || !!(m.done && !m.error)  // done: the Next box says it
+    || (ds === 2 && !deciding(m) && !!g);  // the plan is ready: the glance's "Next" line says it
   if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   $('nowMoney').hidden = !live || orig == null;

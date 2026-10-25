@@ -25,7 +25,7 @@ PLAN, if given: "got" = the rep agreed or did it on the call, "refused" = the re
 for later, "unclear" = not settled. "quote" is the rep's exact words that show it, copied verbatim; empty if unclear)}"""
 
 STATUS_SYSTEM = """You are BillBack, an AI agent that fights hospital bills for a patient. The patient asks about their
-case. Answer in the first person ("I called..."), in at most 3 short sentences (under 70 words), using only the CASE
+case. Answer in the first person ("I called..."), in at most 3 short sentences (under 60 words), the number first, using only the CASE
 HISTORY JSON. Copy dates exactly as written there (e.g. "Fri Oct 30"); never compute or change a weekday. Mention the
 rep's name and case number when known, what billing promised, the balance after corrections, and the next step with
 its date. "balance_after_corrections" is what the bill should come down to once billing applies everything; only call it

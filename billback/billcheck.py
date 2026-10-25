@@ -125,9 +125,11 @@ def line_corrections(bill: dict, hospital_name: str | None = None) -> list[dict]
         units = li.get("units") or 1
         amt = round(float(li.get("amount") or 0), 2)
         key = (code, units, _cents(amt))
+        # the plain name a patient knows (the price file's common name), not just the billing code
+        name = (posted_prices.get(code) or {}).get("common_name") or li.get("description") or code
         if code and key in seen:
-            out.append({"kind": "duplicate_line", "line": i, "code": code, "amount": amt,
-                        "label": f"{code} billed twice", "source": f"{acct} · lines {seen[key]} and {i}",
+            out.append({"kind": "duplicate_line", "line": i, "code": code, "amount": amt, "name": name,
+                        "label": f"Billed twice: {name}", "source": f"{acct} · lines {seen[key]} and {i}",
                         "detail": f"Line {i} repeats line {seen[key]}: {li.get('description', code)}, ${amt:,.2f}."})
             continue
         seen.setdefault(key, i)
@@ -138,7 +140,7 @@ def line_corrections(bill: dict, hospital_name: str | None = None) -> list[dict]
             if _cents(amt) > _cents(cap):
                 src = f"{table.get('hospital_name') or h.name} price file, {table.get('last_updated_on', '?')}"
                 out.append({"kind": "price_above_posted", "line": i, "code": code, "amount": round(amt - cap, 2),
-                            "billed": amt, "posted": cap, "label": f"{code} charged above the posted price",
+                            "billed": amt, "posted": cap, "name": name, "label": f"Above the posted price: {name}",
                             "source": src, "url": (table.get("source") or {}).get("file_url", ""),
                             "detail": f"Line {i} charges ${amt:,.2f}; the hospital's posted price is ${cap:,.2f}."})
     return out

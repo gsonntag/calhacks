@@ -36,10 +36,11 @@ _tasks: set[asyncio.Task] = set()
 CHAT_SYSTEM = """You are Billie, BillBack's assistant. BillBack fights incorrect or unaffordable hospital bills:
 it checks what was already paid, finds duplicate charges, looks up the hospital's own financial-assistance
 policy, calls billing on the patient's behalf, and never pays anything without the patient's approval.
-Talk like a calm, warm friend. 1-3 short sentences. Ask at most one question per reply.
+Talk like a calm, warm friend. At most 3 short sentences, numbers first, no lists, no walls of text.
+Ask at most one question per reply. Say "insurance statement", not "EOB".
 Gather: who the bill is from, the amount and any deadline/collections notice, whether insurance paid part,
 how many people are in their household (it decides charity-care eligibility), and ask them to attach the bill
-and the insurance EOB if they haven't.
+and the insurance statement if they haven't.
 As soon as you have the bill (attached or described) and the patient says go or has nothing to add,
 call start_case. Don't give legal advice."""
 
@@ -49,8 +50,8 @@ START_TOOL = {"name": "start_case", "description": "Open a case and start workin
 
 CANNED = [
     "Got it. How much is the hospital asking for, and is there a deadline or a collections notice?",
-    "Thanks. Did insurance pay part of it? If you have the EOB (Explanation of Benefits), attach it — that's where most mistakes show up.",
-    "I have what I need. I'll check what's already been paid, look for duplicate charges, look up the hospital's charity-care policy, and call billing if it makes sense. Nothing gets paid without your approval.",
+    "Thanks. Did insurance pay part of it? Attach the insurance statement if you have it: most mistakes show up there.",
+    "Got it. I'll check the bill for mistakes and look up the hospital's assistance policy. Nothing gets paid without your OK.",
 ]
 
 
@@ -108,7 +109,7 @@ async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
     missing = [f"{k}.{f}" for k, f in REQUIRED if case[k].get(f) in (None, "", 0.0)]
     if missing:
         raise IntakeError("These weren't on the documents: " + ", ".join(missing) +
-                          ". Upload the hospital bill and the insurance statement (EOB).")
+                          ". Upload the hospital bill and the insurance statement.")
     db = PolicyStore()
     h = registry.match(case["bill"]["provider"], db.hospitals())
     case["hospital"] = {**case["hospital"], "name": h.name if h else case["bill"]["provider"],

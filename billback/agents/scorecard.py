@@ -83,7 +83,7 @@ def from_call(ask: dict, outcome: dict, info: dict, rep_lines: list[str], money:
         return "later", what, "call record"
     if kind == "hold" and re.search(r"\b(on hold|paus\w+ collections)\b", low):
         return "got", _rep_line(r"\b(on hold|paus\w+ collections)\b", rep_lines) or "Account on hold", "rep said"
-    return "unclear", "The call didn't get a clear answer on this", ""
+    return "unclear", "Not settled on the call", ""
 
 
 def score(asks: list[dict], outcome: dict, info: dict, rep_lines: list[str], money: dict) -> list[dict]:
