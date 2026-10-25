@@ -68,7 +68,7 @@ def dana_case() -> dict:
 async def test_patient_missing_from_nessie_uses_their_sample_data(live):
     bank, account_id, label = await get_bank(dana_case())
     assert isinstance(bank, FallbackBank) and account_id == "mirror"
-    assert bank.notice == "No Capital One account for Dana — using sample bank data"
+    assert bank.notice == "Using Dana's sample bank history" and bank.quiet  # her own sample: no warning banner
     assert label.startswith("Sample bank data") and "Capital One" not in label
     # Dana has a generated scenario, so her own sample history is used, not Rosa's
     assert await bank.transactions(account_id) == LocalMirror(scenario("dana-altabates-refund")).txns
