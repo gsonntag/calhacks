@@ -38,7 +38,8 @@ Claude, the browser's voice instead of Cartesia. `GET /api/mode` shows which int
 | `NESSIE_API_KEY` | The patient's bank (then `uv run python scripts/seed_nessie.py` and `... seed_nessie.py freecare`) |
 | `BRIGHTDATA_API_KEY`, `BRIGHTDATA_SERP_ZONE`, `BRIGHTDATA_UNLOCKER_ZONE` | Live policy crawls and "Recheck now" |
 | `CARTESIA_API_KEY` (+ optional `CARTESIA_STT_MODEL`, default `ink-2`; `CARTESIA_TTS_MODEL`, default `sonic-3.6`) | Ink speech-to-text and Sonic speech |
-| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `REP_PHONE_NUMBER`, `PUBLIC_BASE_URL` | Real phone calls (optional; see below) |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `REP_PHONE_NUMBER`, `PUBLIC_BASE_URL` | Real phone calls (optional; see below). On a Twilio free trial, `TWILIO_FROM_NUMBER` must be the trial number Twilio assigned for your verified recipient, and the call can't stream audio (see Known limitations) |
+| `TIGER_DATABASE_URL` | Optional: Tiger Data (Timescale Postgres) for household profiles and bank history over time. Unset: onboarding answers are kept in a small local file per profile |
 | `PATIENT_PHONE_NUMBER`, `TWILIO_TWIML_APP_SID` | Optional: the patient's verbal authorization on a 3-way call |
 | `BILLBACK_ADMIN_TOKEN` | Shared secret (16+ characters) for every action that places a call, spends API credits or changes data. Open any page once with `?key=<token>`; the browser keeps it and removes it from the address bar. Unset: those actions only work from `localhost` on the same machine, never through a tunnel |
 | `BILLBACK_REQUIRE_LIVE=1` | Judging mode: the server refuses to start unless the Claude, Bright Data and Nessie keys and the admin token are set (format check only, no API calls), and the sample policies are never used |
@@ -61,12 +62,20 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
 
 ## How it works
 
+0. **Onboarding (optional, `/onboarding.html`).** Asks only the questions that could still change the
+   answer: hospital, household size, **household income before taxes**, insurance, medical bills. The answers
+   carry into the patient's next case (Tiger Data when it's on, else `data/profiles/`). The intake chat also
+   asks household size and, optionally, income.
 1. **Read the bill.** Claude reads the bill and the insurance statement (PDFs or photos) into fields:
    patient, hospital, account, lines, amounts, the insurer's patient share.
 2. **Review.** Two agents run side by side, and the case page shows each check as it happens:
    - **Nessie agent** (the patient's own records): payments the bill doesn't show, a line billed twice,
      duplicate bank charges, the bill against the insurance statement, lines above the hospital's posted
-     price, income from payroll deposits, 12 months of medical spending.
+     price, income from payroll deposits, 12 months of medical spending. **It double-checks the income the
+     patient stated** against the bank (`finance.stated_check`): take-home pay is converted to a before-tax
+     range. If the stated figure fits, it's used. If it's lower than the bank shows, the bank's lower estimate is
+     used and flagged ("have pay stubs ready"), so BillBack never claims a discount the hospital would reject on
+     pay stubs. If it's higher, the stated figure is used and noted.
    - **Bright Data agent** (public rules): the hospital's financial-assistance policy from our policy DB
      (refreshed live when it's stale, crawled live for a new hospital), the discount the patient qualifies
      for, the payment-plan terms.
@@ -77,7 +86,18 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
    approves the version on screen. On the Cases page, each case has a hold-to-talk mic: ask where things
    stand or say "call them"; anything with consequences is said back first and runs only after a spoken yes.
 4. **The call.** BillBack phones billing (or the desk console), says it's an automated assistant, works
-   through the asks, refuses to pay on the call, reads the case number back, and records what billing agreed.
+   through the asks, reads the case number back, and records what billing agreed. **Guardrails are enforced
+   in code, not just the prompt** (`billback/agents/mandate.py`):
+   - Before agreeing to anything (a payment plan, a balance, a settlement, paying today) or giving out any
+     information, the caller calls `check_offer`.
+   - Code decides from the plan the patient approved, and fails closed. Plans are allowed only if
+     interest-free, within the approved monthly amount and length, and on the corrected balance. SSN, card and
+     bank details are never shared.
+   - A refusal is spoken in the code's own words.
+   - **Every sentence is screened before it's spoken** (`mandate.screen`). It blocks SSN- or card-like numbers
+     (unless they're in the brief or the rep just said them), unapproved agreements to pay or enrol, paying
+     now, and claiming to be human, and replaces the sentence with a safe line.
+   - Each decision shows as a note in the call transcript and goes to the audit log.
 5. **Resolved and follow-up.** A scorecard marks each ask got / refused / promised later. The balance only
    drops when billing confirms it ("expected $0 once they apply the corrections" until then); once it does,
    the hospital bill in Nessie is marked corrected. If money is still owed, the planner proposes an
@@ -179,10 +199,21 @@ Docs: [`docs/brightdata.md`](docs/brightdata.md).
 Code: `billback/integrations/nessie.py`, `billback/agents/auditor.py`, `billback/finance.py`,
 `billback/agents/planner.py`, `scripts/seed_nessie.py`.
 
+### Tiger Data (household history)
+Optional (`TIGER_DATABASE_URL`). Every household BillBack helps is stored in Tiger Cloud (Timescale Postgres):
+- a `profiles` row per household (same person = same row across cases)
+- every Nessie transaction in a `transactions` hypertable, tagged income or not
+- a real-time `monthly_cashflow` continuous aggregate
+
+The case page shows "Income by month (Tiger Data)", and `/households.html` (admin only) lists households
+lowest % of poverty line first. Tiger only stores and rolls up data; eligibility math stays in `finance.py`. A
+Tiger failure never blocks a case. Code: `billback/tiger.py`, `billback/onboarding.py`.
+
 ### Anthropic Claude
 Reads the bill and insurance statement (vision), extracts policy rules with verbatim quotes, runs the phone
-call (a tool-use loop with `record_outcome`, `press_keys`, `end_call`; `billback/agents/caller.py`), reads the
-call transcript into outcomes, answers in the Ask BillBack chat (as BillBack, the Nessie agent, the Bright
+call (a tool-use loop with `record_outcome`, `press_keys`, `check_offer`, `end_call`;
+`billback/agents/caller.py`), reads the call transcript into outcomes and marks each ask (a mark only counts if
+its quote is really in the rep's words, `billback/agents/scorecard.py`), answers in the Ask BillBack chat (as BillBack, the Nessie agent, the Bright
 Data agent or the Planner) and on the Cases-page mic. Models:
 `claude-sonnet-5-5` and `claude-haiku-5-5` (`billback/config.py`). It never produces a dollar figure that code
 didn't compute.
@@ -198,7 +229,21 @@ didn't compute.
   run. Only live runs are recorded.
 
 ## Known limitations
-- **Cartesia is out of credits** (HTTP 402 since 2026-10-25). No real Twilio phone call has been recorded yet;
+- **Real phone calls need a paid Twilio account.** On a Twilio free trial:
+  - We place calls with a TwiML `Url`, because the trial refuses inline `Twiml`, `Timeout` and
+    `StatusCallbackMethod`.
+  - The trial fetches that URL unsigned. BillBack accepts the unsigned fetch only when it carries both the
+    call's secret token and the CallSid Twilio returned when we placed the call; a wrong signature is still
+    refused (`billback/voice/routes.py`).
+  - The trial **strips `<Stream>`** ("The Stream verb is not available on trial accounts"), so the call can't
+    reach our voice pipeline.
+
+  We confirmed this end to end on 2026-10-25: the call rings and our server answers, but there's no audio
+  stream. Upgrading Twilio unlocks it.
+  [Photon](https://photon.codes) (calls from an iMessage line over SIP/RTP) is a possible alternative. It
+  needs a SIP and RTP client in the server, so it isn't built.
+- **Cartesia credits.** The first account ran out (HTTP 402 on 2026-10-25). A new key is configured, and its
+  balance is unknown. No real Twilio phone call has been recorded yet;
   the phone path is tested against simulated Twilio and Cartesia sockets. Desk mode on Ink, barge-in with
   word timestamps, ID read-back and keypad tones were built and tested offline (fakes, plus a headless Chrome
   run of `rep.html`) and need one live check. The Cases-page mic's Ink batch STT was written while the account
@@ -217,9 +262,11 @@ didn't compute.
 - **Synthetic data.** Patients, insurer and bank histories are made up. The live Nessie sandbox still has the
   older, cleaner histories until it is reseeded. Medical merchants are matched by keyword, not MCC codes.
   Nessie's account balance isn't read.
-- **Income is take-home pay** (bank deposits). The poverty-line test should use gross income. BillBack labels
-  the figure, estimates gross as take-home ÷ 0.80, and warns on the case page when that would change the
-  discount ("have pay stubs ready"), but eligibility still uses take-home. Using gross would flip one test
+- **Income.** When the patient states their income before taxes (onboarding or chat), BillBack uses it after
+  the bank double-check (see "How it works"). Without a stated income, it falls back to take-home pay from
+  bank deposits. The poverty-line test should use gross income, so BillBack labels the figure, estimates gross
+  as take-home ÷ 0.80, and warns on the case page when that would change the discount ("have pay stubs ready"),
+  but eligibility still uses take-home. Using gross would flip one test
   patient (dana-altabates-refund, who shows the warning). Marcus stays eligible either way: his bill plus
   12 months of bank medical spending is about 14% of take-home and 11.5% of estimated gross, so he gets no
   warning.
@@ -231,13 +278,24 @@ didn't compute.
   The `/flows/` pages are early intake mockups, not linked from the app (except `/flows/drop-go.html`, which
   works).
 - **Admin key:** the browser side (`web/auth.js`) has only been tested server-side.
+- **The speech screen is pattern-based.** It errs toward blocking: a bare 9-digit number is treated as an SSN
+  unless it's in the brief or the rep said it. Some loose agreements ("sure, that works for us") aren't
+  caught by the screen. The `check_offer` decision and the approved plan still bound what the caller can
+  commit to. The onboarding "Do you have insurance?" answer is stored, but the insurance statement still
+  decides insured or not.
 
 ## Privacy and responsible use
 - **Says what it is.** Every call opens with "an automated assistant calling on behalf of <patient>, with their
   authorization" and says the call is transcribed (`billback/agents/caller.py`). The Planner in Ask BillBack
   refuses to hide this (`billback/agents/decide.py`).
-- **Never agrees to pay.** The call brain never pays, agrees to pay, or gives card or bank details; the Planner
-  refuses any strategy that would.
+- **Never agrees to pay, enforced in code.**
+  - The call brain never pays, agrees to pay, or gives card or bank details, and the Planner refuses any
+    strategy that would.
+  - On the call, `check_offer` (`billback/agents/mandate.py`) decides every offer or request against the
+    approved plan.
+  - Every sentence passes `mandate.screen` before it's spoken, so even if the model skips the check it can't
+    say an SSN or card number, agree to something unapproved, or claim to be human.
+  - Refusals are logged and shown in the transcript.
 - **Nothing happens without approval.** Every call waits for the patient's OK on the approval gate
   (`billback/orchestrator.py`, `billback/harness.py`); on the Cases-page mic it takes two turns, and the words
   come from code (`billback/agents/talk.py`). A change to the plan after approval resets the approval. The
@@ -262,13 +320,16 @@ didn't compute.
   - `data/<case_id>.audit.jsonl`: the append-only audit log (every event, approval and transcript line).
   - `data/replay_<scenario>.json`: the last live run, for replay.
   - `data/nessie_ids*.json`: Nessie ids of the seeded demo accounts.
+  - `data/profiles/<profile_id>.json`: onboarding answers only (no name or date of birth), when Tiger Data is
+    off. With `TIGER_DATABASE_URL` set, profiles and bank history go to Tiger Cloud instead.
   - Uploaded PDFs are sent to Claude and not saved to disk.
-- **Deleting it:** `POST /api/reset` (admin key) removes all case snapshots and keeps the audit logs on
-  purpose. There is no per-case delete in the app. To erase everything, stop the server and delete `data/`
+- **Deleting it:** `POST /api/reset` (admin key) removes all case snapshots and the locally saved onboarding
+  profiles, and keeps the audit logs on purpose. There is no per-case delete in the app. To erase everything, stop the server and delete `data/`
   (or the files above for one case).
 
 ## Tests
-`uv run pytest -q`: fully offline, no API keys. 416 tests pass on master (0f25617). Live checks that need paid
+`uv run pytest -q`: fully offline, no API keys. 521 tests pass on master (bf8ce8a). The scorecard runs
+against the fixture calls in `demo/outcomes/` (all won, partly won, all refused, promised later). Live checks that need paid
 credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
 
 ## Docs
@@ -277,19 +338,23 @@ credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
 - [`docs/voice.md`](docs/voice.md): the voice pipeline, latency, pronunciation, authorization.
 - [`docs/plan-format.md`](docs/plan-format.md): the plan's data format.
 - [`docs/legal-check.md`](docs/legal-check.md): legal claims checked against sources.
-- [`docs/devpost-submission.md`](docs/devpost-submission.md): the Devpost write-up.
+- [`docs/devpost-submission.md`](docs/devpost-submission.md): the Devpost pack (requirements, prizes, text,
+  video plan, competitors). [`docs/devpost-final.md`](docs/devpost-final.md): paste-ready Devpost fields.
+  [`docs/research/`](docs/research/): Cal Hacks rules, winning Devposts, competitors and market research.
 - [`docs/feasibility.md`](docs/feasibility.md), [`docs/competitors.md`](docs/competitors.md),
   [`docs/judge-qa.md`](docs/judge-qa.md), [`docs/PLAN.md`](docs/PLAN.md).
 
 ## Layout
 ```
 billback/  app.py orchestrator.py harness.py events.py finance.py billcheck.py followups.py llm.py config.py auth.py prices.py contacts.py
-           agents/        intake auditor (Nessie agent) policy (Bright Data agent) decide scorecard caller planner talk report
+           onboarding.py tiger.py
+           agents/        intake auditor (Nessie agent) policy (Bright Data agent) decide scorecard mandate caller planner talk report
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes
            voice/         calls media cartesia_ws desk heard pronounce voices authorization audio routes
            integrations/  nessie brightdata cartesia twilio
 web/       dashboard.html (Cases, at /)  new.html (chat intake)  case.html  ops.html (Under the hood)  hospitals.html
-           rep.html (desk billing)  approve.html (phone approval)  voice.html  pitch.html  auth.js  flows/drop-go.html
+           onboarding.html  households.html  rep.html (desk billing)  approve.html (phone approval)  voice.html  pitch.html
+           auth.js  flows/drop-go.html
 demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, scenarios/, outcomes/, replays
 policydb/  policies.sqlite3, policies.json, raw/ (Bright Data crawl artifacts), prices/ (real price tables)
 scripts/   seed_nessie crawl_policies build_price_tables build_contacts make_scenario setup_cartesia sim_twilio_stream bench_desk make_demo_docs
