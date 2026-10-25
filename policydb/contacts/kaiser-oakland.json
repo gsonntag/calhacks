@@ -1,0 +1,78 @@
+{
+ "hospital_id": "kaiser-oakland",
+ "hospital": "Kaiser Permanente Oakland Medical Center",
+ "built_at": "2026-10-25T05:26:37+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://healthy.kaiserpermanente.org/help-paying-your-bill",
+   "artifact": "raw/kaiser-oakland/page-93e8541f3ce2.md"
+  },
+  {
+   "url": "https://healthy.kaiserpermanente.org/help-paying-your-bill/medical-financial-assistance",
+   "artifact": "raw/kaiser-oakland/page-d8ac3ed36e18.md"
+  },
+  {
+   "url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf",
+   "artifact": "raw/kaiser-oakland/pdf-b7f157d44059.txt"
+  },
+  {
+   "url": "https://healthy.kaiserpermanente.org/support/pay-bills/medical-bills",
+   "artifact": "raw/kaiser-oakland/contact-page-0e2f692f9c6f.md"
+  },
+  {
+   "url": "https://healthy.kaiserpermanente.org/northern-california/facilities/oakland-medical-center-100344/departments",
+   "artifact": "raw/kaiser-oakland/contact-page-cdaf2a69646d.md"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "financial_assistance",
+   "label": "Medical Financial Assistance (MFA) Program",
+   "phone": "1-800-390-3507",
+   "dial": "+18003903507",
+   "hours": "Monday through Friday, 8 a.m. to 5 p.m. PST",
+   "source_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf",
+   "artifact": "raw/kaiser-oakland/pdf-b7f157d44059.txt",
+   "quote": "Call us at 1-800-390-3507 (TTY 711), Monday through Friday, 8 a.m. to 5 p.m. PST."
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Medical Financial Assistance application help and status",
+   "phone": "1-800-479-5764",
+   "dial": "+18004795764",
+   "hours": null,
+   "source_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf",
+   "artifact": "raw/kaiser-oakland/pdf-b7f157d44059.txt",
+   "quote": "need to check the status of your application, please call 1-800-479-5764"
+  },
+  {
+   "department": "advocate",
+   "label": "Health Consumer Alliance",
+   "phone": "1-888-804-3536",
+   "dial": "+18888043536",
+   "hours": null,
+   "source_url": "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/support/mfa-application-ncal-2024-english.pdf",
+   "artifact": "raw/kaiser-oakland/pdf-b7f157d44059.txt",
+   "quote": "You may call the Health Consumer Alliance at 1-888-804-3536 or go to healthconsumer.org"
+  }
+ ],
+ "gaps": [
+  {
+   "department": "billing",
+   "label": "Patient financial services / billing",
+   "phone": null,
+   "why": "None of the Kaiser pages we crawled gives a billing number; its billing FAQ sends patients to the number printed on their bill. Its page says: \"Please call the number that appears on your bill or contact Member Services.\"",
+   "source_url": "https://healthy.kaiserpermanente.org/support/pay-bills/medical-bills"
+  }
+ ],
+ "notes": [
+  {
+   "department": "billing",
+   "note": "None of the Kaiser pages we crawled gives a billing number; its billing FAQ sends patients to the number printed on their bill.",
+   "quote": "Please call the number that appears on your bill or contact Member Services.",
+   "source_url": "https://healthy.kaiserpermanente.org/support/pay-bills/medical-bills"
+  }
+ ],
+ "rejected": []
+}

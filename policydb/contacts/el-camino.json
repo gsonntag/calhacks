@@ -1,0 +1,51 @@
+{
+ "hospital_id": "el-camino",
+ "hospital": "El Camino Hospital",
+ "built_at": "2026-10-25T05:26:48+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.elcaminohealth.org/sites/default/files/2022-04/financial-assistance-discounted-charity-care-eligibility-procedures-review-process422.pdf",
+   "artifact": "raw/el-camino/pdf-2fecabdab3c5.txt"
+  },
+  {
+   "url": "https://www.elcaminohealth.org/patients-visitors/guide/after-you-leave/billing/billing-FAQ",
+   "artifact": "raw/el-camino/contact-page-b3991f2c822f.md"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "financial_assistance",
+   "label": "Financial counselors (for patients without insurance)",
+   "phone": "650-988-8275",
+   "dial": "+16509888275",
+   "hours": null,
+   "source_url": "https://www.elcaminohealth.org/patients-visitors/guide/after-you-leave/billing/billing-FAQ",
+   "artifact": "raw/el-camino/contact-page-b3991f2c822f.md",
+   "quote": "call 650-988-8275 to talk to one of our financial counselors and learn more about payment options, including financial assistance"
+  },
+  {
+   "department": "billing",
+   "label": "Customer service representatives",
+   "phone": "650-940-7220",
+   "dial": "+16509407220",
+   "hours": "between 9 a.m. and 4 p.m., Monday through Friday",
+   "source_url": "https://www.elcaminohealth.org/patients-visitors/guide/after-you-leave/billing/billing-FAQ",
+   "artifact": "raw/el-camino/contact-page-b3991f2c822f.md",
+   "quote": "customer service representatives at 650-940-7220 or 800-665-6540 between 9 a.m. and 4 p.m., Monday through Friday"
+  },
+  {
+   "department": "billing",
+   "label": "Customer service representatives",
+   "phone": "800-665-6540",
+   "dial": "+18006656540",
+   "hours": "between 9 a.m. and 4 p.m., Monday through Friday",
+   "source_url": "https://www.elcaminohealth.org/patients-visitors/guide/after-you-leave/billing/billing-FAQ",
+   "artifact": "raw/el-camino/contact-page-b3991f2c822f.md",
+   "quote": "customer service representatives at 650-940-7220 or 800-665-6540 between 9 a.m. and 4 p.m., Monday through Friday"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}
