@@ -322,10 +322,28 @@
   .replay .find-acts, .replay #chatForm, .replay .plan-banner .actions { display: none !important; }
 
   /* the agent chat: one bubble in the corner; pick who answers (Remy, the two Review agents, the planner) */
-  .chat-fab { position: fixed; right: 24px; bottom: 24px; z-index: 40; width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer;
-              display: grid; place-items: center; background: var(--md-primary-container); color: var(--md-on-primary-container); box-shadow: var(--md-elev-3); }
-  .chat-fab .material-symbols-rounded { font-size: 28px; }
-  .chat-fab:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 2px; }
+  /* an extended FAB: the label says what it is ("Ask Remy"); a short glow the first time it shows */
+  .chat-fab { position: fixed; right: 24px; bottom: 24px; z-index: 40; height: 56px; padding: 0 22px 0 18px; border-radius: 16px; border: 0;
+              cursor: pointer; display: inline-flex; align-items: center; gap: 10px; background: var(--md-primary); color: var(--md-on-primary);
+              font: 500 16px/20px var(--md-font); letter-spacing: .1px; box-shadow: 0 0 0 3px var(--md-surface), var(--md-elev-3); }
+  .chat-fab[hidden] { display: none; }
+  main::after { content: ""; display: block; height: 88px; }  /* room to scroll the last row out from under the button */
+  .chat-fab .material-symbols-rounded { font-size: 24px; }
+  .chat-fab:hover { filter: brightness(1.08); }
+  .chat-fab:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 3px; }
+  .chat-fab.glow { animation: fabglow 1.6s var(--md-ease) 3; }
+  @keyframes fabglow { 0% { box-shadow: 0 0 0 3px var(--md-surface), var(--md-elev-3), 0 0 0 0 color-mix(in srgb, var(--md-primary) 45%, transparent); }
+                       100% { box-shadow: 0 0 0 3px var(--md-surface), var(--md-elev-3), 0 0 0 16px transparent; } }
+  .chat-tip { position: fixed; right: 24px; bottom: 92px; z-index: 40; max-width: min(300px, calc(100vw - 32px)); display: flex; align-items: flex-start; gap: 6px;
+              padding: 12px 8px 12px 16px; border-radius: var(--md-shape-l); background: var(--md-inverse-surface);
+              color: var(--md-inverse-on-surface); font: 400 14px/20px var(--md-font); box-shadow: var(--md-elev-3); }
+  .chat-tip[hidden] { display: none; }
+  .chat-tip::after { content: ""; position: absolute; right: 36px; bottom: -6px; width: 12px; height: 12px; transform: rotate(45deg);
+                     background: inherit; }
+  .chat-tip p { margin: 0; flex: 1; }
+  .chat-tip button { flex: none; width: 28px; height: 28px; margin: -4px 0; border: 0; border-radius: 50%; background: transparent; color: inherit;
+                     cursor: pointer; display: grid; place-items: center; }
+  .chat-tip button .material-symbols-rounded { font-size: 18px; }
   .chat-panel { position: fixed; right: 24px; bottom: 96px; z-index: 41; width: min(420px, calc(100vw - 32px)); height: min(620px, calc(100dvh - 140px));
                 display: flex; flex-direction: column; border-radius: var(--md-shape-xl); background: var(--md-surface-container-low);
                 border: 1px solid var(--md-outline-variant); box-shadow: var(--md-elev-3); overflow: hidden; }
@@ -361,9 +379,10 @@
   .replay .mic { display: none; }
   @media (max-width: 640px) {
     .chat-fab { right: 16px; bottom: 16px; }
+    .chat-tip { right: 16px; bottom: 84px; }
     .chat-panel { right: 16px; left: 16px; bottom: 84px; width: auto; height: calc(100dvh - 160px); }
   }
-  @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .flash, .filling i, .chat-fab.glow { animation: none; } }
   /* the call's guardrail checks (agents/mandate.py), between transcript bubbles */
   .guard-note { display: flex; gap: 6px; align-items: center; align-self: center; margin: 2px auto; padding: 4px 10px; border-radius: 999px;
     font: 500 12px/16px var(--md-font); background: var(--md-surface-container-high); color: var(--md-on-surface-variant); }
@@ -566,8 +585,12 @@
 </div>
 
 <!-- the agent chat: the only place to ask any agent anything (it replaced Ask on findings and the planner chat) -->
-<button type="button" class="chat-fab" id="chatFab" aria-label="Ask Remy" aria-expanded="false" aria-controls="chatPanel" hidden>
-  <span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span>
+<div class="chat-tip" id="chatTip" role="status" hidden>
+  <p><b>Questions about this bill?</b> Ask Remy, or just talk to it.</p>
+  <button type="button" id="chatTipClose" aria-label="Dismiss"><span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+</div>
+<button type="button" class="chat-fab" id="chatFab" aria-expanded="false" aria-controls="chatPanel" hidden>
+  <span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span><span id="chatFabLabel">Ask Remy</span>
 </button>
 <section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
   <div class="chat-head">
@@ -1724,10 +1747,14 @@ function chatEntries(m) {
 
 function renderAgentChat(m) {
   const replay = state.active === 'replay', hasCase = !!state.active && (!!m.bill || replay);
-  $('chatFab').hidden = !hasCase;
-  $('chatFab').setAttribute('aria-expanded', String(chat.open && hasCase));
-  $('chatFab').firstElementChild.textContent = chat.open && hasCase ? 'close' : 'ecg_heart';
-  $('chatPanel').hidden = !(chat.open && hasCase);
+  const fab = $('chatFab'), open = chat.open && hasCase;
+  if (fab.hidden && hasCase) { fab.classList.remove('glow'); void fab.offsetWidth; fab.classList.add('glow'); }  // glow when it first shows
+  fab.hidden = !hasCase;
+  fab.setAttribute('aria-expanded', String(open));
+  setText(fab.firstElementChild, open ? 'close' : 'auto_awesome');
+  setText($('chatFabLabel'), open ? 'Close' : 'Ask Remy');
+  $('chatTip').hidden = !hasCase || open || tipDismissed();
+  $('chatPanel').hidden = !open;
   if ($('chatPanel').hidden) return;
   if (!chatReady(m, chat.agent)) chat.agent = 'remy';
   setHTML($('chatWho'), CHAT_AGENTS.map((a) => {
@@ -1756,7 +1783,14 @@ function renderAgentChat(m) {
   $('chatInput').disabled = $('chatSend').disabled = chat.busy;
 }
 
+// the "Questions about this bill?" hint shows until the chat is opened or the hint is dismissed, once per browser
+const TIP_KEY = 'remy-ask-tip-dismissed';
+function tipDismissed() { try { return localStorage.getItem(TIP_KEY) === '1'; } catch (e) { return false; } }
+function dismissTip() { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} $('chatTip').hidden = true; }
+$('chatTipClose').addEventListener('click', dismissTip);
+
 function setChatOpen(open) {
+  if (open) dismissTip();
   chat.open = open; render();
   if (open) { $('chatLog').scrollTop = 1e6; $('chatInput').focus(); } else $('chatFab').focus();
 }
