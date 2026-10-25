@@ -82,6 +82,10 @@ Gather: who the bill is from, the amount and any deadline/collections notice, wh
 how many people are in their household (it decides charity-care eligibility), roughly what the household earns
 a year before taxes (optional: they may skip it; Remy double-checks it against their bank), and ask them to
 attach the bill and the insurance EOB if they haven't.
+You can't open attachments yourself; Remy reads them and adds what they show to the message as
+[documents read: ...]. Treat that as known: never ask for anything it already gives, and don't say a file was
+attached if it isn't listed there. No insurance statement can simply mean the patient is uninsured: ask once
+whether they have insurance; if not, that's fine, Remy works on self-pay bills too.
 As soon as you have the bill (attached or described) and the patient says go or has nothing to add,
 call start_case. Don't give legal advice."""
 
@@ -113,8 +117,8 @@ def _launch(case: dict, coro=None) -> dict:
 SAMPLE_DOCS = {"default": ("sample-hospital-bill.pdf", "sample-insurance-eob.pdf"),
                "freecare": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf"),
                "raj": ("scenarios/raj-cpmc/bill.pdf", "scenarios/raj-cpmc/eob.pdf")}
-REQUIRED = (("patient", "first_name"), ("patient", "last_name"), ("bill", "provider"), ("bill", "amount_due"),
-            ("eob", "patient_responsibility"))
+REQUIRED = (("patient", "first_name"), ("patient", "last_name"), ("bill", "provider"), ("bill", "amount_due"))
+REQUIRED_EOB = (("eob", "patient_responsibility"),)  # only when an insurance statement was uploaded
 
 
 class IntakeError(RuntimeError):
@@ -151,10 +155,18 @@ async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
             except ValueError:
                 clean[f] = case[key][f]
         case[key] = clean
+    eob = parsed.get("eob")
+    has_eob = isinstance(eob, dict) and any(v not in (None, "", []) for v in eob.values())
+    if not has_eob:  # no insurance statement: self-pay, like the uninsured scenarios (empty EOB)
+        case["eob"], case["insured"] = {}, False
     missing = [f"{k}.{f}" for k, f in REQUIRED if case[k].get(f) in (None, "", 0.0)]
+    # a $0 share is a real answer on an EOB (the plan paid everything)
+    missing += [f"{k}.{f}" for k, f in REQUIRED_EOB if has_eob and parsed[k].get(f) in (None, "")]
     if missing:
         raise IntakeError("These weren't on the documents: " + ", ".join(missing) +
-                          ". Upload the hospital bill and the insurance statement (EOB).")
+                          (". Upload the hospital bill and, if you have insurance, the insurance statement (EOB)."
+                           if not has_eob or "eob.patient_responsibility" not in missing else
+                           ". The insurance statement (EOB) doesn't show your share; upload the full EOB."))
     db = PolicyStore()
     h = registry.match(case["bill"]["provider"], db.hospitals())
     case["hospital"] = {**case["hospital"], "name": h.name if h else case["bill"]["provider"],
@@ -258,6 +270,11 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
             and str(m.get("content", "")).strip()]
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
     note = f" [attached: {', '.join(n for n, _ in uploads)}]" if uploads else ""
+    if uploads and llm.available():
+        try:
+            note += f" [documents read: {intake.summary(await intake.read(uploads))}]"
+        except Exception as e:  # the case reads them again and reports a failure there
+            print("chat couldn't read the attachments:", type(e).__name__)
     msgs.append({"role": "user", "content": (message or "(sent files)") + note})
 
     async def launch(household_size: int | None = None, income_annual: float | None = None) -> dict:

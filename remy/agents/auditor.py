@@ -107,10 +107,11 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     txns_ready.set_result(txns)
     dates = sorted(t["date"][:10] for t in txns if t.get("date"))
     notice = getattr(bank, "notice", "")
-    if notice:  # no Capital One account for this patient, or Nessie didn't answer: sample data, said plainly
+    if notice:  # no Capital One account for this patient (quiet), or Nessie didn't answer: sample data, said plainly
         bank_label = getattr(bank, "label", bank_label)
         bank_name = bank_label.split(" (")[0]
-        bus.emit(cid, "warning", "auditor", text=notice)
+        if not getattr(bank, "quiet", False):
+            bus.emit(cid, "warning", "auditor", text=notice)
     r.step("bank", f"Pull your bank history ({bank_name})", "ok",
            (f"{notice} · " if notice else "")
            + f"{len(txns)} transactions" + (f", {dates[0]} to {dates[-1]}" if dates else ""))

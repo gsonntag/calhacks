@@ -219,7 +219,7 @@ async function startInk() {
   try {
     if (!navigator.mediaDevices || !window.AudioWorkletNode) throw new Error('no mic API');
     const ctx = audioCtx(); if (!ctx) throw new Error('no audio');
-    let key = ''; try { key = localStorage.getItem('remy-admin-key') || localStorage.getItem('billback-admin-key') || ''; } catch (e) {}  // see auth.js
+    let key = ''; try { key = localStorage.getItem('remy-admin-key') || ''; } catch (e) {}  // see auth.js
     ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/api/calls/${callId}/listen${key ? '?key=' + encodeURIComponent(key) : ''}`);
     ws.binaryType = 'arraybuffer';
     const first = await new Promise((res) => {
