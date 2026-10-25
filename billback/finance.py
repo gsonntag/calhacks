@@ -63,11 +63,15 @@ def reconcile(bill: dict, eob: dict, txns: list[dict], corrections: list[dict] |
     owed = round(max(0.0, responsibility - paid), 2)
     insurance_adj = round(charges - responsibility, 2)
 
+    # insured: line errors don't change the share (the EOB already priced the claim), they only split the gap
+    line_errors = list(corrections or [])
     lines = [{"label": "Hospital says you owe", "amount": billed_due, "source": f"bill · acct {bill.get('account_number', '?')}"}]
     if insured:
-        lines.append({"label": "Insurance adjustment not applied", "amount": -round(billed_due + bill_credits - responsibility, 2) or 0.0,
+        in_lines = round(sum(float(c["amount"]) for c in line_errors), 2)
+        lines.append({"label": "Insurance adjustment not applied",
+                      "amount": -max(0.0, round(billed_due + bill_credits - responsibility - in_lines, 2)) or 0.0,
                       "source": f"EOB · claim {eob.get('claim_number', '?')} · patient responsibility ${responsibility:,.2f}"})
-    for c in fixes:
+    for c in (line_errors if insured else fixes):
         lines.append({"label": c.get("label", "Bill error"), "amount": -round(float(c["amount"]), 2),
                       "source": c.get("source", "bill")})
     for t in uncredited:
@@ -81,6 +85,7 @@ def reconcile(bill: dict, eob: dict, txns: list[dict], corrections: list[dict] |
         "insurance_adjustment": insurance_adj,
         "insured": insured,
         "corrections": fixes,
+        "line_errors": line_errors,
         "payments": payments,
         "credited_payments": credited,
         "uncredited_payments": uncredited,

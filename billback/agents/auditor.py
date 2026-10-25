@@ -32,7 +32,12 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     acct = f"bill · acct {bill.get('account_number', '?')}"
     billed = float(bill["amount_due"])
     credits = billcheck.bill_credits(bill)
-    corrections = []
+    # Insured patients get the duplicate-line check too: their share comes from the insurance statement, so the
+    # balance doesn't change, but a line billed twice is its own mistake and is reported apart from insurance.
+    # The posted-price check stays self-pay only: the insurer, not the list price, sets an insured patient's share.
+    corrections = [c for c in billcheck.line_corrections(bill, case.get("hospital", {}).get("name"))
+                   if not insured or c["kind"] == "duplicate_line"]
+    line_total = round(sum(c["amount"] for c in corrections), 2)
     if insured:
         claim = f"{eob.get('insurer', 'insurance statement')} · claim {eob.get('claim_number', '?')}"
         resp = float(eob["patient_responsibility"])
@@ -45,12 +50,16 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
                  f"you owe ${resp:,.2f}", claim)])
 
         r.step("insurance", "Compare the bill with the insurance statement", "running")
-        if billed > expect:
+        ins_gap = round(billed - expect - line_total, 2)
+        if ins_gap > 0:
+            also = f" (plus ${line_total:,.0f} in line errors, below)" if line_total else ""
             r.step("insurance", "Compare the bill with the insurance statement", "flag",
-                   f"The bill ignores your insurance: ${billed - expect:,.0f} too high",
+                   f"The bill ignores your insurance: ${ins_gap:,.0f} too high{also}",
                    [(f"Bill asks for ${billed:,.2f}", acct), (f"Insurance statement says ${resp:,.2f}", claim)])
-            r.finding("insurance", "Insurance wasn’t applied", billed - expect,
-                      [f"The bill asks for ${billed:,.2f}, but your insurance statement says your share is ${resp:,.2f}."], claim)
+            proof = f"The bill asks for ${billed:,.2f}, but your insurance statement says your share is ${resp:,.2f}."
+            if line_total:
+                proof += f" ${line_total:,.2f} of the difference is line errors, reported separately."
+            r.finding("insurance", "Insurance wasn’t applied", ins_gap, [proof], claim)
         else:
             r.step("insurance", "Compare the bill with the insurance statement", "clear", "The bill matches your insurance statement")
     else:
@@ -61,19 +70,17 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
         r.step("insurance", "Check for insurance", "clear",
                "Uninsured: your share is the bill's own charges, so each line is checked instead")
 
-        r.step("lines", "Check the bill's lines", "running")
-        corrections = billcheck.line_corrections(bill, case.get("hospital", {}).get("name"))
-        if corrections:
-            r.step("lines", "Check the bill's lines", "flag",
-                   f"{len(corrections)} line error{'s' if len(corrections) > 1 else ''}: "
-                   f"${sum(c['amount'] for c in corrections):,.0f} too high",
-                   [(c["detail"], c["source"]) for c in corrections])
-            for c in corrections:
-                title = (f"{c['code']} billed twice" if c["kind"] == "duplicate_line"
-                         else f"{c['code']} charged above the hospital's posted price")
-                r.finding(f"{c['kind']}-{c['line']}", title, c["amount"], [c["detail"]], c.get("url") or c["source"])
-        else:
-            r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices")
+    r.step("lines", "Check the bill's lines", "running")
+    if corrections:
+        r.step("lines", "Check the bill's lines", "flag",
+               f"{len(corrections)} line error{'s' if len(corrections) > 1 else ''}: ${line_total:,.0f} too high",
+               [(c["detail"], c["source"]) for c in corrections])
+        for c in corrections:
+            title = (f"{c['code']} billed twice" if c["kind"] == "duplicate_line"
+                     else f"{c['code']} charged above the hospital's posted price")
+            r.finding(f"{c['kind']}-{c['line']}", title, c["amount"], [c["detail"]], c.get("url") or c["source"])
+    else:
+        r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices")
 
     r.step("bank", f"Pull your bank history ({bank_name})", "running")
     txns = await bank.transactions(account_id)
