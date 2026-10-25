@@ -359,14 +359,14 @@ TWILIO_AUTH_TOKEN=…                  # also used to validate webhook signature
 TWILIO_FROM_NUMBER=+1…               # a Twilio voice number you bought
 TWILIO_TWIML_APP_SID=AP…             # optional: enables the conference warm handoff
 PATIENT_PHONE_NUMBER=+1…             # optional: demo patient's phone (verbal consent); or case.patient.phone
-REP_PHONE_NUMBER=+1…                 # the "hospital billing" phone (teammate), as before
+REP_PHONE_NUMBER=+1…                 # the "hospital billing" phone (a second person), as before
 PUBLIC_BASE_URL=https://….trycloudflare.com
 CARTESIA_API_KEY=…                   # as before; CARTESIA_STT_MODEL=ink-2, CARTESIA_TTS_MODEL=sonic-3.6 by default
 ```
 
 1. **Buy a number:** Console → Phone Numbers → Buy a number (Voice capable). Put it in `TWILIO_FROM_NUMBER`.
 2. **Trial accounts** can only call **verified** numbers (Console → Phone Numbers → Verified Caller IDs):
-   verify the teammate's phone and the patient phone. Trial calls start with a Twilio message and ask the
+   verify the billing phone and the patient phone. Trial calls start with a Twilio message and ask the
    callee to press a key before our TwiML runs, so upgrade before demoing.
 3. **Expose the server** so Twilio can reach the webhooks and the WebSocket:
    `cloudflared tunnel --url http://localhost:8000`, then set `PUBLIC_BASE_URL` to the printed https URL and

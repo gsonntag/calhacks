@@ -32,9 +32,8 @@ ROOT = Path(__file__).resolve().parent.parent
 #   docs/legal-check.md     the legal claims, checked against sources
 #   docs/plan-format.md     the plan's data format, recalculation, events, endpoints
 #   docs/feasibility.md     how bank data, hospital policies and calling work in the real world
-# Left out: docs/ideas-backlog.md (internal planning, partly out of date),
-# docs/devpost.md (submission copy, repeats the README), docs/competitors.md (market, not product),
-# docs/research/ (outside research).
+# Left out: docs/ideas-backlog.md (internal planning, partly out of date), docs/competitors.md (market, not
+# product), docs/research/ (outside research).
 DOCS = [
     "README.md",
     "docs/voice.md",

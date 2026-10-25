@@ -42,7 +42,7 @@ goes on screen, re-check the quoted wording on leginfo.
   - there are no deadlines for applying ([HSC 127405(e)(3)](https://california.public.law/codes/health_and_safety_code_section_127405)), while 501(r) has a 240-day application window.
 - 501(r) rules, for reference: no extraordinary collection actions for 120 days after the first post-discharge statement; written notice at least 30 days before one, sent with a plain-language summary of the policy. [IRS 501(r)(6)](https://www.irs.gov/charities-non-profits/billing-and-collections-section-501r6)
 - UCSF's policy asks patients to apply "within 240 days" as a "best efforts" request. California law doesn't allow the hospital to deny an application for being late. If a rep cites 240 days, the caller can answer with HSC 127405(e)(3).
-- `docs/devpost.md` says "nonprofit hospitals must publish these policies (IRS 501(r))". That's true. For a California audience, add "and California law requires every hospital, public ones included, to post them (HSC 127410(c))".
+- "Nonprofit hospitals must publish these policies (IRS 501(r))" is true. For a California audience, add "and California law requires every hospital, public ones included, to post them (HSC 127410(c))".
 
 ## 2. NCCI edits on facility claims
 
