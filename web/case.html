@@ -681,7 +681,9 @@ function renderAgent(key, m, forceOpen = false) {
 }
 
 function renderTabs() {
-  const tabs = state.tabs.filter((t) => !t.archived || t.id === state.active).map((t) => {
+  const rank = { needs_you: 0, running: 1, waiting: 2, done: 3 };  // needs you first (stable: same order within)
+  const tabs = state.tabs.filter((t) => !t.archived || t.id === state.active)
+    .sort((a, b) => (rank[a.attention] ?? 9) - (rank[b.attention] ?? 9)).map((t) => {
     const stage = state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1;
     let dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
     let label = STATUS[stage];

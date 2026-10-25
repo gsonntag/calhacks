@@ -223,6 +223,7 @@ async def start_case(files: list[UploadFile] = File(default=[]), scenario: str =
 @app.get("/api/cases")
 async def list_cases():
     """Every case, with its step and attention (caselist.overview) for the case page's case switcher."""
+    caselist.resurface_all()
     return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
              "status": c["status"], "case_number": orchestrator.summary(c)["case_number"],
              "next": orchestrator.next_action(c), **caselist.overview(c)} for c in orchestrator.cases.values()]
@@ -232,6 +233,7 @@ async def list_cases():
 async def dashboard():
     """Every case (archived ones flagged): balances, calls, follow-ups, the next action with its due date, and
     the at-a-glance step and attention. Sorted needs you, running, waiting on the hospital, done; newest first."""
+    caselist.resurface_all()  # an archived case that newly needs the patient comes back to Active
     rows = [{**orchestrator.summary(c), **caselist.overview(c)} for c in orchestrator.cases.values()]
     return sorted(rows, key=caselist.rank)
 

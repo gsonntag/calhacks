@@ -74,6 +74,9 @@ def save(case: dict) -> None:
 def set_status(case: dict, status: str) -> None:
     case["status"] = status
     save(case)
+    if case.get("archived"):  # archived but newly needs the patient: back to the Active list right away
+        from . import caselist
+        caselist.resurface(case)
 
 
 def load_cases() -> int:

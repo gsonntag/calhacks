@@ -203,3 +203,38 @@ async def test_new_routes_need_the_admin_key(monkeypatch, fresh):
         assert (await cl.post(f"/api/cases/{c['id']}/restore")).status_code == 401
         assert (await cl.delete(f"/api/cases/{c['id']}")).status_code == 401
         assert (await cl.post(f"/api/cases/{c['id']}/archive", headers={"X-BillBack-Key": "k" * 24})).status_code == 200
+
+
+# ---------- an archived case that newly needs the patient comes back ----------
+async def test_archived_case_comes_back_when_it_newly_needs_you(client, fresh):
+    c = fresh("reviewing")
+    assert (await client.post(f"/api/cases/{c['id']}/archive", json={"confirm": True})).json()["archived"] is True
+    orchestrator.set_status(c, "awaiting_call_approval")  # the plan is ready: the patient has to look
+    assert c["archived"] is False
+    assert any(e["kind"] == "unarchived" and "needs you" in e["text"] for e in bus.history(c["id"]))
+    assert next(x for x in events.load_cases() if x["id"] == c["id"])["archived"] is False
+    tab = next(t for t in (await client.get("/api/cases")).json() if t["id"] == c["id"])
+    assert tab["archived"] is False and tab["attention"] == "needs_you"
+
+
+async def test_archived_case_comes_back_when_a_followup_goes_overdue_or_it_fails(client, fresh):
+    c = fresh("done")
+    _followup(c, date.today() + timedelta(days=2))
+    await client.post(f"/api/cases/{c['id']}/archive")
+    assert c["archived"] is True
+    c["clock_days"] = 5  # nothing emitted: the dashboard read notices it
+    row = next(r for r in (await client.get("/api/dashboard")).json() if r["id"] == c["id"])
+    assert row["archived"] is False and row["attention"] == "needs_you"
+    d = fresh("calling")
+    await client.post(f"/api/cases/{d['id']}/archive", json={"confirm": True})
+    orchestrator.set_status(d, "error")
+    assert d["archived"] is False
+
+
+async def test_archived_while_it_needed_you_stays_archived_until_something_new(client, fresh):
+    c = fresh("awaiting_call_approval")
+    await client.post(f"/api/cases/{c['id']}/archive", json={"confirm": True})
+    await client.get("/api/dashboard")
+    assert c["archived"] is True  # the patient saw this one and archived it anyway
+    orchestrator.set_status(c, "error")
+    assert c["archived"] is False

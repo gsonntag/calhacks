@@ -97,16 +97,39 @@ def archive(case: dict, confirm: bool = False) -> dict:
         warn = guard_warning(case)
         if warn and not confirm:
             raise NeedsConfirm(warn + " Archive it anyway? It keeps running in the background.")
-        case["archived"], case["archived_at"] = True, orchestrator.case_now(case).isoformat()
+        o = overview(case)
+        # what needed the patient when they archived it: that one they've seen, anything new brings it back
+        case.update(archived=True, archived_at=orchestrator.case_now(case).isoformat(),
+                    archived_need=o["headline"] if o["attention"] == "needs_you" else None)
         orchestrator.save(case)
     return overview(case)
 
 
 def restore(case: dict) -> dict:
-    case.pop("archived_at", None)
+    for k in ("archived_at", "archived_need"):
+        case.pop(k, None)
     case["archived"] = False
     orchestrator.save(case)
     return overview(case)
+
+
+def resurface(case: dict) -> bool:
+    """An archived case that newly needs the patient (plan ready, a failed step, a follow-up overdue) goes back
+    to the Active list, logged in its history. One they archived while it already needed them (with the
+    confirm) stays archived until something else needs them."""
+    if not case.get("archived") or case["id"] not in orchestrator.cases:
+        return False
+    o = overview(case)
+    if o["attention"] != "needs_you" or o["headline"] == case.get("archived_need"):
+        return False
+    restore(case)
+    bus.emit(case["id"], "unarchived", text=f"Unarchived: needs you ({o['headline']})")
+    return True
+
+
+def resurface_all() -> None:
+    for case in list(orchestrator.cases.values()):
+        resurface(case)
 
 
 def delete(case: dict, task=None, confirm: bool = False) -> None:
