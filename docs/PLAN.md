@@ -40,6 +40,50 @@ bank history and insurer stay synthetic.
 
 Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
 
+6. **Step 2B: the Decide agent** (see below), between the Review and Your approval.
+
+## The flow: Step 2A and Step 2B
+
+- **2A, Review:** the Nessie agent and the Bright Data agent run in parallel, each checklist visible live.
+- **2B, Decide:** a third agent takes what both found and works out the plan. Then Your approval.
+
+**Every past stage stays reopenable.** Click any finished stage to see everything it did: each check, each
+piece of evidence and source, the decision, the call transcript. Nothing an agent did disappears.
+
+### What the Decide agent shows
+- What it got: "Nessie found you paid $500. Bright Data found you qualify for free care."
+- What it concluded: "You owe $0, and the hospital owes you $500 back."
+- The path and why: e.g. refund first, then confirm a $0 balance; or apply insurance, then a plan.
+- Who it will negotiate with: billing, the financial-assistance office, or the collections agency.
+- The exact asks, in order, with fallbacks. These feed the approval card.
+
+The decision is **rules-based code** (today's logic lives in `finance.settle` and `orchestrator.call_asks`,
+hidden from the user); Claude only writes the plain-English explanation.
+
+### Talking to the Decide agent
+The user can chat to change the strategy ("ask for the refund first", "don't mention a plan", "I can do
+$150/mo", "ask for a supervisor if they say no"). The plan updates on screen with what changed and why, and
+the user approves that plan; the caller follows it.
+
+Guardrails: the chat changes strategy, never facts. Numbers always come from the code. Every ask must be
+backed by something Nessie or Bright Data found; if not, the agent says why it can't. Hard rules stay: never
+agree to pay on a call, always say it's an automated assistant.
+
+### Questioning and correcting (when to rerun)
+- **Asking** ("why do you think I paid $500?") changes nothing; the agent answers from its own evidence.
+- **Correcting** ("that $500 was to my dentist") is saved as an explicit fix on that finding. Then only what
+  depends on it is redone: the money math recalculates instantly; Nessie/Bright Data do NOT re-fetch (their
+  data didn't change); the Decide agent re-plans and shows the difference.
+- The user's strategy preferences are stored separately from facts, so they survive corrections.
+- A full rerun only happens when inputs truly change (new bill, different hospital, new bank data), via an
+  explicit "Start over" button, never silently.
+- Corrections are allowed until the call starts. A change after approval resets the approval.
+- Every correction is logged in the case history (what changed, and how the plan changed).
+
+### Later: ask Nessie or Bright Data directly
+Each agent answers questions only from what it found (transactions, policy text, quotes), shows the
+source, and says when it doesn't know. Reuse the existing "Ask BillBack" endpoint (`/api/cases/{id}/ask`).
+
 ## Later (when there's time)
 
 From the audit, roughly in priority order. Details and sources are in `docs/ideas-backlog.md`.
