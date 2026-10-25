@@ -67,15 +67,14 @@ async def test_offline_end_to_end(client):
     assert r["ended"] is True
     assert r["outcome"]["case_number"] == "58213"
 
-    # $600 is still owed: the interest-free plan (Sutter's terms) waits for the patient's OK, then goes to the bank
-    await _approve(c, case_id, "planner")
+    # $600 is still owed: the interest-free plan (Sutter's terms) is proposed; the patient decides on it, no OK asked
     done = await _wait_for(case_id, lambda e: e["kind"] == "case_done")
     s = done["summary"]
     # a review and a hold are not a reduction: billing still shows $8,700 until it confirms the $600
     assert s["started_at"] == 8700 and s["now"] == 8700 and s["refund"] == 0
     assert s["expected"] == 600 and s["confirmed"] is False
     assert s["case_number"] == "58213"
-    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is True
+    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is False
 
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
@@ -96,10 +95,9 @@ async def test_offline_end_to_end(client):
     assert all(f["proof"] and f["source"] for f in finds.values())
     assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600, 8700]
     assert [e for e in hist if e["kind"] == "balance"][-1]["label"] == "Billing still shows"
-    # the plan in the bank ends: 6 scheduled payments, Nov 2026 to Apr 2027, adding up to the $600
-    made = next(e for e in hist if e["kind"] == "tool_result" and e["tool"] == "create_payment_plan")["result"]
-    assert made["payments"] == 6 and made["first_date"] == "2026-11-15" and made["last_date"] == "2027-04-15"
-    assert made["total"] == 600 and len(made["bill_ids"]) == 6
+    # nothing asks to set the plan up in the bank: the patient decides at the end
+    assert not any(e["kind"] == "approval_requested" and e["agent"] == "planner" for e in hist)
+    assert not any(e["kind"] == "tool_call" and e.get("tool") == "create_payment_plan" for e in hist)
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)

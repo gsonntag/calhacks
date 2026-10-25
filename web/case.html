@@ -143,7 +143,6 @@
   .bubble-who { font: 500 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; }
   .bubble-wrap .m3-bubble { font-size: 15px; line-height: 22px; }
   @media (max-width: 640px) { .bubble-wrap .m3-bubble { max-width: 92%; } }
-  #deskLink:empty { display: none; }
 
   /* Resolved details */
   .final { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; }
@@ -160,7 +159,7 @@
 
   .in { animation: fadein .35s var(--md-ease); }
   @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .replay #deskLink, .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn { display: none !important; }
+  .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn { display: none !important; }
 
   @media (max-width: 640px) {
     .m3-top-app-bar { padding: 8px 12px; }
@@ -282,18 +281,13 @@
   /* findings: Ask / This is wrong, in place */
   .find-acts { display: flex; flex-wrap: wrap; gap: 4px 8px; }
   .find-acts .m3-btn { min-height: 32px; padding: 0 12px; }
-  .finds summary .find-ask { min-height: 32px; padding: 0 12px; }
-  .find-ask[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
   .find-box { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); }
   .find-box form { display: flex; gap: 8px; flex-wrap: wrap; }
   .find-box .m3-input { flex: 1; min-width: 180px; }
-  .qa { display: flex; flex-direction: column; gap: 2px; }
-  .qa .q { font-weight: 500; }
-  .qa .lbl { font: 500 11px/16px var(--md-font); color: var(--md-on-surface-variant); }
   .wrong-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--st-warn); font: 500 12px/16px var(--md-font); }
   .finds li.is-wrong .fl { text-decoration: line-through; text-decoration-color: var(--md-on-surface-variant); }
   .finds li.flash { border-radius: var(--md-shape-m); }
-  .replay .find-acts, .replay .find-ask, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
+  .replay .find-acts, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
   @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
 </head>
@@ -433,7 +427,6 @@
           <div class="transcript-wrap" id="transcriptWrap">
             <div id="transcript" aria-live="polite"></div>
           </div>
-          <span class="body-m muted" id="deskLink"></span>
           <div><button type="button" class="m3-btn outlined" id="endCallBtn" hidden><span class="material-symbols-rounded" aria-hidden="true">call_end</span>End call</button></div>
         </div>
       </li>
@@ -553,7 +546,10 @@ function apply(m, e) {
     case 'reconciliation': m.rec = e; break;
     case 'review_done': m.review = { auditor: e.auditor, policy: e.policy }; break;
     case 'balance': m.balances.push(e.amount); break;
-    case 'approval_requested': m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; if (e.agent === 'planner') m.plan = { ...(m.plan || {}), ...e.detail }; break;
+    case 'approval_requested':
+      // the payment plan is the patient's own decision at the end: show the plan, never a Yes/No card (old replays have one)
+      if (e.agent === 'planner') { m.plan = { ...(m.plan || {}), ...e.detail }; break; }
+      m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; break;
     case 'approval_resolved': {
       const who = Object.keys(m.approvals).find((k) => m.approvals[k].id === e.approval_id);
       if (who) { m.approvals[who].resolved = e.approved;
@@ -928,7 +924,6 @@ function render() {
     return `<div class="bubble-wrap ${them ? 'them' : 'me'}${i >= (seen[tk] || 0) ? ' in' : ''}"><span class="bubble-who">${them ? 'Billing' : 'BillBack'}</span><span class="m3-bubble ${them ? 'them' : 'me'}">${esc(l.text)}</span></div>`;
   }).join(''));
   seen[tk] = m.lines.length;
-  setHTML($('deskLink'), m.call && m.call.mode === 'desk' ? `Desk mode · <a href="${location.origin}/rep.html?call=${encodeURIComponent(m.call.call_id)}&hospital=${encodeURIComponent(prov)}" target="_blank">open the billing-rep console</a>` : '');
   $('endCallBtn').hidden = !(m.call && !m.callEnded && !m.done);
   $('callSummary').textContent = m.callDeclined ? 'No call made'
     : m.call ? (m.callEnded ? `${outcomeText(m)} · ${timer(el)}` : `${phaseText(m)} · ${timer(el)}`)
@@ -1013,31 +1008,21 @@ function setHTMLKeep(el, html) {
 }
 
 function findingHTML(f, m, ui, isNew, acts) {
-  const k = esc(f.key), c = m.corrections[f.key], qa = m.qa[f.key] || [], box = ui.box[f.key];
+  const k = esc(f.key), c = m.corrections[f.key], box = ui.box[f.key];
   const open = ui.finds.has(f.key) || !!box;
   const flash = ui.flashFind === f.key && Date.now() < ui.flashUntil ? ' flash' : '';
   const err = ui.err[f.key] ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.err[f.key])}</p>` : '';
-  // Ask sits on the row once the finding's agent is done; it needs the saved plan facts, so it waits for the plan
-  const askBtn = !acts.live || !(m.agent[f.agent] || {}).done ? ''
-    : `<button type="button" class="m3-btn text find-ask" data-act="ask" data-key="${k}"${acts.ask ? '' : ' aria-disabled="true" title="Available once the plan is ready"'}>${sym('chat_bubble')}Ask</button>`;
   const buttons = !acts.ask ? '' : `<div class="find-acts">
       ${c ? (acts.correct ? `<button type="button" class="m3-btn text" data-act="undo" data-id="${esc(c.id)}">${sym('undo')}Undo “This is wrong”</button>` : '')
           : acts.correct ? `<button type="button" class="m3-btn text" data-act="wrong" data-key="${k}">${sym('flag')}This is wrong</button>` : ''}</div>`;
-  const answers = qa.map((x) => `<div class="qa"><span class="q">${esc(x.question)}</span><span>${esc(x.answer)}</span>
-      <span class="lbl">${esc(agentName(m, x.agent))}${(x.sources || []).length ? ' · ' + srcHTML(x.sources[0]) : ''}</span></div>`).join('');
-  const busy = ui.busy['ask:' + f.key];
-  const askForm = box === 'ask' ? `<form data-form="ask" data-key="${k}"><input class="m3-input" data-draft="ask:${k}" maxlength="500"
-      value="${esc(ui.drafts['ask:' + f.key] || '')}" placeholder="Ask the agent that found this" aria-label="Your question"${busy ? ' disabled' : ''}>
-      <button type="submit" class="m3-btn filled"${busy ? ' disabled' : ''}>${busy ? 'Asking…' : 'Ask'}</button></form>` : '';
-  const askBox = answers || askForm ? `<div class="find-box">${answers}${askForm}${box === 'ask' ? err : ''}</div>` : '';
   const wrongBox = box === 'wrong' && !c ? `<div class="find-box"><p class="body-m" style="margin:0">What’s wrong? (optional) I’ll leave this finding out and redo the plan.</p>
       <form data-form="wrong" data-key="${k}"><input class="m3-input" data-draft="wrong:${k}" maxlength="500" value="${esc(ui.drafts['wrong:' + f.key] || '')}"
       placeholder="e.g. that payment was to my dentist" aria-label="What’s wrong">
       <button type="submit" class="m3-btn filled"${ui.busy['wrong:' + f.key] ? ' disabled' : ''}>Save</button>
       <button type="button" class="m3-btn text" data-act="cancel" data-key="${k}">Cancel</button></form>${err}</div>` : '';
   const tag = c ? `<p class="wrong-tag">${sym('flag')}You said this is wrong${c.note ? ': “' + esc(c.note) + '”' : ''}${c.v ? ` · <button type="button" class="made-v" data-act="goplan">plan v${c.v}</button>` : ''}</p>` : '';
-  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b>${askBtn}</summary>
-    <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}${askBox}</div></details></li>`;
+  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
+    <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}</div></details></li>`;
 }
 
 // what an older version has that the latest doesn't (for "tap an older version to compare")
@@ -1410,7 +1395,7 @@ document.querySelector('main').addEventListener('click', async (e) => {
   const ui = uiOf(state.active), key = b.dataset.key, act = b.dataset.act;
   if (b.closest('summary')) e.preventDefault();  // a button on a finding row must not also fold the row
   if (b.getAttribute('aria-disabled') === 'true') return;
-  if (act === 'ask' || act === 'wrong') {
+  if (act === 'wrong') {
     ui.box[key] = ui.box[key] === act ? undefined : act; ui.finds.add(key); delete ui.err[key]; render();
     const n = document.querySelector(`[data-draft="${CSS.escape(act + ':' + key)}"]`); if (n) n.focus();
   } else if (act === 'cancel') { delete ui.box[key]; render(); }
@@ -1458,11 +1443,9 @@ document.querySelector('main').addEventListener('submit', async (e) => {
   if (state.active === 'replay') return;
   const ui = uiOf(state.active), key = f.dataset.key, kind = f.dataset.form, dk = kind + ':' + key;
   const text = (ui.drafts[dk] || '').trim();
-  if (kind === 'ask' && !text) return;
   ui.busy[dk] = true; delete ui.err[key]; render();
   try {
-    if (kind === 'ask') await post(`/api/cases/${state.active}/ask`, { question: text, finding: key });
-    else { await post(`/api/cases/${state.active}/corrections`, { finding: key, note: text }); delete ui.box[key]; }
+    await post(`/api/cases/${state.active}/corrections`, { finding: key, note: text }); delete ui.box[key];
     ui.drafts[dk] = '';
   } catch (err) { ui.err[key] = err.message; }
   finally { delete ui.busy[dk]; render(); }

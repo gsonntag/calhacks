@@ -6,6 +6,7 @@ import pytest
 
 from billback import config, finance, orchestrator
 from billback.agents import planner
+from billback.events import bus
 from billback.integrations.nessie import LocalMirror
 
 TODAY = date(2026, 10, 24)
@@ -105,21 +106,15 @@ def test_schedule_ends_and_rolls_over_the_year():
     assert s == [("2026-12-15", 88.0), ("2027-01-15", 88.0), ("2027-02-15", 78.98)]
 
 
-async def test_planner_writes_one_bill_per_payment(monkeypatch):
-    from billback.harness import gate
-
-    async def yes(*a, **k):
-        return True
-    monkeypatch.setattr(gate, "request", yes)
+async def test_planner_only_proposes_the_plan():
+    """The patient decides at the end: no approval card, nothing written to the bank."""
     case = {"id": "money-plan", "today": "2026-10-24", "bill": {"account_number": "CPMC-1"},
             "hospital": {"name": "CPMC"}}
     bank = LocalMirror({"transactions": []})
     out = await planner.run(case, bank, "mirror", 1574.98, 3033.33, policy_cap_pct=10)
-    made = out["created"]
-    assert made["payments"] == 18 and made["last_date"] == "2028-04-15" and made["last_amount"] == 78.98
-    bills = await bank.list_bills("mirror")
-    assert len(bills) == 18 and round(sum(b["payment_amount"] for b in bills), 2) == 1574.98
-    assert all(b["status"] == "pending" for b in bills)
+    assert out["created"] is None and (out["plan"]["months"], out["plan"]["last"]) == (18, 78.98)
+    assert await bank.list_bills("mirror") == []
+    assert not any(e["kind"] == "approval_requested" for e in bus.history("money-plan"))
 
 
 # --- 1: a hold is not a win ---
