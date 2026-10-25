@@ -771,8 +771,7 @@ function awaitingConfirm(m) {
 // the plan exactly as the server wrote it ("17 × $88/mo, then $78.98"); older events only have months × monthly
 const planLabel = (p) => p.text || `${p.months} × ${money(p.monthly)}/mo`;
 function planOf(m) {
-  if (m.done && m.done.plan && m.done.plan.months > 0) return m.done.plan;
-  return m.plan && m.plan.months > 0 ? m.plan : null;
+  return null;  // payment plans are left off: the page shows only the final amount
 }
 
 // what the agents found, biggest saving first (things that aren't money off the bill, like a plan, go last)

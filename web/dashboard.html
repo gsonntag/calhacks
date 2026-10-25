@@ -222,7 +222,6 @@ function detailHTML(c) {
     `<dt>Case number</dt><dd>${c.case_number ? `<b>${esc(c.case_number)}</b>` : '<span class="muted">none yet</span>'}</dd>`,
     `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}` : '<span class="muted">not called yet</span>'}</dd>`,
   ];
-  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${esc(c.plan.text || `${c.plan.months} × ${money(c.plan.monthly)}/mo`)} <span class="muted">interest-free</span></dd>`);
 
   const calls = c.calls.length ? `<ul class="m3-list">${c.calls.map((x) => `<li class="m3-list-item">
       <span class="li-leading">${icon('call')}</span>
