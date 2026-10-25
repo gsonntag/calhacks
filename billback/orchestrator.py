@@ -348,7 +348,8 @@ def summary(case: dict) -> dict:
             "case_number": num, "calls": calls, "last_call": last, "followups": case.get("followups") or [],
             "next": next_action(case), "today": case_now(case).isoformat(), "clock_days": case.get("clock_days", 0),
             "created": case.get("today"), "created_at": case.get("created_at"), "can_call_again": can_call_again(case),
-            "plan": res.get("plan")}
+            "plan": res.get("plan"),
+            "needs_plan_ok": any(a["agent"] == "planner" for a in gate.pending_for(case["id"]))}
 
 
 def _history_for_llm(s: dict) -> dict:
