@@ -146,14 +146,16 @@ async def test_twilio_rest_requests(monkeypatch):
     monkeypatch.setattr(config, "TWILIO_ACCOUNT_SID", "AC1")
     monkeypatch.setattr(config, "TWILIO_AUTH_TOKEN", "tok")
     monkeypatch.setattr(config, "TWILIO_FROM_NUMBER", "+15550001111")
-    assert await twilio.create_call("+15552223333", "<Response/>", "https://x/status") == "CA123"
+    assert await twilio.create_call("+15552223333", "https://x/voice/twilio/agent?token=t", "https://x/status") == "CA123"
     await twilio.add_participant("billback-c1", "app:AP1?token=t", label="billback", status_callback="https://x/s",
                                  end_conference_on_exit=True)
     call, part = sent
     assert str(call.url) == "https://api.twilio.com/2010-04-01/Accounts/AC1/Calls.json"
     assert call.headers["authorization"] == "Basic " + base64.b64encode(b"AC1:tok").decode()
     form = parse_qs(call.content.decode())
-    assert form["To"] == ["+15552223333"] and form["From"] == ["+15550001111"] and form["Twiml"] == ["<Response/>"]
+    assert form["To"] == ["+15552223333"] and form["From"] == ["+15550001111"]
+    assert form["Url"] == ["https://x/voice/twilio/agent?token=t"]
+    assert not {"Twiml", "Timeout", "StatusCallbackMethod"} & set(form)  # refused on Twilio's free trial
     assert form["StatusCallbackEvent"] == ["initiated", "ringing", "answered", "completed"]
     pform = parse_qs(part.content.decode())
     assert str(part.url).endswith("/Conferences/billback-c1/Participants.json")
@@ -192,6 +194,17 @@ async def test_twiml_app_voice_url(api):
     r = await api.post("/voice/twilio/agent", data=params, headers={"X-Twilio-Signature": sig})
     assert r.headers["content-type"].startswith("application/xml")
     assert 'url="wss://pub.example/voice/twilio/stream"' in r.text and f'value="{leg.token}"' in r.text
+
+
+async def test_unsigned_twiml_fetch_needs_token_and_call_sid(api):
+    leg = calls.register(media.Leg("c1", voices.default()))
+    leg.call_sid = "CA42"  # what Twilio returned when we placed the call
+    path = f"/voice/twilio/agent?token={leg.token}"
+    assert (await api.post(path, data={"CallSid": "CA99"})).status_code == 403                    # another call
+    assert (await api.post("/voice/twilio/agent?token=guess", data={"CallSid": "CA42"})).status_code == 403
+    assert (await api.post(path, data={"CallSid": "CA42"}, headers={"X-Twilio-Signature": "forged"})).status_code == 403
+    r = await api.post(path, data={"CallSid": "CA42"})                                             # unsigned, both match
+    assert r.status_code == 200 and f'value="{leg.token}"' in r.text
 
 
 async def test_voices_routes(api):
@@ -393,10 +406,12 @@ def phone(monkeypatch, fakes):
     dialed, hung_up, streams = [], [], []
     scripts = {"+15554445555": ["Hello?", "Yes, I authorize that."], "+15552223333": REP_LINES}
 
-    async def create_call(to, twiml, status_callback, timeout=30):
+    async def create_call(to, url, status_callback):
         assert status_callback.startswith("https://pub.example/voice/twilio/status?token=")
+        assert url.startswith("https://pub.example/voice/twilio/agent?token=")
+        token = url.split("token=", 1)[1]
+        twiml = calls.stream_twiml(calls.legs[token])  # what /voice/twilio/agent serves when Twilio fetches it
         assert 'url="wss://pub.example/voice/twilio/stream"' in twiml
-        token = re.search(r'name="token" value="([^"]+)"', twiml)[1]
         dialed.append(to)
         tw = FakeTwilio(token, scripts[to])
         streams.append(tw)

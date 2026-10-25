@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BillBack — Get started</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="m3.css">
+<!--
+  Onboarding: builds the household profile by asking only what can change the outcome (billback/onboarding.py).
+  Each answer goes to POST /api/onboarding/assess, which returns how certain the outcome is and the one question
+  that narrows it most. Save: POST /api/onboarding -> Tiger Data profile (billback/tiger.py), or a local copy when
+  Tiger is off; the patient's next case uses it. A stated income is double-checked against the bank (income_check).
+-->
+<style>
+  .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
+  @media (max-width: 720px) { .m3-top-app-bar .m3-tabs { order: 2; flex-basis: 100%; margin: 0 -16px; padding: 0 8px; gap: 0; } .m3-top-app-bar .m3-tab { padding: 0 10px; } }
+  .hero h1 { margin: 8px 0 4px; }
+  .hero p { margin: 0; max-width: 680px; }
+  .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .wrap { grid-template-columns: 1fr; } .meter { order: -1; } }
+  .card { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .card h2 { margin: 0; }
+  .why { margin: 0; font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gain { font: 500 12px/16px var(--md-font); color: var(--md-primary); letter-spacing: .4px; text-transform: uppercase; }
+  .bank { padding: 10px 14px; border-radius: var(--md-shape-m); background: var(--st-info-container); color: var(--st-on-info-container); font: 400 14px/20px var(--md-font); }
+  .bank.ok { background: var(--st-success-container); color: var(--st-on-success-container); }
+  .bank.warn { background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .meter { position: sticky; top: 80px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .meter .big { font: 700 40px/44px var(--md-font); font-variant-numeric: tabular-nums; }
+  .bar { height: 8px; border-radius: 4px; background: var(--md-surface-container-highest); overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--md-primary); border-radius: 4px; transition: width var(--md-dur-l) var(--md-ease); }
+  .meter .outcome { font: 500 16px/22px var(--md-font); }
+  .meter .small, .small { font: 400 13px/18px var(--md-font); color: var(--md-on-surface-variant); }
+  .answered { display: flex; flex-wrap: wrap; gap: 6px; }
+  .answered .m3-chip { cursor: pointer; }
+  .per { display: flex; flex-direction: column; }
+  .per div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--md-outline-variant); font: 400 14px/20px var(--md-font); }
+  .per div:last-child { border-bottom: 0; }
+  .per b { font-weight: 500; white-space: nowrap; }
+  .per .free { color: var(--st-money); }
+  #err { padding: 12px 16px; }
+</style>
+</head>
+<body>
+<header class="m3-top-app-bar">
+  <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="onboarding.html" aria-current="page">Get started</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="households.html">Households</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
+</header>
+<main class="m3-page m3-stack">
+  <div class="hero">
+    <h1 class="headline-l">Let's see what you qualify for</h1>
+    <p class="body-l muted">We only ask what could change the answer, and stop as soon as it can't. Your bank fills in
+      what it can.</p>
+  </div>
+  <div class="m3-card error" id="err" role="alert" hidden></div>
+  <div class="wrap">
+    <div class="m3-stack">
+      <form class="m3-card card" id="who">
+        <h2 class="title-l">About you</h2>
+        <p class="why">Your name finds your bank account (Capital One), so we can estimate income without asking.</p>
+        <div class="grid2">
+          <div class="m3-field"><label for="first_name">First name</label><input class="m3-input" id="first_name" required autocomplete="given-name"></div>
+          <div class="m3-field"><label for="last_name">Last name</label><input class="m3-input" id="last_name" required autocomplete="family-name"></div>
+          <div class="m3-field"><label for="dob">Date of birth</label><input class="m3-input" id="dob" type="date" autocomplete="bday"></div>
+          <div class="m3-field"><label for="zip">ZIP code</label><input class="m3-input" id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div>
+        </div>
+        <div class="actions"><button class="m3-btn filled" type="submit">Continue</button></div>
+      </form>
+      <form class="m3-card card" id="ask" hidden></form>
+      <div class="m3-card card" id="done" hidden></div>
+    </div>
+    <aside class="m3-card meter" id="meter" aria-live="polite">
+      <div class="label-l muted">How sure we are</div>
+      <div class="big" id="pct">—</div>
+      <div class="bar"><i id="barfill" style="width:0"></i></div>
+      <div class="outcome" id="outcome">Answer a few questions to see.</div>
+      <div class="small" id="range"></div>
+      <div class="answered" id="answered"></div>
+    </aside>
+  </div>
+</main>
+<script src="/auth.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const money = (n) => '$' + Math.round(n || 0).toLocaleString();
+const answers = {}, skipped = new Set();
+let hospitals = {};
+const LABEL = { hospital_id: 'Hospital', household_size: 'Household', income: 'Income', insured: 'Insurance', medical_oop: 'Medical bills' };
+const show = (k, v) => k === 'hospital_id' ? (hospitals[v] || v) : k === 'insured' ? (v ? 'insured' : 'uninsured')
+  : k === 'income' || k === 'medical_oop' ? money(v) : k === 'household_size' ? `${v} ${v === 1 ? 'person' : 'people'}` : v;
+
+async function post(path) {
+  const r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ answers, skipped: [...skipped] }) });
+  if (!r.ok) throw new Error(r.status === 401 ? 'Needs the admin key.' : `Request failed (${r.status})`);
+  return r.json();
+}
+
+function meter(a) {
+  $('pct').textContent = Math.round(100 * a.certainty) + '%';
+  $('barfill').style.width = (100 * a.certainty) + '%';
+  $('outcome').textContent = a.outcome || '';
+  $('range').textContent = a.fpl_range ? (a.fpl_range[0] === a.fpl_range[1]
+    ? `${Math.round(a.fpl_range[0])}% of the poverty line`
+    : `Somewhere between ${Math.round(a.fpl_range[0])}% and ${Math.round(a.fpl_range[1])}% of the poverty line`) : '';
+  $('answered').innerHTML = Object.keys(LABEL).filter((k) => k in answers || skipped.has(k)).map((k) =>
+    `<button type="button" class="m3-chip" data-k="${k}" title="Change">${esc(LABEL[k])}: ${esc(k in answers ? show(k, answers[k]) : 'not sure')}</button>`).join('');
+}
+
+function ask(a) {
+  const n = a.next, f = $('ask');
+  $('done').hidden = !!n; f.hidden = !n;
+  if (!n) return finish(a);
+  (n.options || []).forEach((o) => { hospitals[o.id] = o.name; });
+  const input = n.kind === 'select'
+    ? `<select class="m3-select" id="v" required><option value="">Choose…</option>${n.options.map((o) => `<option value="${esc(o.id)}">${esc(o.name)} · ${esc(o.city)}</option>`).join('')}</select>`
+    : n.kind === 'yesno'
+      ? `<div class="m3-segmented" role="group" aria-label="${esc(n.q)}"><button type="button" data-yes="1">Yes</button><button type="button" data-yes="0">No</button></div>`
+      : `<input class="m3-input" id="v" type="number" min="${n.kind === 'number' ? 1 : 0}" step="${n.kind === 'number' ? 1 : 100}" required value="${n.prefill ?? ''}" inputmode="numeric">`;
+  f.innerHTML = `<div class="gain">Narrows it most · removes ~${Math.round(100 * n.gain)}% of the uncertainty</div>
+    <h2 class="title-l">${esc(n.q)}</h2><p class="why">${esc(n.why)}</p>
+    ${n.prefill_note ? `<div class="bank">${esc(n.prefill_note)}. Change it if your household earns more before taxes.</div>` : ''}
+    ${input}
+    <div class="actions">${n.kind === 'yesno' ? '' : '<button class="m3-btn filled" type="submit">Next</button>'}
+      <button class="m3-btn text" type="button" id="skip">I'm not sure</button></div>`;
+  f.dataset.field = n.field; f.dataset.kind = n.kind;
+  f.querySelectorAll('[data-yes]').forEach((b) => b.onclick = () => answer(n.field, b.dataset.yes === '1'));
+  $('skip').onclick = () => { skipped.add(n.field); step(); };
+  (f.querySelector('input, select, button') || f).focus();
+}
+
+function finish(a) {
+  const per = a.per_hospital.map((h) => `<div><span>${esc(h.name)}</span><b class="${h.discount_pct >= 100 ? 'free' : ''}">${h.discount_pct >= 100 ? 'Free care' : h.discount_pct ? h.discount_pct + '% off' : 'No discount'}${h.certainty < 1 ? ' (likely)' : ''}</b></div>`).join('');
+  $('done').innerHTML = `<h2 class="title-l">${a.decided ? "That's all we need" : "That's as far as we can get"}</h2>
+    <p class="why">${a.decided ? 'More answers wouldn\'t change the result.' : 'The rest depends on answers you weren\'t sure about. A bill or bank history will settle it.'}</p>
+    ${a.bank ? `<div class="bank">Bank: about ${money(a.bank.annual)}/yr take-home (${esc(a.bank.source)})</div>` : ''}
+    ${incomeCheck(a)}
+    <div class="per">${per}</div>
+    <div class="actions"><button class="m3-btn filled" id="save" type="button">Save my profile</button></div><div class="small" id="saved"></div>`;
+  $('save').onclick = save;
+}
+
+// What the bank says about the income they told us (finance.stated_check), in plain words.
+function incomeCheck(a) {
+  const c = a.income_check;
+  if (c) return `<div class="bank ${c.ok ? 'ok' : 'warn'}"><b>Income check:</b> ${esc(c.text)}</div>`;
+  if ('income' in answers) return `<div class="small">We'll check the ${money(answers.income)} you told us against your bank when you start a case.</div>`;
+  return '';
+}
+
+async function save() {
+  $('save').disabled = true;
+  try {
+    const r = await post('/api/onboarding');
+    $('saved').innerHTML = r.saved
+      ? `Saved to your profile (Tiger Data). <a href="new.html">Start a case with your bill</a> · <a href="households.html">Households</a>`
+      : r.stored === 'local'
+        ? `Saved on this server (Tiger Data isn't connected). Your next case under this name${answers.dob ? ' and date of birth' : ''} will use it. <a href="new.html">Start a case with your bill</a>`
+        : 'Couldn\'t save your profile.';
+  } catch (e) { $('save').disabled = false; err(e); }
+}
+
+const err = (e) => { $('err').hidden = false; $('err').textContent = e.message || String(e); };
+async function step() {
+  $('err').hidden = true;
+  try { const a = await post('/api/onboarding/assess'); meter(a); ask(a); } catch (e) { err(e); }
+}
+function answer(field, v) { answers[field] = v; skipped.delete(field); step(); }
+
+$('who').onsubmit = (e) => {
+  e.preventDefault();
+  for (const k of ['first_name', 'last_name', 'dob', 'zip']) { const v = $(k).value.trim(); if (v) answers[k] = v; else delete answers[k]; }
+  $('who').hidden = true; step();
+};
+$('ask').onsubmit = (e) => {
+  e.preventDefault();
+  const f = e.target, v = $('v').value;
+  if (v === '') return;
+  answer(f.dataset.field, f.dataset.kind === 'select' ? v : Number(v));
+};
+$('answered').onclick = (e) => {
+  const k = e.target.closest('[data-k]')?.dataset.k;
+  if (k) { delete answers[k]; skipped.delete(k); step(); }
+};
+addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
+</script>
+</body>
+</html>

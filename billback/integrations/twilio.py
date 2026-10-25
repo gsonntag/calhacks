@@ -34,11 +34,13 @@ async def _req(method: str, path: str, data: dict | None = None) -> dict:
     return r.json() if r.content else {}
 
 
-async def create_call(to: str, twiml: str, status_callback: str, timeout: int = 30) -> str:
-    """Outbound call running `twiml` when answered. Returns the CallSid."""
+async def create_call(to: str, url: str, status_callback: str) -> str:
+    """Outbound call that fetches its TwiML from `url` (POST) when answered. Returns the CallSid.
+    Only Url, StatusCallback and StatusCallbackEvent: Twilio's free trial refuses inline Twiml, Timeout and
+    StatusCallbackMethod ("trial accounts have limited parameter access"), and the defaults (POST, 60 s) suit us."""
     call = await _req("POST", "/Calls.json", {
-        "To": to, "From": config.TWILIO_FROM_NUMBER, "Twiml": twiml, "Timeout": timeout,
-        "StatusCallback": status_callback, "StatusCallbackMethod": "POST", "StatusCallbackEvent": CALL_EVENTS})
+        "To": to, "From": config.TWILIO_FROM_NUMBER, "Url": url,
+        "StatusCallback": status_callback, "StatusCallbackEvent": CALL_EVENTS})
     return call["sid"]
 
 

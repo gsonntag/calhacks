@@ -128,8 +128,11 @@ OTHER_INCOME = (r"\b(uber|lyft|doordash|door dash|instacart|grubhub|postmates|sh
 # Take-home is roughly 75-85% of gross at these incomes (FICA 7.65% + federal and CA withholding + benefits).
 # Eligibility still uses the bank figure (what we can prove); the estimate below, take-home / 0.80, is shown
 # next to it and flags any case where gross pay could change the answer, so billing's request for pay stubs
-# is no surprise. It is an estimate, never used for the money.
+# is no surprise. It is an estimate, never used for the money. When the patient tells us their income before
+# taxes (onboarding or chat), stated_check compares it with this range and eligibility uses the checked figure.
 TAKE_HOME_SHARE = 0.80
+TAKE_HOME_HIGH, TAKE_HOME_LOW = 0.85, 0.75  # the plausible range: gross = take-home / 0.85 .. take-home / 0.75
+STATED_TOLERANCE = 0.10  # a stated income this close to that range still fits it
 
 
 def income(txns: list[dict], today: date | None = None, lookback_days: int = 90) -> dict:
@@ -179,6 +182,44 @@ def gross_check(inc: dict, household_size: int, tiers: list[dict], insured: bool
                     + (f", medical bills {at_gross['oop_pct_income']:.0f}% of income" if out_of_pocket else "")
                     + f"), the discount would be {at_gross['discount_pct']:g}%, not {elig['discount_pct']:g}%. "
                       "Have pay stubs ready."}
+
+
+def stated_check(inc: dict, stated: float) -> dict:
+    """The before-tax income the patient told us, checked against their bank deposits (take-home, inc =
+    income()). `used` is the gross figure eligibility uses:
+      consistent  stated fits take-home / TAKE_HOME_HIGH .. / TAKE_HOME_LOW (give or take STATED_TOLERANCE): stated
+      below       under that range: the bank's lowest gross (take-home / TAKE_HOME_HIGH). Billing checks pay
+                  stubs, so we never claim a discount the deposits would contradict.
+      above       over it: stated (it can only lower the discount); maybe other income or another earner
+      no_bank     no income deposits to check against: stated"""
+    stated = round(float(stated), 2)
+    take = float(inc.get("annual") or 0)
+    s = _usd(round(stated))
+    if take <= 0:
+        return {"stated": stated, "outcome": "no_bank", "used": stated, "ok": False, "take_home": 0.0, "range": None,
+                "basis": f"{s}/yr before taxes, as you said; not checked against the bank",
+                "text": f"You said {s} a year before taxes. I couldn't check that against your bank (no paycheck or "
+                        "other income deposits), so I used what you said. Have pay stubs ready.",
+                "line": f"You said {s} · bank shows no income deposits · couldn't check"}
+    lo, hi = round(take / TAKE_HOME_HIGH), round(take / TAKE_HOME_LOW)
+    t, bank = _usd(round(take)), f"bank shows {_usd(round(take))} take-home (about {_usd(lo)}–{_usd(hi)} before taxes)"
+    out = {"stated": stated, "take_home": take, "range": [lo, hi]}
+    if stated < lo * (1 - STATED_TOLERANCE):
+        return {**out, "outcome": "below", "used": float(lo), "ok": False,
+                "basis": f"{_usd(lo)}/yr before taxes, the least your bank deposits ({t} take-home) suggest",
+                "text": f"You said {s} a year before taxes; your bank deposits ({t} take-home) suggest at least "
+                        f"{_usd(lo)} before taxes, so I used that. Have pay stubs ready.",
+                "line": f"You said {s} · {bank} · ⚠ lower than the bank shows"}
+    if stated > hi * (1 + STATED_TOLERANCE):
+        return {**out, "outcome": "above", "used": stated, "ok": True,
+                "basis": f"{s}/yr before taxes, as you said",
+                "text": f"You said {s} a year before taxes, more than your bank deposits show ({t} take-home); "
+                        "maybe other income or another earner. I used what you said.",
+                "line": f"You said {s} · {bank} · ✓ more than the bank shows"}
+    return {**out, "outcome": "consistent", "used": stated, "ok": True,
+            "basis": f"{s}/yr before taxes, as you said; your bank deposits fit that",
+            "text": f"You said about {s} a year before taxes; your bank deposits ({t} take-home) fit that.",
+            "line": f"You said {s} · {bank} · ✓ fits"}
 
 
 def _merchant_key(t: dict) -> str:

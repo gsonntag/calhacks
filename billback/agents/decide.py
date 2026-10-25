@@ -302,7 +302,7 @@ def who_to_call(case: dict, discount: float) -> dict:
                 "phone": bill.get("billing_phone") or None,
                 "why": "You qualify for a discount, which their financial-assistance team applies"}
     return {"who": "billing", "department": f"{hosp['name']} {dept}", "phone": bill.get("billing_phone") or None,
-            "why": "No discount applies, so billing can correct the balance and set up the plan"}
+            "why": "Billing can correct the balance and set up the plan (no financial-assistance discount applies)"}
 
 
 def decided(case: dict, share: float, paid: float, d: float, owed: float, target: float, refund: float,
@@ -317,8 +317,14 @@ def decided(case: dict, share: float, paid: float, d: float, owed: float, target
     if not rec["payments"]:
         nessie.append("No payments to the hospital in your bank history")
     annual = inc.get("annual") or inc.get("monthly", 0) * 12
-    bright.insert(0, f"Your income is about {money(annual)}/yr, {elig.get('fpl_pct', 0):.0f}% of the poverty line "
-                     f"(household of {elig.get('household_size') or case['patient'].get('household_size', 1)})")
+    hh = elig.get("household_size") or case["patient"].get("household_size", 1)
+    if inc.get("check"):  # the patient told us their income: the checked figure, then what the bank said about it
+        bright.insert(0, f"Your income is about {money(elig.get('income_annual') or annual)}/yr before taxes, "
+                         f"{elig.get('fpl_pct', 0):.0f}% of the poverty line (household of {hh})")
+        bright.insert(1, inc["check"]["line"])
+    else:
+        bright.insert(0, f"Your income is about {money(annual)}/yr, {elig.get('fpl_pct', 0):.0f}% of the poverty line "
+                         f"(household of {hh})")
     if not elig["discount_pct"]:
         bright.append("No discount tier in their policy fits your income and bills")
     math = [f"{money(rec['billed_due'])} billed" + (f" − {money(rec['billed_due'] - share)} insurance" if rec["billed_due"] > share else "")
@@ -768,7 +774,8 @@ def _records(case: dict, agent: str) -> dict:
         pol = f["pol"]
         evidence.update(policy_quotes=[t.get("quote") for t in pol["policy"].get("tiers") or [] if t.get("quote")],
                         eligibility=pol.get("eligibility"), plan_terms=pol.get("plan_terms"),
-                        income={k: (pol.get("income") or {}).get(k) for k in ("annual", "monthly", "source")})
+                        income={k: (pol.get("income") or {}).get(k)
+                                for k in ("annual", "monthly", "source", "stated", "check")})
     return evidence
 
 

@@ -372,6 +372,12 @@ def next_action(case: dict) -> dict:
                 "due": None, "overdue": False}
     if st == "error":
         return {"action": "Something went wrong — start a new case", "due": None, "overdue": False}
+    # step 5's plan for the next call (decide.next_step): asks the last call didn't settle
+    nv = decide.latest(case) or {}
+    if nv.get("round") == len(case.get("calls") or []) + 1 and (nv.get("next") or {}).get("kind") in ("call", "wait"):
+        return {"action": nv["next"]["text"], "due": None, "overdue": False}
+    if st == "done" and not is_confirmed(case["result"]):
+        return {"action": "Waiting for billing to confirm the new balance", "due": None, "overdue": False}
     return {"action": "Nothing pending — billing has done everything it promised", "due": None, "overdue": False}
 
 
