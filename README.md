@@ -106,7 +106,7 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
    with only the open asks.
 
 ```
- chat / drop-and-go ──► Orchestrator ──► audit log + live case page (web/case.html), Cases list (web/dashboard.html)
+ chat / drop-and-go ──► Orchestrator ──► audit log + Cases page (web/case.html: case rail + live case)
                               │
    ┌──────────────┬───────────┼────────────────┬────────────────────┬──────────────────┐
    ▼              ▼           ▼                ▼                    ▼                  ▼
@@ -352,7 +352,7 @@ remy/  app.py orchestrator.py harness.py events.py finance.py billcheck.py follo
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes
            voice/         calls media cartesia_ws desk heard pronounce voices authorization audio routes
            integrations/  nessie brightdata cartesia twilio
-web/       dashboard.html (Cases, at /)  new.html (chat intake)  case.html  ops.html (Under the hood)  hospitals.html
+web/       case.html (Cases, at /: rail.js case rail + live case)  new.html (chat intake)  ops.html (Under the hood)  hospitals.html
            onboarding.html  households.html  rep.html (desk billing)  approve.html (phone approval)  voice.html  pitch.html
            auth.js  flows/drop-go.html
 demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, scenarios/, outcomes/, replays
