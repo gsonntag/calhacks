@@ -211,11 +211,15 @@ def payment_plan(balance: float, monthly_income: float, max_share: float = 0.04,
     cap = max(10.0, monthly_income * share)
     if max_monthly:
         cap = max_monthly
-    policy = f"; the hospital's policy caps it at {policy_cap_pct:g}%" if policy_cap_pct else ""
+    # the share is BillBack's own default unless the hospital policy's cap is the lower one
+    ours = not (policy_cap_pct and policy_cap_pct / 100 < max_share)
+    policy = (f"; the hospital's policy allows up to {policy_cap_pct:g}%" if policy_cap_pct and ours
+              else f"; the hospital's policy caps it at {policy_cap_pct:g}%" if policy_cap_pct else "")
+    default = ": BillBack's default, not the hospital's rule" if ours else ""
     for months in (1, 3, 6, 12, 18, 24, 36):
         pay = math.ceil(balance / months)
         if pay <= cap:
             why = (f"${pay}/mo is within the ${max_monthly:,.0f}/mo you said you can pay" if max_monthly
                    else f"${pay}/mo stays under {share * 100:g}% of monthly income (${monthly_income:,.0f})")
-            return {"months": months, "monthly": float(pay), "reason": why + ("" if max_monthly else policy)}
+            return {"months": months, "monthly": float(pay), "reason": why + ("" if max_monthly else default + policy)}
     return {"months": 36, "monthly": float(math.ceil(balance / 36)), "reason": "longest standard plan"}

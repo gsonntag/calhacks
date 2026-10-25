@@ -319,13 +319,13 @@
   "plan": {
     "months": 6,
     "monthly": 162.0,
-    "reason": "$162/mo stays under 4% of monthly income ($6,717); the hospital's policy caps it at 10%"
+    "reason": "$162/mo stays under 4% of monthly income ($6,717): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
   },
   "finance_reconcile": {
     "billed_due": 27619.57,
     "patient_responsibility": 967.52,
     "insurance_adjustment": 26652.05,
-    "paid": 0,
+    "paid": 0.0,
     "owed": 967.52,
     "overbilled_by": 26652.05,
     "payment_txn_ids": [],
