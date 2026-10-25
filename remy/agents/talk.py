@@ -137,6 +137,8 @@ async def turn(case: dict, text: str, run: Callable[[str, dict], Awaitable[str |
     if pending and time.time() - pending["ts"] > PENDING_FOR:
         pending = v["pending"] = None
 
+    from .. import askremy
+    text = askremy.redact(text)  # SSN / card / account digits are never stored, replayed or sent to a model
     tool, kind, said = "", "", ""
     if llm.available():
         ctx = {**orchestrator._whole_case(case), "CAN_DO": {k: o["say"] for k, o in can.items()},

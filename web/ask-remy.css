@@ -51,3 +51,5 @@
   .chat-panel { right: 16px; left: 16px; bottom: 84px; width: auto; height: calc(100dvh - 160px); }
 }
 @media (prefers-reduced-motion: reduce) { .chat-fab.glow { animation: none; } }
+/* every page with the widget: room to scroll the last row (an Approve card, a form field) out from under the button */
+body.has-ask-remy main::after { content: ""; display: block; height: 88px; }
