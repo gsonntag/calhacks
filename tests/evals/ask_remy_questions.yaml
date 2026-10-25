@@ -257,6 +257,16 @@ groups:
         must_include_any: ["until they confirm", "until billing", "until it confirms", "not confirmed", "hasn't confirmed", "once billing"]
         must_not_include: ["billing confirmed", "already refunded", "has been refunded"]
         numbers_grounded: true
+      - id: case-raj-get-back-before-call
+        why: before any call, $0 + $400 back is what the bill should come to once billing applies the corrections
+        page: case
+        case: raj
+        turns: ["How much will I get back?"]
+        text_offline: true
+        must_include_all: ["$400"]
+        must_include_any: ["until it confirms", "until they confirm", "until billing", "not confirmed", "hasn't confirmed", "once billing"]
+        must_not_include: ["billing confirmed", "already refunded", "has been refunded"]
+        numbers_grounded: true
       - id: case-raj-still-owe
         why: no — free care takes the $3,800 he'd owe after the corrections to $0, expected, not yet confirmed
         page: case

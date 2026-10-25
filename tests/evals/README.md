@@ -1,6 +1,6 @@
 # Ask Remy eval
 
-`ask_remy_questions.yaml` holds 83 questions for the Ask Remy chat. `scripts/eval_ask_remy.py` runs them against
+`ask_remy_questions.yaml` holds 84 questions for the Ask Remy chat. `scripts/eval_ask_remy.py` runs them against
 the app in-process (FastAPI + httpx ASGITransport), on the demo cases built offline (Rosa, Marcus, and Raj, the hero case:
 `?scenario=raj&household_size=4`, answer key `demo/scenarios/raj-cpmc/expected.json`). Every expected number
 comes from the offline pipeline, with today pinned to 2026-10-25 (Raj's bank history is "the last 12 months"). The header of the YAML lists each one and where it came from.
@@ -68,7 +68,7 @@ These are assumptions. Align them with the endpoint, or adjust `REMY_PATHS` / `d
 
 | Group | Items | Measures |
 |---|---|---|
-| `case` | 25 | One case (Rosa, Marcus, Rosa after a desk call, Rosa with a finding marked wrong, Raj before and after the same desk call). Routing: bank → Nessie agent, policy and price → Bright Data agent, plan changes → planner, otherwise status. Also checks sources and the context: bill lines vs posted prices, apply_how, the collections quote, the billing contact, the call scorecard and transcript, and wrong findings flagged. 4 items cover today's case-page chat and must keep passing. Raj (8 items): why he gets free care (the bank's medical bills lift him over Sutter's 10% bar), what's wrong with the bill, the CT against CPMC's price file, what the bank showed, the $400 refund and $0 not yet confirmed, and the Cases tab putting his bill first by money at stake. |
+| `case` | 26 | One case (Rosa, Marcus, Rosa after a desk call, Rosa with a finding marked wrong, Raj before and after the same desk call). Routing: bank → Nessie agent, policy and price → Bright Data agent, plan changes → planner, otherwise status. Also checks sources and the context: bill lines vs posted prices, apply_how, the collections quote, the billing contact, the call scorecard and transcript, and wrong findings flagged. 4 items cover today's case-page chat and must keep passing. Raj (9 items): why he gets free care (the bank's medical bills lift him over Sutter's 10% bar), what's wrong with the bill, the CT against CPMC's price file, what the bank showed, the $400 refund and $0 not yet confirmed, and the Cases tab putting his bill first by money at stake. |
 | `cases` | 7 | All bills: cases labelled by patient, totals computed in code and de-duplicated (Rosa is uploaded twice: $14,300, not $23,000), priority, collections deadline. |
 | `hospitals` | 9 | Hospitals tab: the policy DB, the same-bill comparison (El Camino $0 + $500 refund for Rosa, SF General $5,600 for Marcus, $0 + $400 back for Raj at 13 hospitals), cited crawl sources. |
 | `under_the_hood` | 10 | Recent agent activity, and "how does Remy work" answers that cite `README.md` / `docs/`. Also checks `remy.knowledge` directly. |
