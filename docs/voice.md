@@ -18,11 +18,12 @@ the patient-authorization handoff.
 | `billback/voice/calls.py` | Entry point `run_twilio_call(case, brief)`, `twilio_ready()`. Places calls (direct or conference), registers per-call stream tokens, handles status callbacks, cleans up. |
 | `billback/voice/media.py` | `MediaSession`: one Twilio Media Stream. Handles the Twilio stream protocol, feeds audio to STT, runs the turn loop, streams TTS back, does barge-in. `Leg` = one expected stream. |
 | `billback/voice/cartesia_ws.py` | Streaming clients: Ink STT (`/stt/turns/websocket`) and Sonic TTS (`/tts/websocket`; `stream_many` speaks sentences as they arrive). |
-| `billback/voice/desk.py` | Desk mode, streamed: `POST /api/calls/{id}/turn/stream` returns the reply as NDJSON text + audio for `web/rep.html`. |
+| `billback/voice/desk.py` | Desk mode, streamed: `POST /api/calls/{id}/turn/stream` returns the reply as NDJSON text + audio for `web/rep.html`; `WS /api/calls/{id}/listen` relays the browser mic to Ink; `POST /api/calls/{id}/interrupt` handles barge-in. |
+| `billback/voice/heard.py` | `Spoken`: what one reply played (Sonic requests, audio length, word timestamps) and `heard(played_s)`, the reply cut at the last word played. `is_echo` for desk mode. |
 | `billback/voice/pronounce.py` | Text normalizer applied before every TTS call (phone pipeline, desk mode `/api/tts`, voice previews). |
 | `billback/voice/voices.py` | Voice catalog (American, British, Indian English, Mexican Spanish), resolved per case. |
 | `billback/voice/authorization.py` | Captures the patient's verbal consent, the HIPAA 164.510(b) step. |
-| `billback/voice/audio.py` | G.711 μ-law helpers (framing, decoding for recordings). |
+| `billback/voice/audio.py` | G.711 μ-law helpers (framing, decoding for recordings, keypad tones for phone menus). |
 | `billback/voice/routes.py` | FastAPI `router`: Twilio webhooks + media WebSocket, `/api/voices*`. |
 | `billback/integrations/twilio.py` | Twilio REST over httpx (calls, conference participants), TwiML, `X-Twilio-Signature` validation. |
 | `scripts/sim_twilio_stream.py` | Plays Twilio against a local server to test the whole loop without a phone. |
@@ -30,6 +31,7 @@ the patient-authorization handoff.
 | `web/voice.html` | Voice picker + pronunciation before/after demo. |
 | `tests/test_voice.py` | Offline tests (fake Twilio, fake STT/TTS): protocol, barge-in, signatures, normalizer, full calls. |
 | `tests/test_latency.py` | Offline tests for the latency work: sentence chunking, streamed turns, eager-end drafts, desk stream. |
+| `tests/test_voice_upgrades.py` | Offline tests for interrupted replies, desk mode on Ink, read-backs, keypad tones and hold messages. |
 
 ## Architecture
 
@@ -73,10 +75,11 @@ us            on turn.end: CallSession.reply(text, draft) streams Claude's reply
               (CallSession emits the rep and BillBack "transcript" events, the same as in desk mode)
 us → Sonic    per sentence (one generation at a time; sentences that arrived meanwhile are joined):
               {"context_id":"<sid>-3_1","transcript":normalize(sentence),"voice","language":"en-IN","normalization":"en-US",
-               "output_format":{"container":"raw","encoding":"pcm_mulaw","sample_rate":8000}}
-Sonic → us    {"type":"chunk","data":<base64>} … {"type":"done"}
-us → Twilio   {"event":"media","streamSid","media":{"payload":…}} per chunk, then {"event":"mark","mark":{"name":"say-3"}}
-Twilio → us   {"event":"mark","mark":{"name":"say-3"}}  when playback actually finished
+               "output_format":{"container":"raw","encoding":"pcm_mulaw","sample_rate":8000},"add_timestamps":true}
+Sonic → us    {"type":"chunk","data":<base64>} … {"type":"timestamps","word_timestamps":{"words","start","end"}} … {"type":"done"}
+us → Twilio   {"event":"media","streamSid","media":{"payload":…}} per chunk; {"event":"mark","mark":{"name":"say-3.2"}}
+              where the next Sonic request's audio starts; {"event":"mark","mark":{"name":"say-3"}} at the end
+Twilio → us   {"event":"mark","mark":{"name":"say-3.2"}} … {"name":"say-3"}  as playback reaches each one
 ```
 
 **Speaking state.** We count ourselves as speaking from the first TTS chunk until Twilio echoes the mark
@@ -91,6 +94,31 @@ interjection ("wait", "sorry", "no"). A single stray word is usually the tail of
 beat early. We found this in a live run: the rep's "…how can I help" ended a turn, the trailing "you?"
 arrived as a new turn while the reply was starting, and that should not interrupt. Backchannel heard while
 we talk is ignored entirely rather than answered.
+
+**Remembering only what was heard** (`voice/heard.py`). Before, an interrupted reply stayed in Claude's
+history whole, as if billing had heard all of it. Now each reply records what it sent: every Sonic request's
+original text, where its audio starts, and Sonic's word timestamps (`add_timestamps`). On barge-in, before
+the `clear` (after it, Twilio echoes every pending mark at once), we estimate how much Twilio has played: the
+position of the last progress mark it echoed plus the time since, never past the next mark it hasn't echoed
+and never past the audio we sent. It leans low on purpose: repeating a few words is better than assuming the
+rep heard them. `Spoken.heard(played_s)` turns that into text. The timestamps are for the spoken form
+("$8,700" is five spoken words), so we map them back to the written text by normalizing prefixes of it and
+counting words. Without timestamps we use the played fraction of that request. `CallSession.interrupted(heard)`
+then rewrites this turn's assistant text to `"Thank you, Diane. Your statement shows—[interrupted]"`. Tool
+calls stay, and if Claude is still writing, the cut is applied when the reply finishes. It emits
+`transcript_cut`, and the system prompt explains the marker. Desk mode does the same with the Web Audio clock
+(see "Desk mode on Cartesia Ink").
+
+**Hold and phone menus.** A turn that is a recorded hold message ("your call is important to us", "please
+continue to hold", "next available representative") gets no answer at all: `media.is_hold` matches the
+phrasing and skips the brain, unless the line sounds like a person ("this is", "I", "how can I help") or a
+menu ("press"). Hold music mostly transcribes as nothing or a stray word, which the one-word rule above
+already ignores. A `call_hold` event goes on the bus. A menu ("For billing, press 2") goes to Claude, which
+calls the `press_keys` tool with no spoken text (the prompt says a menu is not a person). The media session
+then sends the keys as in-band DTMF: `audio.dtmf("2")` synthesizes the two keypad frequencies as μ-law 8 kHz
+(120 ms tone, 100 ms gap), and they go down the same media stream as speech, followed by a `keys-N` mark.
+PSTN menus detect DTMF in G.711 audio, so no Twilio REST call is needed (updating the call's TwiML would end
+`<Connect><Stream>`). A `press_keys` turn takes one model call and says nothing.
 
 **Greeting.** On an outbound call the person who answers speaks first. If the line stays silent (4 s for
 the hospital, 2–2.5 s for the patient), the brain speaks first with `turn(None)`.
@@ -136,7 +164,7 @@ What each change bought:
 4. **Prompt caching.** `cache_control` on the system prompt + case brief (tools render first, so they are
    cached too) and on the conversation history. Haiku 5.5 caches prefixes of 512 tokens and up, and every
    turn after the first reads about 2.5 k cached tokens.
-5. **Desk mode** (`voice/desk.py`, `web/rep.html`). Before, it waited for Claude's whole reply, then for
+5. **Desk mode** (`voice/desk.py`, `web/rep.html`; for listening see "Desk mode on Cartesia Ink"). Before, it waited for Claude's whole reply, then for
    Sonic's whole 44.1 kHz WAV from `/api/tts`, before playing anything. Now one request streams NDJSON
    (`text` sentences, `audio` pcm_s16le 24 kHz chunks, `done`) over a Sonic WebSocket that stays open
    between turns, and the page schedules the chunks back to back with Web Audio. If streaming isn't
@@ -162,6 +190,39 @@ simulator doesn't include.
 Turn-taking caveat: because we now answer within about 0.5 s, a rep who pauses mid-sentence ("…this is
 Diane. [pause] How can I help you?") is more likely to have Ink end the turn early and then barge in on
 the start of our reply. The barge-in rules are unchanged; the old pipeline did the same thing, just later.
+
+## Desk mode on Cartesia Ink
+
+The desk demo used to listen with Chrome's SpeechRecognition (hold the mic button), so only the speaking
+side was Cartesia. Now `web/rep.html` streams the mic to Ink through our server, hands-free, and the rep can
+talk over BillBack.
+
+```
+web/rep.html  getUserMedia (echoCancellation) → AudioWorklet → 16 kHz pcm_s16le, 100 ms frames
+              ──binary──► WS /api/calls/{id}/listen ──► Ink /stt/turns/websocket (encoding=pcm_s16le,
+                                                         sample_rate=16000, same keyterms as the phone leg)
+              ◄──JSON──  {"type":"ready"} · {"type":"start"} · {"type":"partial","text","barge","echo"}
+                         · {"type":"end","text","barge","echo"} · {"type":"unavailable","reason"}
+on "end"      POST /api/calls/{id}/turn/stream {"rep_said": text}  (unchanged; a turn that arrives while a
+              reply is still streaming is queued and sent after it)
+on barge-in   stop Web Audio now, POST /api/calls/{id}/interrupt {"played_s"}: the server cancels the reply's
+              Sonic contexts and cuts the history to the words played
+```
+
+Ink's turn events decide when the rep is done, the same as on the phone. The server adds two flags so the
+rules stay in Python: `barge` is `media.should_barge_in(text)` (real words, not "mm-hmm"), and `echo` is
+`heard.is_echo(text, reply)`: nearly all the words are BillBack's own reply, which happens when it plays
+through laptop speakers into the mic. The page knows whether audio is playing, so it decides. While playing,
+a `partial` or `end` with `barge` and not `echo` interrupts; backchannel and echo are ignored; an `end` then
+becomes the next turn. `played_s` is the sum of the scheduled Web Audio chunks already played (gaps don't
+count). The interrupted bubble shows the unheard rest struck through. The mic button mutes and unmutes.
+
+**Fallback.** If the socket says `unavailable` (no `CARTESIA_API_KEY`, HTTP 402 out of credits, or an Ink
+`error` event), fails to connect, or closes mid-call, the page goes back to push-to-talk with Chrome's
+SpeechRecognition and says so next to the call status. Pressing the mic while BillBack talks still stops
+the audio (and cuts the history when the reply was streamed Sonic audio). Typing always works.
+
+Not done yet: speculative drafts on `turn.eager_end` in desk mode (the page sends the turn on `end`).
 
 ## Voices and accents
 
@@ -198,6 +259,7 @@ dashboard keeps the original text. Rules, all unit-tested:
 | `BCH-48213977`, `FA-20931`, `A1B2C3D4` | `<spell>BCH 4821 3977</spell>`, … | same; long digit runs grouped 4/3 |
 | `CPT 80053`, `J2405` | `<spell>CPT</spell> <spell>80053</spell>`, `<spell>J 2405</spell>` | any 5+ digit run or letter+digit code is an ID |
 | `+14155551212`, `415.555.1212` | `(415) 555-1212` | canonical form; Sonic's normalizer groups it as a phone number |
+| `Let me read that back: FA209-31.` | `… <spell>F A 2 0 9</spell> dash <spell>3 1</spell>.` | read-backs: one character at a time, dashes said, a gap kept as a pause (`FA 20931` → `<spell>F A</spell>, <spell>2 0 9 3 1</spell>`) |
 | `EOB`, `CT`, `ICU`, `HCPCS` | `<spell>EOB</spell>` … | case-sensitive acronym list |
 | `FPL`, `DOB`, `501(r)` | federal poverty level, date of birth, five oh one R | expansions |
 | ondansetron, metabolic, acetaminophen, ketorolac, ceftriaxone, … | `<<ɑ\|n\|ˈ\|d\|æ\|n\|s\|ə\|ˌ\|t\|ɹ\|ɑ\|n>>` … | Sonic 3.x inline IPA phonemes |
@@ -207,6 +269,15 @@ Ordinals, counts, years, `COVID-19`, `9am` and `3rd` are left alone, existing ma
 search-and-replace on the server. We keep the table in code so it is versioned, reviewed and tested, and so
 it works for every request without dictionary setup. For non-English voices only IDs, codes and phones are
 rewritten; money and dates are left to Sonic's own normalizer for that language.
+
+**Reading IDs back.** A sim run accepted "FA 20931" misheard as "FA209-31". The prompt now has Claude
+answer a case or reference number with only "Let me read that back: <number as heard>. Is that right?",
+and call `record_outcome` with it after the rep says yes. The read-back rule above makes the rep hear
+"F A 2 0 9 dash 3 1", which sounds different from "F A, 2 0 9 3 1". `record_outcome` also checks it in code:
+a `case_number` counts as confirmed (`case_number_confirmed: true` in the outcome) only if BillBack said it
+in an earlier turn, so the rep has answered since, or it is a number from the brief. Otherwise it is still
+saved, flagged unconfirmed, and the tool result tells Claude to read it back. This adds no model call: the
+read-back is the reply to the rep's turn. The offline scripted brain reads the number back the same way.
 
 On the listening side, the Ink STT socket gets **keyterms** (patient, hospital and insurer names, "EOB",
 "charity care", "financial assistance", and so on) to improve recall of the words that matter on these calls.
@@ -339,6 +410,11 @@ The `run_case` choice `_phone_call(...) if cartesia.phone_ready() else _desk_cal
   - the normalizer
   - full `run_twilio_call` runs: consent then hospital, consent refused, dial failure → `DialError`
   - follow-up briefs
+- `tests/test_voice_upgrades.py`, also offline: `Spoken.heard` with and without word timestamps, history
+  cuts (after and during a reply, scripted brain), Sonic timestamps recorded per request, phone barge-in
+  using Twilio progress marks, desk interrupt (after and mid-turn), the Ink listen socket (frames, events,
+  `unavailable` for no key / 402 / Ink error), read-back pronunciation and the confirmation rule, DTMF tones
+  (decoded back with Goertzel), hold messages and `press_keys`.
 - `uv run python scripts/sim_twilio_stream.py [--voice priya] [--rep-voice tessa] [--short] [--barge-in]`
   starts the app with the voice router on `127.0.0.1:8022` and acts as Twilio over a real WebSocket:
   - streams the rep's lines (synthesized once by Sonic, cached in `data/sim/cache/`) as real-time 20 ms
@@ -362,5 +438,6 @@ billback … the explanation of benefits on claim C-2026-0815-44917 shows Rosa's
             eight thousand seven hundred dollars …
 rep      Your case number is FA209-31.
 outcome: case_number FA209-31, account_on_hold (recorded by Claude's record_outcome tool)
+         (the rep had said FA 20931; BillBack now reads numbers back first, see "Reading IDs back")
 latency (turn.end → first audio): 1419, 1936, 2733 ms; Sonic first chunk 125–148 ms   (before streaming; now ~0.45–0.8 s, see Latency)
 ```

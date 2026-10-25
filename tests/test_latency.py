@@ -365,7 +365,7 @@ async def test_desk_events_stream_text_then_audio_then_done(claude, monkeypatch)
         async def ensure(self):
             pass
 
-        async def stream_many(self, texts, prefix):
+        async def stream_many(self, texts, prefix, spoken=None):
             async for t in texts:
                 yield t.encode()  # "audio" = the sentence bytes
 
@@ -378,7 +378,7 @@ async def test_desk_events_stream_text_then_audio_then_done(claude, monkeypatch)
     assert [base64.b64decode(e["data"]).decode() for e in lines if e["type"] == "audio"] == [
         "Hello Diane, this is BillBack. ", "I'm an automated assistant."]
     assert lines[-1] == {"type": "done", "say": "Hello Diane, this is BillBack. I'm an automated assistant.",
-                         "ended": False, "outcome": {}, "audio": True}
+                         "ended": False, "outcome": {}, "audio": True, "interrupted": False}
 
 
 async def test_desk_route_without_cartesia_streams_text_only(monkeypatch):
@@ -408,7 +408,7 @@ async def test_desk_tts_failure_still_returns_text_for_the_browser_voice(claude,
         async def ensure(self):
             raise RuntimeError("HTTP 402")
 
-        async def stream_many(self, texts, prefix):
+        async def stream_many(self, texts, prefix, spoken=None):
             await self.ensure()
             yield b""  # pragma: no cover
 

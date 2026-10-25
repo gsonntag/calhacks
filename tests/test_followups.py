@@ -14,7 +14,7 @@ FIRST_CALL = ["Patient Financial Services, this is Diane, how can I help you?", 
               "I see it.", "Okay.",
               "I've opened a financial assistance review and put the account on hold. "
               "We'll send a corrected statement within 5 business days.",
-              "Your case number is FA 20931."]
+              "Your case number is FA 20931.", "Yes, that's right."]
 SECOND_CALL = ["Billing, this is Marco.", "Let me look.", "Yes, the adjustment is on there.", "Okay.",
                "The account is still on hold and the refund goes out in two weeks.", "Reference number 77120."]
 
