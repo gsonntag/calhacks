@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="m3.css">
 <!--
   Hospital policy database (policydb/, built by real Bright Data crawls) and "same bill, different hospitals".
-  Data: GET /api/hospitals, GET /api/hospitals/{id}, GET /api/compare?scenario=, POST /api/hospitals/{id}/recheck
-  (remy/policies/routes.py).
+  Data: GET /api/hospitals, GET /api/hospitals/{id}, GET /api/compare?scenario=, POST /api/hospitals/{id}/recheck,
+  POST /api/hospitals (add a hospital: an event stream of crawl lines, then the result) (remy/policies/routes.py).
 -->
 <style>
   /* shared top app bar layout (wraps the tabs under the brand on phones) */
@@ -97,6 +97,33 @@
   .log td.url { overflow-wrap: anywhere; min-width: 200px; max-width: 420px; }
   code { font: 400 12px/16px ui-monospace, monospace; background: var(--md-surface-container-high); padding: 1px 5px; border-radius: var(--md-shape-xs); overflow-wrap: anywhere; }
   #err { padding: 12px 16px; }
+
+  /* Add a hospital */
+  .add { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .add h2 { margin: 0; }
+  .add p { margin: 0; }
+  .add form { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.4fr) auto; gap: 12px; align-items: end; }
+  .add .m3-btn { white-space: nowrap; height: 56px; border-radius: var(--md-shape-l); }
+  @media (max-width: 760px) { .add form { grid-template-columns: 1fr 1fr; } .add .m3-field.name { grid-column: 1 / -1; } .add form .m3-btn { grid-column: 1 / -1; } }
+  @media (max-width: 480px) { .add { padding: 16px; } .add form { grid-template-columns: 1fr; } }
+  .addlog { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .addlog li { display: flex; gap: 8px; align-items: flex-start; font: 400 13px/20px var(--md-font); color: var(--md-on-surface-variant); min-width: 0; }
+  .addlog li .material-symbols-rounded { font-size: 18px; line-height: 20px; flex: none; }
+  .addlog li b { color: var(--md-on-surface); font-weight: 500; }
+  .addlog li span.t { min-width: 0; overflow-wrap: anywhere; }
+  .addlog li.ok .material-symbols-rounded { color: var(--st-success); }
+  .addlog li.flag .material-symbols-rounded { color: var(--st-warn); }
+  .addlog li.running .material-symbols-rounded { color: var(--md-primary); animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .addlog li.running .material-symbols-rounded { animation: none; } }
+  .addres { padding: 12px 16px; border-radius: var(--md-shape-m); font: 400 14px/20px var(--md-font); overflow-wrap: anywhere; }
+  .addres.ok { background: var(--st-success-container); color: var(--st-on-success-container); }
+  .addres.flag { background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .addres.err { background: var(--md-error-container); color: var(--md-on-error-container); }
+  .addres a { color: inherit; }
+  .xrow { scroll-margin-top: 128px; }  /* below the sticky app bar (two rows on phones) */
+  .xrow.new { animation: flash 2.4s var(--md-ease) 1; }
+  @keyframes flash { from { background: var(--st-success-container); } to { background: transparent; } }
   @media (max-width: 520px) { .kv { grid-template-columns: 1fr; gap: 0; } .kv b { margin-top: 6px; } }
   @media (pointer: coarse), (max-width: 640px) { summary { min-height: 44px; } }
 </style>
@@ -112,6 +139,20 @@
     <p class="body-l muted">Real financial-assistance policies, crawled from each hospital's own site via Bright Data. Every quote is checked word for word against the source before we use a number.</p>
   </div>
   <div class="stats" id="stats"></div>
+  <div class="m3-card add" aria-labelledby="addTitle">
+    <h2 class="title-l" id="addTitle">Add a hospital</h2>
+    <p class="body-m muted">Don't see your hospital? Type its name and we'll find its financial-assistance policy on its
+      own website, live, with Bright Data. Usually under a minute.</p>
+    <form id="addForm" novalidate>
+      <div class="m3-field name"><label for="addName">Hospital name</label><input class="m3-input" id="addName" required minlength="3" maxlength="120" autocomplete="off" placeholder="e.g. Seattle Children's Hospital"></div>
+      <div class="m3-field"><label for="addCity">City, state</label><input class="m3-input" id="addCity" maxlength="80" autocomplete="off" placeholder="e.g. Seattle, WA"></div>
+      <div class="m3-field"><label for="addSite">Website (optional)</label><input class="m3-input" id="addSite" maxlength="200" inputmode="url" autocomplete="off" placeholder="e.g. seattlechildrens.org"></div>
+      <button type="submit" class="m3-btn filled" id="addBtn" disabled><span class="material-symbols-rounded" aria-hidden="true">travel_explore</span>Add and crawl</button>
+    </form>
+    <span class="status" id="addNote"></span>
+    <ul class="addlog" id="addLog" aria-live="polite" hidden></ul>
+    <div class="addres" id="addRes" role="status" hidden></div>
+  </div>
   <div class="m3-card error" id="err" role="alert" hidden></div>
 
   <section aria-labelledby="cmpTitle">
@@ -144,7 +185,7 @@ const icon = (name, cls = '') => `<span class="material-symbols-rounded ${cls}" 
 const OK = `<span class="m3-status success badge">${icon('verified')}quote verified</span>`;
 const ruleText = (t) => `${t.applies_to === 'all' ? 'All' : t.applies_to[0].toUpperCase() + t.applies_to.slice(1)} patients ≤ ${t.max_fpl_pct}% FPL → ${t.discount_pct}% off` +
   (t.min_oop_pct_income ? ` if out-of-pocket > ${t.min_oop_pct_income}% of income` : '');
-let canRecheck = false;
+let canRecheck = false, canAdd = false;
 const openRows = new Set();   // keeps rows expanded across re-renders
 
 async function api(path, opts) {
@@ -204,7 +245,7 @@ function statusChip(cur) {
 
 function hospitalCard(h) {
   const cur = h.current;
-  if (!cur) return `<div class="xrow"><div class="xhead" style="cursor:default"><span class="x-main"><span class="x-name">${esc(h.name)}</span><span class="x-sub">${esc(h.system)}</span></span><span class="m3-status">Not crawled yet</span></div></div>`;
+  if (!cur) return `<div class="xrow" id="row-${esc(h.id)}"><div class="xhead" style="cursor:default"><span class="x-main"><span class="x-name">${esc(h.name)}</span><span class="x-sub">${esc(h.system || h.city)}</span></span><span class="m3-status">Not crawled yet</span></div></div>`;
   const pol = cur.extracted, ver = cur.verification;
   const tierChecks = ver.checks.filter((c) => c.what === 'tier');
   const tiers = tierChecks.map((c) => `<div class="tier">
@@ -244,7 +285,7 @@ function hospitalCard(h) {
   const checks = h.checks.map((c) => `<li>${day(c.checked_at)} ${esc(c.checked_at.slice(11, 16))} UTC — ${c.changed ? '<b>changed</b>' : 'unchanged'}: ${esc(c.note)} <code>${esc((c.content_sha256 || '').slice(0, 12))}</code></li>`).join('');
   const versions = h.versions.map((v) => `<li>v${v.version} · ${day(v.fetched_at)} · ${esc(v.status)} · ${v.tiers_verified} verified / ${v.tiers_rejected} rejected · <code>${esc(v.content_sha256.slice(0, 12))}</code></li>`).join('');
   const head = `<span class="x-main"><span class="x-name">${esc(h.name)}</span>
-      <span class="x-sub">${esc(h.system)} · ${tierChecks.length} tier${tierChecks.length === 1 ? '' : 's'} · fetched ${day(cur.fetched_at)}</span></span>
+      <span class="x-sub">${esc(h.system || h.city)} · ${tierChecks.length} tier${tierChecks.length === 1 ? '' : 's'} · fetched ${day(cur.fetched_at)}</span></span>
     <span class="x-trail">${statusChip(cur)}</span>`;
   const body = `<div class="recheck" id="h-${esc(h.id)}">
       <button type="button" class="m3-btn outlined" data-recheck="${esc(h.id)}" ${canRecheck ? '' : 'disabled title="Bright Data keys not configured on this server"'}>${icon('refresh')}Recheck now</button>
@@ -267,12 +308,14 @@ function hospitalCard(h) {
       <ul class="small">${decisions}</ul></details>
     <details><summary>Versions (${h.versions.length}) and checks (${h.checks.length})</summary>
       <ul class="small">${versions}</ul><ul class="small">${checks}</ul></details>`;
-  return xrow(`h-${h.id}`, head, body, false);
+  return xrow(`h-${h.id}`, head, body, false).replace('<div class="xrow">', `<div class="xrow" id="row-${esc(h.id)}">`);
 }
 
 async function loadHospitals() {
   const list = await api('/api/hospitals');
   canRecheck = list.can_recheck;
+  canAdd = list.can_add;
+  setAddEnabled(adding);
   const n = list.bright_data_requests || {};
   const quotes = list.hospitals.reduce((a, h) => a + (h.current ? h.current.tiers_verified : 0), 0);
   const last = list.hospitals.map((h) => h.current && (h.current.last_checked || h.current.fetched_at)).filter(Boolean).sort().pop();
@@ -306,6 +349,99 @@ document.addEventListener('click', async (e) => {
     loadCompare(document.querySelector('.seg [aria-pressed="true"]').dataset.s).catch(showErr);
   } catch (err) { st.className = 'status flag'; st.textContent = err.message; btn.disabled = false; }
 });
+// ---- Add a hospital: POST /api/hospitals answers JSON (already on record) or an event stream (crawled live) ----
+let adding = false;
+const lines = new Map();
+const LINE_ICON = {running: 'progress_activity', ok: 'check_circle', flag: 'warning', error: 'error'};
+
+function setAddEnabled(busy) {
+  const off = busy || !canAdd;
+  ['addName', 'addCity', 'addSite'].forEach((id) => { $(id).disabled = !canAdd; });
+  $('addBtn').disabled = off;
+  if (!canAdd) $('addBtn').title = 'Bright Data keys not configured on this server'; else $('addBtn').removeAttribute('title');
+  if (!canAdd) $('addNote').textContent = 'Adding a hospital needs Bright Data keys (not set on this server).';
+  else if ($('addNote').textContent.startsWith('Adding a hospital needs')) $('addNote').textContent = '';
+}
+
+function showLine(l) {
+  let li = lines.get(l.key);
+  if (!li) { li = document.createElement('li'); lines.set(l.key, li); $('addLog').appendChild(li); }
+  li.className = l.status;
+  li.innerHTML = `${icon(LINE_ICON[l.status] || 'info')}<span class="t"><b>${esc(l.label)}</b> · ${esc(l.result)}</span>`;
+}
+
+function showResult(cls, html) { const el = $('addRes'); el.className = 'addres ' + cls; el.innerHTML = html; el.hidden = false; }
+
+async function revealHospital(id) {
+  openRows.add(`h-${id}`); openRows.delete(`!h-${id}`);
+  await loadHospitals();
+  const row = $(`row-${id}`);
+  if (!row) return;
+  row.classList.add('new');
+  row.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+}
+
+function resultText(r) {
+  const tiers = r.tiers_verified, src = (r.sources || []).map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(file(u))}</a>`).join(' · ');
+  const used = r.requests != null ? ` Used ${r.requests} of at most ${r.cap} Bright Data requests.` : '';
+  const head = r.matched ? `<b>${esc(r.name)}</b> is already on record, so we didn't crawl it again.`
+    : `<b>${esc(r.name)}</b> added.`;
+  const body = tiers ? ` ${tiers} discount tier${tiers === 1 ? '' : 's'} found, each quote checked word for word against the hospital's own document.`
+    : " We fetched its policy documents but couldn't verify any income-based discount tiers in them.";
+  return head + body + used + (src ? `<div style="margin-top:6px">Sources: ${src}</div>` : '');
+}
+
+async function addHospital(e) {
+  e.preventDefault();
+  const name = $('addName').value.trim().replace(/\s+/g, ' ');
+  if (name.length < 3 || name.length > 120) { showResult('err', "Please enter the hospital's name (3 to 120 characters)."); $('addName').focus(); return; }
+  adding = true; setAddEnabled(true);
+  lines.clear(); $('addLog').innerHTML = ''; $('addLog').hidden = true; $('addRes').hidden = true;
+  $('addNote').className = 'status'; $('addNote').textContent = `Looking for ${name}…`;
+  try {
+    const res = await fetch('/api/hospitals', {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name, city: $('addCity').value.trim(), website: $('addSite').value.trim()})});
+    if (!res.ok) { const b = await res.json().catch(() => ({})); throw new Error(b.detail || `HTTP ${res.status}`); }
+    if (!(res.headers.get('content-type') || '').startsWith('text/event-stream')) {
+      const r = await res.json();
+      $('addNote').textContent = '';
+      showResult('ok', resultText(r));
+      setTimeout(() => revealHospital(r.hospital_id).catch(showErr), 1500);
+      return;
+    }
+    $('addLog').hidden = false;
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = '', end = null;
+    while (!end) {
+      const {value, done} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let i;
+      while (!end && (i = buf.indexOf('\n\n')) >= 0) {
+        const chunk = buf.slice(0, i); buf = buf.slice(i + 2);
+        const ev = (chunk.match(/^event: (.*)$/m) || [])[1], data = (chunk.match(/^data: (.*)$/m) || [])[1];
+        if (!ev || !data) continue;
+        const d = JSON.parse(data);
+        if (ev === 'start') $('addNote').textContent = `Crawling ${d.name} with Bright Data (at most ${d.cap} requests)…`;
+        else if (ev === 'line') showLine(d);
+        else if (ev === 'done' || ev === 'error') end = [ev, d];
+      }
+    }
+    $('addNote').textContent = '';
+    lines.forEach((li) => { if (li.className === 'running') { li.className = ''; li.firstElementChild.textContent = 'radio_button_unchecked'; } });
+    if (!end) throw new Error('The connection closed before the crawl finished. Reload in a minute: it may still be saved.');
+    const [ev, d] = end;
+    if (ev === 'error') { showResult('err', esc(d.detail)); await loadHospitals(); return; }
+    showResult(d.tiers_verified ? 'ok' : 'flag', resultText(d));
+    await loadCompare(document.querySelector('.seg [aria-pressed="true"]').dataset.s).catch(showErr);
+    setTimeout(() => revealHospital(d.hospital_id).catch(showErr), 1500);  // a moment to read the result first
+  } catch (err) {
+    $('addNote').textContent = '';
+    showResult('err', esc(err.message || String(err)));
+  } finally { adding = false; setAddEnabled(false); }
+}
+$('addForm').addEventListener('submit', addHospital);
+
 addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
 loadCompare('freecare').catch(showErr);

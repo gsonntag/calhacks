@@ -812,7 +812,7 @@ function recheckHTML(m, ui) {
 // stage; the others their last poll
 Rail.live = (c) => {
   const m = state.models[c.id];
-  if (!m || !m.bill) return null;
+  if (!m || !m.bill || c.status === 'interrupted') return null;  // stopped (⋯ menu) or cut off by a restart: no live stage
   if (m.error) return ['Error', ''];
   const stage = stageOf(m);
   if (stage === 4) return openNext(m) ? ['What’s next', 'amber'] : null;  // the poll knows whether billing confirmed it
@@ -820,6 +820,12 @@ Rail.live = (c) => {
 };
 Rail.pick = (id) => { openCase(id, true); if (matchMedia('(max-width: 960px)').matches) scrollTo({ top: 0 }); };
 function renderTabs() { Rail.active = state.active; Rail.render(); renderHistory(); }
+// the rail's ⋯ menu deleted a case this page was following in the background: stop listening to it
+Rail.onChange = (id, what) => {
+  if (what !== 'delete') return;
+  const ws = state.socks[id]; delete state.socks[id]; delete state.models[id];
+  if (ws) ws.close();
+};
 
 // ---------- views: Progress (the live steps) and Calls & follow-ups (the case's saved history) ----------
 const day = (iso) => { if (!iso) return ''; const [y, mo, d] = iso.split('-').map(Number); return new Date(y, mo - 1, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); };

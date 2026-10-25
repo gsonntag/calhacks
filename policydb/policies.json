@@ -1,8 +1,8 @@
 {
- "exported_at": "2026-10-25T11:17:39+00:00",
+ "exported_at": "2026-10-25T11:34:38+00:00",
  "bright_data_requests": {
-  "serp": 42,
-  "unlocker": 109
+  "serp": 43,
+  "unlocker": 112
  },
  "runs": [
   {
@@ -700,6 +700,16 @@
      "fetched_at": "2026-10-25T11:17:39+00:00"
     }
    }
+  },
+  {
+   "id": "crawl-20261025T113349-256ddd",
+   "kind": "crawl",
+   "started_at": "2026-10-25T11:33:49+00:00",
+   "finished_at": null,
+   "hospitals": [
+    "duke-university-hospital"
+   ],
+   "summary": null
   }
  ],
  "hospitals": [
@@ -3919,6 +3929,768 @@
      "latency_ms": null,
      "ok": 1,
      "note": "apply VERIFIED in https://my.clevelandclinic.org/-/scassets/files/org/patients-visitors/billing/financial-assistance/7-financial-assistance-program-policy.pdf?la=en | 'The Financial Assistance Application may be found in our Emergency Departments and Admissions areas, from a Patient Financial Advocate at our facilities or onli'"
+    }
+   ]
+  },
+  {
+   "id": "duke-university-hospital",
+   "name": "Duke University Hospital",
+   "system": "",
+   "city": "Durham, NC",
+   "domains": [
+    "dukehealth.org"
+   ],
+   "aliases": [],
+   "query": "",
+   "hcai": "",
+   "versions": [
+    {
+     "id": 34,
+     "hospital_id": "duke-university-hospital",
+     "version": 1,
+     "fetched_at": "2026-10-25T11:34:38+00:00",
+     "content_sha256": "5367c3c2a1c1f2a336e2597108959e54046987ccadb4ccf2d7552a64faa97194",
+     "source_urls": [
+      "https://www.dukehealth.org/paying-for-care/financial-assistance",
+      "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+      "https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf"
+     ],
+     "documents": [
+      {
+       "url": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+       "kind": "page",
+       "role": "policy_page",
+       "sha256": "24cac5bae38200595343731201a0832f2afdbf144a2031dea40b57259eb66a53",
+       "nbytes": 14461,
+       "via": "unlocker",
+       "title": "Payment Plans and Financial Assistance",
+       "pages": null,
+       "artifacts": [
+        "raw/duke-university-hospital/page-24cac5bae382.md"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain dukehealth.org",
+        "mentions 'financial assistance' (+4)",
+        "mentions 'financial-assistance' (+4)",
+        "mentions 'mychart' (-3)",
+        "names the hospital (1 words)",
+        "Google rank 1 (-0.25)"
+       ],
+       "text_sha256": "3d7e29a656f3acdf3685ad4cabfe5d658e397577591ce563aa4c5b64219cfab3"
+      },
+      {
+       "url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "dde7ef912b5733f829c3710367edd3bd22cfc17f87f9fb4d90d143ac10ef7a4d",
+       "nbytes": 295092,
+       "via": "unlocker",
+       "title": "DUHS Financial Assistance Policy - English",
+       "pages": 9,
+       "artifacts": [
+        "raw/duke-university-hospital/pdf-dde7ef912b57.pdf",
+        "raw/duke-university-hospital/pdf-dde7ef912b57.txt"
+       ],
+       "found_on": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial assistance' (+3)",
+        "English (+1)"
+       ],
+       "text_sha256": "1086574140808351309c0f9a20c0d2bc871e8e446d412c8cbcc415de13a95a6c"
+      },
+      {
+       "url": "https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "6859e2f6deea601250bb0e94e7ac822e8e65f410e9d01e97791ff2e820e6a7dc",
+       "nbytes": 556044,
+       "via": "unlocker",
+       "title": "DUHS Financial Assistance Summary - English",
+       "pages": 2,
+       "artifacts": [
+        "raw/duke-university-hospital/pdf-6859e2f6deea.pdf",
+        "raw/duke-university-hospital/pdf-6859e2f6deea.txt"
+       ],
+       "found_on": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+       "why": [
+        "PDF (+2)",
+        "says policy (+3)",
+        "'financial assistance' (+3)",
+        "English (+1)",
+        "notice/summary, not the policy (-2)"
+       ],
+       "text_sha256": "2fcc7eb0043e2bb2a4012edccb2c260c42e0dabd26a9c6827008e2c9f3d79631"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "Duke University Hospital Durham, NC financial assistance charity care policy"
+      ],
+      "serp_artifacts": [
+       "raw/duke-university-hospital/serp-2a51a8a68496.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+        "title": "Payment Plans and Financial Assistance",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 15.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain dukehealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'mychart' (-3)",
+         "names the hospital (1 words)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://www.dukehealth.org/sites/default/files/general_page/DUHSFinancialAssistanceApplication-English2021.pdf",
+        "title": "Financial Assistance Application",
+        "serp_rank": 3,
+        "kind": "official",
+        "score": 11.25,
+        "is_pdf": true,
+        "reasons": [
+         "official domain dukehealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'application' (-3)",
+         "names the hospital (1 words)",
+         "Google rank 3 (-0.75)"
+        ]
+       },
+       {
+        "url": "https://www.advocamed.com/hospital/duke-university-health-system",
+        "title": "Duke University Health System Financial Assistance Guide",
+        "serp_rank": 9,
+        "kind": "other",
+        "score": 10.75,
+        "is_pdf": false,
+        "reasons": [
+         "other domain advocamed.com",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "names the hospital (3 words)",
+         "Google rank 9 (-2.25)"
+        ]
+       },
+       {
+        "url": "https://cef.my.salesforce-sites.com/apex/resource?id=0010P00001p6uQkQAI",
+        "title": "Provides large discounts on outstanding Duke Hospital bills.",
+        "serp_rank": 8,
+        "kind": "other",
+        "score": 5.0,
+        "is_pdf": false,
+        "reasons": [
+         "other domain cef.my.salesforce-sites.com",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'discount' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 8 (-2)"
+        ]
+       },
+       {
+        "url": "https://www.careroute.ai/hospital-financial-assistance/duke-health",
+        "title": "Duke Health Financial Assistance: Free Care to 200% FPL ...",
+        "serp_rank": 6,
+        "kind": "aggregator",
+        "score": 4.5,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain careroute.ai",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'charity care' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'charity' (+2)",
+         "names the hospital (2 words)",
+         "Google rank 6 (-1.5)"
+        ]
+       },
+       {
+        "url": "https://duke-charity-care-application.pdffiller.com/",
+        "title": "Duke University Health System Financial Hardship - Blank ...",
+        "serp_rank": 7,
+        "kind": "other",
+        "score": 4.25,
+        "is_pdf": false,
+        "reasons": [
+         "other domain duke-charity-care-application.pdffiller.com",
+         "mentions 'financial assistance' (+4)",
+         "names the hospital (2 words)",
+         "Google rank 7 (-1.75)"
+        ]
+       },
+       {
+        "url": "https://dollarfor.org/medical-debt-help-durham-duke-university-hospital/",
+        "title": "Medical Bill Help from Duke University Hospital",
+        "serp_rank": 5,
+        "kind": "aggregator",
+        "score": -2.25,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dollarfor.org",
+         "mentions 'charity care' (+4)",
+         "mentions 'charity' (+2)",
+         "names the hospital (3 words)",
+         "Google rank 5 (-1.25)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+        "title": "Payment Plans and Financial Assistance",
+        "serp_rank": 1,
+        "kind": "official",
+        "score": 15.75,
+        "is_pdf": false,
+        "reasons": [
+         "official domain dukehealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'mychart' (-3)",
+         "names the hospital (1 words)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://www.dukehealth.org/sites/default/files/general_page/DUHSFinancialAssistanceApplication-English2021.pdf",
+        "title": "Financial Assistance Application",
+        "serp_rank": 3,
+        "kind": "official",
+        "score": 11.25,
+        "is_pdf": true,
+        "reasons": [
+         "official domain dukehealth.org",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'application' (-3)",
+         "names the hospital (1 words)",
+         "Google rank 3 (-0.75)"
+        ]
+       }
+      ],
+      "regulator_doc": null
+     },
+     "extracted": {
+      "tiers": [
+       {
+        "max_fpl_pct": 200.0,
+        "discount_pct": 100.0,
+        "applies_to": "all",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "\u27a2 Discount of 100% for individuals with incomes up to 200% FPL.",
+        "limit_quote": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 225.0,
+        "discount_pct": 90.0,
+        "applies_to": "all",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "\u27a2 Discount of 90% for individuals with incomes above 200% FPL-225% FPL",
+        "limit_quote": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 250.0,
+        "discount_pct": 80.0,
+        "applies_to": "all",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "\u27a2 Discount of 80% for individuals with incomes above 225% FPL-250% FPL",
+        "limit_quote": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 275.0,
+        "discount_pct": 70.0,
+        "applies_to": "all",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "\u27a2 Discount of 70% for individuals with incomes above 250% FPL-275% FPL",
+        "limit_quote": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       },
+       {
+        "max_fpl_pct": 300.0,
+        "discount_pct": 65.0,
+        "applies_to": "all",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "\u27a2 Discount of 65% for individuals with incomes above 275% FPL-300% FPL",
+        "limit_quote": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "source_role": "policy_doc",
+        "verified": true
+       }
+      ],
+      "other_relief": [
+       {
+        "what": "Patients whose total patient liability exceeds 15% of annual household income (medically indigent) may have the portion above 15% of income adjusted, even if they do not qualify for the sliding scale.",
+        "quote": "Patients that are determined to be ineligible for Financial Assistance may still be eligible for a  discount if their patient liability exceeds 15% of their current year or prior year annual household income.",
+        "source_url": "https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf",
+        "verified": true,
+        "applies_to": "all",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": 15.0
+       },
+       {
+        "what": "North Carolina residents enrolled in Medicaid, homeless, or in another means-tested program are presumptively approved for 100% financial assistance.",
+        "quote": "For North Carolina residents, presumptive eligibility will be approved at 100% if one of the following non-income-based criteria is met:",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "verified": true,
+        "applies_to": "all",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": null
+       }
+      ],
+      "no_collections_while_pending": null,
+      "collections_quote": "",
+      "collections_source": null,
+      "payment_plan": {
+       "interest_free": true,
+       "quote": "Duke University Health System (DUHS) offers interest\u2010free payment plans of up to six years, depending on the amount you owe to all Duke Health entities.",
+       "source_url": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+       "max_pct_monthly_income": 5.0,
+       "cap_quote": "For North Carolina residents with incomes between 200-300% of the federal poverty level (FPL), a Payment Plan is available, with no interest charged, for a term of no more than thirty-six (36) months with monthly payments no greater than five percent (5%) of monthly household income.",
+       "cap_source_url": "https://www.dukehealth.org/paying-for-care/financial-assistance"
+      },
+      "apply_how": "North Carolina residents are screened automatically, while out-of-state residents must apply with income documentation by mail, fax, or email.",
+      "apply_quote": "North Carolina resident patients are no longer required to apply for Financial Assistance and will automatically be deemed eligible through a presumptive screening protocol mandated by the State of North Carolina.",
+      "notes": "Covers only medically necessary services; experimental, elective (including transplant) services and international patients are excluded, and out-of-state patients with out-of-network insurance are excluded for non-ED services."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "tier",
+        "quote": "\u27a2 Discount of 100% for individuals with incomes up to 200% FPL.",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "tier": {
+         "max_fpl_pct": 200,
+         "discount_pct": 100,
+         "applies_to": "all",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "\u27a2 Discount of 90% for individuals with incomes above 200% FPL-225% FPL",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "tier": {
+         "max_fpl_pct": 225,
+         "discount_pct": 90,
+         "applies_to": "all",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "\u27a2 Discount of 80% for individuals with incomes above 225% FPL-250% FPL",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "tier": {
+         "max_fpl_pct": 250,
+         "discount_pct": 80,
+         "applies_to": "all",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "\u27a2 Discount of 70% for individuals with incomes above 250% FPL-275% FPL",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "tier": {
+         "max_fpl_pct": 275,
+         "discount_pct": 70,
+         "applies_to": "all",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "tier",
+        "quote": "\u27a2 Discount of 65% for individuals with incomes above 275% FPL-300% FPL",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "tier": {
+         "max_fpl_pct": 300,
+         "discount_pct": 65,
+         "applies_to": "all",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "other_relief",
+        "quote": "Patients that are determined to be ineligible for Financial Assistance may still be eligible for a  discount if their patient liability exceeds 15% of their current year or prior year annual household income.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf",
+        "summary": "Patients whose total patient liability exceeds 15% of annual household income (medically indigent) may have the portion above 15% of income adjusted, even if they do not qualify for the sliding scale."
+       },
+       {
+        "what": "other_relief",
+        "quote": "For North Carolina residents, presumptive eligibility will be approved at 100% if one of the following non-income-based criteria is met:",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+        "summary": "North Carolina residents enrolled in Medicaid, homeless, or in another means-tested program are presumptively approved for 100% financial assistance."
+       },
+       {
+        "what": "collections",
+        "quote": "",
+        "verified": false,
+        "source_url": null
+       },
+       {
+        "what": "payment_plan",
+        "quote": "Duke University Health System (DUHS) offers interest\u2010free payment plans of up to six years, depending on the amount you owe to all Duke Health entities.",
+        "verified": true,
+        "source_url": "https://www.dukehealth.org/paying-for-care/financial-assistance"
+       },
+       {
+        "what": "payment_plan_cap",
+        "quote": "For North Carolina residents with incomes between 200-300% of the federal poverty level (FPL), a Payment Plan is available, with no interest charged, for a term of no more than thirty-six (36) months with monthly payments no greater than five percent (5%) of monthly household income.",
+        "verified": true,
+        "source_url": "https://www.dukehealth.org/paying-for-care/financial-assistance"
+       },
+       {
+        "what": "apply",
+        "quote": "North Carolina resident patients are no longer required to apply for Financial Assistance and will automatically be deemed eligible through a presumptive screening protocol mandated by the State of North Carolina.",
+        "verified": true,
+        "source_url": "https://www.dukehealth.org/paying-for-care/financial-assistance"
+       }
+      ],
+      "tiers_verified": 5,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 5,
+     "tiers_rejected": 0,
+     "status": "ok",
+     "run_id": "crawl-20261025T113349-256ddd",
+     "is_current": 1
+    }
+   ],
+   "checks": [
+    {
+     "id": 38,
+     "hospital_id": "duke-university-hospital",
+     "checked_at": "2026-10-25T11:34:38+00:00",
+     "content_sha256": "5367c3c2a1c1f2a336e2597108959e54046987ccadb4ccf2d7552a64faa97194",
+     "changed": 1,
+     "version_id": 34,
+     "note": "initial crawl: version 1",
+     "run_id": "crawl-20261025T113349-256ddd"
+    }
+   ],
+   "crawl_log": [
+    {
+     "id": 607,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:04+00:00",
+     "stage": "discover",
+     "product": "serp",
+     "url": "google: Duke University Hospital Durham, NC financial assistance charity care policy",
+     "status": 200,
+     "bytes": 24449,
+     "latency_ms": 15191,
+     "ok": 1,
+     "note": "application/json; charset=utf-8"
+    },
+    {
+     "id": 608,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:04+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.dukehealth.org/paying-for-care/financial-assistance \u2014 score 15.75: official domain dukehealth.org; mentions 'financial assistance' (+4); mentions 'financial-assistance' (+4); mentions 'mychart' (-3); names the hospital (1 words); Google rank 1 (-0.25)"
+    },
+    {
+     "id": 609,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:04+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "candidate page https://www.dukehealth.org/sites/default/files/general_page/DUHSFinancialAssistanceApplication-English2021.pdf \u2014 score 11.25: official domain dukehealth.org; mentions 'financial assistance' (+4); mentions 'application' (-3); names the hospital (1 words); Google rank 3 (-0.75)"
+    },
+    {
+     "id": 610,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:04+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://www.careroute.ai/hospital-financial-assistance/duke-health"
+    },
+    {
+     "id": 611,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:04+00:00",
+     "stage": "discover",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "skipped aggregator https://dollarfor.org/medical-debt-help-durham-duke-university-hospital/"
+    },
+    {
+     "id": 612,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:07+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.dukehealth.org/paying-for-care/financial-assistance",
+     "status": 200,
+     "bytes": 14461,
+     "latency_ms": 2286,
+     "ok": 1,
+     "note": "text/html; charset=utf-8"
+    },
+    {
+     "id": 613,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:07+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "https://www.dukehealth.org/paying-for-care/financial-assistance: 50 links, policy documents: https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3), English (+1)]; https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf [PDF (+2), says policy (+3), 'financial assistance' (+3), English (+1), notice/summary, not the policy (-2)]"
+    },
+    {
+     "id": 614,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:14+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf",
+     "status": 200,
+     "bytes": 295092,
+     "latency_ms": 7504,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 615,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:32+00:00",
+     "stage": "fetch",
+     "product": "unlocker",
+     "url": "https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf",
+     "status": 200,
+     "bytes": 556044,
+     "latency_ms": 16453,
+     "ok": 1,
+     "note": "application/pdf"
+    },
+    {
+     "id": 616,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf | '\u27a2 Discount of 100% for individuals with incomes up to 200% FPL.'"
+    },
+    {
+     "id": 617,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf | '\u27a2 Discount of 90% for individuals with incomes above 200% FPL-225% FPL'"
+    },
+    {
+     "id": 618,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf | '\u27a2 Discount of 80% for individuals with incomes above 225% FPL-250% FPL'"
+    },
+    {
+     "id": 619,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf | '\u27a2 Discount of 70% for individuals with incomes above 250% FPL-275% FPL'"
+    },
+    {
+     "id": 620,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf | '\u27a2 Discount of 65% for individuals with incomes above 275% FPL-300% FPL'"
+    },
+    {
+     "id": 621,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://www.dukehealth.org/sites/default/files/general_page/DUHS_Financial_Assistance_Policy%20Summary_English_2025.pdf | 'Patients that are determined to be ineligible for Financial Assistance may still be eligible for a  discount if their patient liability exceeds 15% of their cur'"
+    },
+    {
+     "id": 622,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://www.dukehealth.org/sites/default/files/DUHS_Financial_Assistance_Policy__English.pdf | 'For North Carolina residents, presumptive eligibility will be approved at 100% if one of the following non-income-based criteria is met:'"
+    },
+    {
+     "id": 623,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections REJECTED: not found | ''"
+    },
+    {
+     "id": 624,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "payment_plan VERIFIED in https://www.dukehealth.org/paying-for-care/financial-assistance | 'Duke University Health System (DUHS) offers interest\u2010free payment plans of up to six years, depending on the amount you owe to all Duke Health entities.'"
+    },
+    {
+     "id": 625,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "payment_plan_cap VERIFIED in https://www.dukehealth.org/paying-for-care/financial-assistance | 'For North Carolina residents with incomes between 200-300% of the federal poverty level (FPL), a Payment Plan is available, with no interest charged, for a term'"
+    },
+    {
+     "id": 626,
+     "run_id": "crawl-20261025T113349-256ddd",
+     "hospital_id": "duke-university-hospital",
+     "ts": "2026-10-25T11:34:38+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://www.dukehealth.org/paying-for-care/financial-assistance | 'North Carolina resident patients are no longer required to apply for Financial Assistance and will automatically be deemed eligible through a presumptive screen'"
     }
    ]
   },
