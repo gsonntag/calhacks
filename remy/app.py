@@ -271,15 +271,6 @@ async def list_cases():
              "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
 
 
-@app.get("/api/households", dependencies=ADMIN)
-async def households():
-    """Every household we've helped, lowest income vs the poverty line first, with 12 months of income from
-    Tiger Data. Admin-only: names, income and household size are personal."""
-    if not tiger.enabled():
-        return {"enabled": False, "households": []}
-    return {"enabled": True, "households": await tiger.households_by_need()}
-
-
 class Onboarding(BaseModel):
     answers: dict = {}
     skipped: list[str] = []
@@ -310,7 +301,9 @@ async def _assess(o: Onboarding) -> tuple[dict, dict]:
     a = onboarding.clean(o.answers)
     bank = await _bank_income(a.get("first_name"), a.get("last_name"))
     hs = await asyncio.to_thread(onboarding.hospitals_with_tiers)
-    return a, {**onboarding.assess(a, bank, o.skipped, hs), "bank": bank}
+    # answers that were sent but didn't pass clean(): the page says so instead of silently asking again
+    invalid = [k for k in onboarding.FIELDS if o.answers.get(k) is not None and k not in a and k != "hospital_id"]
+    return a, {**onboarding.assess(a, bank, o.skipped, hs), "bank": bank, "invalid": invalid}
 
 
 @app.post("/api/onboarding/assess", dependencies=ADMIN)

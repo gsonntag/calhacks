@@ -205,9 +205,8 @@ Optional (`TIGER_DATABASE_URL`). Every household Remy helps is stored in Tiger C
 - every Nessie transaction in a `transactions` hypertable, tagged income or not
 - a real-time `monthly_cashflow` continuous aggregate
 
-The case page shows "Income by month (Tiger Data)", and `GET /api/households` (admin only) lists households
-lowest % of poverty line first. Tiger only stores and rolls up data; eligibility math stays in `finance.py`. A
-Tiger failure never blocks a case. Code: `remy/tiger.py`, `remy/onboarding.py`.
+The case page shows "Income by month (Tiger Data)" for the current household. Tiger only stores and rolls up
+data; eligibility math stays in `finance.py`. A Tiger failure never blocks a case. Code: `remy/tiger.py`, `remy/onboarding.py`.
 
 ### Anthropic Claude
 Reads the bill and insurance statement (vision), extracts policy rules with verbatim quotes, runs the phone
