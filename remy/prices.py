@@ -170,7 +170,10 @@ def payer(name, plan, dollar=None, pct=None, algorithm=None, methodology=None, m
 
 
 def wanted(codes: list[tuple[str, str]]) -> list[str]:
-    return [c for c, t in codes if t in CPT_TYPES and c in CODE_SET]
+    """The curated codes on a line. UCLA lists its facility charges only under chargemaster ids that embed the
+    CPT/HCPCS code ("RRUCLA-4509928400-99284-0450-...", type CDM), so a dashed CDM id's segments count too."""
+    return [c for c, t in codes if t in CPT_TYPES and c in CODE_SET] + [
+        seg for c, t in codes if t == "CDM" and "-" in c for seg in c.split("-") if seg in CODE_SET]
 
 
 # ---------- CSV (tall and wide) ----------
@@ -362,7 +365,7 @@ def entry(code: str, items: list[dict]) -> dict:
     charge = with_gross[0] if with_gross else None
     rates = with_rates[0] if with_rates else None
     base = charge or rates or sorted(items, key=_rank)[0]
-    code_type = next(t for c, t in base["codes"] if c == code)
+    code_type = next((t for c, t in base["codes"] if c == code), "CDM")  # embedded in a CDM id: see wanted()
     dollars = _dollars(rates) if rates else []
     mm = next((i for i in (rates, charge) if i and (i["min"] is not None or i["max"] is not None)), None)
     if mm:

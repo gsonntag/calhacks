@@ -224,6 +224,34 @@ SPECS: dict[str, dict] = {
                    "duplicate_bank_charge": {"merchant": "Gregory Lane Cleaners", "amount": 26.50,
                                              "date": "2026-09-28", "description": "Dry cleaning"}},
     },
+    "jordan-ucla-wrist": {
+        "seed": 1106,
+        "story": "Jordan, uninsured, fell off a bike and broke a wrist (non-displaced distal radius fracture), seen "
+                 "in Ronald Reagan UCLA's emergency department (real UCLA prices): X-rays before and after the "
+                 "splint, an IV push for pain. Single, Westwood resident, about 240% of the poverty line. No "
+                 "billing errors: UCLA's own policy gives uninsured patients at or below 400% FPL 100% charity "
+                 "care, so the bill goes to $0.",
+        "hospital_id": "ucla-reagan",
+        "patient": {"first_name": "Jordan", "last_name": "Reyes", "household_size": 1, "dob": "1999-04-12",
+                    "phone_label": "Jordan's phone",
+                    "address": {"street_number": "10960", "street_name": "Strathmore Dr", "city": "Los Angeles",
+                                "state": "CA", "zip": "90024"}},
+        "pay": {"employer": "WESTWOOD COFFEE CO", "frequency": "biweekly", "amount": 1475.00,
+                "first_payday": "2026-07-10"},
+        "rent": {"merchant": "Strathmore Apartments", "amount": 1650.00, "description": "Rent (shared apt)"},
+        "merchants": [("Ralphs Westwood", "Groceries", 30, 95), ("Trader Joe's Westwood", "Groceries", 20, 70),
+                      ("Chevron Wilshire Blvd", "Gas", 35, 60), ("Espresso Profeta", "Coffee", 5, 12),
+                      ("Metro TAP Reload", "Transit", 20, 50), ("SoCal Wireless", "Phone bill", 50, 50)],
+        "medical": [("CVS/PHARMACY #9180", "Prescription", 16.49, "2026-03-04"),
+                    ("CVS/PHARMACY #9180", "Prescription", 21.99, "2026-08-10")],
+        "insurance": None,
+        "visit": {"service_date": "2026-08-09", "statement_date": "2026-10-09", "due_date": "2026-11-08",
+                  "account_number": "UCLA-41907263",
+                  "notice": "Self-pay statement - payment due by 2026-11-08."},
+        # no drug line: UCLA's file prices drugs by NDC only, so J2270 has no posted gross charge
+        "procedures": [("99284", 1), ("73110", 2), ("29125", 1), ("96374", 1)],
+        "errors": {},
+    },
 }
 
 ERROR_TYPES = ("insurance_not_applied", "uncredited_payment", "duplicate_line", "price_above_posted",

@@ -1,0 +1,252 @@
+{
+  "scenario": "jordan-ucla-wrist",
+  "generator": "remy/scenarios.py",
+  "generator_version": 2,
+  "seed": 1106,
+  "as_of": "2026-10-25",
+  "story": "Jordan, uninsured, fell off a bike and broke a wrist (non-displaced distal radius fracture), seen in Ronald Reagan UCLA's emergency department (real UCLA prices): X-rays before and after the splint, an IV push for pain. Single, Westwood resident, about 240% of the poverty line. No billing errors: UCLA's own policy gives uninsured patients at or below 400% FPL 100% charity care, so the bill goes to $0.",
+  "real": {
+    "hospital_id": "ucla-reagan",
+    "hospital": "Ronald Reagan UCLA Medical Center",
+    "price_file": {
+      "hospital_name": "Ronald Reagan UCLA Medical Center",
+      "location": "Ronald Reagan UCLA Medical Center",
+      "address": "757 Westwood Plaza, Los Angeles, CA 90095",
+      "last_updated_on": "2026-03-29",
+      "template_version": "3.0.0",
+      "file_url": "https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json",
+      "fetched_at": "2026-10-25T13:12:02+00:00",
+      "sha256": "97215d1ec3a3c1ec872d65a6f36a744ba14b7628c311471044e5280b9251c5a6",
+      "table": "policydb/prices/ucla-reagan.json"
+    },
+    "policy": {
+      "version": 1,
+      "fetched_at": "2026-10-25T11:14:38+00:00",
+      "status": "ok",
+      "source_urls": [
+        "https://www.uclahealth.org/sites/default/files/documents/financial-assistance-policy-hs5310.pdf?f=1b1b90f9"
+      ],
+      "tiers": [
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 100.0,
+          "applies_to": "uninsured",
+          "min_oop_pct_income": null,
+          "quote": "Self-Pay Patients with Patient's Family incomes not exceeding 400% of the FPL and who reside in the Hospital's primary service area as defined in Appendix 1 may be eligible for a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
+          "source_url": "https://www.uclahealth.org/sites/default/files/documents/financial-assistance-policy-hs5310.pdf?f=1b1b90f9"
+        },
+        {
+          "max_fpl_pct": 400.0,
+          "discount_pct": 100.0,
+          "applies_to": "insured",
+          "min_oop_pct_income": 10.0,
+          "quote": "High Medical Cost Patients with Patient's Family incomes not exceeding 400% of the FPL, who reside in the Hospital's primary service area as defined in Appendix 1, may be extended a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
+          "source_url": "https://www.uclahealth.org/sites/default/files/documents/financial-assistance-policy-hs5310.pdf?f=1b1b90f9"
+        }
+      ],
+      "payment_plan": {
+        "interest_free": true,
+        "max_pct_monthly_income": 10.0,
+        "quote": "Reasonable Payment Plans will be interest -free.",
+        "cap_quote": "\"Reasonable Payment Plan\" – Monthly payments that are not more than 10 percent of a Patient's Family income for a month, excluding deductions for essential living expenses."
+      }
+    }
+  },
+  "synthetic": [
+    "patient",
+    "no insurer (uninsured)",
+    "bank history",
+    "account and claim numbers",
+    "the planted errors"
+  ],
+  "planted_errors": [],
+  "bill_lines": [
+    {
+      "line": 1,
+      "code": "99284",
+      "units": 1,
+      "description_from_file": "HB ER DEPT VISIT ACUITY 4",
+      "common_name": "ED visit, level 4 (high-moderate)",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 2420.0,
+      "posted_gross": 2420.0,
+      "billed": 2420.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 1694.0,
+      "payer_dollar_rates": 124,
+      "file_notes": [
+        "File note: 0 remits to support allowed amounts"
+      ]
+    },
+    {
+      "line": 2,
+      "code": "73110",
+      "units": 2,
+      "description_from_file": "HB WRIST 3+ VIEWS",
+      "common_name": "X-ray wrist, 3+ views",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 490.0,
+      "posted_gross": 980.0,
+      "billed": 980.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 343.0,
+      "payer_dollar_rates": 115,
+      "file_notes": [
+        "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: 0 remits to support allowed amounts"
+      ]
+    },
+    {
+      "line": 3,
+      "code": "29125",
+      "units": 1,
+      "description_from_file": "HB SPLINT APPLY SHORT ARM STATIC",
+      "common_name": "Short arm splint, static",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 460.0,
+      "posted_gross": 460.0,
+      "billed": 460.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 322.0,
+      "payer_dollar_rates": 115,
+      "file_notes": [
+        "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: 0 remits to support allowed amounts"
+      ]
+    },
+    {
+      "line": 4,
+      "code": "96374",
+      "units": 1,
+      "description_from_file": "HB NONCHEMO IV PUSH SINGLE INITIAL",
+      "common_name": "IV push, single or first drug",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 840.0,
+      "posted_gross": 840.0,
+      "billed": 840.0,
+      "planted_error": null,
+      "duplicate_of_line": null,
+      "negotiated_median_of_payers": 588.0,
+      "payer_dollar_rates": 124,
+      "file_notes": [
+        "File note: 0 remits to support allowed amounts"
+      ]
+    }
+  ],
+  "eob_basis": null,
+  "totals": {
+    "total_charges": 4700.0,
+    "correct_charges": 4700.0,
+    "insurance_adjustments_on_bill": 0.0,
+    "patient_payments_on_bill": 0.0,
+    "amount_due": 4700.0,
+    "allowed": null,
+    "plan_paid": null,
+    "patient_responsibility": 4700.0,
+    "paid_uncredited": 0.0,
+    "paid_total": 0.0
+  },
+  "waterfall": {
+    "start": {
+      "label": "Hospital says you owe",
+      "amount": 4700.0
+    },
+    "steps": [],
+    "owed_before_discount": 4700.0
+  },
+  "income": {
+    "annual": 38405.81,
+    "monthly": 3200.48,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,477 x 26); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 48007.26,
+    "bills_monthly": 2308.08,
+    "bills_source": "48 regular Nessie payments in the last 90 days (ATM WITHDRAWAL LOS ANGELES CA, Amazon Marketplace, CHEVRON WILSHIRE BLVD #973, Chevron Wilshire Blvd…)"
+  },
+  "medical_spending": {
+    "since": "2025-10-25",
+    "bank_total": 38.48,
+    "this_bill": 0.0,
+    "out_of_pocket": 38.48,
+    "txn_ids": [
+      "mirror-081",
+      "mirror-181"
+    ],
+    "discount_without_bank": 100.0,
+    "bank_decides_eligibility": false
+  },
+  "discount": {
+    "fpl_pct": 240.6,
+    "fpl_amount": 15960,
+    "fpl_year": 2026,
+    "household_size": 1,
+    "insured": false,
+    "oop_pct_income": 0.1,
+    "discount_pct": 100.0,
+    "tier_quote": "Self-Pay Patients with Patient's Family incomes not exceeding 400% of the FPL and who reside in the Hospital's primary service area as defined in Appendix 1 may be eligible for a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
+    "at_estimated_gross": null
+  },
+  "settle": {
+    "discounted_share": 0.0,
+    "balance": 0.0,
+    "refund": 0.0
+  },
+  "correct": {
+    "balance": 0.0,
+    "refund": 0.0,
+    "discount_pct": 100.0,
+    "plan_months": 0,
+    "plan_monthly": 0.0,
+    "plan_last": 0.0
+  },
+  "plan": {
+    "months": 0,
+    "monthly": 0.0,
+    "last": 0.0,
+    "total": 0.0,
+    "text": "nothing owed",
+    "reason": "nothing owed"
+  },
+  "finance_reconcile": {
+    "billed_due": 4700.0,
+    "patient_responsibility": 4700.0,
+    "insurance_adjustment": 0.0,
+    "paid": 0.0,
+    "owed": 4700.0,
+    "overbilled_by": 0.0,
+    "payment_txn_ids": [],
+    "duplicate_txn_ids": []
+  },
+  "findings": [
+    {
+      "id": "discount",
+      "agent": "bright_data",
+      "title": "Free care under their policy",
+      "money": 4700.0,
+      "quote": "Self-Pay Patients with Patient's Family incomes not exceeding 400% of the FPL and who reside in the Hospital's primary service area as defined in Appendix 1 may be eligible for a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
+      "source": "https://www.uclahealth.org/sites/default/files/documents/financial-assistance-policy-hs5310.pdf?f=1b1b90f9"
+    }
+  ],
+  "must_not_report": [
+    {
+      "what": "a duplicate line on the bill",
+      "why": "every bill line is distinct"
+    },
+    {
+      "what": "a line above the posted price",
+      "why": "every line equals the posted gross charge"
+    },
+    {
+      "what": "a duplicate bank charge",
+      "why": "none planted; generator checked find_duplicates"
+    }
+  ],
+  "app_notes": [
+    "Uninsured: case.json has \"eob\": {}. finance.reconcile here was given a self-pay pseudo-EOB whose patient_responsibility is the corrected charges. The app's Nessie agent (agents/auditor.py) reads eob['patient_responsibility'] directly, so it cannot run this case until it handles a missing EOB.",
+    "Not modeled: California caps charges for uninsured patients at or under 400% FPL at the greater of Medicare or Medi-Cal (HSC 127405(d)); a real audit could argue more off."
+  ]
+}

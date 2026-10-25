@@ -1,8 +1,8 @@
 {
- "exported_at": "2026-10-25T11:34:38+00:00",
+ "exported_at": "2026-10-25T13:12:09+00:00",
  "bright_data_requests": {
   "serp": 43,
-  "unlocker": 112
+  "unlocker": 114
  },
  "runs": [
   {
@@ -710,6 +710,20 @@
     "duke-university-hospital"
    ],
    "summary": null
+  },
+  {
+   "id": "prices-20261025T131159-0c57ff",
+   "kind": "prices",
+   "started_at": "2026-10-25T13:11:59+00:00",
+   "finished_at": "2026-10-25T13:12:09+00:00",
+   "hospitals": [
+    "ucla-reagan"
+   ],
+   "summary": {
+    "prices": [
+     "ucla-reagan"
+    ]
+   }
   }
  ],
  "hospitals": [
@@ -19650,6 +19664,104 @@
      "latency_ms": null,
      "ok": 1,
      "note": "apply VERIFIED in https://www.uclahealth.org/sites/default/files/documents/financial-assistance-policy-hs5310.pdf?f=1b1b90f9 | \"A patient's request for Financial Assistance can be communicated verbally or in writing and a Patient Financial Assistance application will be given/mailed to p\""
+    },
+    {
+     "id": 627,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:11:59+00:00",
+     "stage": "prices",
+     "product": "unlocker",
+     "url": "https://www.uclahealth.org/cms-hpt.txt",
+     "status": 0,
+     "bytes": 0,
+     "latency_ms": 0,
+     "ok": 0,
+     "note": "error: Bright Data unlocker failed for -: not configured (BRIGHTDATA_API_KEY / unlocker zone missing)"
+    },
+    {
+     "id": 628,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:11:59+00:00",
+     "stage": "prices",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "Web Unlocker failed for https://www.uclahealth.org/cms-hpt.txt: Bright Data unlocker failed for -: not configured (BRIGHTDATA_API_KEY / unlocker zone missing); falling back to plain HTTPS"
+    },
+    {
+     "id": 629,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:11:59+00:00",
+     "stage": "prices",
+     "product": null,
+     "url": "https://www.uclahealth.org/cms-hpt.txt",
+     "status": 200,
+     "bytes": 1561,
+     "latency_ms": 116,
+     "ok": 1,
+     "note": "plain HTTPS (not Bright Data)"
+    },
+    {
+     "id": 630,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:11:59+00:00",
+     "stage": "prices",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "cms-hpt.txt (https): location 'Ronald Reagan UCLA Medical Center' -> https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json"
+    },
+    {
+     "id": 631,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:11:59+00:00",
+     "stage": "prices",
+     "product": "unlocker",
+     "url": "https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json",
+     "status": 0,
+     "bytes": 0,
+     "latency_ms": 0,
+     "ok": 0,
+     "note": "error: Bright Data unlocker failed for -: not configured (BRIGHTDATA_API_KEY / unlocker zone missing)"
+    },
+    {
+     "id": 632,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:11:59+00:00",
+     "stage": "prices",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "Web Unlocker failed for https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json: Bright Data unlocker failed for -: not configured (BRIGHTDATA_API_KEY / unlocker zone missing); falling back to plain HTTPS"
+    },
+    {
+     "id": 633,
+     "run_id": "prices-20261025T131159-0c57ff",
+     "hospital_id": "ucla-reagan",
+     "ts": "2026-10-25T13:12:01+00:00",
+     "stage": "prices",
+     "product": null,
+     "url": "https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json",
+     "status": 200,
+     "bytes": 499979594,
+     "latency_ms": 1656,
+     "ok": 1,
+     "note": "plain HTTPS (not Bright Data)"
     }
    ]
   },

@@ -1,0 +1,5547 @@
+{
+ "hospital_id": "ucla-reagan",
+ "hospital_name": "Ronald Reagan UCLA Medical Center",
+ "location_name": "Ronald Reagan UCLA Medical Center",
+ "hospital_address": "757 Westwood Plaza, Los Angeles, CA 90095",
+ "last_updated_on": "2026-03-29",
+ "template_version": "3.0.0",
+ "layout": "json",
+ "source": {
+  "cms_hpt_url": "https://www.uclahealth.org/cms-hpt.txt",
+  "cms_hpt_via": "https",
+  "hpt_location_name": "Ronald Reagan UCLA Medical Center",
+  "source_page_url": "https://www.uclahealth.org/patient-resources/billing-insurance/price-transparency/machine-readable-files",
+  "file_url": "https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json",
+  "via": "https",
+  "fetched_at": "2026-10-25T13:12:02+00:00",
+  "sha256": "97215d1ec3a3c1ec872d65a6f36a744ba14b7628c311471044e5280b9251c5a6",
+  "bytes": 499979594
+ },
+ "codes_requested": 67,
+ "codes_found": 67,
+ "missing_codes": [],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "CDM",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "HB ER DEPT VISIT ACUITY 1",
+   "setting": "outpatient",
+   "gross": 520.0,
+   "discounted_cash": 286.0,
+   "negotiated_min": 15.18,
+   "negotiated_max": 3339.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 364.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 391.56,
+     "percentage": 75.3,
+     "methodology": "percent of total billed charges",
+     "median": 391.56,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3339.0,
+     "methodology": "case rate",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 307.84,
+     "percentage": 59.2,
+     "methodology": "percent of total billed charges",
+     "median": 391.04,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 391.508,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 338.72,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 377.104,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 290.68,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 376.48,
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "CDM",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "HB ER DEPT VISIT ACUITY 2",
+   "setting": "outpatient",
+   "gross": 1030.0,
+   "discounted_cash": 566.5,
+   "negotiated_min": 24.38,
+   "negotiated_max": 3339.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 721.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 775.59,
+     "percentage": 75.3,
+     "methodology": "percent of total billed charges",
+     "median": 735.82,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3339.0,
+     "methodology": "case rate",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 609.76,
+     "percentage": 59.2,
+     "methodology": "percent of total billed charges",
+     "median": 703.1,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 775.487,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 669.9,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 746.956,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 752.93,
+     "percentage": 73.1,
+     "methodology": "percent of total billed charges",
+     "median": 767.55,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "CDM",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "HB ER DEPT VISIT ACUITY 3",
+   "setting": "outpatient",
+   "gross": 1600.0,
+   "discounted_cash": 880.0,
+   "negotiated_min": 44.6,
+   "negotiated_max": 3339.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1120.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 1204.8,
+     "percentage": 75.3,
+     "methodology": "percent of total billed charges",
+     "median": 1204.8,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3339.0,
+     "methodology": "case rate",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 947.2,
+     "percentage": 59.2,
+     "methodology": "percent of total billed charges",
+     "median": 1098.1,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 1204.64,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 1196.8,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 1160.32,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 1169.6,
+     "percentage": 73.1,
+     "methodology": "percent of total billed charges",
+     "median": 1502.3,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "CDM",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "HB ER DEPT VISIT ACUITY 4",
+   "setting": "outpatient",
+   "gross": 2420.0,
+   "discounted_cash": 1331.0,
+   "negotiated_min": 68.35,
+   "negotiated_max": 3339.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1694.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 1822.26,
+     "percentage": 75.3,
+     "methodology": "percent of total billed charges",
+     "median": 1822.26,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3339.0,
+     "methodology": "case rate",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 1911.8,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 1659.0,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 1822.018,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 1734.9,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 1754.984,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 716.38,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 1769.02,
+     "percentage": 73.1,
+     "methodology": "percent of total billed charges",
+     "median": 3252.96,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "CDM",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "HB ER DEPT VISIT ACUITY 5",
+   "setting": "outpatient",
+   "gross": 3200.0,
+   "discounted_cash": 1760.0,
+   "negotiated_min": 108.08,
+   "negotiated_max": 3339.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2240.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 2409.6,
+     "percentage": 75.3,
+     "methodology": "percent of total billed charges",
+     "median": 2409.6,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3339.0,
+     "methodology": "case rate",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 2528.0,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 2196.2,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 2409.28,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2294.08,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2320.64,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 1677.86,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 1788.8,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 5130.08,
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HB ER DEPT VISIT ACUITY 5 TRAUMA",
+     "setting": "outpatient",
+     "gross": 3340.0
+    },
+    {
+     "description": "HB ER EXAM REQ BY POLICE ADULT",
+     "setting": "outpatient",
+     "gross": 1890.0
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "CDM",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "HB CRITICAL CARE 0.5-1.25HR TRAUMA",
+   "setting": "outpatient",
+   "gross": 3900.0,
+   "discounted_cash": 2145.0,
+   "negotiated_min": 121.6,
+   "negotiated_max": 3510.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2730.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 2936.7,
+     "percentage": 75.3,
+     "methodology": "percent of total billed charges",
+     "median": 2763.51,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3339.0,
+     "methodology": "case rate",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 2308.8,
+     "percentage": 59.2,
+     "methodology": "percent of total billed charges",
+     "median": 2427.24,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 2936.31,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2710.11,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2828.28,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 2180.1,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 3522.27,
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HB CRITICAL CARE 1ST 30-74 MINS",
+     "setting": "outpatient",
+     "gross": 3670.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "HB CHEST SINGLE VIEW",
+   "setting": "outpatient",
+   "gross": 360.0,
+   "discounted_cash": 198.0,
+   "negotiated_min": 90.0,
+   "negotiated_max": 324.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 252.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 244.08,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 264.95,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 290.556,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 161.92,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 213.48,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 245.52,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 271.044,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 263.45,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 261.072,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 126.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 249.84,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 260.65,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM CHEST 1 VIEW",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "HB CHEST 2 VIEWS",
+   "setting": "outpatient",
+   "gross": 420.0,
+   "discounted_cash": 231.0,
+   "negotiated_min": 105.0,
+   "negotiated_max": 378.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 294.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 284.76,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 284.76,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 338.982,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 164.04,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 331.8,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 235.62,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 316.218,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 301.08,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 304.584,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 280.5,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 234.78,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 301.21,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM CHEST 2 VIEWS",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "HB CT BRAIN WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 2940.0,
+   "discounted_cash": 1617.0,
+   "negotiated_min": 400.0,
+   "negotiated_max": 2646.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1176.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 1993.32,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 1993.32,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 2372.874,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 198.13,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 1743.42,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 2005.08,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 2213.526,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2148.72,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2132.088,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 1029.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 2040.36,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 2128.56,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT HEAD/BRAIN W/O DYE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "HB CT C-SPINE WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 2940.0,
+   "discounted_cash": 1617.0,
+   "negotiated_min": 400.0,
+   "negotiated_max": 2646.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1176.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 1993.32,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 2119.6,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 2372.874,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 2273.8,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 1743.42,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 1590.76,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 2213.526,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2148.85,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2132.088,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 1643.46,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 2128.57,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT NECK SPINE W/O DYE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "HB CT CHEST DIAG WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 2940.0,
+   "discounted_cash": 1617.0,
+   "negotiated_min": 400.0,
+   "negotiated_max": 2646.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1176.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 1993.32,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 1993.32,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 2372.874,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 1743.42,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 1649.34,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 2213.526,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2107.56,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2132.088,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 980.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 2040.36,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT THORAX DX C-",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "HB CT CHEST DIAG W CONTRAST",
+   "setting": "outpatient",
+   "gross": 3680.0,
+   "discounted_cash": 2024.0,
+   "negotiated_min": 400.0,
+   "negotiated_max": 3312.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1472.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 2495.04,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 1247.52,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 2970.128,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 2907.2,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 2064.48,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 2770.672,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2636.32,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2668.736,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 2553.92,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT THORAX DX C+",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "HB CT ANGIOGRAM CHEST W/WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 4990.0,
+   "discounted_cash": 2744.5,
+   "negotiated_min": 400.0,
+   "negotiated_max": 4491.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1996.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 3383.22,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 3595.75,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 4027.429,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 2095.46,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 3942.1,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 2799.39,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 3756.971,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 3577.33,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 3618.748,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 3463.06,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 3612.77,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ANGIOGRAPHY CHEST",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "HB CT ABDOMEN&PELVIS WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 3570.0,
+   "discounted_cash": 1963.5,
+   "negotiated_min": 400.0,
+   "negotiated_max": 3213.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1802.85,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 2420.46,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 2420.46,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 2881.347,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 425.08,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 2117.01,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 2002.77,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 2687.853,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2559.33,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2588.964,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 1995.63,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 2560.21,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ABD & PELVIS W/O CONTRAST",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "HB CT ABDOMEN PELVIS W CONTRAST",
+   "setting": "outpatient",
+   "gross": 4510.0,
+   "discounted_cash": 2480.5,
+   "negotiated_min": 400.0,
+   "negotiated_max": 4059.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2277.55,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 3057.78,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 3057.78,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 3640.021,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 665.37,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 3562.9,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 2532.7,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 3395.579,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 3236.61,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 3270.652,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 1505.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 2521.09,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 3265.24,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ABD & PELVIS W/CONTRAST",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "HB CT ABD PELVIS WO 1/+ REGION FOLLOW W CONTRAST",
+   "setting": "outpatient",
+   "gross": 5460.0,
+   "discounted_cash": 3003.0,
+   "negotiated_min": 400.0,
+   "negotiated_max": 4914.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2757.3,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 3701.88,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 3701.88,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 4406.766,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 4222.76,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 4313.4,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 3063.06,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 4110.834,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 3914.27,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 3959.592,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 3727.54,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 3789.24,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 3953.05,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ABD&PLV WO CNTR FLWD CNTR",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "HB MRI BRAIN WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 6090.0,
+   "discounted_cash": 3349.5,
+   "negotiated_min": 650.0,
+   "negotiated_max": 5481.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2436.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 4129.02,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 4129.02,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 4915.239,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 4811.1,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 3416.49,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 4585.161,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 4365.92,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 4416.468,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 3140.12,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 3404.31,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 5249.58,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "MRI BRAIN STEM W/O DYE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "HB MRI L-SPINE WO CONTRAST",
+   "setting": "outpatient",
+   "gross": 5570.0,
+   "discounted_cash": 3063.5,
+   "negotiated_min": 650.0,
+   "negotiated_max": 5013.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2228.0,
+   "payer_rates": 123,
+   "payer_dollar_rates": 116,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 3776.46,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 3776.46,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 4495.547,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 3303.01,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 3124.77,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 4193.653,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 3993.13,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 4039.364,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 3865.58,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 4011.8,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "MRI LUMBAR SPINE W/O DYE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "HB L-SPINE 2-3 VIEWS",
+   "setting": "outpatient",
+   "gross": 670.0,
+   "discounted_cash": 368.5,
+   "negotiated_min": 167.5,
+   "negotiated_max": 603.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 469.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 454.26,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 454.26,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 540.757,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 397.31,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 502.5,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 504.443,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 481.73,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 485.884,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 374.53,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM L-S SPINE 2/3 VWS",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "HB SHOULDER 2+ VIEWS",
+   "setting": "outpatient",
+   "gross": 550.0,
+   "discounted_cash": 302.5,
+   "negotiated_min": 137.5,
+   "negotiated_max": 495.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 385.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 372.9,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 372.9,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 443.905,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 326.15,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 349.52,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 414.095,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 398.93,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 398.86,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 381.7,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 398.2,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM OF SHOULDER",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "HB WRIST 3+ VIEWS",
+   "setting": "outpatient",
+   "gross": 490.0,
+   "discounted_cash": 269.5,
+   "negotiated_min": 122.5,
+   "negotiated_max": 441.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 343.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 332.22,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 344.0,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 395.479,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 366.88,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 387.1,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 276.83,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 368.921,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 353.77,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 355.348,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 273.91,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 353.92,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM OF WRIST",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "HB ANKLE 3+ VIEWS",
+   "setting": "outpatient",
+   "gross": 530.0,
+   "discounted_cash": 291.5,
+   "negotiated_min": 132.5,
+   "negotiated_max": 477.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 371.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 359.34,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 359.34,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 427.763,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 314.29,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 377.48,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 399.037,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 379.96,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 384.356,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 185.5,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 296.27,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 376.51,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM OF ANKLE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "HB FOOT 3+ VIEWS",
+   "setting": "outpatient",
+   "gross": 540.0,
+   "discounted_cash": 297.0,
+   "negotiated_min": 135.0,
+   "negotiated_max": 486.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 378.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 366.12,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 366.12,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 435.834,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 426.6,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 405.0,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 406.566,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 391.4,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 391.608,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 301.86,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 390.96,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-RAY EXAM OF FOOT",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "HB US ABDOMEN COMPLETE",
+   "setting": "outpatient",
+   "gross": 1490.0,
+   "discounted_cash": 819.5,
+   "negotiated_min": 372.5,
+   "negotiated_max": 1341.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1043.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 1010.22,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 1010.22,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 1202.579,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 198.13,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 883.57,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 877.61,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 1121.821,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 1068.83,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 1080.548,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 832.91,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 1055.07,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "US EXAM ABDOM COMPLETE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "HB US ABDOMEN LTD",
+   "setting": "outpatient",
+   "gross": 810.0,
+   "discounted_cash": 445.5,
+   "negotiated_min": 202.5,
+   "negotiated_max": 729.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 567.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 549.18,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 549.18,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 653.751,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 401.17,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 639.9,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 552.42,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 609.849,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 580.69,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 587.412,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 452.79,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 586.45,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ECHO EXAM OF ABDOMEN",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "CDM",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "HB US PELVIS NONOBSTETRIC",
+   "setting": "outpatient",
+   "gross": 1440.0,
+   "discounted_cash": 792.0,
+   "negotiated_min": 360.0,
+   "negotiated_max": 1296.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1008.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 976.32,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 1030.32,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 1162.224,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 195.74,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 853.92,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 1078.19,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 1084.176,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 1032.34,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 1044.288,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 804.96,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 1042.56,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "US EXAM PELVIC COMPLETE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "CDM",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "HB PULM FXN LAB EKG 12-LEAD",
+   "setting": "outpatient",
+   "gross": 500.0,
+   "discounted_cash": 275.0,
+   "negotiated_min": 16.4,
+   "negotiated_max": 450.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 350.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 339.0,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 363.36,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 276.3,
+     "percentage": 55.26,
+     "methodology": "percent of total billed charges",
+     "notes": "Svc. May be packaged/bundled into a separate rate or paid at a % of charge if it exceeds the contractual threshold Can be subject to lesser of provisions , Per…"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 296.5,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 282.72,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 376.45,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 361.3,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 362.6,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 308.08,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 347.0,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 362.0,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HB EKG 12-LEAD TRACING ONLY",
+     "setting": "outpatient",
+     "gross": 500.0
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "CDM",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "HB ECHO TTE 2D COMPLETE + COLORFLOW",
+   "setting": "outpatient",
+   "gross": 3460.0,
+   "discounted_cash": 1903.0,
+   "negotiated_min": 865.0,
+   "negotiated_max": 3114.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2422.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 2345.88,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 2345.88,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 2792.566,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 2051.78,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 1943.7,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 2605.034,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 2483.91,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 2509.192,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 1674.56,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 1934.14,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 2505.05,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HB TTE 2D COMPLT W/WO FOLLOW W CONTRAST W COLORFLOW",
+     "setting": "outpatient",
+     "gross": 3640.0
+    },
+    {
+     "description": "TTE W/DOPPLER COMPLETE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "HB PULM FXN LAB VENIPUNCTURE BLOOD DRAW",
+   "setting": "outpatient",
+   "gross": 40.0,
+   "discounted_cash": 22.0,
+   "negotiated_min": 3.63,
+   "negotiated_max": 36.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 28.0,
+   "payer_rates": 144,
+   "payer_dollar_rates": 137,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 27.12,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 27.12,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 22.104,
+     "percentage": 55.26,
+     "methodology": "percent of total billed charges",
+     "notes": "Svc. May be packaged/bundled into a separate rate or paid at a % of charge if it exceeds the contractual threshold Can be subject to lesser of provisions , Per…"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 31.6,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 23.7,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 30.116,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 26.37,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 29.008,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 30.0,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 27.76,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 28.41,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HB RESP VENIPUNCTURE BLOOD DRAW",
+     "setting": "outpatient",
+     "gross": 40.0
+    },
+    {
+     "description": "HB VENIPUNCTURE BLOOD DRAW",
+     "setting": "outpatient",
+     "gross": 40.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "HB METABOLIC PANEL BASIC",
+   "setting": "outpatient",
+   "gross": 210.0,
+   "discounted_cash": 115.5,
+   "negotiated_min": 52.5,
+   "negotiated_max": 210.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 147.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 142.38,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 142.38,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 210.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 165.9,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 124.53,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 158.109,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 150.55,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 152.292,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 73.5,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 117.39,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 150.61,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "BASIC METABOLIC PNL TOTAL CA",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "HB METABOLIC PANEL COMPREHENSV",
+   "setting": "outpatient",
+   "gross": 340.0,
+   "discounted_cash": 187.0,
+   "negotiated_min": 85.0,
+   "negotiated_max": 340.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 238.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 230.52,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 230.52,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 340.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 177.21,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 201.62,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 195.69,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 255.986,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 248.39,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 246.568,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 246.57,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 235.96,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 241.24,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "COMPREHEN METABOLIC PANEL",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "HB LIPID PANEL",
+   "setting": "outpatient",
+   "gross": 140.0,
+   "discounted_cash": 77.0,
+   "negotiated_min": 35.0,
+   "negotiated_max": 140.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 98.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 94.92,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 94.92,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 140.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 21.92,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 110.6,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 79.1,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 105.406,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 100.37,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 101.528,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 70.21,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 97.16,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 101.37,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "LIPID PANEL",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "HB CBC & PLATELET CT & DIFF",
+   "setting": "outpatient",
+   "gross": 140.0,
+   "discounted_cash": 77.0,
+   "negotiated_min": 35.0,
+   "negotiated_max": 140.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 98.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 94.92,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 94.92,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 140.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 65.68,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 110.6,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 79.1,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 105.406,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 100.37,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 101.528,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 91.42,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 78.26,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 96.13,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "COMPLETE CBC W/AUTO DIFF WBC",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "HB CBC AND PLATELET COUNT",
+   "setting": "outpatient",
+   "gross": 110.0,
+   "discounted_cash": 60.5,
+   "negotiated_min": 27.5,
+   "negotiated_max": 110.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 77.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 74.58,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 74.58,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 110.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 81.56,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 86.9,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 62.15,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 82.819,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 78.86,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 79.772,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 78.4,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 76.34,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 78.12,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "COMPLETE CBC AUTOMATED",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "HB PROTHROMBIN TIME",
+   "setting": "outpatient",
+   "gross": 110.0,
+   "discounted_cash": 60.5,
+   "negotiated_min": 27.5,
+   "negotiated_max": 110.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 77.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 74.58,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 74.58,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 110.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 81.56,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 86.9,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 62.15,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 82.819,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 77.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 79.772,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 77.93,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 76.34,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 75.31,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "PROTHROMBIN TIME",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "HB APTT ACTIVATED PTT",
+   "setting": "outpatient",
+   "gross": 140.0,
+   "discounted_cash": 77.0,
+   "negotiated_min": 35.0,
+   "negotiated_max": 140.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 98.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 94.92,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 94.92,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 140.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 83.02,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 79.1,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 105.406,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 98.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 101.528,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 97.15,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 97.16,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 98.45,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "THROMBOPLASTIN TIME PARTIAL",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "HB TROPONIN I QUANT",
+   "setting": "outpatient",
+   "gross": 240.0,
+   "discounted_cash": 132.0,
+   "negotiated_min": 60.0,
+   "negotiated_max": 240.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 168.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 162.72,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 174.11,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 240.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 142.32,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 136.39,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 180.696,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 173.12,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 174.048,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 166.56,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 173.76,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ASSAY OF TROPONIN QUANT",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "HB LIPASE",
+   "setting": "outpatient",
+   "gross": 160.0,
+   "discounted_cash": 88.0,
+   "negotiated_min": 40.0,
+   "negotiated_max": 160.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 112.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 108.48,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 113.55,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 160.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 126.4,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 94.88,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 120.464,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 114.7,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 116.032,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 56.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 89.44,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 115.8,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ASSAY OF LIPASE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "HB BNP B TYPE NATRIURETIC PEPTID",
+   "setting": "outpatient",
+   "gross": 250.0,
+   "discounted_cash": 137.5,
+   "negotiated_min": 62.5,
+   "negotiated_max": 250.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 175.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 169.5,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 169.5,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 250.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 197.5,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 142.32,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 188.225,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 180.65,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 181.3,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 181.3,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 173.5,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 181.0,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ASSAY OF NATRIURETIC PEPTIDE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "HB CREATINE KINASE TOTAL CK",
+   "setting": "outpatient",
+   "gross": 95.0,
+   "discounted_cash": 52.25,
+   "negotiated_min": 23.75,
+   "negotiated_max": 95.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 66.5,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 64.41,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 64.41,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 95.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 75.05,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 53.68,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 71.5255,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 68.11,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 68.894,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 82.0,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 65.93,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 67.78,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ASSAY OF CK (CPK)",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "HB TSH THYROID STIMULATNG HORM",
+   "setting": "outpatient",
+   "gross": 150.0,
+   "discounted_cash": 82.5,
+   "negotiated_min": 37.5,
+   "negotiated_max": 150.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 105.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 101.7,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 101.7,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 150.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 118.5,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 84.75,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 112.935,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 107.54,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 108.78,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 100.18,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 104.1,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 108.61,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ASSAY THYROID STIM HORMONE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HB HEMOGLOBIN A1C",
+   "setting": "outpatient",
+   "gross": 50.0,
+   "discounted_cash": 27.5,
+   "negotiated_min": 11.25,
+   "negotiated_max": 50.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 35.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 33.9,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 44.07,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 50.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 39.5,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 37.95,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 37.645,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 48.17,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 36.26,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 44.38,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 27.95,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 47.07,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "HB HEMOGLOBIN A1C",
+     "setting": "outpatient",
+     "gross": 45.0
+    },
+    {
+     "description": "HEMOGLOBIN GLYCOSYLATED A1C",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "HB URINALYSIS AUTO W MICROSCOPIC",
+   "setting": "outpatient",
+   "gross": 95.0,
+   "discounted_cash": 52.25,
+   "negotiated_min": 23.75,
+   "negotiated_max": 95.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 66.5,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 64.41,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 64.41,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 95.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 73.47,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 75.05,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 53.68,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 71.5255,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 68.11,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 68.894,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 66.5,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 65.93,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 67.78,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "URINALYSIS AUTO W/SCOPE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "HB URINALYSIS DIPSTICK AUTO",
+   "setting": "outpatient",
+   "gross": 90.0,
+   "discounted_cash": 49.5,
+   "negotiated_min": 22.5,
+   "negotiated_max": 90.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 63.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 61.02,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 61.02,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 90.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 71.1,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 50.41,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 67.761,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 64.52,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 65.268,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 62.46,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 62.14,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "URINALYSIS AUTO W/O SCOPE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "HB HCG QUAL URINE PREG TEST",
+   "setting": "outpatient",
+   "gross": 80.0,
+   "discounted_cash": 44.0,
+   "negotiated_min": 2.8,
+   "negotiated_max": 80.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 56.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 54.24,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 54.24,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 80.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 39.46,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 63.2,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 59.25,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 60.232,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 57.35,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 58.016,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 80.0,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 44.72,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "HB BACT CULTURE URINE QUANT",
+   "setting": "outpatient",
+   "gross": 170.0,
+   "discounted_cash": 93.5,
+   "negotiated_min": 42.5,
+   "negotiated_max": 170.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 119.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 115.26,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 115.26,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 170.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 134.3,
+     "percentage": 79.0,
+     "methodology": "percent of total billed charges",
+     "median": 96.05,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 127.993,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 121.87,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 123.284,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 130.55,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 117.98,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 120.49,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "URINE CULTURE/COLONY COUNT",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "HB BACT CULTURE BLOOD",
+   "setting": "outpatient",
+   "gross": 430.0,
+   "discounted_cash": 236.5,
+   "negotiated_min": 107.5,
+   "negotiated_max": 430.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 301.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 291.54,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 323.79,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 430.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 254.99,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 243.13,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 323.747,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 308.61,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 311.836,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 321.44,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 298.42,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 311.33,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "BLOOD CULTURE FOR BACTERIA",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "CDM",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "HB INFECT AGENT DNA RNA SAR COVID19 AMP PROBE",
+   "setting": "outpatient",
+   "gross": 150.0,
+   "discounted_cash": 82.5,
+   "negotiated_min": 37.5,
+   "negotiated_max": 150.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 105.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 101.7,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 102.0,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 150.0,
+     "percentage": 100.0,
+     "methodology": "percent of total billed charges",
+     "median": 85.13,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 88.95,
+     "percentage": 59.3,
+     "methodology": "percent of total billed charges",
+     "median": 88.95,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier, Percent rate is limited by maximum val…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 112.935,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 112.91,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 108.78,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 106.43,
+     "notes": "Both charges and/or payments may be further adjusted as a result of a modifier"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 104.1,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 103.95,
+     "notes": "Can be subject to lesser of provisions , Both charges and/or payments may be further adjusted as a result of a modifier"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "SARS-COV-2 COVID-19 AMP PRB",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "HB NONCHEMO IV HYDRATION 1ST HOUR",
+   "setting": "outpatient",
+   "gross": 860.0,
+   "discounted_cash": 473.0,
+   "negotiated_min": 51.3,
+   "negotiated_max": 957.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 602.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 583.08,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 620.74,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 717.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 647.494,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 617.21,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 623.672,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 768.3,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 596.84,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 608.45,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "HB NONCHEMO IV HYDRATION EACH ADDL HR",
+   "setting": "outpatient",
+   "gross": 280.0,
+   "discounted_cash": 154.0,
+   "negotiated_min": 14.6,
+   "negotiated_max": 957.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 196.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 189.84,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 379.68,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 717.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 210.812,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 203.23,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 203.056,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 211.68,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 194.32,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 406.63,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "HB NONCHEMO IV INFUSION 1ST HOUR",
+   "setting": "outpatient",
+   "gross": 990.0,
+   "discounted_cash": 544.5,
+   "negotiated_min": 62.6,
+   "negotiated_max": 957.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 693.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 671.22,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 671.22,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 957.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 745.371,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 707.54,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 717.948,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 675.87,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 553.41,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 707.83,
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "HB NONCHEMO IV INFUSION EACH ADDITIONAL HR",
+   "setting": "outpatient",
+   "gross": 320.0,
+   "discounted_cash": 176.0,
+   "negotiated_min": 19.27,
+   "negotiated_max": 957.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 224.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 216.96,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 408.0,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 957.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 240.928,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 391.3,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 232.064,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 300.0,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 178.88,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 275.84,
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "HB NONCHEMO IM /SUBQ INJECTION EACH",
+   "setting": "outpatient",
+   "gross": 130.0,
+   "discounted_cash": 71.5,
+   "negotiated_min": 18.75,
+   "negotiated_max": 829.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 91.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 88.14,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 88.14,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 78.0,
+     "percentage": 60.0,
+     "methodology": "percent of total billed charges",
+     "median": 74.1,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 97.877,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 93.2,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 94.276,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 103.74,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 90.22,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 97.85,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "HB NONCHEMO IV PUSH SINGLE INITIAL",
+   "setting": "outpatient",
+   "gross": 840.0,
+   "discounted_cash": 462.0,
+   "negotiated_min": 49.82,
+   "negotiated_max": 829.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 588.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 569.52,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 632.52,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 672.0,
+     "percentage": 80.0,
+     "methodology": "percent of total billed charges",
+     "median": 631.67,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 632.436,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 602.16,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 609.168,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 294.23,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 582.96,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 607.96,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "CDM",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "HB NONCHEMO IV PUSH EACH ADDL SEQUENTIAL",
+   "setting": "outpatient",
+   "gross": 440.0,
+   "discounted_cash": 242.0,
+   "negotiated_min": 21.29,
+   "negotiated_max": 829.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 308.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 298.32,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 596.64,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 829.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 264.0,
+     "percentage": 60.0,
+     "methodology": "percent of total billed charges",
+     "median": 333.08,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 331.276,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 331.28,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 319.088,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "median": 154.0,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 305.36,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 331.33,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 1
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "Ondansetron hcl injection",
+   "setting": "outpatient",
+   "negotiated_min": 0.19,
+   "negotiated_max": 4.55,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.19,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 0.187,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 4.55,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ondansetron (Zofran) injection, per 1 mg).",
+    "File note: Per Service Unit Rate"
+   ],
+   "line_items": 1
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "Ketorolac tromethamine inj",
+   "setting": "outpatient",
+   "negotiated_min": 0.42,
+   "negotiated_max": 5.07,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.86,
+   "payer_rates": 22,
+   "payer_dollar_rates": 22,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna Medicare",
+     "plan": "Medicare",
+     "dollar": 0.4154,
+     "methodology": "fee schedule",
+     "notes": "Line item charges and subsequent payments can be subject to service bundling. For example, items with a negotiated rate of 0 or blank."
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Vivity, Anthem HMO",
+     "plan": "HMO-NonCity of LA",
+     "dollar": 0.75,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 1.3175,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "UnitedHealthcare (Medicare plan)",
+     "payer": "Optum",
+     "plan": "Medicare",
+     "dollar": 1.192198,
+     "methodology": "fee schedule",
+     "notes": "Line item charges and subsequent payments can be subject to service bundling. For example, items with a negotiated rate of 0 or blank."
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 5.07,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Medicare",
+     "payer": "Anthem Medicare",
+     "plan": "Medicare",
+     "dollar": 0.4154,
+     "methodology": "fee schedule",
+     "notes": "Line item charges and subsequent payments can be subject to service bundling. For example, items with a negotiated rate of 0 or blank."
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ketorolac (Toradol) injection, per 15 mg).",
+    "File note: No additional generic notes"
+   ],
+   "line_items": 1
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "Dexamethasone sodium phos",
+   "setting": "outpatient",
+   "negotiated_min": 0.2,
+   "negotiated_max": 4.59,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.2,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 0.1955,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 4.59,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Dexamethasone injection, per 1 mg).",
+    "File note: Per Service Unit Rate"
+   ],
+   "line_items": 1
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "Morphine sulfate injection",
+   "setting": "outpatient",
+   "negotiated_min": 4.44,
+   "negotiated_max": 8.78,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4.44,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 4.437,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 8.78,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Morphine injection, up to 10 mg).",
+    "File note: Per Service Unit Rate"
+   ],
+   "line_items": 1
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "Fentanyl citrate injection",
+   "setting": "outpatient",
+   "negotiated_min": 2.43,
+   "negotiated_max": 5.31,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.43,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 2.431,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 5.31,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Fentanyl injection, per 0.1 mg).",
+    "File note: Per Service Unit Rate"
+   ],
+   "line_items": 1
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "Ceftriaxone sodium injection",
+   "setting": "outpatient",
+   "negotiated_min": 0.97,
+   "negotiated_max": 4.93,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.97,
+   "payer_rates": 3,
+   "payer_dollar_rates": 3,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 0.969,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 4.93,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ceftriaxone injection, per 250 mg).",
+    "File note: Per Service Unit Rate"
+   ],
+   "line_items": 1
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "Normal saline solution infus",
+   "setting": "outpatient",
+   "negotiated_min": 4.3,
+   "negotiated_max": 7.04,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.11,
+   "payer_rates": 9,
+   "payer_dollar_rates": 9,
+   "payers": [
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 5.61,
+     "methodology": "fee schedule",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "LA care Medi-Cal HMO",
+     "plan": "Medi-Cal HMO",
+     "dollar": 7.04,
+     "methodology": "fee schedule",
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Normal saline infusion, 1000 cc).",
+    "File note: Per Service Unit Rate"
+   ],
+   "line_items": 1
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "CDM",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "HB REPR1 SCALP TRUNK LIMB GENITALIA <2.6CM",
+   "setting": "outpatient",
+   "gross": 1130.0,
+   "discounted_cash": 621.5,
+   "negotiated_min": 282.5,
+   "negotiated_max": 1017.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 791.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 804.56,
+     "percentage": 71.2,
+     "methodology": "percent of total billed charges",
+     "median": 850.89,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 912.023,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 904.0,
+     "percentage": 80.0,
+     "methodology": "percent of total billed charges",
+     "median": 892.7,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 850.777,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 850.77,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 819.476,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 784.22,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 1610.34,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "RPR S/N/AX/GEN/TRNK 2.5CM/<",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "CDM",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "HB I&D ABSCESS SIMPLE SINGLE",
+   "setting": "outpatient",
+   "gross": 1390.0,
+   "discounted_cash": 764.5,
+   "negotiated_min": 347.5,
+   "negotiated_max": 1251.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 973.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 989.68,
+     "percentage": 71.2,
+     "methodology": "percent of total billed charges",
+     "median": 970.83,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 1121.869,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "median": 328.67,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 1112.0,
+     "percentage": 80.0,
+     "methodology": "percent of total billed charges",
+     "median": 789.36,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 1046.531,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 1017.98,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 1008.028,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 964.66,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 1386.42,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "I&D ABSCESS SIMPLE/SINGLE",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "CDM",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "HB SPLINT APPLY SHORT ARM STATIC",
+   "setting": "outpatient",
+   "gross": 460.0,
+   "discounted_cash": 253.0,
+   "negotiated_min": 115.0,
+   "negotiated_max": 414.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 322.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 311.88,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 346.38,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 371.266,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "EPN",
+     "dollar": 276.0,
+     "percentage": 60.0,
+     "methodology": "percent of total billed charges",
+     "median": 788.71,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "PPO",
+     "dollar": 346.334,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 341.27,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 333.592,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 319.24,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "APPL SHORT ARM SPLINT STATIC",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "CDM",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "HB INHAL TREATMENT NEBULIZER",
+   "setting": "outpatient",
+   "gross": 200.0,
+   "discounted_cash": 110.0,
+   "negotiated_min": 11.7,
+   "negotiated_max": 808.31,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 140.0,
+   "payer_rates": 124,
+   "payer_dollar_rates": 124,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 135.6,
+     "percentage": 67.8,
+     "methodology": "percent of total billed charges",
+     "median": 150.6,
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 599.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 581.0,
+     "methodology": "other",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 150.58,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "median": 150.58,
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 145.04,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 111.8,
+     "percentage": 55.9,
+     "methodology": "percent of total billed charges",
+     "median": 200.0,
+     "notes": "No payer specific notes"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HB RESP INHAL TREATMENT NEBULIZER PRESS/NONPRESS",
+     "setting": "outpatient",
+     "gross": 200.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "CDM",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "HB CATHETERIZATION BLADDER FOLEY SIMPLE",
+   "setting": "outpatient",
+   "gross": 390.0,
+   "discounted_cash": 214.5,
+   "negotiated_min": 97.5,
+   "negotiated_max": 351.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 273.0,
+   "payer_rates": 122,
+   "payer_dollar_rates": 115,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "All Products",
+     "dollar": 277.68,
+     "percentage": 71.2,
+     "methodology": "percent of total billed charges",
+     "median": 280.09,
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Cross",
+     "plan": "All Products",
+     "dollar": 314.769,
+     "percentage": 80.71,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield",
+     "plan": "All Products",
+     "dollar": 312.0,
+     "percentage": 80.0,
+     "methodology": "percent of total billed charges",
+     "notes": "Can be subject to lesser of provisions , Percent rate is limited by maximum value, but this maximum can be exceeded by other provisions"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "HMO",
+     "dollar": 293.631,
+     "percentage": 75.29,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "All Products",
+     "dollar": 282.828,
+     "percentage": 72.52,
+     "methodology": "percent of total billed charges",
+     "notes": "No payer specific notes"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net B&G",
+     "plan": "HMO",
+     "dollar": 270.66,
+     "percentage": 69.4,
+     "methodology": "percent of total billed charges",
+     "median": 278.61,
+     "notes": "Can be subject to lesser of provisions"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: 0 remits to support allowed amounts"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "INSERT TEMP BLADDER CATH",
+     "setting": "outpatient",
+     "gross": null
+    }
+   ]
+  }
+ }
+}

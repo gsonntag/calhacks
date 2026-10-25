@@ -67,10 +67,16 @@ def test_wide_csv(tmp_path):
     assert cbc["negotiated_min"] == cbc["negotiated_max"] == 46.59 and cbc["min_max_source"].startswith("computed")
 
 
+def test_json_reads_cpt_embedded_in_cdm_id(tmp_path):
+    # UCLA's layout: the facility charge sits only on a CDM id that embeds the CPT code; a bare CDM id doesn't count
+    ed = build("v3.json", tmp_path)["prices"]["99284"]
+    assert (ed["code_type"], ed["description"], ed["gross"], ed["line_items"]) == ("CDM", "HB ER DEPT VISIT ACUITY 4", 7310, 1)
+
+
 def test_json_v3(tmp_path):
     t = build("v3.json", tmp_path)
     assert t["layout"] == "json" and t["location_name"] == "JSON Test Hospital | JSON Test Hospital Annex"
-    assert set(t["prices"]) == {"74177", "J2405"}
+    assert set(t["prices"]) == {"74177", "J2405", "99284"}
     ct = t["prices"]["74177"]
     assert ct["setting"] == "outpatient" and ct["gross"] == 9200 and ct["discounted_cash"] == 4600
     assert (ct["negotiated_min"], ct["negotiated_max"]) == (900, 4800) and ct["payer_rates"] == 4
