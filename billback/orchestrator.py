@@ -415,6 +415,61 @@ async def answer_status(case: dict, question: str) -> dict:
     return {"answer": followups.fallback_status(s), "source": "history"}
 
 
+BILLBACK_SYSTEM = """You are BillBack, the AI agent running this patient's hospital-bill case, answering in the
+case page's agent chat. You know the whole case: the CASE JSON has the stored history (calls, promises, follow-ups,
+next step), every finding from the Nessie agent (the patient's bank, bill and insurance statement) and the Bright
+Data agent (the hospital's own policy and public rules), and the current call plan. Answer in the first person, in
+at most 4 short plain sentences, only from the CASE JSON; copy dates exactly as written there. Never invent facts,
+amounts or dates. Plain text, no markdown. "balance_after_corrections" is what the bill should come down to once
+billing applies everything, not what it is now: only call it confirmed if a call has balance_confirmed_by_rep.
+If the patient asks to change the call plan (what to ask first, what they can pay per month, leaving an ask off,
+asking for a supervisor), call hand_to_planner instead of answering: the planner makes a new plan version. You
+can't change facts: if a finding is wrong, tell them to use "This is wrong" on it in the Review step."""
+
+HANDOFF_TOOL = {"name": "hand_to_planner", "description": "Pass the patient's request to change the call plan to the "
+                "planner (the Decide agent), which checks it against the rules and makes a new plan version.",
+                "input_schema": {"type": "object", "properties": {}}}
+
+
+def _whole_case(case: dict) -> dict:
+    ctx = {"history": _history_for_llm(summary(case))}
+    if not case.get("calls"):  # "done" can mean the patient said "Not now": never let that read as a won call
+        ctx["note"] = ("No call to billing has been made yet, so billing hasn't agreed to, confirmed or promised "
+                       "anything. Lower balances are what the bill should come down to once billing applies the "
+                       "corrections, not what it has come down to. Calling now would be the first call.")
+    if f := case.get("facts"):
+        ctx["findings"] = list(f["findings"].values())
+        ctx["corrections"] = [c for c in case.get("corrections") or [] if c.get("active")]
+    if ver := decide.latest(case):
+        ctx["plan"] = {k: ver[k] for k in ("v", "round", "money", "call", "asks", "skipped", "next") if k in ver}
+    return ctx
+
+
+async def ask_billback(case: dict, question: str) -> dict:
+    """The agent chat's default: BillBack answers about the whole case, and hands plan changes to the planner."""
+    answer, handoff = "", False
+    if llm.available():
+        try:
+            resp = await llm.create(system=BILLBACK_SYSTEM, model=config.MODEL_FAST, max_tokens=1500, effort="low",
+                                    tools=[HANDOFF_TOOL], messages=[{"role": "user", "content":
+                                        f"CASE (JSON):\n{json.dumps(_whole_case(case), default=str)}\n\nPatient asks: {question}"}])
+            handoff = any(b.type == "tool_use" for b in resp.content)
+            answer = "".join(b.text for b in resp.content if b.type == "text").strip()
+        except Exception as e:
+            print("billback chat LLM error, using template:", type(e).__name__)
+    else:
+        handoff = decide._offline_intent(question)[0] == "change"
+    if handoff and decide.latest(case):
+        out = await decide.chat(case, question, via="billback")
+        return {**out, "answer": out["reply"], "agent": "decide", "agent_name": "Planner", "via": "billback"}
+    if handoff:
+        answer = "Your plan isn't ready yet. Once the Review is done, the planner can change it."
+    if not answer:
+        answer = (await answer_status(case, question))["answer"]
+    bus.emit(case["id"], "agent_qa", "billback", question=question, answer=answer, sources=[])
+    return {"answer": answer, "agent": "billback", "agent_name": "BillBack", "sources": []}
+
+
 calls_by_cartesia_id: dict[str, str] = {}
 
 

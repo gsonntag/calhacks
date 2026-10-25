@@ -42,6 +42,7 @@ TWILIO_FROM_NUMBER = _secret("TWILIO_FROM_NUMBER")        # a Twilio number you 
 TWILIO_TWIML_APP_SID = _secret("TWILIO_TWIML_APP_SID")    # optional: enables the 3-way conference handoff
 PATIENT_PHONE_NUMBER = _secret("PATIENT_PHONE_NUMBER")    # demo patient's phone (teammate), for verbal consent
 CARTESIA_STT_MODEL = os.getenv("CARTESIA_STT_MODEL", "ink-2")
+CARTESIA_STT_BATCH_MODEL = os.getenv("CARTESIA_STT_BATCH_MODEL", "ink-whisper")  # short recordings (Cases page mic)
 CARTESIA_TTS_MODEL = os.getenv("CARTESIA_TTS_MODEL", "sonic-3.6")
 
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://localhost:8000")
