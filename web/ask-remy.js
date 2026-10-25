@@ -52,16 +52,24 @@
   const $ = (id) => document.getElementById(id);
   const st = { open: false, busy: false, err: '', items: [], loaded: false };
 
-  // the hint shows until the chat is opened or dismissed, once per browser (shared with the case page)
+  // the hint shows once per browser (shared with the case page), on every width: briefly, once the page has settled,
+  // and never over something that waits on the patient (.attn-card). It goes after 6 s, on a scroll or focus, or
+  // when the chat is opened or the hint dismissed.
   const TIP_KEY = 'remy-ask-tip-dismissed';
   const tipDismissed = () => { try { return localStorage.getItem(TIP_KEY) === '1'; } catch (e) { return false; } };
-  const dismissTip = () => { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} $('arTip').hidden = true; };
+  let tipLive = false;
+  const hideTip = () => {
+    tipLive = false; $('arTip').hidden = true;
+    document.removeEventListener('scroll', hideTip, true); document.removeEventListener('focusin', hideTip);
+  };
+  const dismissTip = () => { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} hideTip(); };
+  const needsYou = () => [...document.querySelectorAll('.attn-card')].some((el) => el.getClientRects().length);
 
   function render() {
     $('arFab').setAttribute('aria-expanded', String(st.open));
     $('arFab').firstElementChild.textContent = st.open ? 'close' : 'auto_awesome';
     $('arFabLabel').textContent = st.open ? 'Close' : 'Ask Remy';
-    $('arTip').hidden = st.open || tipDismissed();
+    $('arTip').hidden = st.open || !tipLive;
     $('arPanel').hidden = !st.open;
     if (!st.open) return;
     const intro = `<ul class="chat-intro"><li class="on"><b>Remy</b> sees every tab: your cases, the hospitals, what the agents did and your profile.</li>
@@ -114,13 +122,13 @@
   render();
   if (!tipDismissed()) {
     $('arFab').classList.add('glow');
-    // a phone has no room to spare: the hint shows once, and goes after 6 s or on the first scroll or input focus
-    if (matchMedia('(max-width: 640px)').matches) {
+    setTimeout(() => {
+      if (st.open || tipDismissed() || needsYou()) return;
       try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {}
-      const hide = () => { $('arTip').hidden = true; removeEventListener('scroll', hide); document.removeEventListener('focusin', hide); };
-      setTimeout(hide, 6000);
-      addEventListener('scroll', hide, { passive: true, once: true });
-      document.addEventListener('focusin', hide, { once: true });
-    }
+      tipLive = true; render();
+      setTimeout(hideTip, 6000);
+      document.addEventListener('scroll', hideTip, { capture: true, passive: true });
+      document.addEventListener('focusin', hideTip);
+    }, 2500);
   }
 })();

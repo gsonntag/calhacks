@@ -291,10 +291,11 @@ function hospitalCard(h) {
   const head = `<span class="x-main"><span class="x-name">${esc(h.name)}</span>
       <span class="x-sub">${esc(h.system || h.city)} · ${tierChecks.length} tier${tierChecks.length === 1 ? '' : 's'} · fetched ${day(cur.fetched_at)}</span></span>
     <span class="x-trail">${statusChip(cur)}</span>`;
-  const body = `<div class="recheck" id="h-${esc(h.id)}">
-      <button type="button" class="m3-btn outlined" data-recheck="${esc(h.id)}" ${canRecheck ? '' : 'disabled title="Bright Data keys not configured on this server"'}>${icon('refresh')}Recheck now</button>
-      <span class="status" id="st-${esc(h.id)}">${canRecheck ? '' : 'Recheck needs Bright Data keys (not set on this server).'}</span>
-    </div>
+  // no live keys on this server: no recheck control at all, rather than a dead button
+  const body = `${canRecheck ? `<div class="recheck" id="h-${esc(h.id)}">
+      <button type="button" class="m3-btn outlined" data-recheck="${esc(h.id)}">${icon('refresh')}Recheck now</button>
+      <span class="status" id="st-${esc(h.id)}"></span>
+    </div>` : ''}
     <div class="kv"><b>City</b><span>${esc(h.city)}</span><b>Version</b><span>v${cur.version} · fetched ${day(cur.fetched_at)}</span>
       <b>Content sha256</b><span><code>${esc(cur.content_sha256.slice(0, 16))}…</code></span>
       <b>Quotes</b><span>${ver.tiers_verified} tier quotes verified, ${ver.tiers_rejected} rejected</span></div>

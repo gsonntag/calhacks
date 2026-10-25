@@ -573,7 +573,8 @@ const STATUS = ['Upload', 'Reviewing', 'Your plan', 'On call', 'Resolved'];
 const AGENT_STATUS = {created: 1, reviewing: 1, deciding: 2, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const money = (n) => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+// whole dollars when there are no cents ($400), otherwise exactly two decimals ($16,088.70)
+const money = (n) => { const v = Number(n); return '$' + v.toLocaleString('en-US', Math.round(v * 100) % 100 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : { maximumFractionDigits: 0 }); };
 const setHTML = (el, html) => { if (el._html !== html) { el.innerHTML = html; el._html = html; } };
 const setText = (el, t) => { if (el.textContent !== t) el.textContent = t; };
 const timer = (sec) => { const s = Math.max(0, Math.floor(sec)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
@@ -756,16 +757,17 @@ function renderAgent(key, m, forceOpen = false) {
 }
 
 // "Recheck now": the Bright Data agent checks the hospital live (POST /api/cases/{id}/policy/recheck) and every
-// request (tool, URL, found / blocked / empty / timed out) streams into its panel above. Needs live keys.
+// request (tool, URL, found / blocked / empty / timed out) streams into its panel above. Needs live keys: without
+// them (GET /api/mode live_crawl false) the control is hidden.
 function recheckHTML(m, ui) {
   const a = m.agent.policy || {};
   if (state.active === 'replay' || !a.started || (!a.done && !ui.rechecking)) return '';  // first pass still running
   const running = !a.done || ui.rechecking, live = state.liveCrawl;
-  const why = live ? 'Check the hospital’s policy live with Bright Data (at most 10 requests)'
-    : 'Needs Bright Data and Claude keys on this server';
-  return `<div class="recheck"><button type="button" class="m3-btn tonal" data-act="recheck"${running || !live ? ' aria-disabled="true"' : ''}
+  if (!live) return '';  // no live keys on this server: no control at all, rather than a dead button
+  const why = 'Check the hospital’s policy live with Bright Data (at most 10 requests)';
+  return `<div class="recheck"><button type="button" class="m3-btn tonal" data-act="recheck"${running ? ' aria-disabled="true"' : ''}
       title="${esc(why)}">${sym('refresh')}${running && ui.rechecking ? 'Rechecking…' : 'Recheck now'}</button>
-    <span class="body-s muted">${esc(ui.recheckErr || (live ? 'Live: watch each Bright Data request above' : why))}</span></div>`;
+    <span class="body-s muted">${esc(ui.recheckErr || 'Live: watch each Bright Data request above')}</span></div>`;
 }
 
 // the case rail (rail.js): every case this page follows (the open one and the running ones) shows its live
@@ -1750,7 +1752,8 @@ function renderAgentChat(m) {
   fab.setAttribute('aria-expanded', String(open));
   setText(fab.firstElementChild, open ? 'close' : 'auto_awesome');
   setText($('chatFabLabel'), open ? 'Close' : 'Ask Remy');
-  $('chatTip').hidden = !hasCase || open || tipDismissed();
+  $('chatTip').hidden = !hasCase || open || !tip.live;
+  maybeTip(hasCase);
   $('chatPanel').hidden = !open;
   if ($('chatPanel').hidden) return;
   if (!chatReady(m, chat.agent)) chat.agent = 'remy';
@@ -1780,10 +1783,32 @@ function renderAgentChat(m) {
   $('chatInput').disabled = $('chatSend').disabled = chat.busy;
 }
 
-// the "Questions about this bill?" hint shows until the chat is opened or the hint is dismissed, once per browser
+// the "Questions about this bill?" hint shows once per browser (shared with ask-remy.js), on every width: briefly,
+// only once the page is idle, never while a step waits on the patient ("Call now", an approval, an .attn-card).
+// It goes after 6 s, on a scroll or focus, as soon as something needs the patient, or when the chat is opened.
 const TIP_KEY = 'remy-ask-tip-dismissed';
+const TIP_ATTN = '.attn-card, #approveBtn, #nextCallBtn, #planYes';
+const tip = { live: false, timer: 0 };
 function tipDismissed() { try { return localStorage.getItem(TIP_KEY) === '1'; } catch (e) { return false; } }
-function dismissTip() { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} $('chatTip').hidden = true; }
+function pageNeedsYou() { return [...document.querySelectorAll(TIP_ATTN)].some((el) => el.getClientRects().length); }
+function hideTip() {
+  tip.live = false; $('chatTip').hidden = true;
+  document.removeEventListener('scroll', hideTip, true); document.removeEventListener('focusin', hideTip);
+}
+function dismissTip() { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} hideTip(); }
+function maybeTip(hasCase) {
+  if (tip.live && pageNeedsYou()) return hideTip();
+  if (tip.live || tip.timer || !hasCase || chat.open || tipDismissed()) return;
+  tip.timer = setTimeout(() => {  // idle for 2.5 s; if a step needs the patient by then, a later render tries again
+    tip.timer = 0;
+    if (chat.open || tipDismissed() || pageNeedsYou() || !state.active) return;
+    try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {}
+    tip.live = true; $('chatTip').hidden = false;
+    setTimeout(hideTip, 6000);
+    document.addEventListener('scroll', hideTip, { capture: true, passive: true });
+    document.addEventListener('focusin', hideTip);
+  }, 2500);
+}
 $('chatTipClose').addEventListener('click', dismissTip);
 
 function setChatOpen(open) {
