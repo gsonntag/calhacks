@@ -46,8 +46,9 @@ Claude, the browser's voice instead of Cartesia. `GET /api/mode` shows which int
 **Ports.** The app serves everything on one port (8000 above; any port works). Real phone calls need Twilio
 to reach `/voice/twilio/*` over HTTPS: `cloudflared tunnel --url http://localhost:8000`, then set
 `PUBLIC_BASE_URL` (details in [`docs/voice.md`](docs/voice.md)). Without Twilio, calls run in **desk mode**:
-the case page links a billing-rep console (`rep.html`) where a teammate plays billing, and BillBack listens
-through Cartesia Ink and answers out loud through Sonic.
+a teammate plays billing on the rep console (`rep.html?call=<id>`; once the call starts, the case's **Under the
+hood** page links it as "rep console"), and BillBack listens through Cartesia Ink and answers out loud through
+Sonic.
 
 One-time data scripts (they call paid APIs; the results are already committed):
 
@@ -70,14 +71,19 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
      (refreshed live when it's stale, crawled live for a new hospital), the discount the patient qualifies
      for, the payment-plan terms.
 3. **The plan.** Rules-based code (`billback/agents/decide.py`) turns the findings into a list of asks, biggest
-   money first, each linked to its proof. You can ask about any finding, mark one wrong, or change the
-   strategy in a chat; every change makes a new plan version. "Call now" approves the version on screen.
+   money first, each linked to its proof. Mark a finding "This is wrong", or open **Ask BillBack** (the round
+   button bottom-right of the case page) and pick who answers: BillBack (the whole case), the Nessie agent, the
+   Bright Data agent, or the Planner ("I can do $150/mo"). Every plan change makes a new version; "Call now"
+   approves the version on screen. On the Cases page, each case has a hold-to-talk mic: ask where things
+   stand or say "call them"; anything with consequences is said back first and runs only after a spoken yes.
 4. **The call.** BillBack phones billing (or the desk console), says it's an automated assistant, works
    through the asks, refuses to pay on the call, reads the case number back, and records what billing agreed.
 5. **Resolved and follow-up.** A scorecard marks each ask got / refused / promised later. The balance only
-   drops when billing confirms it. A payment plan, if one is needed, is written to the bank as scheduled
-   bills. A follow-up is scheduled from what billing promised, and "Call again" reuses the plan with only the
-   open asks.
+   drops when billing confirms it ("expected $0 once they apply the corrections" until then); once it does,
+   the hospital bill in Nessie is marked corrected. If money is still owed, the planner proposes an
+   interest-free plan ("6 × $100/mo"); the patient decides and sets up the payments, and nothing is written
+   to the bank for it. A follow-up is scheduled from what billing promised, and "Call again" reuses the plan
+   with only the open asks.
 
 ```
  chat / drop-and-go ──► Orchestrator ──► audit log + live case page (web/case.html), Cases list (web/dashboard.html)
@@ -86,15 +92,17 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
    ▼              ▼           ▼                ▼                    ▼                  ▼
  Intake        Nessie agent Bright Data      Decide (plan)        Caller             Follow-up / Planner
  Claude vision bank txns,   agent: policy DB rules-based asks,    Twilio or desk ↔   scorecard, next round,
- bill + EOB    payments,    ◄── SERP → Unlocker  versions,        Cartesia Ink/Sonic payment plan → Nessie
-               duplicates,  → PDFs → Claude  planner chat         ↔ Claude call brain ── APPROVAL GATE ──
-               income       → verified quotes
+ bill + EOB    payments,    ◄── SERP → Unlocker  versions,        Cartesia Ink/Sonic plan proposal,
+               duplicates,  → PDFs → Claude  Ask BillBack chat    ↔ Claude call brain bill corrected → Nessie
+               income       → verified quotes                      ▲
+                                                 APPROVAL GATE ────┘ (before every call)
 ```
 
 - **Orchestration** (`billback/orchestrator.py`): a fixed pipeline on purpose, so it's predictable on stage.
-- **Harness** (`billback/harness.py`): every tool has a permission tier. `read` runs freely, `act` is
-  announced, `consequential` waits for the patient's approval (placing a call, saving a payment plan). Every
-  tool call, result and approval is an event streamed to the UI and appended to the audit log.
+- **Harness** (`billback/harness.py`): every tool has a permission tier (`read` runs freely, `act` is
+  announced, `consequential` waits for the patient), and every call waits on the approval gate ("Call now",
+  "Call again", the phone approval page or a spoken yes). Every tool call, result and approval is an event
+  streamed to the UI and appended to the audit log.
 - **Money is computed, not generated** (`billback/finance.py`): reconciliation, duplicates, income from
   deposits, % of the 2026 federal poverty line, discount tiers, payment plans (written as "17 × $88/mo, then
   $78.98" so the total is exact). Claude extracts policy rules with verbatim quotes, and code checks each
@@ -107,7 +115,10 @@ Our own voice pipeline, not a hosted agent: Twilio Media Streams ↔ Cartesia In
 brain ↔ Cartesia Sonic (streaming TTS).
 - **Ink** (`/stt/turns/websocket`, `ink-2`): turn detection (`turn.end`), and Claude starts drafting on
   `turn.eager_end`. Keyterms (patient, hospital and insurer names, "charity care", "EOB") improve recall.
-  Desk mode streams the browser mic to Ink too (16 kHz PCM, `WS /api/calls/{id}/listen`).
+  Desk mode streams the browser mic to Ink too (16 kHz PCM, `WS /api/calls/{id}/listen?key=…`).
+- **Cases-page mic**: one recorded turn goes to Ink's batch STT (`POST /api/cases/{id}/talk`), the browser's
+  own transcript as fallback; the answer is spoken with Sonic (`/api/tts`), or the browser voice without
+  credits.
 - **Sonic** (`/tts/websocket`, `sonic-3.6`): Claude's reply is spoken sentence by sentence as it streams.
   Word timestamps (`add_timestamps`) tell us what billing actually heard when they interrupt.
 - **Barge-in**: real words stop playback ("mm-hmm" doesn't); the call brain's memory is cut to the last word
@@ -159,8 +170,9 @@ Docs: [`docs/brightdata.md`](docs/brightdata.md).
 - **12 months of medical spending** (pharmacies, clinics, dental…) added to this bill for the hospitals'
   "medical costs over 10% of income" rule. Each transaction is listed as proof.
 - **Plan sized on the bank**: regular monthly bills found in the history lower what the patient can pay.
-- **Writes**: a payment plan as one scheduled Nessie bill per payment (so it ends); after billing confirms a
-  new balance, the hospital bill in Nessie is updated (`PUT /bills/{id}`).
+- **Writes**: only after billing confirms a new balance on a call: the hospital bill in Nessie is updated to
+  it and marked "corrected by billing" (`PUT /bills/{id}`; cancelled at $0). The proposed payment plan is
+  never written to the bank.
 - **Fallback**: if Nessie has no account for the patient or doesn't answer, the case uses sample bank data
   and says so on the case page.
 
@@ -170,7 +182,8 @@ Code: `billback/integrations/nessie.py`, `billback/agents/auditor.py`, `billback
 ### Anthropic Claude
 Reads the bill and insurance statement (vision), extracts policy rules with verbatim quotes, runs the phone
 call (a tool-use loop with `record_outcome`, `press_keys`, `end_call`; `billback/agents/caller.py`), reads the
-call transcript into outcomes, answers "Ask" on a finding, the planner chat and "what's the status?". Models:
+call transcript into outcomes, answers in the Ask BillBack chat (as BillBack, the Nessie agent, the Bright
+Data agent or the Planner) and on the Cases-page mic. Models:
 `claude-sonnet-5-5` and `claude-haiku-5-5` (`billback/config.py`). It never produces a dollar figure that code
 didn't compute.
 
@@ -188,8 +201,9 @@ didn't compute.
 - **Cartesia is out of credits** (HTTP 402 since 2026-10-25). No real Twilio phone call has been recorded yet;
   the phone path is tested against simulated Twilio and Cartesia sockets. Desk mode on Ink, barge-in with
   word timestamps, ID read-back and keypad tones were built and tested offline (fakes, plus a headless Chrome
-  run of `rep.html`) and need one live check. Without credits, desk mode falls back to Chrome's speech
-  recognition and voice, and says so.
+  run of `rep.html`) and need one live check. The Cases-page mic's Ink batch STT was written while the account
+  had no credits and has never run live. Without credits, desk mode and the mic fall back to Chrome's speech
+  recognition and voice, and say so.
 - **Desk mode** doesn't yet start Claude early on Ink's `turn.eager_end` (the phone path does). In
   conference mode Ink hears one mixed track.
 - **The live Bright Data path** (streamed crawl, retries, "Recheck now", stale re-crawl) is tested with replies
@@ -205,24 +219,29 @@ didn't compute.
   Nessie's account balance isn't read.
 - **Income is take-home pay** (bank deposits). The poverty-line test should use gross income. BillBack labels
   the figure, estimates gross as take-home ÷ 0.80, and warns on the case page when that would change the
-  discount ("have pay stubs ready"), but eligibility still uses take-home. Using gross would flip two test
-  patients (marcus-real, dana-altabates-refund) from free care to none.
+  discount ("have pay stubs ready"), but eligibility still uses take-home. Using gross would flip one test
+  patient (dana-altabates-refund, who shows the warning). Marcus stays eligible either way: his bill plus
+  12 months of bank medical spending is about 14% of take-home and 11.5% of estimated gross, so he gets no
+  warning.
 - **Recorded replays** predate the latest changes: they still end on "$8,700 → $600" and use older wording.
   A live run shows the current behaviour (balance stays at billing's figure until confirmed).
-- **Not built:** Gmail intake (the "Demo inbox" chip loads the sample bill, marked simulated), "Start over"
-  (re-fetching data for a case), the California collections-law check, notifications when a case needs you.
+- **Not built:** archiving or deleting a single case, Gmail intake (the "Demo inbox" chip loads the sample
+  bill, marked simulated), "Start over" (re-fetching data for a case), the California collections-law check,
+  notifications when a case needs you.
   The `/flows/` pages are early intake mockups, not linked from the app (except `/flows/drop-go.html`, which
   works).
 - **Admin key:** the browser side (`web/auth.js`) has only been tested server-side.
 
 ## Privacy and responsible use
 - **Says what it is.** Every call opens with "an automated assistant calling on behalf of <patient>, with their
-  authorization" and says the call is transcribed (`billback/agents/caller.py`). The planner chat refuses to
-  hide this (`billback/agents/decide.py`).
-- **Never agrees to pay.** The call brain never pays, agrees to pay, or gives card or bank details; the planner
-  chat refuses any strategy that would.
-- **Nothing happens without approval.** Placing a call and saving a payment plan are `consequential` tools
-  that wait for the patient (`billback/harness.py`). A change to the plan after approval resets the approval.
+  authorization" and says the call is transcribed (`billback/agents/caller.py`). The Planner in Ask BillBack
+  refuses to hide this (`billback/agents/decide.py`).
+- **Never agrees to pay.** The call brain never pays, agrees to pay, or gives card or bank details; the Planner
+  refuses any strategy that would.
+- **Nothing happens without approval.** Every call waits for the patient's OK on the approval gate
+  (`billback/orchestrator.py`, `billback/harness.py`); on the Cases-page mic it takes two turns, and the words
+  come from code (`billback/agents/talk.py`). A change to the plan after approval resets the approval. The
+  planner only proposes a payment plan and writes nothing to the bank.
 - **Patient authorization (HIPAA 45 CFR 164.510(b)).** A hospital may discuss a bill with someone the patient
   involves in payment, with the patient's verbal agreement. With `PATIENT_PHONE_NUMBER` set, BillBack first
   calls the patient, asks one scripted question, and logs the question, the transcribed answer, the time and
@@ -244,14 +263,13 @@ didn't compute.
   - `data/replay_<scenario>.json`: the last live run, for replay.
   - `data/nessie_ids*.json`: Nessie ids of the seeded demo accounts.
   - Uploaded PDFs are sent to Claude and not saved to disk.
-- **Deleting it:** delete a case from the Cases list (removes its snapshot; refused mid-call), or `POST
-  /api/reset` (all case snapshots). Both keep the audit log on purpose. To erase everything, stop the server
-  and delete `data/` (or the files above for one case).
+- **Deleting it:** `POST /api/reset` (admin key) removes all case snapshots and keeps the audit logs on
+  purpose. There is no per-case delete in the app. To erase everything, stop the server and delete `data/`
+  (or the files above for one case).
 
 ## Tests
-`uv run pytest -q`: fully offline, no API keys. 281 tests on master before PRs #1–#8; those PRs add about 140
-more (300+ in total). Live checks that need paid credits are listed in each PR and in
-[`docs/PLAN.md`](docs/PLAN.md).
+`uv run pytest -q`: fully offline, no API keys. 416 tests pass on master (0f25617). Live checks that need paid
+credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
 
 ## Docs
 - [`docs/DEMO.md`](docs/DEMO.md): the 2-minute demo script and fallbacks.
@@ -259,19 +277,20 @@ more (300+ in total). Live checks that need paid credits are listed in each PR a
 - [`docs/voice.md`](docs/voice.md): the voice pipeline, latency, pronunciation, authorization.
 - [`docs/plan-format.md`](docs/plan-format.md): the plan's data format.
 - [`docs/legal-check.md`](docs/legal-check.md): legal claims checked against sources.
+- [`docs/devpost-submission.md`](docs/devpost-submission.md): the Devpost write-up.
 - [`docs/feasibility.md`](docs/feasibility.md), [`docs/competitors.md`](docs/competitors.md),
   [`docs/judge-qa.md`](docs/judge-qa.md), [`docs/PLAN.md`](docs/PLAN.md).
 
 ## Layout
 ```
-billback/  app.py orchestrator.py harness.py events.py finance.py billcheck.py followups.py llm.py config.py auth.py caselist.py prices.py
-           agents/        intake auditor (Nessie agent) policy (Bright Data agent) decide scorecard caller planner
+billback/  app.py orchestrator.py harness.py events.py finance.py billcheck.py followups.py llm.py config.py auth.py prices.py contacts.py
+           agents/        intake auditor (Nessie agent) policy (Bright Data agent) decide scorecard caller planner talk report
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes
            voice/         calls media cartesia_ws desk heard pronounce voices authorization audio routes
            integrations/  nessie brightdata cartesia twilio
-web/       dashboard.html (Cases, at /)  new.html (chat intake)  case.html  hospitals.html  rep.html (desk billing)
-           approve.html (phone approval)  voice.html  pitch.html  flows/drop-go.html
+web/       dashboard.html (Cases, at /)  new.html (chat intake)  case.html  ops.html (Under the hood)  hospitals.html
+           rep.html (desk billing)  approve.html (phone approval)  voice.html  pitch.html  auth.js  flows/drop-go.html
 demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, scenarios/, outcomes/, replays
 policydb/  policies.sqlite3, policies.json, raw/ (Bright Data crawl artifacts), prices/ (real price tables)
-scripts/   seed_nessie crawl_policies build_price_tables make_scenario setup_cartesia sim_twilio_stream make_demo_docs
+scripts/   seed_nessie crawl_policies build_price_tables build_contacts make_scenario setup_cartesia sim_twilio_stream bench_desk make_demo_docs
 ```

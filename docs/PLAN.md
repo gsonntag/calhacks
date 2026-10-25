@@ -11,68 +11,68 @@ Four mock judges scored the project. They all praised the same thing: Claude nev
 number (policy figures need an exact quote from the crawled page, code does the money math, every figure cites
 its source). Scores: General "finalist, not yet a winner" · Cartesia 6.9/10, "likely loses to a team with a
 real phone call" · Nessie "likely top 3" · Bright Data "strong contender, moderate fixable risk of
-disqualification" (Live-ness 4/10). Gavin's picks are marked ✔. Status (2026-10-25): "→ #n" is the open PR that
-addresses the item (PRs #1–#8, #9 in progress, and this docs PR #10, which merges last); **open** means nothing addresses it yet.
+disqualification" (Live-ness 4/10). Gavin's picks are marked ✔. Status (2026-10-25, master 0f25617): "✓ #n"
+means PR #n merged and covers it; **open** means nothing on master covers it. #4 and #8 were closed without
+merging; this docs PR is #10.
 
 ### P0: before anyone sees it (bugs and disqualification risks)
-1. ✔ **→ #2** **Login on approve and reset.** `POST /api/approvals/{id}` and `POST /api/reset` (`billback/app.py:421`,
-   `:567`) are open to anyone. Through a public tunnel, a stranger could approve a call that rings a real
-   phone. Add a shared secret.
-2. ✔ **→ #3** **No false win.** When billing only puts the account on hold, the case still shows the target ($600) as
-   the balance (`billback/orchestrator.py:455`). Show the real balance until the reduction is confirmed.
-3. ✔ **→ #6** **A patient missing from Nessie stops the whole case** (`billback/integrations/nessie.py:167`). Fall
-   back to the sample data, and say so on the case page.
-4. **→ #2** (`BILLBACK_REQUIRE_LIVE=1`) **The app can't run on sample policies on stage.** Refuse to start without working keys, so
-   `SAMPLE_TIERS` can't appear. The Bright Data track's "mocked or hardcoded data" rule could disqualify us.
-5. **→ #3** (one scheduled Nessie bill per payment) **The 6-month payment plan never ends.** It's written to Nessie as a recurring bill with no end date.
+1. ✔ **✓ #2** **Login on approve and reset.** `POST /api/approvals/{id}` and `POST /api/reset` were open to
+   anyone. Now every call-placing, credit-spending or data-changing route needs `BILLBACK_ADMIN_TOKEN`
+   (`X-BillBack-Key`, or `?key=` once), or localhost when unset.
+2. ✔ **✓ #3** **No false win.** When billing only puts the account on hold, the case showed the target as the
+   balance. Now billing's figure stays until confirmed ("expected $0 once they apply the corrections").
+3. ✔ **✓ #6** **A patient missing from Nessie stops the whole case.** Now it falls back to sample bank data and
+   says so on the case page.
+4. **✓ #2** (`BILLBACK_REQUIRE_LIVE=1`) **The app can't run on sample policies on stage.** Judging mode refuses
+   to start without the keys, and `SAMPLE_TIERS` is never used.
+5. **✓ #3, then moot** **The 6-month payment plan never ends.** #3 wrote one scheduled Nessie bill per
+   payment; since 98eef7d the planner only proposes the plan and writes nothing to the bank.
 
 ### P1: the demo (every judge raised these)
-6. **→ #10** (`docs/DEMO.md` leads with Marcus and the 12-hospital comparison) **Lead with a case that shows off the sponsors.** Rosa's $8,700 → $600 is subtraction (insurance
-   already covered + one $500 bank payment). Bright Data says she's "not eligible", and California law
-   already requires the interest-free plan. Lead with Marcus ($5,600 → $0 free care), or show "same bill at
-   CPMC: $0, at ZSFG: $5,600". (See also item 5 of "Rough version": rosa-real.)
+6. **→ #10** **Lead with a case that shows off the sponsors.** `docs/DEMO.md` leads with Marcus ($5,600 → $0
+   free care at UCSF) and the 12-hospital comparison; Rosa is the backup.
 7. **Something live in the 2 minutes.**
-   - **→ #5** Bright Data: a 20-second live crawl starting at 0:00 (a bill from a hospital that isn't stored yet,
-     streaming on the case page), or "Recheck now" on stage.
+   - **✓ #5** Bright Data: live crawl on the case page and "Recheck now" (not yet run live).
    - **Open** Cartesia: record one real Twilio call and show it with the latency numbers (needs credits).
-   - ✔ **→ #7** Cartesia: desk mode listens with Chrome's speech recognition (`web/rep.html:150`). Route it through
-     Ink so the whole demo uses Cartesia, and allow interrupting. Can be built offline; live test needs
-     credits.
-8. **→ #10** (README, DEMO; `docs/brightdata.md` price tables → #5) **Docs agree with each other and with the code.** README says 139 tests (281); `docs/DEMO.md` says 4
-   hospitals (12) and is a 3-minute script (judging is 2); `docs/brightdata.md` says price tables aren't
-   used (they are); add a "Known limitations" section to the README (the Cartesia track asks for it) with
-   PHI data-retention notes.
-9. **→ #8** (menus already show only Cases · Hospitals · Under the hood; `/flows/` unlinked) **Hide the extras for judging.** About 10 app pages plus 13 mockups in `/flows/`: take them out of the
-   menus.
+   - ✔ **✓ #7** Cartesia: desk mode listens through Ink, with barge-in (built offline; needs one live check).
+8. **→ #10** **Docs agree with each other and with the code.** README, DEMO and PLAN checked against master
+   (416 tests; 12 hospitals; 2-minute script; Known limitations with data-retention notes).
+9. **Open** (#8 closed) **Hide the extras for judging.** Menus already show only Cases · Hospitals · Under the
+   hood and `/flows/` is unlinked; #8's readability pass did not land.
 
 ### P2: correctness
-10. **→ #3, partly** (labelled take-home, gross check with a warning, gig/Venmo counted; eligibility still on take-home: **open decision**) **Income:** the poverty-line test uses gross pay but the income is take-home pay, so patients look more
-    eligible than they are. Gig and Venmo income are ignored.
-11. **→ #7** **Interrupted replies:** when billing interrupts, BillBack remembers its whole reply, as if billing
-    heard it. Use Sonic word timestamps to cut it at the word where it was interrupted.
-12. **→ #5** **Hospitals stored as "no tiers" are never re-crawled**, so Saint Francis stays wrong.
-13. **→ #7** **Read IDs back for confirmation.** A sim run accepted "FA 20931" misheard as "FA209-31".
+10. **✓ #3, partly** **Income:** labelled take-home, gross estimated (÷ 0.80) with a warning, gig/Venmo counted.
+    Eligibility still uses take-home: **open decision** (gross would flip only dana-altabates-refund now; Marcus
+    is about 11.5% of estimated gross, still over UCSF's 10%).
+11. **✓ #7** **Interrupted replies:** the call brain remembers only what was played (Sonic word timestamps).
+12. **✓ #5** **"No tiers" hospitals are never re-crawled:** a "no tiers" result older than 6 hours is crawled
+    again.
+13. **✓ #7** **Read IDs back for confirmation.**
 
 ### P3: per-track upgrades (if there's time)
-- **→ #6** (12-month medical spending, bill marked corrected, messier data) and **#3** (plan sized on the bank) Nessie: add up 12 months of medical purchases for the high-medical-cost rule (makes bank data decide
-  eligibility; also in "Later"); size the plan on her balance and recurring bills instead of a flat 4%; mark
-  the bill updated in Nessie once billing confirms; seed messier data (today the $500 payment names the
-  hospital account number, and pay is identical every 14 days).
-- **→ #7** Cartesia: keypad tones for phone menus, stay quiet during hold music.
+- **✓ #6, #3** Nessie: 12 months of bank medical spending for the high-medical-cost rule, bill marked corrected
+  in Nessie once billing confirms, messier seed data (#6); plan sized on the bank's recurring bills (#3).
+- **✓ #7** Cartesia: keypad tones for phone menus, quiet during hold messages.
 
-### Still open after the PRs merge
+Also merged: #1 (a line billed twice on insured bills, its own ask), #9 (the caller says only the plan's
+asks), #11 (Ask BillBack chat on the case page; hold-to-talk mic on the Cases page), #12 (the step bar fills
+with real progress). 98eef7d removed Ask on findings, the desk-mode console link on the case page, and the
+post-call payment-plan Yes/No card.
+
+### Still open
 - A recorded real Twilio call (needs Cartesia credits); one live check each of #7 (desk on Ink, barge-in,
-  timestamps, read-back) and #5 ("Recheck now", a stale re-crawl).
+  timestamps, read-back), #5 ("Recheck now", a stale re-crawl) and #11 (Ink batch STT on the Cases-page mic).
 - Reseed the live Nessie sandbox with #6's messier histories (250–500 requests per generated scenario).
-- Income: decide whether eligibility uses estimated gross (flips marcus-real and dana-altabates-refund).
-- Re-record the replays: they predate #3, #5 and #8.
+- Income: decide whether eligibility uses estimated gross (flips dana-altabates-refund).
+- Re-record the replays: they predate #3, #5, #6 and 98eef7d.
+- Not on master: #4 (cases overview, archive/delete) and #8 (readability pass), both closed.
 
-## Open handoff items (updated 2026-10-25, 06:50)
+## Open handoff items (updated 2026-10-25, master 0f25617)
 
-- **Call speed is merged** (e1fa24f, pushed). Still to do: rehearse the new streaming player in
-  `web/rep.html` in Chrome once Cartesia has credits again.
-- **Cartesia is out of credits** (HTTP 402). Phone path down; desk mode uses the browser voice until topped up.
-- **Next to build:** item 5 below (Bright Data agent: real prices), then step 4's live call screen.
+- **416 tests pass offline** (`uv run pytest -q`, no keys).
+- **Cartesia is out of credits** (HTTP 402). Phone path, desk mode on Ink and the Cases-page mic's Ink STT are
+  untested live; each falls back to the browser's speech and voice.
+- **Live checks still owed:** see "Still open" above. Each needs a small, stated credit cap (rule below).
 - **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/`. Uploading
   needs a server with API keys. Only Rosa and Marcus have Nessie bank accounts; Dana, Amara, Lena don't yet.
 - **Contacts:** `billback/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
@@ -109,8 +109,8 @@ bank history and insurer stay synthetic.
 
 ## Rough version (build now, in order)
 
-Status (2026-10-25, 06:50): 1–4 built · 5 not built · 6 built (step 3). Outside this list: step 5 built
-(offline), step 4's live call screen not built, call speed merged. 281 tests pass.
+Status (2026-10-25, master 0f25617): 1–4 built · 5 mostly built (#1, #5) · 6 built (step 3). Outside this
+list: step 5 built (offline), step 4's live call screen not built, call speed merged. 416 tests pass.
 
 1. **Fold New case into Cases.** *(Built.)* Cases is home, with a "+ New case" button that opens the chat intake. With
    no cases yet, go straight to the chat. Top bar: Cases · Hospitals · Under the hood.
@@ -121,9 +121,9 @@ Status (2026-10-25, 06:50): 1–4 built · 5 not built · 6 built (step 3). Outs
 4. **Nessie agent:** *(Built, commit 7fa5967: strict payment match, uninsured cases, credited payments.
    Merged into `after-david-takeover`.)* Fix the loose payment match first (any word like "Medical"/"Pacific" in a merchant name
    counts as a payment to the hospital, and there's no date check: `finance._matches_payee`).
-5. **Bright Data agent: real prices.** *(Not built. The price tables (`policydb/prices/`) and the rosa-real
-   scenario exist, but the agent has no price check or duplicate-line check, and Rosa's bill is still the
-   old $8,700 everywhere.)* Rebuild Rosa's bill from CPMC's real price file and add a price
+5. **Bright Data agent: real prices.** *(Mostly built: the price check against `policydb/prices/`
+   (#5, unit-aware) and the duplicate-line check (#1) run on every bill. Rosa's demo bill is still the old
+   $8,700 one; the rosa-real scenario has the real-price rebuild.)* Rebuild Rosa's bill from CPMC's real price file and add a price
    check against it, plus a duplicate-line check on the bill. Update her numbers everywhere they appear
    (insurance statement, demo PDFs, replays, pitch).
 
