@@ -18,7 +18,7 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
 
-from .. import billcheck, config, finance, llm
+from .. import billcheck, config, finance, llm, tiger
 from ..events import bus
 from ..integrations import brightdata
 from ..policies import monitor, pipeline, registry
@@ -332,6 +332,7 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     bus.emit(cid, "evidence", "policy", label="Income vs poverty line",
              value=f"{elig['fpl_pct']}% of FPL (household {elig['household_size']}, {elig['fpl_year']} guidelines)",
              source=inc["source"])
+    await _save_household(cid, case, txns, inc, elig, insured)
 
     free = [t for t in tiers if t.get("discount_pct") == 100]
     r.step("free", "Check free care", "running")
@@ -528,3 +529,19 @@ async def recheck_case(case: dict) -> dict:
                    if e["kind"] == "agent_finished" and e["agent"] == "policy"), summary)
     r.finish(before, summary)
     return out
+
+
+async def _save_household(cid: str, case: dict, txns: list[dict], inc: dict, elig: dict, insured: bool) -> None:
+    """Store the household and its bank history in Tiger Data and show its income month by month.
+    Never blocks or fails the case: eligibility above is already decided from the same transactions."""
+    if not tiger.enabled():
+        return
+    try:
+        months = await tiger.save_household(case, txns, inc, elig, insured)
+    except Exception as e:
+        bus.emit(cid, "warning", "policy", text=f"Couldn't save the household to Tiger Data ({type(e).__name__})")
+        return
+    if months:
+        bus.emit(cid, "evidence", "policy", label="Income by month (Tiger Data)",
+                 value=" · ".join(f"{m['month'][:7]} ${m['income']:,.0f}" for m in months),
+                 source=f"Tiger Data continuous aggregate over {len(txns)} Nessie transactions")

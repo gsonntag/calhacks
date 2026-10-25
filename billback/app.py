@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import auth, config, events, followups, llm, orchestrator
+from . import auth, config, events, followups, llm, orchestrator, tiger
 from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
 from .integrations import cartesia
@@ -223,6 +223,15 @@ async def list_cases():
     return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
              "status": c["status"], "case_number": orchestrator.summary(c)["case_number"],
              "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
+
+
+@app.get("/api/households", dependencies=ADMIN)
+async def households():
+    """Every household we've helped, lowest income vs the poverty line first, with 12 months of income from
+    Tiger Data. Admin-only: names, income and household size are personal."""
+    if not tiger.enabled():
+        return {"enabled": False, "households": []}
+    return {"enabled": True, "households": await tiger.households_by_need()}
 
 
 @app.get("/api/dashboard")

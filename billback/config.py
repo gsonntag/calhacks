@@ -47,6 +47,10 @@ CARTESIA_TTS_MODEL = os.getenv("CARTESIA_TTS_MODEL", "sonic-3.6")
 
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://localhost:8000")
 
+# Tiger Data (Timescale Postgres): household profiles and their bank history over time (billback/tiger.py).
+# Unset: nothing is stored there and the app runs from the case files alone.
+TIGER_DATABASE_URL = _secret("TIGER_DATABASE_URL")
+
 # Shared secret for routes that place a call, spend credits or wipe state (billback/auth.py). Unset: those
 # routes only answer requests made directly on this machine, never through a tunnel.
 ADMIN_TOKEN = _secret("BILLBACK_ADMIN_TOKEN")
@@ -65,6 +69,7 @@ def mode() -> dict:
         "brightdata": bool(BRIGHTDATA_API_KEY and BRIGHTDATA_UNLOCKER_ZONE),
         "cartesia": bool(CARTESIA_API_KEY),
         "twilio": bool(TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER),
+        "tiger": bool(TIGER_DATABASE_URL),
     }
 
 

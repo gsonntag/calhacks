@@ -68,7 +68,7 @@ async def _wire_webhooks(base: str) -> tuple[str, str]:
     tool = await _req("POST", "/v1/agents/tools", {
         "type": "webhook", "name": "record_outcome",
         "description": "Record what the hospital agreed to and the case/reference number. Call it as soon as the rep gives a case number, and again if anything changes.",
-        "pre_tool_speech": "none", "execution_mode": "immediate", "response_timeout_secs": 10,
+        "pre_tool_speech": "off", "execution_mode": "immediate", "response_timeout_secs": 10,
         "api_schema": {
             "url": f"{base}/api/cartesia/tools/record_outcome", "method": "POST",
             "request_body_schema": {"type": "object", "properties": {
