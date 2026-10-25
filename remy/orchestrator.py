@@ -11,7 +11,7 @@ import time
 import uuid
 from datetime import date, timedelta
 
-from . import config, events, finance, followups, llm, offline, voice
+from . import config, events, examples, finance, followups, llm, offline, voice
 from .agents import auditor, caller, decide, planner, policy, scorecard
 from .events import bus
 from .harness import gate
@@ -24,11 +24,25 @@ RUNTIME = ("call_done", "turns_seen", "wh_counts", "wh_turn_ids")
 ACTIVE = ("created", "reviewing", "deciding", "awaiting_call_approval", "calling", "planning")
 
 
-SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
+# demo patients a case can start from (?scenario=...): paths under demo/. "raj" is the generated hero case
+# (demo/scenarios/raj-cpmc: remy/scenarios.py), where the bank history is what qualifies him for free care.
+SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json", "raj": "scenarios/raj-cpmc/case.json"}
 
 
 def demo_case(scenario: str = "default") -> dict:
-    return json.loads((config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")).read_text())
+    """The scenario's demo case (examples.load: SCENARIOS or demo/scenarios/<name>/); Rosa's for an unknown one."""
+    return examples.load(scenario if examples.exists(scenario) else "default")
+
+
+def scenario_as_of(scenario: str) -> str | None:
+    """A generated scenario's date (its expected.json "as_of"): the bank windows (90 days of income, 12 months of
+    medical bills) are counted back from it, so the case gives the answer key's numbers on any later day. None
+    for the hand-made demo cases, which run on today's date."""
+    path = config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")
+    try:
+        return json.loads((path.parent / "expected.json").read_text())["as_of"] if path.parent.name != "demo" else None
+    except (OSError, ValueError, KeyError):
+        return None
 
 
 def _blank(v):
@@ -47,11 +61,14 @@ def blank_case() -> dict:
 def new_case(overrides: dict | None = None, scenario: str = "default", from_documents: bool = False) -> dict:
     """from_documents: live mode. The case starts empty and is filled from the uploaded bill/EOB (intake);
     bank history comes from Nessie and the policy from the policy DB. Otherwise (offline/mock) it starts
-    from the sample case."""
-    scenario = scenario if scenario in SCENARIOS else "default"
+    from the sample case. Raises examples.UnknownScenario for a scenario this server doesn't have."""
+    if not examples.exists(scenario):
+        raise examples.UnknownScenario(f"Unknown demo scenario: {scenario!r}")
     base = blank_case() if from_documents else demo_case(scenario)
     base.update({k: v for k, v in (overrides or {}).items() if v})
-    case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": date.today().isoformat(),
+    # "today" is the date the bank history is read as of; follow-up clocks (case_now) keep the real date
+    today = scenario_as_of(scenario) or date.today().isoformat()
+    case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": today,
             "created_at": time.time(), "result": {}, "call_outcome": {}, "calls": [], "followups": [], "clock_days": 0}
     _reset_call_state(case)
     cases[case["id"]] = case
@@ -110,20 +127,15 @@ def advance_clock(case: dict, days: int | None) -> None:
 
 
 def audit_summary(audit: dict) -> dict:
-    rec = audit["reconciliation"]
-    note = (auditor._dup_note(rec["duplicates"][0]) if rec["duplicates"]
-            else "no errors on the bill")
-    return {"result": f"${rec['owed']:,.0f} owed", "note": note}
+    return auditor.summary(audit["reconciliation"])
 
 
 def policy_summary(pol: dict) -> dict:
     d = pol["eligibility"]["discount_pct"]
-    result = (f"Free care → ${pol['target']:,.0f}" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}") if d else "No discount"
-    if pol.get("refund"):
-        result += f" + ${pol['refund']:,.0f} back"
-    if not d:
-        result = f"${pol['target']:,.0f}, no discount"  # payment plans are left off: just the final amount
-    return {"result": result, "note": "charity-care discount" if d else "income is above the policy's limits"}
+    result = policy.headline(pol["eligibility"], d, pol["target"], pol.get("refund") or 0)
+    note = ("your bank history qualifies you" if d and pol["eligibility"].get("needs_bank_medical")
+            else "charity-care discount" if d else "income is above the policy's limits")
+    return {"result": result, "note": note}
 
 
 def save_replay(case: dict) -> None:

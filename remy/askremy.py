@@ -9,6 +9,7 @@ Without Claude (or when it fails) the question is routed to a template that answ
 import json
 import re
 import time
+from typing import NamedTuple
 from datetime import date, datetime, timezone
 
 from . import billcheck, contacts, events, followups, knowledge, llm
@@ -63,6 +64,12 @@ def _o():
 
 def _money(x) -> str:
     return f"${float(x or 0):,.0f}"
+
+
+def _amt(x) -> str:
+    """Exact dollars: "$2,053.35", or "$3,800" when there are no cents."""
+    s = f"${float(x or 0):,.2f}"
+    return s[:-3] if s.endswith(".00") else s
 
 
 # ---------------------------------------------------------------- bills: every case, and one person's
@@ -160,7 +167,7 @@ def _priority(rows: list[dict]) -> list[dict]:
         why = f"{_money(r['money_at_stake'])} at stake" if r["money_at_stake"] else "nothing left to win"
         if r["deadline"]:
             d = r["days_to_deadline"]
-            why += f", deadline {r['deadline']}" + (" (overdue)" if d is not None and d < 0 else f" ({d} days)" if d is not None else "")
+            why += f", deadline {r['deadline']}" + (" (overdue)" if d is not None and d < 0 else " (today)" if d == 0 else " (tomorrow)" if d == 1 else f" ({d} days)" if d is not None else "")
         out.append({"rank": i, "label": r["label"], "why": why})
     return out
 
@@ -221,10 +228,58 @@ def _contacts(case: dict) -> list[dict]:
     return out[:4]
 
 
+def _whose(case: dict) -> str:
+    """"Sutter Health's": the health system's name, as the Review's wording has it."""
+    h = case.get("hospital") or {}
+    return f"{h.get('system') or h.get('name') or 'the hospital'}'s"
+
+
+def eligibility_facts(case: dict) -> dict | None:
+    """Why the hospital's policy gives (or doesn't give) this discount, from the stored eligibility facts: the tier's
+    own words, source and fetch date, the high-medical-cost bar, this bill alone as a percent of income, the bank's
+    other medical bills, and the percent with them. The bill-alone percent is computed here from the same fields
+    eligibility used (the out-of-pocket of this bill / the income it tested)."""
+    f = case.get("facts") or {}
+    pol = f.get("pol") or {}
+    elig = pol.get("eligibility")
+    if not elig:
+        return None
+    tier = elig.get("tier") or {}
+    income = float(elig.get("income_annual") or (pol.get("income") or {}).get("annual") or 0)
+    bill_oop = float(elig.get("bill_out_of_pocket") or 0)
+    bank = float(elig.get("bank_medical") or 0)
+    n = len(elig.get("bank_medical_txns") or [])
+    bar = tier.get("min_oop_pct_income")
+    # this bill alone as % of income: the policy agent's own figure when it stored one, else the same sum here
+    alone = elig.get("bill_oop_pct_income")
+    if alone is None:
+        alone = round(100 * bill_oop / income, 1) if income else None
+    out = {"discount_pct": elig.get("discount_pct") or 0, "fpl_pct": elig.get("fpl_pct"),
+           "household_size": elig.get("household_size"), "insured": elig.get("insured"),
+           "income_annual": income or None, "income_basis": elig.get("income_basis") or (pol.get("income") or {}).get("basis"),
+           "tier_quote": tier.get("quote"), "tier_limit_quote": tier.get("limit_quote") or None,
+           "tier_max_fpl_pct": tier.get("max_fpl_pct"), "bar_pct_income": bar,
+           "source": tier.get("source_url") or pol.get("source"), "fetched": _policy_fetched(case),
+           "this_bill_share": bill_oop, "this_bill_alone_pct_income": alone,
+           "bank_medical_12_months": bank, "bank_medical_txn_count": n,
+           "with_bank_pct_income": elig.get("oop_pct_income"), "needs_bank_medical": bool(elig.get("needs_bank_medical")),
+           "refund_expected": (_o().summary(case).get("expected_refund") or 0)}
+    if g := elig.get("gross_check"):
+        out["at_estimated_gross"] = {k: g.get(k) for k in ("gross_annual_est", "fpl_pct", "oop_pct_income", "discount_pct")}
+    if bar is not None and alone is not None:
+        out["summary"] = (f"This bill alone ({_amt(bill_oop)}) is {alone:.1f}% of income"
+                          + (f"; with {_amt(bank)} of other medical bills in the bank ({n} payments over 12 months) it's "
+                             f"{float(elig.get('oop_pct_income') or 0):.1f}%" if bank else "")
+                          + f"; {_whose(case)} bar is over {bar:g}% of family income.")
+    return {k: v for k, v in out.items() if v is not None}
+
+
 def whole_case(case: dict) -> dict:
     """Everything about one case for Remy (the voice turn uses it too)."""
     o = _o()
     ctx = {"history": o._history_for_llm(o.summary(case)), "label": label(case)}
+    if el := eligibility_facts(case):
+        ctx["eligibility"] = el  # never trimmed (see DROP): it's what "why is it free?" rests on
     if not case.get("calls"):  # "done" can mean the patient said "Not now": never let that read as a won call
         ctx["note"] = ("No call to billing has been made yet, so billing hasn't agreed to, confirmed or promised "
                        "anything. Lower balances are what the bill should come down to once billing applies the "
@@ -393,11 +448,26 @@ def profiles(n: int = 5) -> list[dict]:
 
 # ---------------------------------------------------------------- who and which hospital a question names
 
+# first or last names that are also everyday words: they only count when written capitalized ("Bill's bill")
+COMMON_WORDS = {"bill", "will", "june", "may", "mark", "grace", "faith", "hope", "rose", "joy", "sue", "pat", "art",
+                "rich", "april", "august", "dawn", "summer", "ray", "guy", "jack", "frank", "penny", "ruby", "amber",
+                "holly", "iris", "lily", "drew", "chase", "max", "ivy", "dean", "page", "case", "price", "cash", "case",
+                "young", "long", "rice", "brown", "white", "black", "green", "gray", "king", "hall", "wood", "day"}
+
+
+def _names(question: str, name: str) -> bool:
+    name = name.strip()
+    if not name or name.lower() not in set(re.findall(r"[a-z]+", question.lower())):
+        return False
+    if name.lower() in COMMON_WORDS:
+        return bool(re.search(rf"\b{re.escape(name[:1].upper() + name[1:].lower())}\b", question))
+    return True
+
+
 def named_cases(question: str) -> list[dict]:
-    """Cases whose patient the question names (first or last name, whole word)."""
-    words = set(re.findall(r"[a-z]+", question.lower()))
-    return [c for c in all_cases() if {str((c.get("patient") or {}).get(k) or "").lower()
-                                       for k in ("first_name", "last_name")} & words - {""}]
+    """Cases whose patient the question names (first or last name, whole word; see COMMON_WORDS)."""
+    return [c for c in all_cases() if any(_names(question, str((c.get("patient") or {}).get(k) or ""))
+                                          for k in ("first_name", "last_name"))]
 
 
 GENERIC = {"hospital", "medical", "center", "health", "the", "saint", "university", "mount", "general"}
@@ -431,26 +501,59 @@ def _sources_of(h) -> list[str]:
 
 # ---------------------------------------------------------------- the context
 
+def _size(ctx: dict) -> int:
+    return len(json.dumps(ctx, default=str))
+
+
+def _trim_bills(s: dict | None, n: int) -> None:
+    if s:
+        s.update(bills=s["bills"][:n], priority=s["priority"][:n])
+
+
+# Whole sections, least needed first: dropped one by one if trimming wasn't enough. ("case", "x") is case["x"].
+DROP = [("code_map",), ("under_the_hood",), ("same_bill_elsewhere",), ("get_started",), ("hospitals",),
+        ("how_it_works",), ("case", "last_call_transcript"), ("case", "call_scorecards"), ("case", "contacts"),
+        ("case", "bill_lines_vs_posted_prices"), ("case", "other_bills"), ("all_cases", "bills"),
+        ("case", "corrections"), ("case", "plan"), ("case", "findings"), ("all_cases",), ("case", "history")]
+
+
 def _shrink(ctx: dict) -> dict:
-    """Keep the JSON under LIMIT: trim the biggest optional parts first."""
-    steps = [lambda c: c.get("under_the_hood") and c.update(under_the_hood=c["under_the_hood"][-8:]),
-             lambda c: c.get("hospitals") and c.update(hospitals=[{k: h.get(k) for k in ("name", "status", "tiers")}
-                                                                  for h in c["hospitals"]]),
-             lambda c: c.get("how_it_works") and c.update(how_it_works=c["how_it_works"][:2]),
-             lambda c: c.get("all_cases") and c["all_cases"].update(bills=c["all_cases"]["bills"][:6]),
-             lambda c: c.get("case") and c["case"].update(bill_lines_vs_posted_prices=c["case"]["bill_lines_vs_posted_prices"][:10],
-                                                          last_call_transcript=(c["case"].get("last_call_transcript") or [])[-10:]),
-             lambda c: c.pop("same_bill_elsewhere", None), lambda c: c.pop("code_map", None),
-             lambda c: c.get("hospitals") and c.update(hospitals=[{k: h.get(k) for k in ("name", "status")} for h in c["hospitals"]])]
+    """Keep the JSON under LIMIT: trim the biggest optional parts first, then drop whole sections (lowest
+    priority first) until it fits; "trimmed" says what was left out."""
+    c = ctx.get("case") or {}
+    steps = [lambda: ctx.get("under_the_hood") and ctx.update(under_the_hood=ctx["under_the_hood"][-8:]),
+             lambda: ctx.get("hospitals") and ctx.update(hospitals=[{k: h.get(k) for k in ("name", "status", "tiers", "sources")
+                                                                      if k in h} for h in ctx["hospitals"]]),
+             lambda: ctx.get("how_it_works") and ctx.update(how_it_works=ctx["how_it_works"][:2]),
+             lambda: _trim_bills(ctx.get("all_cases"), 6),
+             lambda: _trim_bills(c.get("other_bills"), 4),
+             lambda: c and c.update(bill_lines_vs_posted_prices=(c.get("bill_lines_vs_posted_prices") or [])[:10],
+                                    last_call_transcript=(c.get("last_call_transcript") or [])[-10:]),
+             lambda: c.get("findings") and c.update(findings=[{k: x.get(k) for k in ("key", "agent", "title", "value", "source",
+                                                                                      "marked_wrong") if k in x}
+                                                              for x in c["findings"]]),
+             lambda: c.get("plan") and c["plan"].update(asks=[{k: a.get(k) for k in ("kind", "text", "money")}
+                                                              for a in c["plan"].get("asks") or []]),
+             lambda: ctx.get("hospitals") and ctx.update(hospitals=[{k: h.get(k) for k in ("name", "status")} for h in ctx["hospitals"]]),
+             lambda: _trim_bills(ctx.get("all_cases"), 3)]
     for step in steps:
-        if len(json.dumps(ctx, default=str)) <= LIMIT:
+        if _size(ctx) <= LIMIT:
+            return ctx
+        step()
+    dropped = []
+    for path in DROP:
+        if _size(ctx) <= LIMIT:
             break
-        step(ctx)
+        parent = ctx if len(path) == 1 else ctx.get(path[0])
+        if isinstance(parent, dict) and parent.pop(path[-1], None) is not None:
+            dropped.append(".".join(path))
+    if dropped:
+        ctx["trimmed"] = dropped
     return ctx
 
 
 PAGE_ALIASES = {"under-the-hood": "ops", "get-started": "start", "onboarding": "start", "dashboard": "cases"}
-PRIVATE = re.compile(r"name|dob|birth|ssn|social|card|account|routing|phone|email|address", re.I)
+PROFILE_KEYS = ("household_size", "insured", "income", "medical_oop", "hospital", "hospital_id")  # as profiles() keeps
 
 
 def page_of(page: str | None) -> str:
@@ -459,10 +562,13 @@ def page_of(page: str | None) -> str:
 
 
 def clean_profile(profile: dict | None) -> dict | None:
-    """An onboarding profile for the context: the answers only, never a name, DOB, SSN, card or account."""
+    """An onboarding profile for the context: only the answers profiles() keeps (an allowlist, so no name, DOB,
+    SSN, card or account under any key), long digit runs redacted."""
     if not isinstance(profile, dict):
         return None
-    return {k: v for k, v in profile.items() if not PRIVATE.search(k) and isinstance(v, (int, float, str, bool, type(None)))}
+    out = {k: redact(v) if isinstance(v, str) else v for k, v in profile.items()
+           if k in PROFILE_KEYS and isinstance(v, (int, float, str, bool, type(None)))}
+    return out or None
 
 
 def remy_context(case_id: str | None, page: str, question: str = "", profile: dict | None = None) -> dict:
@@ -489,7 +595,9 @@ def remy_context(case_id: str | None, page: str, question: str = "", profile: di
             row["sources"] = _sources_of(h)[:4]
     ctx["under_the_hood"] = activity(case["id"] if case and page == "ops" else None)
     ctx["get_started"] = [p for p in [clean_profile(profile)] if p] + profiles()
-    if question and (knowledge.is_how_question(question) or page == "ops"):
+    # how Remy works, when asked; on a case page a question about the case ("why do I get it free?") isn't one
+    how = knowledge.is_how_question(question) and not (case and case_intent(question))
+    if question and (how or page == "ops"):
         ctx["how_it_works"] = knowledge.relevant(question)
         ctx["code_map"] = knowledge.CODE_MAP
     return _shrink(ctx)
@@ -501,37 +609,78 @@ def system_for(page: str) -> str:
 
 # ---------------------------------------------------------------- guardrails in code
 
-CARD = re.compile(r"(?:\d[ -]?){13,19}")
-SSN = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
+CARD = re.compile(r"(?<!\d)\d(?:[ -]?\d){12,18}(?!\d)")
+SSN = re.compile(r"(?<!\d)\d{3}[ -]?\d{2}[ -]?\d{4}(?!\d)")
+LONG_DIGITS = re.compile(r"(?<!\d)\d(?:[ -]?\d){8,}(?!\d)")  # 9+ digits, spaces or dashes allowed
 REFUSE_PAY = re.compile(r"\b(agree to pay|just pay|go ahead and pay|and pay \$|pay (the|this|my|it|them|that)\b[^?]{0,30}"
                         r"\b(now|today|off|in full)|pay \$[\d,.]+ (now|today)|authori[sz]ed to (agree to )?pay|"
                         r"(give|use|charge|read) (them |billing )?my (card|bank|account)|card (number|details)|"
                         r"bank (details|account number)|routing number)\b", re.I)
-REFUSE_PRIVATE = re.compile(r"\b(ssn|social security)\b", re.I)
+REFUSE_PRIVATE = re.compile(r"\bssn\b|social security|\bmy social\b|\bsocial( security)? (number|no\.?|#)|"
+                            r"\b(bank|checking|savings) account (number|no\.?|#|is)\b|\brouting (number|no\.?|#)", re.I)
 REFUSE_HIDE = re.compile(r"pretend (to be|you'?re) (me|a (real )?(person|human))|\bnot a (bot|robot)\b|"
                          r"say (you'?re|you are) (a )?(human|person|me)\b", re.I)
 INJECTION = re.compile(r"\bignore (all |your |any |the |previous |prior )*(instructions|rules|guardrails)\b|"
                        r"\byou are now (authori[sz]ed|allowed)\b", re.I)
+PAY_NOTE = "(I can't pay for you or agree to pay anything; that decision is always yours.)"
+LEGAL = re.compile(r"\b(lawyers?|attorneys?|legal|sue|suing|lawsuits?|bankrupt\w*|court|garnish\w*|tax(es)?|"
+                   r"credit report|statute of limitations)\b", re.I)
+LEGAL_TEXT = ("I'm not a lawyer, and I can't give legal, tax or bankruptcy advice beyond what the documents show. "
+              "For that, try your local legal aid office, the hospital's patient advocate, or California HCAI's "
+              "complaint process for hospital bills.")
+
+
+def _luhn(digits: str) -> bool:
+    total = 0
+    for i, ch in enumerate(reversed(digits)):
+        d = int(ch) * (2 if i % 2 else 1)
+        total += d - 9 if d > 9 else d
+    return total % 10 == 0
+
+
+def _card(text: str) -> bool:
+    """A payment card number: 13-19 digits that pass the Luhn check (a claim number like 2026-0815-44917 doesn't)."""
+    return any(_luhn(re.sub(r"\D", "", m.group(0))) for m in CARD.finditer(text or ""))
 
 
 def redact(text: str) -> str:
-    """Card and Social Security numbers never reach the log, the memory or the model."""
-    return SSN.sub("[redacted]", CARD.sub("[redacted]", text or ""))
+    """What the patient typed, before it's stored or sent anywhere (log, memory, model): any run of 9+ digits
+    (SSN, card, bank account, with or without spaces or dashes) becomes [redacted]."""
+    return LONG_DIGITS.sub("[redacted]", text or "")
 
 
-def refusal(question: str) -> str | None:
-    """Requests Remy refuses in code, before any model: paying, card / SSN / bank details, hiding that it's
-    automated, and instructions to drop its rules."""
+def redact_answer(text: str) -> str:
+    """An answer keeps phone numbers (10 digits, 3-3-4) but never shows a card or SSN-shaped number."""
+    text = CARD.sub(lambda m: "[redacted]" if _luhn(re.sub(r"\D", "", m.group(0))) else m.group(0), text or "")
+    return SSN.sub("[redacted]", text)
+
+
+def refusal(question: str) -> tuple[str, str] | None:
+    """Requests Remy refuses in code, before any model: (kind, text). Kinds: "private" (card / SSN / bank
+    details), "hide" (pretending to be a person), "inject" ("ignore your instructions"), "pay" (a request to pay
+    or agree to pay). A *question* about paying ("Should I pay it now?") is not refused: callers answer it and
+    add PAY_NOTE."""
     q = question or ""
-    if CARD.search(q) or SSN.search(q) or REFUSE_PRIVATE.search(q):
-        return ("I can't take or repeat card, Social Security or bank details, and I never give them to billing. "
-                "Please don't share them here; I never agree to pay anything on your behalf.")
+    if _card(q) or any(re.search(r"[ -]", m.group(0)) for m in SSN.finditer(q)) or REFUSE_PRIVATE.search(q):
+        return "private", ("I can't take or repeat card, Social Security or bank details, and I never give them to "
+                           "billing. Please don't share them here; I never agree to pay anything on your behalf.")
     if decide.HIDE.search(q) or REFUSE_HIDE.search(q):
-        return "I can't do that: Remy always says it's an automated assistant calling for you, never a person."
-    if decide.PAY.search(q) or REFUSE_PAY.search(q) or INJECTION.search(q):
-        return ("I can't do that: I never agree to pay or give payment details, and any payment decision comes back "
-                "to you. I'm only here to get the bill corrected.")
+        return "hide", "I can't do that: Remy always says it's an automated assistant calling for you, never a person."
+    if INJECTION.search(q):
+        return "inject", ("I can't do that: I keep my rules whatever a message says. I never agree to pay or give "
+                          "payment details; any payment decision comes back to you.")
+    if decide.PAY.search(q) or REFUSE_PAY.search(q):
+        return "pay", ("I can't do that: I never agree to pay or give payment details, and any payment decision comes "
+                       "back to you. I'm only here to get the bill corrected.")
     return None
+
+
+def refused(question: str) -> str | None:
+    """The refusal text, unless it's only a question about paying (answered, with PAY_NOTE)."""
+    r = refusal(question)
+    if not r or (r[0] == "pay" and QUESTION.search(question)):
+        return None
+    return r[1]
 
 
 # ---------------------------------------------------------------- sources, routing, answering
@@ -551,6 +700,9 @@ def sources(ctx: dict) -> list[str]:
     pol = c.get("policy") or {}
     if str(pol.get("source") or "").startswith("http"):
         out.append(pol["source"] + (f" · fetched {pol['fetched']}" if pol.get("fetched") else ""))
+    el = c.get("eligibility") or {}
+    if str(el.get("source") or "").startswith("http") and el["source"] != pol.get("source"):
+        out.append(el["source"] + (f" · fetched {el['fetched']}" if el.get("fetched") else ""))
     for x in c.get("findings") or []:
         if x.get("key") == "auditor:insurance" and x.get("source") and not x.get("marked_wrong"):
             out.append(x["source"])
@@ -571,12 +723,61 @@ def sources(ctx: dict) -> list[str]:
 BANK = re.compile(r"\b(bank|payments?|paid|insurance|insurer|eob|claim|nessie|charged|card)\b", re.I)
 PRICE = re.compile(r"\b(prices?d?|pricing|posted|charge master|chargemaster|overcharg\w*|cost)\b", re.I)
 POLICY = re.compile(r"\b(polic(y|ies)|discounts?|qualif\w*|income|bright ?data|charity|financial assistance|"
-                    r"free care|poverty|cover|tiers?)\b", re.I)
+                    r"free care|poverty|cover|tiers?|write[- ]?off)\b", re.I)
 QUESTION = re.compile(r"\?\s*$|^\s*(what|how|which|why|when|where|who|does|did|is|are|can|could|should|will)\b", re.I)
-BILLS = re.compile(r"\b(which (bill|one)|first|in total|total|all (my|of my|the) bills|other bills|owe altogether)\b", re.I)
-OWE = re.compile(r"\b(how much|what) do i (still |actually )?owe\b|\bmy balance\b|\bwhat'?s (my|the) balance\b", re.I)
+TOTAL = re.compile(r"\b(in total|totals?|altogether|all (my|of my|the) bills|across (all|my|the) bills|combined|"
+                   r"owe altogether|all together)\b", re.I)
+FIRST = re.compile(r"\b(which (bill|one|case)|first|priorit\w*|start with|deal with|most urgent|tackle)\b", re.I)
+BILLS = re.compile(TOTAL.pattern + "|" + FIRST.pattern + r"|\bother bills\b", re.I)
+OWE = re.compile(r"\b(how much|what) do i (still |actually |only |really )?owe\b|\bmy balance\b|"
+                 r"\bwhat'?s (my|the) balance\b|\bwhy\b.{0,40}\bowe\b|\bhow did you (get|come up with|work out)\b|"
+                 r"\bwhere did\b.{0,40}\bcome from\b|\bbreak ?down\b|\bthe math\b", re.I)
+CONTACT = re.compile(r"\b(who (do|should|will) (i|you|we) (call|contact|talk to)|who to call|phone( number)?|"
+                     r"number to call|which number|contact|department|call them myself|reach (them|billing))\b", re.I)
+ACTIVITY = re.compile(r"\b(what did (the |you |your )?(agents?|you) (just )?do|what (just )?happened|just now|"
+                      r"what have (the |you |your )?(agents? )?(been )?(doing|done)|agents? (been )?doing|activity|"
+                      r"audit|latest|recently)\b", re.I)
 COLLECT = re.compile(r"\b(collections?|collection agency|deadlines?|due|overdue|late)\b", re.I)
-ACTIVITY = re.compile(r"\b(agents?|activity|doing|happened|audit|log)\b", re.I)
+NEEDS = re.compile(r"\b(need from me|what do you need|what should i (give|provide|upload|bring)|what info\w*|"
+                   r"how do i (start|begin)|get started|what do i (need|have) to (do|give|provide))\b", re.I)
+FREE = re.compile(r"\bfree\b|100%|nothing|\$0\b|write[- ]?off|write (this|it|that|my bill) off|wipe|forgive|cancel|zero",
+                  re.I)
+# case questions with their own offline answers (on a case page they win over the how-it-works docs)
+WHY_FREE = re.compile(r"\bwhy\b.{0,40}(\bfree\b|\$0\b|\bzero\b|\bnothing\b|\bqualif\w*|\beligib\w*|\bwrit\w* (it |this )?off\b|"
+                      r"\bcharity\b|\bdiscount\b)|\bhow (did|do|come|could|can) i\b.{0,20}(\bfree\b|\bqualif\w*|\beligib\w*)|"
+                      r"\bwhat (makes|made) me (qualify|eligible)\b|\bwhat (do|did) i qualify (for )?on\b", re.I)
+WRONG = re.compile(r"\bwhat'?s wrong\b|\bwhat is wrong\b|\bmistakes?\b|\berrors?\b|\bwhat did you find\b|"
+                   r"\b(problems?|issues?) (with|on|in) (my|the|this) bill\b|\bwhat'?s (off|incorrect)\b", re.I)
+REFUND = re.compile(r"\b(how much|what)\b.{0,25}\bget back\b|\bget (any |some |my |the |that )?(money|\$[\d,.]+|payment|"
+                    r"it|anything|something) back\b|\brefund\w*\b|\bmoney back\b|\bowes? me\b|\bpay me back\b", re.I)
+STILL_OWE = re.compile(r"\b(do|will) i (still |really |actually )?(owe|have to pay|need to pay)\b|"
+                       r"\bam i (still )?(on the hook|responsible)\b", re.I)
+ELSEWHERE = re.compile(r"\b(another|other|different|any other) hospitals?\b|\belsewhere\b|\bsomewhere else\b", re.I)
+
+
+def case_intent(question: str) -> bool:
+    """A question about the open case's own numbers, not about how Remy works."""
+    return any(p.search(question or "") for p in (WHY_FREE, WRONG, REFUND, STILL_OWE, OWE, ELSEWHERE))
+FOLLOW = re.compile(r"^\s*(and |so |ok(ay)?,? )?(what about |how about |tell me (more )?about )?(the )?"
+                    r"(first|second|third|fourth|fifth|sixth|last|other|next) (one|bill|hospital|ask|finding)?\s*\??\s*$|"
+                    r"^\s*(and |so )?(what about |how about )?(that|this|it)( one)?\s*\??\s*$|^\s*(and )?why( is that| not)?\s*\??\s*$|"
+                    r"\bthe (first|second|third|fourth|fifth|sixth|last|other) one\b|\bthat one\b|"
+                    r"^\s*(tell me |say )?more( about (that|it|this))?\s*\??\s*$|^\s*tell me more\b.{0,20}$|^\s*go on\b",
+                    re.I)
+NEEDS_ITEMS = [
+    {"kind": "need", "label": "The bill and insurance statement", "text": "The bill and, if you're insured, the insurance "
+     "statement (EOB).", "why": "they're the facts I check: what the hospital charged and what your insurance says you owe"},
+    {"kind": "need", "label": "Household size", "text": "Your household size.",
+     "why": "financial-assistance tiers are a percent of the poverty line, which depends on household size"},
+    {"kind": "need", "label": "Income before taxes", "text": "Your income before taxes.",
+     "why": "it decides which discount tier you fit; I check it against your bank deposits"},
+    {"kind": "need", "label": "Insurance yes or no", "text": "Whether you have insurance.",
+     "why": "hospitals' policies have different tiers for insured and uninsured patients"}]
+ORDINAL = {"first": 0, "second": 1, "third": 2, "fourth": 3, "fifth": 4, "sixth": 5, "next": 1, "other": 1, "last": -1}
+NEEDS_TEXT = ("To work on a bill I need: the bill itself (a photo or PDF) and, if you're insured, the insurance "
+              "statement (EOB), which shows what insurance says you owe; your household size and income before "
+              "taxes, which decide whether the hospital's financial-assistance policy cuts the bill (I check the "
+              "income against your bank); and whether you have insurance, which decides which policy tier applies.")
 
 
 def owe_text(case: dict) -> str:
@@ -636,23 +837,311 @@ def _row_text(case: dict, r: dict) -> str:
     return s
 
 
-def hospitals_text(question: str, ctx: dict) -> tuple[str, list[str]]:
-    """The offline answer about the policy database: a named hospital, a named patient's bill elsewhere, sources."""
-    low, hs, people = question.lower(), named_hospitals(question), named_cases(question)
+class Ans(NamedTuple):
+    """An offline answer: its text, sources, the route used, and the items it listed (for "the second one")."""
+    text: str
+    sources: list
+    route: str
+    items: list = []
+
+
+def plain(text: str, limit: int = 400) -> str:
+    """Doc text for the chat: markdown stripped (bold, code ticks, links, headings, bullets), cut at a sentence
+    boundary under limit, with "…" only when something was cut."""
+    t = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text or "")
+    t = re.sub(r"\*\*|__|`+", "", t)
+    t = re.sub(r"^\s{0,3}(#+|[-*+]|\d+\.)\s+", "", t, flags=re.M)
+    t = re.sub(r"\s+", " ", t).strip()
+    if len(t) <= limit:
+        return t
+    cut = t[:limit]
+    end = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "), cut.rfind(": "))
+    if end > limit // 3:
+        return cut[:end + 1].rstrip(":") + " …"
+    return cut[:cut.rfind(" ")].rstrip(",;:") + " …"
+
+
+def _list(names: list[str], n: int = 6) -> str:
+    """"a, b and c", or "a, b, …, f and 6 more"."""
+    if len(names) <= n:
+        return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+    return ", ".join(names[:n]) + f" and {len(names) - n} more"
+
+
+def waterfall_text(case: dict) -> Ans:
+    """Why the bill comes to what it does: the plan's own math lines (decide.compute), in order."""
+    ver = decide.latest(case)
+    if not ver or not ver.get("math"):
+        return Ans(owe_text(case), [], "remy")
+    parts = []
+    for i, x in enumerate(ver["math"]):
+        amt = _money(abs(x["amount"]))
+        parts.append(f"{x['label']} {amt}" if i == 0 else f"= {x['label']} {amt}" if x.get("total") else f"− {x['label']} {amt}")
+    r = bill_row(case)
+    note = "" if r["confirmed_balance"] is not None else (f" Billing still shows {_money(r['billing_shows_now'])} "
+                                                          "until it confirms the corrections.")
+    srcs = list(dict.fromkeys(x["source"] for x in ver["math"] if x.get("source")))[:4]
+    items = [{"kind": "line", "label": x["label"], "text": f"{x['label']}: {_money(abs(x['amount']))}"
+              + (f" (source: {x['source']})" if x.get("source") else ""), "why": x.get("source") or ""}
+             for x in ver["math"] if not x.get("total")][1:]
+    return Ans(f"Here's the math: {' '.join(parts)}.{note}", srcs, "remy", items)
+
+
+def _note(case: dict) -> str:
+    """The confirmation caveat: lower numbers are expected until a call records billing confirming them."""
+    r = bill_row(case)
+    if r["confirmed_balance"] is not None:
+        return " Billing confirmed that on the call."
+    return f" That's expected, not confirmed: billing still shows {_amt(r['billing_shows_now'])} until they confirm it."
+
+
+def why_free_text(case: dict) -> Ans:
+    """"Why do I get it free?": the tier the patient meets, in the policy's own words, and the numbers that meet it
+    (eligibility_facts): the income vs the poverty line, this bill alone vs the bar, and the bank's other medical
+    bills on top. Sources: the policy page with its fetch date, and the bank."""
+    el = eligibility_facts(case)
+    if not el:
+        return Ans("I don't have the hospital's policy for this bill yet: the Bright Data agent is still checking it.",
+                   [], "policy")
+    hosp = case["hospital"]["name"]
+    srcs = [el["source"] + (f" · fetched {el['fetched']}" if el.get("fetched") else "")] if el.get("source") else []
+    fpl = (f"your income is {el['fpl_pct']:.0f}% of the poverty line for a household of {el.get('household_size')}"
+           if el.get("fpl_pct") is not None else "")
+    disc, bar = el["discount_pct"], el.get("bar_pct_income")
+    if not disc:
+        out = (f"{hosp}'s policy doesn't give you a discount on this bill: {fpl}" if fpl else
+               f"{hosp}'s policy doesn't give you a discount on this bill")
+        if el.get("with_bank_pct_income") is not None:
+            out += f", and your medical costs are {float(el['with_bank_pct_income']):.1f}% of income"
+        out += ". So it isn't free. " + owe_text(case)
+        return Ans(out, srcs, "policy")
+    what = "free care (100% off)" if disc >= 100 else f"{disc:g}% off"
+    out = f"{hosp}'s policy says: \u201c{el['tier_quote']}\u201d " if el.get("tier_quote") else f"Under {hosp}'s policy, "
+    if fpl:
+        out += fpl[0].upper() + fpl[1:] + (f", under its {el['tier_max_fpl_pct']:g}% limit." if el.get("tier_max_fpl_pct") else ".")
+    if bar is not None and el.get("this_bill_alone_pct_income") is not None:
+        alone, whose = el["this_bill_alone_pct_income"], _whose(case)
+        med = next((x for x in ((case.get("facts") or {}).get("findings") or {}).values()
+                    if x.get("key") == "auditor:medical" and x.get("source")), None)
+        bank = el.get("bank_medical_12_months") or 0
+        n = el.get("bank_medical_txn_count") or 0
+        if bank and el.get("needs_bank_medical"):  # the same words as the Review's (policy.bank_qualifies)
+            lead = (f"Your bank history qualifies you: this bill alone is {alone:.1f}% of income; with "
+                    f"{_money(bank)} of other medical bills it's {float(el['with_bank_pct_income']):.1f}% — over "
+                    f"{whose} {bar:g}% limit. ")
+            out = lead + out
+            out += (f" Your share of this bill is {_amt(el['this_bill_share'])}; your bank shows {_amt(bank)} in other "
+                    f"medical bills over the last 12 months ({n} payment{'s' if n != 1 else ''}), so you qualify for "
+                    f"{what}.")
+        elif bank:
+            out += (f" Your share of this bill, {_amt(el['this_bill_share'])}, is {alone:.1f}% of your income"
+                    + (f": over {whose} {bar:g}% limit on its own" if alone > bar else "")
+                    + f"; with the {_amt(bank)} of other medical bills your bank shows over the last 12 months ({n} "
+                    f"payment{'s' if n != 1 else ''}) it's {float(el['with_bank_pct_income']):.1f}%, so you qualify "
+                    f"for {what}.")
+        if bank:
+            srcs.append(med["source"] if med else "Nessie bank history")
+        else:
+            out += (f" Your share of this bill, {_amt(el['this_bill_share'])}, is {alone:.1f}% of your income, over "
+                    f"{whose} {bar:g}% limit, so you qualify for {what}.")
+    else:
+        out += f" So you qualify for {what}."
+    return Ans(out + _note(case), srcs[:4], "policy")
+
+
+def wrong_text(case: dict) -> Ans:
+    """"What's wrong with my bill?": each mistake the Nessie agent found that changes what's owed (line errors,
+    insurance, a missed payment), count first, with its amount; the ones the patient marked wrong left out."""
+    found = [x for x in decide.tagged(case, list(((case.get("facts") or {}).get("findings") or {}).values()))
+             if x["agent"] == "auditor" and (x.get("saved") or 0) > 0 and not x.get("marked_wrong")]
+    if not found:
+        return Ans(f"I didn't find a mistake on {label(case)}. " + owe_text(case), [], "auditor")
+    first = lambda x: re.split(r"(?<=\.)\s", (x.get("proof") or [x["title"]])[0])[0].rstrip(".")  # noqa: E731
+    parts = [f"{i}) {x['title']}, {x['value']}: {first(x)}." for i, x in enumerate(found, 1)]
+    out = f"I found {len(found)} mistake{'s' if len(found) != 1 else ''} on {label(case)}. " + " ".join(parts)
+    m = (decide.latest(case) or {}).get("money") or {}
+    if m.get("owed") is not None:
+        out += f" Fixed, you'd owe {_amt(m['owed'])}"
+        if m.get("target") is not None and m["target"] < m["owed"]:
+            el = eligibility_facts(case) or {}
+            out += (", and free care" if (el.get("discount_pct") or 0) >= 100 else ", and the discount") + \
+                f" brings that to {_amt(m['target'])}"
+        out += (f", with {_amt(m['refund'])} back." if m.get("refund") else ".")
+        out += _note(case)
+    items = [{"kind": "finding", "label": x["title"], "why": " ".join(x.get("proof") or []),
+              "text": f"{x['title']} ({x['value']}): {' '.join(x.get('proof') or [])}"} for x in found]
+    return Ans(out, [x["source"] for x in found if x.get("source")][:4], "auditor", items)
+
+
+def refund_text(case: dict) -> Ans:
+    """"How much will I get back?": the refund the plan expects, why (payments the corrected bill makes
+    unnecessary), and whether billing has confirmed it (only a call can)."""
+    r = bill_row(case)
+    refund = r["refund_expected"]
+    paid = [x for x in ((case.get("facts") or {}).get("findings") or {}).values()
+            if str(x.get("key", "")).startswith("auditor:paid-") and not x.get("marked_wrong")]
+    if not refund:
+        return Ans(f"I don't expect a refund on {label(case)}: you haven't paid more than you owe. " + owe_text(case),
+                   [], "remy")
+    el = eligibility_facts(case) or {}
+    disc = el.get("discount_pct") or 0
+    out = f"You should get {_amt(refund)} back."
+    if paid:
+        out += " " + " ".join((x.get("proof") or [""])[0] for x in paid[:2]).strip()
+    out += (" Free care brings what you owe to $0, so what you paid isn't needed and comes back." if disc >= 100
+            and r["expected_after_corrections"] == 0 else " That's more than you owe once the corrections are applied."
+            if paid else "")
+    if r["confirmed_balance"] is not None:
+        out += " Billing confirmed the corrected balance on the call; the refund comes once they process it."
+    else:
+        out += " That's expected, not confirmed: billing still shows " + _amt(r["billing_shows_now"]) + \
+            " until they confirm the corrections, and the refund follows."
+    return Ans(out, [x["source"] for x in paid if x.get("source")][:2], "remy")
+
+
+def still_owe_text(case: dict, question: str) -> Ans:
+    """"Do I still owe $3,800?": the amount asked about against what billing shows now, what's owed after the
+    corrections, and after the discount. Never a yes to paying."""
+    r = bill_row(case)
+    m = (decide.latest(case) or {}).get("money") or {}
+    shows, target = r["billing_shows_now"], r["expected_after_corrections"]
+    owed = m.get("owed")
+    if target is None or owed is None:
+        return Ans(owe_text(case), [], "remy")
+    asked = [float(x.replace(",", "")) for x in re.findall(r"\$\s?(\d[\d,]*(?:\.\d{1,2})?)", question)]
+    near = lambda a, b: b is not None and abs(a - b) < 1  # noqa: E731
+    el = eligibility_facts(case) or {}
+    disc = el.get("discount_pct") or 0
+    how = "free care" if disc >= 100 else f"the {disc:g}% discount" if disc else ""
+    after = (f"after the corrections you'd owe {_amt(owed)}"
+             + (f", and {how} brings that to {_amt(target)}" if how and target < owed else ""))
+    refund = f", with {_amt(r['refund_expected'])} back" if r["refund_expected"] else ""
+    caveat = (" Billing confirmed that on the call." if r["confirmed_balance"] is not None else
+              f"; billing still shows {_amt(shows)} until they confirm.")
+    if asked and near(asked[0], target) and target > 0:
+        out = f"Once billing applies the corrections, {_amt(target)} is what it should come to"
+        out += "; billing confirmed it on the call." if r["confirmed_balance"] is not None else \
+            f"; billing still shows {_amt(shows)} until they confirm."
+    elif asked and target < asked[0] and (near(asked[0], owed) or near(asked[0], shows) or near(asked[0], r["billed"])):
+        out = f"No — {after}{refund}" + caveat
+    elif asked:
+        out = f"Not that amount: {after}{refund}" + caveat
+    else:
+        out = f"{after}{refund}" + caveat
+    return Ans(out[0].upper() + out[1:] if out else out, [], "remy")
+
+
+def contact_text(case: dict) -> Ans:
+    """Who to call: the plan's choice of department and the verified number (contacts.for_case)."""
+    call = (decide.latest(case) or {}).get("call") or {}
+    cs = _contacts(case)
+    first = next((c for c in cs if c.get("phone")), None)
+    out = f"I'd call {call['department']}: {call['why'][0].lower() + call['why'][1:]}. " if call.get("department") else ""
+    if first:
+        out += f"The number is {first['phone']} ({first['label']})" + (f". {first['hours']}" if first.get("hours") else "")
+        out = out.rstrip(".") + "."
+    else:
+        out += "I don't have a verified number for them yet: use the one printed on your bill."
+    out += " You don't have to call yourself: I make the call once you approve it on the case page."
+    return Ans(out, [first["source_url"]] if first and str(first.get("source_url", "")).startswith("http") else [], "remy")
+
+
+def case_activity_text(case: dict) -> Ans:
+    evs = activity(case["id"], 5)
+    if not evs:
+        return Ans("The agents haven't done anything on this bill yet.", [], "remy")
+    return Ans("Most recently: " + "; ".join(f"{e['agent']}: {e['what']}" for e in evs) + ".", [], "remy")
+
+
+def totals_text(summary: dict) -> Ans:
+    """"What do I owe in total?": the totals, all computed in bills_summary."""
+    t = summary["totals"]
+    if not t["bills"]:
+        return Ans("There are no bills on the Cases tab yet. Start one with New case.", [], "remy")
+    out = (f"Across {t['bills']} bill{'s' if t['bills'] != 1 else ''}: billed {_money(t['billed'])}; billing shows "
+           f"{_money(t['billing_shows_now'])} now; once the corrections are applied it should be "
+           f"{_money(t['expected_after_corrections'])}")
+    out += f" (plus {t['bills_still_in_review']} still in review)." if t["bills_still_in_review"] else "."
+    if t["refunds_expected"]:
+        out += f" Refunds expected: {_money(t['refunds_expected'])}."
+    confirmed = [b for b in summary["bills"] if b["confirmed_balance"] is not None]
+    out += (f" Billing has confirmed {len(confirmed)} of them ({_money(t['confirmed_by_billing'])})." if confirmed
+            else " Billing hasn't confirmed any of the lower balances yet.")
+    return Ans(out, [], "remy", _bill_items(summary))
+
+
+def first_text(summary: dict) -> Ans:
+    """"Which bill first?": the top of the priority order with its reason, then the rest in order."""
+    pr = summary["priority"]
+    if not pr:
+        return Ans("There are no bills on the Cases tab yet. Start one with New case.", [], "remy")
+    out = f"Start with {pr[0]['label']}: {pr[0]['why']}."
+    if len(pr) > 1:
+        out += " Then " + "; ".join(f"{p['rank']}. {p['label']} ({p['why']})" for p in pr[1:6]) + "."
+    return Ans(out, [], "remy", _bill_items(summary))
+
+
+def _bill_items(summary: dict) -> list[dict]:
+    rows = {b["label"]: b for b in summary["bills"]}
+    out = []
+    for p in summary["priority"]:
+        b = rows.get(p["label"]) or {}
+        c = _o().cases.get(b.get("case_id"))
+        out.append({"kind": "bill", "label": p["label"], "why": p["why"],
+                    "text": (owe_text(c) + (f" Next: {b['next_step']}." if b.get("next_step") else "")) if c else p["label"]})
+    return out
+
+
+def hospital_text(h, why: bool = False) -> Ans:
+    """One hospital's row from the policy database: its tiers (or why it has none), source and fetch date, and,
+    when asked why, what its policy would give each bill on the Cases tab."""
+    from .policies.store import PolicyStore
+    cur = PolicyStore().current(h.id)
+    if not cur:
+        return Ans(f"{h.name} is in the list but hasn't been crawled yet, so I have no policy for it.", [], "policy")
+    ex = cur["extracted"]
+    tiers = [_tier(t) for t in ex.get("tiers") or [] if isinstance(t.get("max_fpl_pct"), (int, float))
+             and isinstance(t.get("discount_pct"), (int, float))]
+    out = (f"{h.name}'s policy: {'; '.join(tiers[:3])}." if tiers else
+           f"{h.name} is stored with no fixed discount tier" + (f": {plain(ex.get('notes'), 240)}" if ex.get("notes") else "."))
+    out = out if out.endswith((".", "…")) else out + "."
+    urls = list(cur.get("source_urls") or [])
+    out += f" Fetched {str(cur['fetched_at'])[:10]}" + (f" from {urls[0]}." if urls else ".")
+    if why:
+        for c in all_cases()[:2]:
+            r = next((r for r in (comparison(c, top=None) or {}).get("results", []) if r["hospital"] == h.name), None)
+            if r:
+                out += " " + _row_text(c, r)
+    return Ans(out, urls[:2], "policy")
+
+
+def hospitals_text(question: str, ctx: dict, case: dict | None = None) -> Ans:
+    """The offline answer about the policy database: a named patient's (or the open case's) bill at other
+    hospitals, a named hospital, sources, hospitals with no tiers."""
+    low, hs, people = question.lower(), named_hospitals(question), ([case] if case else named_cases(question))
+    if case:
+        hs = [h for h in hs if h.name != case["hospital"]["name"]]
     summary = {h["name"]: h for h in ctx.get("hospitals") or hospitals_summary()}
     if people and (cmp := comparison(people[0], top=None)):
         rows, c = cmp["results"], people[0]
+        first = c["patient"]["first_name"]
+        items = [{"kind": "hospital", "label": r["hospital"], "text": _row_text(c, r),
+                  "why": r["rule"] or r.get("why_not") or ""} for r in rows]
         if hs:
             pick = [r for r in rows if r["hospital"] in {h.name for h in hs}]
             if pick:
-                return " ".join(_row_text(c, r) for r in pick[:2]), [s for r in pick[:2] for s in r["sources"][:1]]
-        if re.search(r"\bfree\b|100%|nothing|\$0\b", low):
-            free = [r for r in rows if r["discount_pct"] >= 100]
-            if free:
-                return (f"Under their own policies, {', '.join(r['hospital'] for r in free[:6])} would give "
-                        f"{c['patient']['first_name']} free care for this bill."), [s for r in free[:2] for s in r["sources"][:1]]
-            return f"None of the hospitals' policies would give {c['patient']['first_name']} free care for this bill.", []
-        return " ".join(_row_text(c, r) for r in rows[:3]), [s for r in rows[:2] for s in r["sources"][:1]]
+                return Ans(" ".join(_row_text(c, r) for r in pick[:2]), [s for r in pick[:2] for s in r["sources"][:1]],
+                           "policy", [i for i in items if i["label"] in {r["hospital"] for r in pick}])
+        if FREE.search(low):
+            free = [r for r in rows if r["balance"] == 0]
+            if not free:
+                return Ans(f"None of the {len(rows)} hospitals' policies would bring {first}'s bill to $0.", [], "policy", items)
+            return Ans(f"{len(free)} of {len(rows)} hospitals would bring {first}'s bill to $0 under their own policies: "
+                       f"{_list([r['hospital'] for r in free])}.", [s for r in free[:2] for s in r["sources"][:1]],
+                       "policy", [i for i in items if i["label"] in {r["hospital"] for r in free}])
+        return Ans(" ".join(_row_text(c, r) for r in rows[:3]) + (f" ({len(rows) - 3} more hospitals on the Hospitals tab.)"
+                                                                    if len(rows) > 3 else ""),
+                   [s for r in rows[:2] for s in r["sources"][:1]], "policy", items)
     if hs and re.search(r"\b(where|source|sources|from|fetched|link|url|document)\b", low):
         out, srcs = [], []
         for h in hs[:2]:
@@ -661,22 +1150,19 @@ def hospitals_text(question: str, ctx: dict) -> tuple[str, list[str]]:
             out.append(f"{h.name}'s policy comes from its own documents" + (f", fetched {row['fetched']}" if row.get("fetched") else "")
                        + (f": {urls[0]}" if urls else " (no source on record)") + ".")
             srcs += urls[:2]
-        return " ".join(out), srcs[:4]
+        return Ans(" ".join(out), srcs[:4], "policy")
+    if hs:
+        parts = [hospital_text(h, why=bool(re.search(r"\bwhy\b|\bno discount\b|\bnot\b", low))) for h in hs[:2]]
+        return Ans(" ".join(p.text for p in parts), [s for p in parts for s in p.sources][:4], "policy")
     if re.search(r"\b(no|don'?t|doesn'?t|without|not)\b.{0,30}\btiers?\b|\bno tiers\b", low):
         none = [n for n, h in summary.items() if h.get("status") == "no tiers"]
-        return ((f"These hospitals don't state a fixed discount tier in what we crawled: {', '.join(none)}." if none
-                 else "Every hospital in the database states at least one discount tier."), [])
-    if hs:
-        out, srcs = [], []
-        for h in hs[:2]:
-            row = summary.get(h.name) or {}
-            tiers = "; ".join(row.get("tiers") or []) or "no fixed discount tier stated"
-            out.append(f"{h.name}: {tiers}" + (f"; payment plans {row['plan_terms']}" if row.get("plan_terms") else "") + ".")
-            srcs += _sources_of(h)[:1]
-        return " ".join(out), srcs
+        return Ans(f"{len(none)} of {len(summary)} hospitals don't state a fixed discount tier in what we crawled: "
+                   f"{_list(none, 8)}." if none else "Every hospital in the database states at least one discount tier.",
+                   [], "policy", [{"kind": "hospital", "label": n, "text": n, "why": ""} for n in none])
     with_tiers = [n for n, h in summary.items() if h.get("status") == "tiers"]
-    return (f"The policy database has {len(summary)} hospitals; {len(with_tiers)} have verified discount tiers"
-            + (f", for example {', '.join(with_tiers[:3])}." if with_tiers else "."), [])
+    return Ans(f"The policy database has {len(summary)} hospitals; {len(with_tiers)} have verified discount tiers"
+               + (f": {_list(with_tiers)}." if with_tiers else "."), [], "policy",
+               [{"kind": "hospital", "label": n, "text": n, "why": ""} for n in with_tiers])
 
 
 def activity_text(ctx: dict) -> str:
@@ -689,99 +1175,210 @@ def activity_text(ctx: dict) -> str:
     return "Latest from each agent: " + "; ".join(f"{a}: {e['what']} ({e['when']})" for a, e in list(last.items())[-5:]) + "."
 
 
-async def routed(case: dict | None, question: str, ctx: dict) -> tuple[str, list[str], str]:
-    """Without Claude (or when its answer can't be used): refusals by rule, then the agent whose evidence answers
-    the question, then the bills / status templates, all from code. Returns (answer, sources, route)."""
-    if said := refusal(question):
-        return said, [], "refused"
+def _findings(case: dict, agent: str) -> list[dict]:
+    f = (case.get("facts") or {}).get("findings") or {}
+    return [{"kind": "finding", "label": x["title"], "why": " ".join(x.get("proof") or []),
+             "text": f"{x['title']} ({x['value']}): {' '.join(x.get('proof') or [])}"
+                     + (" You said this one is wrong, so the plan leaves it out." if x.get("marked_wrong") else "")}
+            for x in decide.tagged(case, [x for x in f.values() if x["agent"] == agent])]
+
+
+async def follow_up(case: dict | None, question: str, ctx: dict, turns: list[dict]) -> Ans | None:
+    """"What about the second one?" / "that one" / "why?": resolved against what the last answer listed (the
+    last question is routed again for its items). Never an unrelated answer: if it can't be resolved, ask."""
+    if not FOLLOW.search(question):
+        return None
+    turns = [t for t in turns or [] if t.get("q")]
+    # the question that listed the items: the latest non-follow-up turn (of the last 4) whose answer listed some
+    bases = [i for i in range(len(turns) - 1, -1, -1) if not FOLLOW.search(turns[i]["q"])][:4]
+    if not bases:
+        return Ans("Which one do you mean? Ask me about a bill, a hospital or a finding by name.", [], "remy")
+    base, prev = bases[0], None
+    for i in bases:
+        a = await route(case, turns[i]["q"], ctx, [])
+        if prev is None or a.items:
+            base, prev = i, a
+        if a.items:
+            break
+    picked = 0  # the item picked since ("the second one", then "why?")
+    for t in turns[base + 1:]:
+        if m := re.search(r"\b(first|second|third|fourth|fifth|sixth|last|other|next)\b", t["q"].lower()):
+            picked = ORDINAL[m.group(1)]
+    low = question.lower()
+    m = re.search(r"\b(first|second|third|fourth|fifth|sixth|last|other|next)\b", low)
+    if m:
+        picked = ORDINAL[m.group(1)]
+    ok = lambda i: prev.items and -len(prev.items) <= i < len(prev.items)  # noqa: E731
+    if re.search(r"\bwhy\b", low):
+        if ok(picked) and prev.items[picked].get("why"):
+            it = prev.items[picked]
+            return Ans(f"{it['label']}: {it['why']}".rstrip(".") + ".", [], prev.route, [it])
+        if case:
+            return waterfall_text(case)
+        return Ans("Which part do you mean? Ask me about a bill, a hospital or a finding by name.", [], "remy")
+    idx = picked
+    if prev.items and -len(prev.items) <= idx < len(prev.items):
+        it = prev.items[idx]
+        return Ans(it["text"], prev.sources if idx == 0 else [], prev.route, [it])
+    opts = [i["label"] for i in prev.items[:6]]
+    return Ans("Which one do you mean?" + (f" {_list(opts)}." if opts else
+                                          " Ask me about a bill, a hospital or a finding by name."), [], "remy", prev.items)
+
+
+async def route(case: dict | None, question: str, ctx: dict, turns: list[dict] | None = None) -> Ans:
+    """Without Claude (or when its answer can't be used): refusals by rule, legal questions, follow-ups, then the
+    agent or the code template whose data answers the question. Everything here is computed, nothing invented."""
+    if said := refused(question):
+        return Ans(said, [], "refused")
     kind, said = decide._offline_intent(question)
-    if kind == "refused" and not QUESTION.search(question):  # "what do I owe?" is a question, not a change of facts
-        return said, [], "refused"
+    if kind == "refused" and not QUESTION.search(question) and not decide.PAY.search(question):
+        return Ans(said, [], "refused")  # a change of facts; "what do I owe?" is a question, not one
+    if LEGAL.search(question):
+        return Ans(LEGAL_TEXT, [], "remy")
+    if fu := await follow_up(case, question, ctx, turns or []):
+        return fu
     if case is None:
         return general(question, ctx)
     if kind == "change":
-        return "Your plan isn't ready yet. Once the Review is done, the planner can change it.", [], "remy"
+        return Ans("Your plan isn't ready yet. Once the Review is done, the planner can change it.", [], "remy")
+    if any(h.name != case["hospital"]["name"] for h in named_hospitals(question)):
+        return hospitals_text(question, ctx, case)
     if PRICE.search(question) and (text := price_text(case, question)):
-        return text, [r["posted"]["source"] for r in billcheck.line_table(case["bill"], case["hospital"].get("name"))
-                      if r["posted"]][:1], "policy"
-    if OWE.search(question) and not BILLS.search(question):
-        return owe_text(case), sources(ctx), "remy"
+        return Ans(text, [r["posted"]["source"] for r in billcheck.line_table(case["bill"], case["hospital"].get("name"))
+                          if r["posted"]][:1], "policy")
+    if CONTACT.search(question):
+        return contact_text(case)
+    if ACTIVITY.search(question):
+        return case_activity_text(case)
+    if case.get("facts") and not TOTAL.search(question):
+        if STILL_OWE.search(question) and not re.search(r"\bwhy\b", question, re.I):
+            return still_owe_text(case, question)
+        if WHY_FREE.search(question):
+            return why_free_text(case)
+        if REFUND.search(question):
+            return refund_text(case)
+        if WRONG.search(question):
+            return wrong_text(case)
+        if ELSEWHERE.search(question):
+            return hospitals_text(question, ctx, case)
+    if OWE.search(question) and not TOTAL.search(question):
+        return waterfall_text(case)
     agent = "auditor" if BANK.search(question) else "policy" if POLICY.search(question) else None
     if agent and case.get("facts"):
-        out = await decide.answer_agent(case, agent, question, emit=False, use_llm=False)
-        return out["answer"], out["sources"], agent
+        out = await decide.answer_agent(case, agent, redact(question), emit=False, use_llm=False)
+        return Ans(out["answer"], out["sources"], agent, _findings(case, agent))
     if BILLS.search(question):
-        if ctx.get("case", {}).get("other_bills"):
-            return bills_text(ctx["case"]["other_bills"]), [], "remy"
-        if ctx["all_cases"]["totals"]["bills"] > 1:
-            return bills_text(ctx["all_cases"]), [], "remy"
-    return followups.fallback_status(_o().summary(case)), sources(ctx), "remy"
+        s = ctx.get("case", {}).get("other_bills") or (ctx["all_cases"] if ctx["all_cases"]["totals"]["bills"] > 1 else None)
+        if s:
+            return totals_text(s) if TOTAL.search(question) else first_text(s)
+    return Ans(followups.fallback_status(_o().summary(case)), sources(ctx), "remy")
 
 
-def general(question: str, ctx: dict) -> tuple[str, list[str], str]:
-    """The offline answer on a page with no case open. Returns (answer, sources, route)."""
+async def routed(case: dict | None, question: str, ctx: dict, turns: list[dict] | None = None) -> tuple[str, list[str], str]:
+    a = await route(case, question, ctx, turns)
+    return a.text, a.sources, a.route
+
+
+def general(question: str, ctx: dict) -> Ans:
+    """The offline answer on a page with no case open. Totals and which-bill-first come before names, so a
+    patient called Bill never takes over "Which bill first?"; a named hospital comes before the docs."""
     page, low = ctx["page"], question.lower()
     if decide._offline_intent(question)[0] == "change" and not QUESTION.search(question):
-        return "Open the bill on the Cases tab and ask there: plan changes go to that case's planner.", [], "remy"
-    if ctx.get("how_it_works") and knowledge.is_how_question(question):
-        h = ctx["how_it_works"][0]
-        return f"From {_doc_source(h)}: {h['text'][:400].strip()}", sources(ctx), "remy"
-    if page == "hospitals" or named_hospitals(question) or (POLICY.search(question) and not named_cases(question)):
-        text, srcs = hospitals_text(question, ctx)
-        return text, srcs or sources(ctx), "policy"
+        return Ans("Open the bill on the Cases tab and ask there: plan changes go to that case's planner.", [], "remy")
+    if NEEDS.search(question):
+        p = (ctx.get("get_started") or [None])[0]
+        return Ans(NEEDS_TEXT + (" Nothing is saved from Get started yet." if not p else
+                                 " Your Get started answers are saved, so you only need the bill and statement."),
+                   [], "remy", NEEDS_ITEMS)
+    if named_hospitals(question):
+        return hospitals_text(question, ctx)
+    if knowledge.is_how_question(question) and (hs := knowledge.relevant(question)):
+        # this question's own sections (a follow-up re-routes it), and "tell me more" gets the same one, longer
+        items = [{"kind": "doc", "label": _doc_source(h), "why": "", "text": f"From {_doc_source(h)}: {plain(h['text'], 1200)}"}
+                 for h in hs]
+        return Ans(f"From {_doc_source(hs[0])}: {plain(hs[0]['text'])}", [_doc_source(h) for h in hs[:2]], "remy", items)
+    people = named_cases(question)
+    if TOTAL.search(question):
+        return totals_text(ctx["all_cases"])
+    if FIRST.search(question):
+        return first_text(ctx["all_cases"])
+    if OWE.search(question) and not people:
+        cases = all_cases()
+        return Ans(owe_text(cases[0]), [], "remy") if len(cases) == 1 else totals_text(ctx["all_cases"])
+    if page == "hospitals" or (POLICY.search(question) and not people) or (people and FREE.search(question)):
+        return hospitals_text(question, ctx)
     if COLLECT.search(question):
-        return collections_text(ctx["all_cases"]["bills"], all_cases()), [], "remy"
-    if people := named_cases(question):
+        return Ans(collections_text(ctx["all_cases"]["bills"], all_cases()), [], "remy")
+    if people:
         if OWE.search(question):
-            return owe_text(people[0]), [], "remy"
-        return f"{label(people[0])}: " + followups.fallback_status(_o().summary(people[0])), [], "remy"
-    if page == "ops" or (ACTIVITY.search(question) and not BILLS.search(question)):
-        return activity_text(ctx), [], "remy"
+            return Ans(owe_text(people[0]), [], "remy")
+        return Ans(f"{label(people[0])}: " + followups.fallback_status(_o().summary(people[0])), [], "remy")
+    if page == "ops" or ACTIVITY.search(question) or re.search(r"\bagents?\b", low):
+        return Ans(activity_text(ctx), [], "remy")
     if page == "start" or re.search(r"\b(household|profile|onboarding)\b", low):
         p = (ctx.get("get_started") or [None])[0]
         if not p:
-            return "No household profile is saved yet. Fill in Get started and I'll use it on your next bill.", [], "remy"
+            return Ans(NEEDS_TEXT + " Nothing is saved from Get started yet.", [], "remy")
         bits = [f"household of {p['household_size']}" if p.get("household_size") else "",
                 f"income {_money(p['income'])} a year before taxes" if isinstance(p.get("income"), (int, float)) else "",
                 ("insured" if p["insured"] else "uninsured") if isinstance(p.get("insured"), bool) else ""]
-        return ("From Get started: " + ", ".join(b for b in bits if b) + ". I use these for the hospital's "
-                "financial-assistance rules on your next bill; the Hospitals tab shows each policy."), [], "remy"
-    return bills_text(ctx["all_cases"]), [], "remy"
+        return Ans("From Get started: " + ", ".join(b for b in bits if b) + ". I use these for the hospital's "
+                   "financial-assistance rules on your next bill; the Hospitals tab shows each policy.", [], "remy")
+    return first_text(ctx["all_cases"]) if ctx["all_cases"]["totals"]["bills"] > 1 else totals_text(ctx["all_cases"])
 
 
-async def _claude(system: str, ctx_json: str, history: list[dict], question: str,
+def guard_scope(ctx: dict, question: str) -> dict:
+    """What an answer's amounts may come from. On a case page, the case (its other bills are the same person's)
+    and the hospitals, not every other patient's money, unless the question is about all the bills."""
+    if not ctx.get("case") or ctx["page"] in ("cases", "ops") or BILLS.search(question):
+        return ctx
+    return {k: v for k, v in ctx.items() if k not in ("all_cases", "under_the_hood")}
+
+
+async def _claude(system: str, ctx: dict, history: list[dict], question: str,
                   tools: list | None = None) -> tuple[str, bool, str]:
     """(answer, handoff, source). source "claude", or "code" when the answer was dropped by the number guard."""
     if not llm.available():
         return "", False, ""
     try:
         resp = await llm.create(system=system, max_tokens=1500, **decide._fast(), **({"tools": tools} if tools else {}),
-                                messages=[{"role": "user", "content": f"CONTEXT (JSON):\n{ctx_json}"},
+                                messages=[{"role": "user", "content": f"CONTEXT (JSON):\n{json.dumps(ctx, default=str)}"},
                                           {"role": "assistant", "content": "Got it. I'll answer only from this."},
                                           *decide.as_messages(history), {"role": "user", "content": f"Patient asks: {question}"}])
     except Exception as e:
         print("remy chat LLM error, using rules:", type(e).__name__)
         return "", False, ""
     handoff = any(b.type == "tool_use" for b in resp.content)
-    answer = "".join(b.text for b in resp.content if b.type == "text").strip()
-    if answer and not decide.grounded(answer, ctx_json):
+    answer = redact_answer("".join(b.text for b in resp.content if b.type == "text").strip())
+    if answer and not decide.grounded(answer, guard_scope(ctx, question)):
         print("remy chat: answer had an amount not in the context, using the routed answer")
         return "", False, "code"
     return answer, handoff, "claude" if answer or handoff else ""
 
 
+HISTORY_CHARS = 2000
+# a client-sent "assistant" turn claiming Remy agreed, paid or was authorized: never fed back as Remy's words
+CLAIMED = re.compile(r"\b(i (have |'ve |already )?(agreed|agree|will pay|'ll pay|paid|authori[sz]ed|confirmed)|"
+                     r"payment (was |has been |is )?(submitted|made|sent|scheduled|authori[sz]ed)|"
+                     r"you('re| are) (now )?authori[sz]ed|(balance|it) (is|was|has been) confirmed)\b", re.I)
+
+
 def as_turns(history: list[dict] | None) -> list[dict] | None:
-    """A history sent with the request ([{role, content}]) as memory turns: the last MEMORY question + answer pairs."""
+    """A history sent with the request ([{role, content}]) as memory turns: the last MEMORY question + answer
+    pairs, each side cut to HISTORY_CHARS and redacted. A pair whose answer claims Remy agreed or paid is dropped:
+    the client can't put words in Remy's mouth."""
     if history is None:
         return None
     out, q = [], None
-    for m in history:
+    for m in history[-4 * decide.MEMORY:]:
         if not isinstance(m, dict) or not isinstance(m.get("content"), str):
             continue
         if m.get("role") == "user":
-            q = redact(m["content"])
+            q = redact(m["content"][:HISTORY_CHARS])
         elif m.get("role") == "assistant" and q is not None:
-            out.append({"q": q, "a": m["content"]})
+            a = m["content"][:HISTORY_CHARS]
+            if not CLAIMED.search(a):
+                out.append({"q": q, "a": redact_answer(a)})
             q = None
     return out[-decide.MEMORY:]
 
@@ -794,21 +1391,28 @@ def _out(answer: str, srcs: list[str], route: str, src: str, **extra) -> dict:
             "sources": srcs, "source": src, **({"refused": True} if route == "refused" else {}), **extra}
 
 
+def _pay_note(question: str, answer: str) -> str:
+    """A question about paying is answered, with a reminder that Remy never pays."""
+    r = refusal(question)
+    return f"{answer} {PAY_NOTE}" if r and r[0] == "pay" else answer
+
+
 async def ask_remy(case: dict, question: str, page: str = "case", history: list[dict] | None = None,
                    profile: dict | None = None) -> dict:
     """The agent chat's default: Remy answers about the whole case (and every tab), and hands plan changes to
-    the planner. history: the conversation so far, when the caller keeps it (else the case's stored chat)."""
+    the planner. history: the conversation so far, when the caller keeps it (else the case's stored chat).
+    Nothing the patient typed is stored or sent before redact()."""
     q = redact(question)
-    if said := refusal(question):
+    if said := refused(question):
         bus.emit(case["id"], "agent_qa", "remy", question=q, answer=said, sources=[])
         return _out(said, [], "refused", "code")
-    intent = decide._offline_intent(question)[0]
-    handoff = intent == "change" and not QUESTION.search(question)  # a plain change request: the planner's rules
-    ctx = remy_context(case["id"], page, question, profile)
+    intent = decide._offline_intent(q)[0]
+    handoff = intent == "change" and not QUESTION.search(q)  # a plain change request: the planner's rules
+    ctx = remy_context(case["id"], page, q, profile)
     turns = as_turns(history) if history is not None else decide.turns(case)
     answer, src = "", ""
     if not handoff:
-        answer, handoff, src = await _claude(system_for(page), json.dumps(ctx, default=str), turns, q, [HANDOFF_TOOL])
+        answer, handoff, src = await _claude(system_for(page), ctx, turns, q, [HANDOFF_TOOL])
         handoff = handoff or (not answer and intent == "change")  # offline, or Claude failed
     if handoff and decide.latest(case):
         out = await decide.chat(case, q, via="remy", prior=turns)
@@ -818,8 +1422,9 @@ async def ask_remy(case: dict, question: str, page: str = "case", history: list[
         answer = "Your plan isn't ready yet. Once the Review is done, the planner can change it."
     route, srcs = "remy", sources(ctx)
     if not answer:
-        answer, srcs, route = await routed(case, question, ctx)
+        answer, srcs, route = await routed(case, q, ctx, turns)
         src = "code"
+    answer = _pay_note(question, answer)
     bus.emit(case["id"], "agent_qa", "remy", question=q, answer=answer, sources=srcs)
     return _out(answer, srcs, route, src)
 
@@ -830,21 +1435,23 @@ def _log_path():
     return events.DATA_DIR / "remy_chat.json"
 
 
-def chat_log(page: str | None = None, n: int = 50, session_id: str | None = None) -> list[dict]:
-    """Case-less turns, oldest first: one session's (session_id), else one page's."""
+def _rows() -> list[dict]:
     try:
-        rows = json.loads(_log_path().read_text())
+        return json.loads(_log_path().read_text())
     except (OSError, json.JSONDecodeError):
-        rows = []
-    if session_id:
-        rows = [r for r in rows if r.get("session_id") == session_id]
-    elif page:
-        rows = [r for r in rows if r.get("page") == page_of(page)]
-    return rows[-n:]
+        return []
+
+
+def chat_log(session_id: str | None, n: int = 50) -> list[dict]:
+    """One browser session's case-less turns, oldest first. No session id, no memory: turns are never shared
+    between browsers or pages' visitors."""
+    if not session_id:
+        return []
+    return [r for r in _rows() if r.get("session_id") == session_id][-n:]
 
 
 def _keep(row: dict) -> None:
-    rows = chat_log(None, 199) + [row]
+    rows = _rows()[-199:] + [row]
     tmp = _log_path().with_suffix(".tmp")
     tmp.write_text(json.dumps(rows, default=str))
     tmp.replace(_log_path())
@@ -857,20 +1464,20 @@ def clear_log() -> None:
 async def ask_general(question: str, page: str, history: list[dict] | None = None, session_id: str | None = None,
                       profile: dict | None = None) -> dict:
     """Remy on a tab with no case open: same context builder and rules. Memory: the history sent with the request,
-    else the stored turns of this session (session_id) or this page."""
+    else this session's stored turns (none without a session_id)."""
     page, q = page_of(page), redact(question)
-    if said := refusal(question):
+    if said := refused(question):
         out = _out(said, [], "refused", "code", page=page)
     else:
-        ctx = remy_context(None, page, question, profile)
+        ctx = remy_context(None, page, q, profile)
         hist = as_turns(history) if history is not None else [
-            {"q": r["question"], "a": r["answer"]} for r in chat_log(page, decide.MEMORY, session_id)]
-        answer, _, src = await _claude(system_for(page), json.dumps(ctx, default=str), hist, q)
+            {"q": r["question"], "a": r["answer"]} for r in chat_log(session_id, decide.MEMORY)]
+        answer, _, src = await _claude(system_for(page), ctx, hist, q)
         route, srcs = "remy", sources(ctx)
         if not answer:
-            answer, srcs, route = await routed(None, question, ctx)
+            answer, srcs, route = await routed(None, q, ctx, hist)
             src = "code"
-        out = _out(answer, srcs, route, src, page=page)
+        out = _out(_pay_note(question, answer), srcs, route, src, page=page)
     _keep({"ts": time.time(), "page": page, "session_id": session_id, "question": q, "answer": out["answer"],
            "sources": out["sources"]})
     return out

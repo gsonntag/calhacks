@@ -4,7 +4,7 @@ ASGITransport), on demo cases built offline.
 
   python scripts/eval_ask_remy.py                       # --offline (default): no Claude, no network
   python scripts/eval_ask_remy.py --group red_team -v   # one group, with every reason printed
-  python scripts/eval_ask_remy.py --live --i-have-approval --max-requests 20   # real Claude (needs Gavin's OK)
+  python scripts/eval_ask_remy.py --live --i-have-approval --max-requests 20   # real Claude (spends credits)
 
 Offline, each item runs one of two ways:
   * no model (llm unavailable): routing, refusals, sources, number grounding of the offline answers;
@@ -12,8 +12,7 @@ Offline, each item runs one of two ways:
     the exact request the app makes and answers with the item's stub_reply. That checks the call shape, the
     context sections, the last-8-turn memory and the number guard without a single network request.
 Live replaces the stub with the real client behind a counter: at most --max-requests (hard cap 60) Claude
-requests, and any 402 / 429 / quota / credits error stops the run at once (docs/PLAN.md "Rule: paid API
-credits"). Cases are always built with Claude off, so setup spends nothing.
+requests, and any 402 / 429 / quota / credits error stops the run at once. Cases are always built with Claude off, so setup spends nothing.
 
 An item whose endpoint or module doesn't exist yet is "skip (not built)", so this runs on master today and on
 the Ask Remy branches later. Exit code: 0 = no failures, 1 = a built feature failed, 2 = bad usage or question
@@ -31,6 +30,7 @@ import sys
 import tempfile
 import time
 import uuid
+from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -50,17 +50,19 @@ ROUTES = {"remy", "auditor", "policy", "decide", "refused"}
 ROUTE_ALIASES = {"nessie": "auditor", "bank": "auditor", "brightdata": "policy", "bright_data": "policy",
                  "planner": "decide", "status": "remy"}
 ENDPOINTS = {"remy", "case", "knowledge"}
-WORLD = {"rosa", "rosa_dup", "marcus", "rosa_called", "rosa_corrected", "rosa_injected", "profile"}
+WORLD = {"rosa", "rosa_dup", "marcus", "rosa_called", "rosa_corrected", "rosa_injected", "raj", "raj_called",
+         "profile"}
 CASE_FIXTURES = WORLD - {"profile"}
 # The case-less endpoint the Ask Remy rebuild adds; the first one that exists is used.
 REMY_PATHS = ("/api/remy/ask", "/api/ask")
 CASE_PATH = "/api/cases/{case_id}/ask"
 ITEM_KEYS = {"id", "page", "case", "turns", "endpoint", "agent", "requires", "route", "refuses", "must_include_any",
-             "must_not_include", "must_not_match", "numbers_grounded", "must_cite", "text_offline", "stub_reply",
+             "must_include_all", "must_not_include", "must_not_match", "numbers_grounded", "must_cite", "text_offline", "stub_reply",
              "stub_only", "context_must_include", "context_must_include_any", "context_must_not_include", "memory",
              "call_shape", "knowledge", "body", "why"}
 
 # Demo-case fixtures (same lines as tests/test_flow.py's desk call).
+AS_OF = date(2026, 10, 25)  # the day the expected numbers were read (demo/scenarios/raj-cpmc/expected.json as_of)
 REP_LINES = ["Patient Financial Services, this is Diane, how can I help you?", "Okay, let me pull that up.",
              "I see it.", "Okay.", "Yes, I've opened a financial assistance review and put the account on hold.",
              "Your case number is 58213.", "Yes, that's right."]
@@ -134,7 +136,8 @@ def validate(data) -> list[str]:
                 errs.append(f"{iid}: endpoint 'knowledge' needs a 'knowledge' mapping")
             if "route" in it and it["route"] not in ROUTES:
                 errs.append(f"{iid}: route must be one of {sorted(ROUTES)}")
-            for k in ("must_include_any", "must_not_include", "must_not_match", "must_cite", "context_must_include",
+            for k in ("must_include_any", "must_include_all", "must_not_include", "must_not_match", "must_cite",
+                      "context_must_include",
                       "context_must_include_any", "context_must_not_include"):
                 if k in it and not (isinstance(it[k], list) and it[k]):
                     errs.append(f"{iid}: {k} must be a non-empty list")
@@ -155,7 +158,7 @@ def validate(data) -> list[str]:
 
 
 def _checks(it: dict) -> list[str]:
-    keys = ("route", "refuses", "must_include_any", "must_not_include", "must_not_match", "numbers_grounded",
+    keys = ("route", "refuses", "must_include_any", "must_include_all", "must_not_include", "must_not_match", "numbers_grounded",
             "must_cite", "context_must_include", "context_must_include_any", "context_must_not_include", "memory",
             "call_shape", "knowledge")
     return [k for k in keys if k in it]
@@ -305,10 +308,37 @@ async def _wait(case_id: str, pred, timeout: float = 30) -> dict:
     raise TimeoutError(f"case {case_id}: timed out")
 
 
-async def _plan_ready(c, scenario: str) -> str:
-    cid = (await c.post(f"/api/cases?scenario={scenario}")).json()["case_id"]
+# fixture -> the demo case it starts from (POST /api/cases?...); Raj is the generated hero case
+# (demo/scenarios/raj-cpmc), household of 4 as the patient says in chat (it's not on the bill or EOB).
+START = {"marcus": "scenario=freecare", "raj": "scenario=raj&household_size=4",
+         "raj_called": "scenario=raj&household_size=4"}
+CALLED = {"rosa_called", "raj_called"}  # fixtures that also make the offline desk call (REP_LINES)
+
+
+async def _plan_ready(c, query: str) -> str:
+    cid = (await c.post(f"/api/cases?{query}")).json()["case_id"]
     await _wait(cid, lambda e: e["kind"] == "approval_requested" and e["agent"] == "caller")
     return cid
+
+
+async def _play_rep(c, call_id: str, max_turns: int = 16) -> None:
+    """Billing's side of the offline desk call. The app's responsive rep (remy.offline.billing_reply) answers what
+    Remy just asked, so calls with more asks (Raj's line corrections) still finish; without it, REP_LINES."""
+    try:
+        from remy.offline import REP_CORRECTION, REP_CORRECTION_MORE, billing_reply
+    except ImportError:
+        billing_reply = None
+    said, fixes = "", 0
+    for i in range(max_turns):
+        if billing_reply:
+            line = billing_reply(i, said, fixes)
+            fixes += line in (REP_CORRECTION, REP_CORRECTION_MORE)
+        else:
+            line = REP_LINES[i] if i < len(REP_LINES) else "Okay."
+        r = (await c.post(f"/api/calls/{call_id}/turn", json={"rep_said": line})).json()
+        if r.get("ended"):
+            return
+        said = r.get("say") or ""
 
 
 async def build_world(c, names: list[str]) -> dict[str, str]:
@@ -320,16 +350,13 @@ async def build_world(c, names: list[str]) -> dict[str, str]:
             r = await c.post("/api/onboarding", json={"answers": PROFILE, "skipped": []})
             r.raise_for_status()
             continue
-        cid = await _plan_ready(c, "freecare" if n == "marcus" else "default")
+        cid = await _plan_ready(c, START.get(n, "scenario=default"))
         ids[n] = cid
-        if n == "rosa_called":
+        if n in CALLED:
             e = await _wait(cid, lambda e: e["kind"] == "approval_requested" and e["agent"] == "caller")
             await c.post(f"/api/approvals/{e['approval_id']}", json={"approved": True})
             ready = await _wait(cid, lambda e: e["kind"] == "call_ready")
-            for line in REP_LINES:
-                r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": line})).json()
-                if r.get("ended"):
-                    break
+            await _play_rep(c, ready["call_id"])
             await _wait(cid, lambda e: e["kind"] == "case_done")
         elif n in ("rosa_corrected", "rosa_injected"):
             note = "that was my dentist" if n == "rosa_corrected" else INJECTED_NOTE
@@ -346,7 +373,8 @@ def _plain(case: dict) -> dict:
 async def ground_text(c) -> str:
     """Everything an answer may quote a dollar amount from: every case (bill, findings, plans, calls), the posted
     prices of each bill's lines (policydb/prices), the dashboard, the hospital list, the same-bill comparison for
-    both demo bills and the Get-started assessment."""
+    both demo bills and for every case (askremy.comparison: Raj's bill at each hospital) and the Get-started
+    assessment."""
     from remy import orchestrator
     cases = list(orchestrator.cases.values())
     parts = [json.dumps([_plain(x) for x in cases], default=str), json.dumps(price_rows(cases), default=str)]
@@ -362,6 +390,11 @@ async def ground_text(c) -> str:
     except Exception:
         pass
     parts.append(json.dumps(PROFILE))
+    try:  # the same-bill comparison Ask Remy computes for each case (the Hospitals tab's math)
+        from remy import askremy
+        parts.append(json.dumps([askremy.comparison(x, top=None) for x in cases], default=str))
+    except (ImportError, AttributeError):
+        pass
     return "\n".join(parts)
 
 
@@ -581,6 +614,9 @@ async def run_item(c, it: dict, feat: dict, ids: dict, ground: str, rec: Recorde
     if it.get("must_include_any") and (live or it.get("text_offline")):
         if not any(_has(answer, s) for s in it["must_include_any"]):
             bad.append(f"answer has none of {it['must_include_any']}")
+    if it.get("must_include_all") and (live or it.get("text_offline")):
+        if lack := [s for s in it["must_include_all"] if not _has(answer, s)]:
+            bad.append(f"answer lacks {lack}")
     for s in it.get("must_not_include") or []:
         if s.lower() in answer.lower():
             bad.append(f"answer includes {s!r}")
@@ -641,15 +677,32 @@ def estimate_requests(items: list[dict], feat: dict) -> int:
 async def run(spec: dict, items: list[dict], live: bool = False, rec: Recorder | None = None,
               log=print) -> list[dict]:
     """Run the items group by group, each group on a fresh world. Returns one result per item."""
-    import httpx
-    from remy import app as app_mod
-    from remy import llm
+    from remy import orchestrator
     feat = features()
     log(f"features: case ask={'yes' if feat['case_ask'] else 'no'} · case-less ask={feat['remy_ask'] or 'not built'}"
         f" · knowledge={'yes' if feat['knowledge'] else 'not built'}")
     if live and rec is None:
         raise ValueError("live runs need a capped Recorder around the real client")
     results: list[dict] = []
+    real_date = orchestrator.date
+    orchestrator.date = _AsOfDate  # Raj's bank history is "the last 12 months": pin today, as tests/test_flow.py does
+    try:
+        await _run_groups(spec, items, live, rec, feat, results)
+    finally:
+        orchestrator.date = real_date
+    return results
+
+
+class _AsOfDate(date):
+    @classmethod
+    def today(cls):
+        return AS_OF
+
+
+async def _run_groups(spec: dict, items: list[dict], live: bool, rec, feat: dict, results: list[dict]) -> None:
+    import httpx
+    from remy import app as app_mod
+    from remy import llm
     stop = ""
     transport = httpx.ASGITransport(app=app_mod.app, raise_app_exceptions=False)
     async with httpx.AsyncClient(transport=transport, base_url="http://eval", timeout=120) as c:
@@ -681,7 +734,6 @@ async def run(spec: dict, items: list[dict], live: bool = False, rec: Recorder |
                 results.append(res)
             llm._client = None
         await c.post("/api/reset")
-    return results
 
 
 def summarize(results: list[dict]) -> dict[str, dict]:
@@ -722,7 +774,7 @@ def main(argv: list[str] | None = None) -> int:
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--offline", action="store_true", help="no Claude, no network (default)")
     mode.add_argument("--live", action="store_true", help="real Claude for answers (needs --i-have-approval)")
-    ap.add_argument("--i-have-approval", action="store_true", help="Gavin OK'd spending Claude credits on this run")
+    ap.add_argument("--i-have-approval", action="store_true", help="you approve spending Claude credits on this run")
     ap.add_argument("--max-requests", type=int, default=DEFAULT_LIVE_REQUESTS,
                     help=f"live: most Claude requests (default {DEFAULT_LIVE_REQUESTS}, hard cap {HARD_CAP})")
     ap.add_argument("--file", type=Path, default=QUESTIONS)
@@ -733,8 +785,7 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
 
     if a.live and not a.i_have_approval:
-        print("Refusing --live without --i-have-approval: live mode spends Claude credits and needs Gavin's OK "
-              "(docs/PLAN.md, 'Rule: paid API credits').", file=sys.stderr)
+        print("Refusing --live without --i-have-approval: live mode spends Claude credits and needs your explicit OK.", file=sys.stderr)
         return 2
     if a.i_have_approval and not a.live:
         print("--i-have-approval only applies with --live.", file=sys.stderr)

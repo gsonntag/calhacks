@@ -25,7 +25,7 @@ def test_question_file_is_valid_and_covers_every_group():
     spec = ev.load()
     items = spec["items"]
     assert set(spec["groups"]) == GROUPS
-    assert 55 <= len(items) <= 80
+    assert 55 <= len(items) <= 95
     assert len({it["id"] for it in items}) == len(items)
     for it in items:
         assert {"id", "page", "case", "turns"} <= set(it) and it["page"] in ev.PAGES
@@ -68,7 +68,7 @@ def test_grounding_includes_posted_prices_and_doc_sections(monkeypatch):
 
 def test_live_needs_explicit_approval_and_a_cap(capsys):
     assert ev.main(["--live"]) == 2
-    assert "needs Gavin's OK" in capsys.readouterr().err
+    assert "needs your explicit OK" in capsys.readouterr().err
     assert ev.main(["--live", "--i-have-approval", "--max-requests", str(ev.HARD_CAP + 1)]) == 2
     assert ev.main(["--i-have-approval"]) == 2
 

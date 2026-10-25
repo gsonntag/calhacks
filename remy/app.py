@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import askremy, auth, config, events, finance, followups, llm, offline, onboarding, orchestrator, tiger
+from . import askremy, auth, config, events, examples, finance, followups, llm, offline, onboarding, orchestrator, tiger
 from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
 from .integrations import cartesia, nessie
@@ -46,6 +46,10 @@ Gather: who the bill is from, the amount and any deadline/collections notice, wh
 how many people are in their household (it decides charity-care eligibility), roughly what the household earns
 a year before taxes (optional: they may skip it; Remy double-checks it against their bank), and ask them to
 attach the bill and the insurance EOB if they haven't.
+You can't open attachments yourself; Remy reads them and adds what they show to the message as
+[documents read: ...]. Treat that as known: never ask for anything it already gives, and don't say a file was
+attached if it isn't listed there. No insurance statement can simply mean the patient is uninsured: ask once
+whether they have insurance; if not, that's fine, Remy works on self-pay bills too.
 As soon as you have the bill (attached or described) and the patient says go or has nothing to add,
 call start_case. Don't give legal advice."""
 
@@ -75,9 +79,10 @@ def _launch(case: dict, coro=None) -> dict:
 
 
 SAMPLE_DOCS = {"default": ("sample-hospital-bill.pdf", "sample-insurance-eob.pdf"),
-               "freecare": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf")}
-REQUIRED = (("patient", "first_name"), ("patient", "last_name"), ("bill", "provider"), ("bill", "amount_due"),
-            ("eob", "patient_responsibility"))
+               "freecare": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf"),
+               "raj": ("scenarios/raj-cpmc/bill.pdf", "scenarios/raj-cpmc/eob.pdf")}
+REQUIRED = (("patient", "first_name"), ("patient", "last_name"), ("bill", "provider"), ("bill", "amount_due"))
+REQUIRED_EOB = (("eob", "patient_responsibility"),)  # only when an insurance statement was uploaded
 
 
 class IntakeError(RuntimeError):
@@ -114,10 +119,18 @@ async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
             except ValueError:
                 clean[f] = case[key][f]
         case[key] = clean
+    eob = parsed.get("eob")
+    has_eob = isinstance(eob, dict) and any(v not in (None, "", []) for v in eob.values())
+    if not has_eob:  # no insurance statement: self-pay, like the uninsured scenarios (empty EOB)
+        case["eob"], case["insured"] = {}, False
     missing = [f"{k}.{f}" for k, f in REQUIRED if case[k].get(f) in (None, "", 0.0)]
+    # a $0 share is a real answer on an EOB (the plan paid everything)
+    missing += [f"{k}.{f}" for k, f in REQUIRED_EOB if has_eob and parsed[k].get(f) in (None, "")]
     if missing:
         raise IntakeError("These weren't on the documents: " + ", ".join(missing) +
-                          ". Upload the hospital bill and the insurance statement (EOB).")
+                          (". Upload the hospital bill and, if you have insurance, the insurance statement (EOB)."
+                           if not has_eob or "eob.patient_responsibility" not in missing else
+                           ". The insurance statement (EOB) doesn't show your share; upload the full EOB."))
     db = PolicyStore()
     h = registry.match(case["bill"]["provider"], db.hospitals())
     case["hospital"] = {**case["hospital"], "name": h.name if h else case["bill"]["provider"],
@@ -126,7 +139,9 @@ async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
 
 
 def _sample_uploads(scenario: str) -> list[tuple[str, bytes]]:
-    return [(n, (config.DEMO_DIR / n).read_bytes()) for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
+    # a generated scenario's files are scenarios/<name>/bill.pdf: named <name>-bill.pdf for the case
+    return [(n.removeprefix("scenarios/").replace("/", "-"), (config.DEMO_DIR / n).read_bytes())
+            for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
 
 
 def _stated_income(v) -> float | None:
@@ -153,7 +168,8 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
         case["patient"].update(stated_income_annual=income_annual, stated_income_source="chat")
     if live and not uploads:
         uploads = _sample_uploads(scenario)
-    case["documents"] = [n for n, _ in uploads] or list(SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"]))
+    case["documents"] = [n for n, _ in uploads] or [n.removeprefix("scenarios/").replace("/", "-")
+                                                    for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
     if live:
         try:
             await _apply_uploads(case, uploads)
@@ -216,6 +232,11 @@ async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str 
             and str(m.get("content", "")).strip()]
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
     note = f" [attached: {', '.join(n for n, _ in uploads)}]" if uploads else ""
+    if uploads and llm.available():
+        try:
+            note += f" [documents read: {intake.summary(await intake.read(uploads))}]"
+        except Exception as e:  # the case reads them again and reports a failure there
+            print("chat couldn't read the attachments:", type(e).__name__)
     msgs.append({"role": "user", "content": (message or "(sent files)") + note})
 
     async def launch(household_size: int | None = None, income_annual: float | None = None) -> dict:
@@ -257,11 +278,23 @@ async def gmail_scan():
 async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default",
                      household_size: int | None = None, income_annual: float | None = None):
     """Start a case from uploaded bill/EOB files, or the sample bill when none are sent.
-    ?scenario=freecare picks the second demo patient (bank history + sample policy).
+    ?scenario=freecare picks the second demo patient (bank history + sample policy); ?scenario=raj the hero
+    case (demo/scenarios/raj-cpmc: bill errors, a missed payment, and a bank history that qualifies him).
     ?income_annual: what the household earns a year before taxes, if the patient said."""
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
+    # any demo scenario, including a generated one by folder name (GET /api/examples lists the demo patients)
+    if not examples.exists(scenario):
+        raise HTTPException(404, f"Unknown demo scenario: {scenario}")
+    if not uploads and scenario not in SAMPLE_DOCS:  # a generated scenario: its own bill.pdf / eob.pdf
+        uploads = [(n, p.read_bytes()) for n, p in examples.sample_docs(scenario)]
     case = await _new_case(uploads, scenario, household_size, income_annual)
     return {"case_id": case["id"]}
+
+
+@app.get("/api/examples")
+async def list_examples():
+    """The demo patients every "Try an example" entry point offers, in demo order (remy/examples.py)."""
+    return examples.listing()
 
 
 @app.get("/api/cases")
@@ -359,9 +392,10 @@ async def ask(case_id: str, q: Question):
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
-    question = q.question.strip()[:500]
-    if q.agent == "remy":
-        out = await _decide_call(orchestrator.ask_remy(case, question or "What's the status?", q.page))
+    raw = q.question.strip()[:500]
+    question = askremy.redact(raw)  # SSN / card / account digits never reach the log, memory or a model
+    if q.agent == "remy":  # Remy sees the raw text only to refuse it, and redacts it itself
+        out = await _decide_call(orchestrator.ask_remy(case, raw or "What's the status?", q.page))
         orchestrator.save(case)  # a handoff may have made a new plan version
         return out
     if q.agent == "decide":
@@ -403,10 +437,11 @@ async def ask_remy_anywhere(q: RemyQuestion):
     return await orchestrator.ask_general(question, q.page, q.history, q.session_id, q.profile)
 
 
-@app.get("/api/remy/chat")
-async def remy_chat(page: str = "cases"):
-    """The chat log for a tab with no case open (oldest first)."""
-    return askremy.chat_log(page)
+@app.get("/api/remy/chat", dependencies=ADMIN)
+async def remy_chat(session_id: str = ""):
+    """One browser session's case-less chat (oldest first); none without a session id. Admin key: it's what the
+    patient typed."""
+    return askremy.chat_log(session_id or None)
 
 
 async def _decide_call(coro):

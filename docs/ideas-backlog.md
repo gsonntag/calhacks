@@ -1,7 +1,7 @@
 # Ideas backlog: check audit (2026-10-25)
 
 A read-only design audit of the two money-checking agents, kept for when there's time to build more.
-Decisions and the current plan are in `docs/PLAN.md`. Items marked "unsure" were not verified; check them
+Items marked "unsure" were not verified; check them
 before putting anything on screen.
 
 ## Audit of the two-agent design

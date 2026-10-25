@@ -140,7 +140,7 @@ def posted_unit_price(code: str, entry: dict) -> tuple[float | None, str]:
     """The posted gross charge for one HCPCS unit of this code, and how it was worked out. None (with the reason)
     when the file's unit can't be converted to the code's unit."""
     gross = entry.get("gross")
-    if gross is None:
+    if not gross:  # missing, or a $0 placeholder: nothing to compare with
         return None, "no posted gross charge"
     dose = HCPCS_DOSE.get(code)
     if not dose and not code.startswith("J"):

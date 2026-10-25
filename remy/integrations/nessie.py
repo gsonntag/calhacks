@@ -188,6 +188,7 @@ class FallbackBank:
         self.mirror = LocalMirror(sample)
         self.sample_whose = sample_whose
         self.label, self.notice = LIVE_LABEL, ""
+        self.quiet = False  # no account for the patient: said in the step, no warning banner
 
     def fall_back(self, notice: str) -> None:
         self.live, self.notice = None, notice
@@ -286,7 +287,8 @@ async def get_bank(case: dict) -> tuple[Any, str, str]:
         bank.fall_back(f"Capital One (Nessie) didn't answer ({_why(e)}) — using sample bank data")
         return bank, "mirror", bank.label
     if not found:
-        bank.fall_back(f"No Capital One account for {first} — using sample bank data")
+        bank.fall_back(f"Using {first}'s sample bank history" if same else f"Using sample bank data (not {first}'s)")
+        bank.quiet = True  # the step and the bank label say it's sample data; no warning banner
         return bank, "mirror", bank.label
     bank.live_account = found["account_id"]
     return bank, found["account_id"], bank.label

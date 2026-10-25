@@ -134,6 +134,8 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
         "correct_balance": rec["owed"],
         "income_pct_fpl": elig["fpl_pct"],
         "policy_tier": elig["tier"],
+        # a high-medical-cost tier: what the patient's out-of-pocket is measured against (finance.charity_discount)
+        **(_medical_costs(elig) if (elig.get("tier") or {}).get("min_oop_pct_income") is not None else {}),
         "policy_quotes": [t.get("quote") for t in policy["policy"].get("tiers", [])],
         "collections_quote": policy["policy"].get("collections_quote"),
         "payment_plan_quotes": [q for q in ((policy.get("plan_terms") or {}).get(k) for k in ("quote", "cap_quote")) if q],
@@ -153,10 +155,68 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
                       "plan_version": plan["v"], "correct_balance": m["owed"],
                       "balance_after_assistance": m["target"], "refund_due_after_assistance": m["refund"],
                       "proposed_payment_plan": plan_ask["plan"] if plan_ask else None,
-                      "payments_made": [p for p, raw in zip(brief["payments_made"], rec["payments"]) if str(raw["id"]) in kept]})
+                      "payments_made": [p for p, raw in zip(brief["payments_made"], rec["payments"]) if str(raw["id"]) in kept],
+                      "bill_corrections": _bill_corrections(plan["asks"], rec)})
     if "discount" not in brief["ask_kinds"]:  # no discount ask: nothing the caller could read as "the patient qualifies"
         brief.update(income_pct_fpl=None, policy_tier=None, policy_quotes=[])
+        for k in ("medical_costs_pct_income", "medical_costs_12_months"):
+            brief.pop(k, None)
     return brief
+
+
+def _medical_costs(elig: dict) -> dict:
+    """The out-of-pocket a high-medical-cost tier measures: this bill's share plus the bank's other medical bills
+    over the last 12 months, as a percent of family income."""
+    return {"medical_costs_pct_income": elig.get("oop_pct_income"),
+            "medical_costs_12_months": {"this_bill": elig.get("bill_out_of_pocket"),
+                                        "other_medical_bills_in_bank": elig.get("bank_medical")}}
+
+
+def _bill_corrections(asks: list[dict], rec: dict) -> list[dict]:
+    """The approved plan's bill_line asks, in its order, with the auditor's line error behind each (line, code,
+    amount, what's wrong, source), so the call can name the line and the amount."""
+    errors = {f"auditor:{c['kind']}-{c['line']}": c for c in rec.get("line_errors") or []}
+    out = []
+    for a in asks:
+        c = next((errors[f] for f in a["findings"] if f in errors), None) if a["kind"] == "bill_line" else None
+        if c:
+            out.append({k: c[k] for k in ("kind", "line", "code", "amount", "billed", "posted", "detail", "source")
+                        if c.get(k) not in (None, "")})
+    return out
+
+
+def _correction_line(c: dict) -> str:
+    """One bill_line ask, said on the call: what's wrong, which line, how much, and the source."""
+    code = f" {c['code']}" if c.get("code") else ""
+    if c["kind"] == "duplicate_line":
+        m = re.search(r"repeats line (\d+)", c.get("detail", ""))
+        dup = f"repeats line {m.group(1)}" if m else "is a duplicate"
+        return (f"Line {c['line']} of the statement {dup}: the same{code} charge of ${c['amount']:,.0f}, "
+                "billed twice. Could you remove the duplicate line?")
+    if c["kind"] == "price_above_posted" and c.get("billed") and c.get("posted"):
+        m = re.search(r"price file, (\S+)$", c.get("source", ""))
+        src = (f", in your published price file dated {m.group(1)}" if m
+               else f", per {c['source']}" if c.get("source") else "")
+        return (f"Line {c['line']} charges ${c['billed']:,.0f} for code{code}, but your own posted price is "
+                f"${c['posted']:,.0f}{src}. Could you correct it to the posted price, ${c['amount']:,.0f} less?")
+    return f"{c.get('detail', '').strip()} Could you correct line {c['line']}, ${c['amount']:,.0f}?".strip()
+
+
+def _qualifies_line(b: dict) -> str:
+    """Why the patient qualifies, in the policy's own terms: a high-medical-cost tier is about medical costs, not
+    income alone; an income tier is about the poverty line."""
+    tier = b.get("policy_tier") or {}
+    need = tier.get("min_oop_pct_income") if isinstance(tier, dict) else None
+    if need is not None and b.get("medical_costs_pct_income") is not None:
+        bank = (b.get("medical_costs_12_months") or {}).get("other_medical_bills_in_bank")
+        incl = f", including ${bank:,.0f} of other medical bills" if bank else ""
+        return (f"The patient's medical expenses over the past 12 months are about {b['medical_costs_pct_income']:.0f}% "
+                f"of family income{incl}, over your policy's {need:.0f}%, so the patient qualifies under your own "
+                "financial assistance policy for patients with high medical costs.")
+    if b.get("income_pct_fpl") is not None:
+        return (f"The patient's income is about {b['income_pct_fpl']:.0f} percent of the poverty line, which "
+                "qualifies under your own financial assistance policy.")
+    return "The patient qualifies under your own financial assistance policy."
 
 
 def _case_number(said: str) -> str:
@@ -331,19 +391,19 @@ class CallSession:
                   + ("" if b.get("insurer") else " The patient is uninsured."))]
         if pay:
             lines.append(f"There's also a ${pay['amount']:,.0f} payment made on {pay['date']} that should be on the "
-                         f"account. With {'both' if 'insurance' in kinds else 'it'} applied the balance is "
+                         f"account. With {'all of that' if 'bill_line' in kinds else 'both' if 'insurance' in kinds else 'it'} applied the balance is "
                          f"${b['correct_balance']:,.0f}.")
         elif "insurance" in kinds:
             lines.append("Could you confirm the corrected balance?")
+        if "bill_line" in kinds:  # one line per line error, in the plan's order, before the money totals
+            at = 2 if "insurance" in kinds else len(lines)
+            lines[at:at] = [_correction_line(c) for c in b.get("bill_corrections") or []]
         hold = "hold the account from collections while it's pending?"
         plan = b.get("proposed_payment_plan") if "plan" in kinds else None
         if "discount" in kinds:
-            fpl = (f"The patient's income is about {b['income_pct_fpl']:.0f} percent of the poverty line, which "
-                   if b.get("income_pct_fpl") is not None else "The patient ")
             refund = (f" and refund the ${b['refund_due_after_assistance']:,.0f} already paid once it's applied,"
                       if "refund" in kinds and b.get("refund_due_after_assistance") else "")
-            lines.append(f"{fpl}qualifies under your own financial assistance policy. Can you open a financial "
-                         f"assistance review{refund} and {hold}")
+            lines.append(f"{_qualifies_line(b)} Can you open a financial assistance review{refund} and {hold}")
         elif plan:
             lines.append(f"Once it's corrected to ${b['balance_after_assistance']:,.0f}, could you set up an "
                          f"interest-free payment plan of {plan['months']} monthly payments of ${plan['monthly']:,.0f}, "

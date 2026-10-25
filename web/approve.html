@@ -42,10 +42,12 @@ const caseId = new URLSearchParams(location.search).get('case');
 const root = document.getElementById('root');
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let shown = null;
+// whole dollars when there are no cents ($400), otherwise exactly two decimals ($670.50)
+const money = (n) => { const v = Number(n); return '$' + v.toLocaleString('en-US', Math.round(v * 100) % 100 ? {minimumFractionDigits: 2, maximumFractionDigits: 2} : {maximumFractionDigits: 0}); };
 function detailText(d) {
   if (d.asks) return d.asks.join(' · ') + (d.say ? ' — ' + d.say : '');
   if (d.say) return d.say;
-  if (d.monthly) return `${d.text || `${d.months} payments of $${d.monthly}`} to ${d.payee}: ${d.months} payments in all. Interest-free. You can stop anytime.`;
+  if (d.monthly) return `${d.text || `${d.months} payments of ${money(d.monthly)}`} to ${d.payee}: ${d.months} payments in all. Interest-free. You can stop anytime.`;
   return Object.entries(d).map(([k, v]) => `${k}: ${v}`).join(' · ');
 }
 async function poll() {

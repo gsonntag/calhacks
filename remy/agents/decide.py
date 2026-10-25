@@ -33,6 +33,11 @@ def money(x: float) -> str:
     return f"${x:,.0f}"
 
 
+def exact(x: float) -> str:
+    """Cents when there are any ($9,952.70), whole dollars otherwise ($400): for math that has to add up."""
+    return f"${x:,.2f}" if round(x, 2) != round(x) else f"${x:,.0f}"
+
+
 # ---------------------------------------------------------------- saved facts
 
 def save_facts(case: dict, audit: dict, pol: dict) -> dict:
@@ -191,7 +196,8 @@ def compute(case: dict) -> dict:
                            "source": f"bank · txn {p['id']}", "finding": f"auditor:paid-{p['id']}"})
     math_lines.append({"label": "You owe", "amount": owed, "total": True})
     if d:
-        math_lines.append({"label": "Free care under their policy" if d == 100 else f"{d:.0f}% discount under their policy",
+        math_lines.append({"label": f"Free care: your {money(share)} share written off" if d == 100
+                           else f"{d:.0f}% discount under their policy",
                            "amount": -round(owed - target + refund, 2), "source": pol.get("source") or "",
                            "finding": "policy:discount"})
         math_lines.append({"label": "They owe you back" if refund else "After the discount",
@@ -220,10 +226,11 @@ def compute(case: dict) -> dict:
             paid, findings=[f"auditor:paid-{p['id']}" for p in payments])
     if d:
         what = "free care" if d == 100 else f"the {d:.0f}% charity-care discount"
-        ask("discount", f"Ask for {what} under their own policy, bringing the bill to {money(target)}",
+        effect = (f"brings the {money(owed)} you owe to {money(target)}" + (f", and {money(refund)} back" if refund else ""))
+        ask("discount", f"Ask for {what} under their own policy: it {effect}",
             f"Request a financial-assistance review under the hospital's own policy: the patient qualifies for "
             f"{'free care' if d == 100 else f'a {d:.0f}% discount'}, which brings the balance to {money(target)}. Quote the policy.",
-            owed - target, findings=["policy:discount"])
+            owed - target, value=f"{money(owed)} owed → {money(target)}", findings=["policy:discount"])
         if refund:
             ask("refund", f"Get the {money(refund)} you overpaid refunded",
                 f"Ask for the {money(refund)} the patient already paid to be refunded once the assistance is applied.",
@@ -257,7 +264,7 @@ def compute(case: dict) -> dict:
     out = {"round": round_of(case), "money": {"billed": billed, "owed": owed, "target": target, "refund": refund,
                                               "saved": round(billed - target + refund, 2)},
            "math": math_lines, "call": who_to_call(case, d), "asks": asks, "skipped": skipped,
-           "decided": decided(case, share, paid, d, owed, target, refund, plan, bad),
+           "decided": decided(case, share, paid, d, owed, target, refund, plan, bad, line_errors),
            "prefs": json.loads(json.dumps(prefs)), "corrections": [c["id"] for c in case["corrections"] if c.get("active")]}
     if nxt:  # after a call: what's done, what that call got, and what happens next
         last = case["calls"][-1]
@@ -289,7 +296,7 @@ def who_to_call(case: dict, discount: float) -> dict:
 
 
 def decided(case: dict, share: float, paid: float, d: float, owed: float, target: float, refund: float,
-            plan: dict | None, bad: set[str]) -> dict:
+            plan: dict | None, bad: set[str], line_errors: list[dict] | None = None) -> dict:
     f = case["facts"]
     rec, pol, finds = f["rec"], f["pol"], f["findings"]
     elig, inc = pol["eligibility"], pol["income"]
@@ -310,12 +317,17 @@ def decided(case: dict, share: float, paid: float, d: float, owed: float, target
                          f"(household of {hh})")
     if not elig["discount_pct"]:
         bright.append("No discount tier in their policy fits your income and bills")
-    math = [f"{money(rec['billed_due'])} billed" + (f" − {money(rec['billed_due'] - share)} insurance" if rec["billed_due"] > share else "")
-            + (f" − {money(paid)} paid" if paid else "") + f" = {money(owed)} owed"]
+    # the same split as the findings and the plan's math lines: insurance, each bill error, each payment
+    billed, errs = float(rec["billed_due"]), line_errors or []
+    ins = round(billed - share - sum(c["amount"] for c in errs), 2)
+    math = [f"{exact(billed)} billed" + (f" − {exact(ins)} insurance" if ins > 0 else "")
+            + "".join(f" − {exact(c['amount'])} bill error" for c in errs)
+            + (f" − {exact(paid)} paid" if paid else "") + f" = {exact(owed)} owed"]
     if d:
-        math.append(f"{money(share)} share × {100 - d:.0f}% = {money(share * (1 - d / 100))}"
+        math.append((f"{money(share)} share, 100% written off under their policy = $0" if d == 100
+                     else f"{money(share)} share − {d:.0f}% under their policy = {money(share * (1 - d / 100))}")
                     + (f" − {money(paid)} paid" if paid else "")
-                    + (f" → they owe you {money(refund)}" if refund else f" = {money(target)}"))
+                    + (f" → they owe you {money(refund)}" if refund else f" = {money(target)}" if paid or d != 100 else ""))
     if plan:
         math.append(f"{money(target)} as {plan['text']}: {plan['reason']}")
     if d:
@@ -803,26 +815,79 @@ def as_messages(history: list[dict]) -> list[dict]:
 
 
 _MONEY = re.compile(r"\$\s?(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?")
-_NUM = re.compile(r"(?<![\w.])(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?")
+# an amount as an answer may write it: $1,234 / $1,234.5 / $1,234.56 / $1.5k / $12k / 900 dollars
+_SAID = re.compile(r"\$\s?(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?(?:\s?([kK])\b)?|"
+                   r"(?<![\w$.,])(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?\s*(k\s+)?dollars?\b", re.I)
+# Keys whose numbers are money. Anything else (zip codes, phone numbers, percents, days, counts) never grounds
+# an amount, whatever its digits.
+MONEY_KEY = re.compile(r"amount|bill|balance|owe|paid|refund|target|money|saved|due|price|gross|cash|negotiated|"
+                       r"median|posted|total|share|responsib|adjust|allowed|income|annual|monthly|cost|oop|stake|"
+                       r"expected|confirmed|charge|deposit|spend|medical|dollar|^value$|^min$|^max$|^billed", re.I)
+NOT_MONEY = re.compile(r"pct|percent|_id$|^id$|phone|zip|days|year|date|count|units|^line$|round|^v$|^n$|rank|txns|^bills$|review|"
+                       r"number|size", re.I)
 
 
 def _cents(whole: str, frac: str | None) -> int:
     return int(whole.replace(",", "")) * 100 + (int((frac or "0")[:2].ljust(2, "0")) if frac else 0)
 
 
-def grounded(answer: str, ctx_json: str) -> bool:
-    """Every dollar amount in the answer ($1,234 / $1,234.56 / $600) is a number in the context: exactly, or
-    rounded to whole dollars (amounts are shown rounded). No sums or differences: the context already carries
-    every total the code computed."""
-    said = [_cents(w, f) for w, f in _MONEY.findall(answer or "")]
+def _said(text: str) -> list[tuple[int, int, str]]:
+    """Amounts in an answer: (cents, k-unit in cents or 0, decimals written: "" / "1" / "2")."""
+    out = []
+    for m in _SAID.finditer(text or ""):
+        whole, frac, k = (m.group(1), m.group(2), m.group(3)) if m.group(1) else (m.group(4), m.group(5), m.group(6))
+        c = _cents(whole, frac)
+        if k:
+            out.append((c * 1000, 10_000 if frac else 100_000, "k"))
+        else:
+            out.append((c, 0, str(len(frac)) if frac else ""))
+    return out
+
+
+def money_values(ctx) -> set[int]:
+    """Every money amount in a context, in cents: numbers under money keys, and every "$..." written in its
+    text (proof lines, policy quotes, docs)."""
+    out: set[int] = {0}
+
+    def walk(x, key: str = "") -> None:
+        if isinstance(x, dict):
+            for k, v in x.items():
+                walk(v, str(k))
+        elif isinstance(x, list):
+            for v in x:
+                walk(v, key)
+        elif isinstance(x, bool):
+            return
+        elif isinstance(x, (int, float)):
+            if MONEY_KEY.search(key) and not NOT_MONEY.search(key):
+                out.add(round(float(x) * 100))
+        elif isinstance(x, str):
+            out.update(_cents(w, f) for w, f in _MONEY.findall(x))
+    walk(ctx)
+    return out
+
+
+def grounded(answer: str, ctx) -> bool:
+    """Every dollar amount in the answer is a money amount in the context (money_values): exactly, rounded or
+    cut to whole dollars or to one decimal, or, for "$1.5k" / "$12k", within that rounding. No sums or
+    differences: the context already carries every total the code computed. ctx: the context, or its JSON."""
+    said = _said(answer)
     if not said:
         return True
-    have, whole = {0}, {0}
-    for w, f in _NUM.findall(ctx_json or ""):
-        c = _cents(w, f)
-        have.add(c)
-        whole.add(round(c / 100) * 100)
-    return all(c in have or (c % 100 == 0 and c in whole) for c in said)
+    if isinstance(ctx, str):
+        try:
+            ctx = json.loads(ctx)
+        except ValueError:
+            pass
+    have = money_values(ctx)
+    whole = {(v + 50) // 100 * 100 for v in have} | {round(v / 100) * 100 for v in have} | {v // 100 * 100 for v in have}
+    tenth = {(v + 5) // 10 * 10 for v in have} | {v // 10 * 10 for v in have}
+
+    def ok(c: int, unit: int, dec: str) -> bool:
+        if dec == "k":
+            return any(abs(v - c) <= unit // 2 for v in have)
+        return c in have or (dec == "" and c in whole) or (dec == "1" and c in tenth)
+    return all(ok(*s) for s in said)
 
 
 async def _answer(system: str, evidence: dict, question: str, what: str,
@@ -885,7 +950,7 @@ async def answer_agent(case: dict, agent: str, question: str, emit: bool = True,
         answer = ("What I found: " + " ".join(f"{x['title']} ({x['value']}): {' '.join(x['proof'])}"
                                               + (" (you said this one is wrong, so the plan leaves it out)" if x.get("marked_wrong") else "")
                                               for x in mine)
-                  if mine else " ".join(latest(case)["decided"]["brightdata"]) + "."
+                  if mine else ". ".join(x.rstrip(".") for x in latest(case)["decided"]["brightdata"]) + "."
                   if agent == "policy" and latest(case) else "I found nothing to correct in what I checked.")
     sources = list(dict.fromkeys(x["source"] for x in mine if x.get("source")))
     if emit:

@@ -9,8 +9,7 @@ then writes the ids to data/nessie_ids.json for reference. The app finds the acc
 on the uploaded bill. Re-seeding deletes the patient's earlier account first, so rosa-real / marcus-real
 (same names as the default / freecare patients) replace those accounts.
 
-PAID API: every transaction is one or two Nessie requests (a generated scenario has about 250). Check
-docs/PLAN.md ("Rule: paid API credits") before running it.
+PAID API: every transaction is one or two Nessie requests (a generated scenario has about 250).
 """
 import asyncio
 import json

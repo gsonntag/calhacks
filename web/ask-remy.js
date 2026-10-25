@@ -1,6 +1,7 @@
 // Ask Remy on every tab: the same button, hint and panel as the case page's agent chat (ask-remy.css), with only
-// Remy answering. Remy sees every tab (remy/askremy.py): POST /api/remy/ask {question, page, case_id?}; the log of
-// a tab with no case open comes from GET /api/remy/chat?page=. Load after auth.js (it sends the admin key):
+// Remy answering. Remy sees every tab (remy/askremy.py): POST /api/remy/ask {question, page, case_id?, session_id};
+// this browser's earlier turns come from GET /api/remy/chat?session_id= (memory is per browser session, never
+// shared). Load after auth.js (it sends the admin key):
 //   <script src="/ask-remy.js" data-page="hospitals"></script>
 // data-case-param="id": the page's ?id= is an open case (Under the hood), so Remy answers about it too.
 (() => {
@@ -9,8 +10,15 @@
   const caseId = me.dataset.caseParam ? new URLSearchParams(location.search).get(me.dataset.caseParam) : null;
   const HINT = { cases: 'Questions about your cases?', hospitals: 'Questions about these hospitals?',
     ops: 'Questions about what the agents did?', start: 'Questions about getting started?' }[page] || 'Questions?';
-  const PLACEHOLDER = { cases: 'Which bill first? What do I owe in total?', hospitals: 'Which hospital has the best discount?',
-    ops: 'What did the agents just do?', start: 'What does Remy need from me?' }[page] || 'Ask anything';
+  // short enough for a phone-width input
+  const PLACEHOLDER = { cases: 'Which bill first?', hospitals: 'Best discount for me?', ops: 'What just happened?',
+    start: 'What do you need?' }[page] || 'Ask Remy';
+  const SESSION_KEY = 'remy-ask-session';
+  const newId = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36));
+  let sessionId = '';
+  try { sessionId = localStorage.getItem(SESSION_KEY) || ''; if (!sessionId) { sessionId = newId(); localStorage.setItem(SESSION_KEY, sessionId); } }
+  catch (e) { sessionId = sessionId || newId(); }  // storage blocked: memory lasts for this page only
+  document.body.classList.add('has-ask-remy');  // ask-remy.css keeps room under the page for the button
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   function srcHTML(src) {
     const m = /^(https?:\S+) · (.+)$/.exec(src || '');
@@ -44,16 +52,24 @@
   const $ = (id) => document.getElementById(id);
   const st = { open: false, busy: false, err: '', items: [], loaded: false };
 
-  // the hint shows until the chat is opened or dismissed, once per browser (shared with the case page)
+  // the hint shows once per browser (shared with the case page), on every width: briefly, once the page has settled,
+  // and never over something that waits on the patient (.attn-card). It goes after 6 s, on a scroll or focus, or
+  // when the chat is opened or the hint dismissed.
   const TIP_KEY = 'remy-ask-tip-dismissed';
   const tipDismissed = () => { try { return localStorage.getItem(TIP_KEY) === '1'; } catch (e) { return false; } };
-  const dismissTip = () => { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} $('arTip').hidden = true; };
+  let tipLive = false;
+  const hideTip = () => {
+    tipLive = false; $('arTip').hidden = true;
+    document.removeEventListener('scroll', hideTip, true); document.removeEventListener('focusin', hideTip);
+  };
+  const dismissTip = () => { try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {} hideTip(); };
+  const needsYou = () => [...document.querySelectorAll('.attn-card')].some((el) => el.getClientRects().length);
 
   function render() {
     $('arFab').setAttribute('aria-expanded', String(st.open));
     $('arFab').firstElementChild.textContent = st.open ? 'close' : 'auto_awesome';
     $('arFabLabel').textContent = st.open ? 'Close' : 'Ask Remy';
-    $('arTip').hidden = st.open || tipDismissed();
+    $('arTip').hidden = st.open || !tipLive;
     $('arPanel').hidden = !st.open;
     if (!st.open) return;
     const intro = `<ul class="chat-intro"><li class="on"><b>Remy</b> sees every tab: your cases, the hospitals, what the agents did and your profile.</li>
@@ -74,7 +90,7 @@
     if (st.loaded || caseId) return;
     st.loaded = true;
     try {
-      const rows = await (await fetch(`/api/remy/chat?page=${encodeURIComponent(page)}`)).json();
+      const rows = await (await fetch(`/api/remy/chat?session_id=${encodeURIComponent(sessionId)}`)).json();
       st.items = rows.flatMap((r) => [{ me: true, text: r.question }, { text: r.answer, sources: r.sources }]).concat(st.items);
     } catch (e) {}
     render();
@@ -96,7 +112,7 @@
     st.items.push({ me: true, text: q }); st.busy = true; st.err = ''; $('arInput').value = ''; render();
     try {
       const r = await fetch('/api/remy/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, page, ...(caseId ? { case_id: caseId } : {}) }) });
+        body: JSON.stringify({ question: q, page, session_id: sessionId, ...(caseId ? { case_id: caseId } : {}) }) });
       const out = await r.json();
       if (!r.ok) throw new Error(out.error || out.detail || `Error ${r.status}`);
       st.items.push({ text: out.answer, sources: out.sources });
@@ -104,5 +120,15 @@
     finally { st.busy = false; render(); $('arInput').focus(); }
   });
   render();
-  if (!tipDismissed()) { $('arFab').classList.add('glow'); }
+  if (!tipDismissed()) {
+    $('arFab').classList.add('glow');
+    setTimeout(() => {
+      if (st.open || tipDismissed() || needsYou()) return;
+      try { localStorage.setItem(TIP_KEY, '1'); } catch (e) {}
+      tipLive = true; render();
+      setTimeout(hideTip, 6000);
+      document.addEventListener('scroll', hideTip, { capture: true, passive: true });
+      document.addEventListener('focusin', hideTip);
+    }, 2500);
+  }
 })();

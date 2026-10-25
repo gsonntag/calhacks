@@ -68,7 +68,7 @@ def dana_case() -> dict:
 async def test_patient_missing_from_nessie_uses_their_sample_data(live):
     bank, account_id, label = await get_bank(dana_case())
     assert isinstance(bank, FallbackBank) and account_id == "mirror"
-    assert bank.notice == "No Capital One account for Dana — using sample bank data"
+    assert bank.notice == "Using Dana's sample bank history" and bank.quiet  # her own sample: no warning banner
     assert label.startswith("Sample bank data") and "Capital One" not in label
     # Dana has a generated scenario, so her own sample history is used, not Rosa's
     assert await bank.transactions(account_id) == LocalMirror(scenario("dana-altabates-refund")).txns
@@ -188,7 +188,13 @@ async def test_agents_show_medical_spending_as_step_finding_and_proof(monkeypatc
     discount = next(e for e in hist if e["kind"] == "finding" and e["key"] == "policy:discount")
     assert any("without them you wouldn't qualify" in p for p in discount["proof"])
     free = [e for e in hist if e["kind"] == "step" and e["key"] == "policy:free"][-1]
-    assert "$3,800 this bill + $315 other medical bills in your bank" in free["result"]
+    # the bank tips him over: that contrast is the step's headline, with this bill's share and the bank's sum
+    e = pol["eligibility"]
+    assert e["bill_oop_pct_income"] < 10 < e["oop_pct_income"]
+    assert free["result"] == (f"Your bank history qualifies you: this bill alone is {e['bill_oop_pct_income']:.1f}% of income; "
+                              f"with $315 of other medical bills it's {e['oop_pct_income']:.1f}% — over their 10% limit")
+    assert discount["title"] == "Free care: your bank history qualifies you"
+    assert discount["proof"][0] == free["result"] + "." and discount["value"] == "$3,800 share written off"
 
 
 def test_scenarios_record_medical_spending():
@@ -197,8 +203,12 @@ def test_scenarios_record_medical_spending():
         ms = exp["medical_spending"]
         assert ms["out_of_pocket"] == round(ms["this_bill"] + ms["bank_total"], 2)
         assert ms["txn_ids"] and ms["bank_total"] > 0, name
-        # no generated patient's outcome hinges on the bank today (see docs: the bank only adds margin)
-        assert ms["bank_decides_eligibility"] is False and ms["discount_without_bank"] == exp["correct"]["discount_pct"]
+        # only Raj's outcome hinges on the bank (the hero case); for the others it only adds margin
+        if name == "raj-cpmc":
+            assert ms["bank_decides_eligibility"] is True and ms["discount_without_bank"] == 0
+            assert exp["correct"]["discount_pct"] == 100
+        else:
+            assert ms["bank_decides_eligibility"] is False and ms["discount_without_bank"] == exp["correct"]["discount_pct"]
 
 
 # ---- 3. the hospital bill is marked updated once billing confirms -----------------------------------------
