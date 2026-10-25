@@ -326,7 +326,7 @@
   "plan": {
     "months": 18,
     "monthly": 88.0,
-    "reason": "$88/mo stays under 4% of monthly income ($3,033); the hospital's policy caps it at 10%"
+    "reason": "$88/mo stays under 4% of monthly income ($3,033): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
   },
   "finance_reconcile": {
     "billed_due": 15414.33,

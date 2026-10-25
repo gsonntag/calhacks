@@ -282,6 +282,8 @@
   /* findings: Ask / This is wrong, in place */
   .find-acts { display: flex; flex-wrap: wrap; gap: 4px 8px; }
   .find-acts .m3-btn { min-height: 32px; padding: 0 12px; }
+  .finds summary .find-ask { min-height: 32px; padding: 0 12px; }
+  .find-ask[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
   .find-box { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); }
   .find-box form { display: flex; gap: 8px; flex-wrap: wrap; }
   .find-box .m3-input { flex: 1; min-width: 180px; }
@@ -291,7 +293,7 @@
   .wrong-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--st-warn); font: 500 12px/16px var(--md-font); }
   .finds li.is-wrong .fl { text-decoration: line-through; text-decoration-color: var(--md-on-surface-variant); }
   .finds li.flash { border-radius: var(--md-shape-m); }
-  .replay .find-acts, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
+  .replay .find-acts, .replay .find-ask, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
   @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
 </head>
@@ -873,7 +875,7 @@ function render() {
 
   // 2 · Review: a column per app agent: its live panel, then what it found
   const panels = reviewAgents(m), finds = findingsOf(m), fk = state.active + '-finds';
-  const acts = { ask: !!m.plans.length && state.active !== 'replay', correct: canCorrect(m) };
+  const acts = { live: state.active !== 'replay', ask: !!m.plans.length, correct: canCorrect(m) };
   setHTMLKeep($('agents'), panels.map((k) => {
     const mine = finds.filter((f) => f.agent === k).map((f) => {
       const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
@@ -1004,8 +1006,10 @@ function findingHTML(f, m, ui, isNew, acts) {
   const open = ui.finds.has(f.key) || !!box;
   const flash = ui.flashFind === f.key && Date.now() < ui.flashUntil ? ' flash' : '';
   const err = ui.err[f.key] ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.err[f.key])}</p>` : '';
+  // Ask sits on the row once the finding's agent is done; it needs the saved plan facts, so it waits for the plan
+  const askBtn = !acts.live || !(m.agent[f.agent] || {}).done ? ''
+    : `<button type="button" class="m3-btn text find-ask" data-act="ask" data-key="${k}"${acts.ask ? '' : ' aria-disabled="true" title="Available once the plan is ready"'}>${sym('chat_bubble')}Ask</button>`;
   const buttons = !acts.ask ? '' : `<div class="find-acts">
-      <button type="button" class="m3-btn text" data-act="ask" data-key="${k}">${sym('chat_bubble')}Ask</button>
       ${c ? (acts.correct ? `<button type="button" class="m3-btn text" data-act="undo" data-id="${esc(c.id)}">${sym('undo')}Undo “This is wrong”</button>` : '')
           : acts.correct ? `<button type="button" class="m3-btn text" data-act="wrong" data-key="${k}">${sym('flag')}This is wrong</button>` : ''}</div>`;
   const answers = qa.map((x) => `<div class="qa"><span class="q">${esc(x.question)}</span><span>${esc(x.answer)}</span>
@@ -1021,7 +1025,7 @@ function findingHTML(f, m, ui, isNew, acts) {
       <button type="submit" class="m3-btn filled"${ui.busy['wrong:' + f.key] ? ' disabled' : ''}>Save</button>
       <button type="button" class="m3-btn text" data-act="cancel" data-key="${k}">Cancel</button></form>${err}</div>` : '';
   const tag = c ? `<p class="wrong-tag">${sym('flag')}You said this is wrong${c.note ? ': “' + esc(c.note) + '”' : ''}${c.v ? ` · <button type="button" class="made-v" data-act="goplan">plan v${c.v}</button>` : ''}</p>` : '';
-  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
+  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b>${askBtn}</summary>
     <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}${askBox}</div></details></li>`;
 }
 
@@ -1391,6 +1395,8 @@ $('notYetBtn').addEventListener('click', () => planDecision(false));
 document.querySelector('main').addEventListener('click', async (e) => {
   const b = e.target.closest('[data-act]'); if (!b || !state.active) return;
   const ui = uiOf(state.active), key = b.dataset.key, act = b.dataset.act;
+  if (b.closest('summary')) e.preventDefault();  // a button on a finding row must not also fold the row
+  if (b.getAttribute('aria-disabled') === 'true') return;
   if (act === 'ask' || act === 'wrong') {
     ui.box[key] = ui.box[key] === act ? undefined : act; ui.finds.add(key); delete ui.err[key]; render();
     const n = document.querySelector(`[data-draft="${CSS.escape(act + ':' + key)}"]`); if (n) n.focus();

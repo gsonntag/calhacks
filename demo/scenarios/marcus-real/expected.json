@@ -518,7 +518,7 @@
     "billed_due": 4174.43,
     "patient_responsibility": 4174.43,
     "insurance_adjustment": 31191.14,
-    "paid": 0,
+    "paid": 0.0,
     "owed": 4174.43,
     "overbilled_by": 0.0,
     "payment_txn_ids": [],

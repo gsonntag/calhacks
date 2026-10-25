@@ -274,7 +274,7 @@
   "plan": {
     "months": 12,
     "monthly": 200.0,
-    "reason": "$200/mo stays under 4% of monthly income ($5,280)"
+    "reason": "$200/mo stays under 4% of monthly income ($5,280): BillBack's default, not the hospital's rule"
   },
   "finance_reconcile": {
     "billed_due": 6678.57,
