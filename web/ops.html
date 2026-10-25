@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
+<link rel="stylesheet" href="ask-remy.css">
 <!--
   Technical view of one case (ops.html?id=<case>): integration modes (/api/mode), agent lanes, reconciliation,
   policy quotes, evidence, call transcript, outcome and the raw audit log, all from the /ws/cases/{id} event stream.
@@ -168,6 +169,7 @@
 </main>
 
 <script src="/auth.js"></script>
+<script src="/ask-remy.js" data-page="ops" data-case-param="id"></script>
 <script>
 const id = new URLSearchParams(location.search).get('id');
 const $ = (x) => document.getElementById(x);

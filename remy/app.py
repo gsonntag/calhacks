@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import auth, config, events, finance, followups, llm, onboarding, orchestrator, tiger
+from . import askremy, auth, config, events, finance, followups, llm, onboarding, orchestrator, tiger
 from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
 from .integrations import cartesia, nessie
@@ -345,6 +345,7 @@ class Question(BaseModel):
     question: str = "What's the status?"
     finding: str | None = None  # one finding: answered only from that agent's evidence
     agent: str | None = None  # the agent chat: remy | auditor | policy | decide
+    page: str = "case"  # the tab the chat was opened on (Remy sees every tab; askremy.PAGES)
 
 
 @app.post("/api/cases/{case_id}/ask", dependencies=ADMIN)
@@ -358,7 +359,7 @@ async def ask(case_id: str, q: Question):
         return JSONResponse({"error": "not found"}, 404)
     question = q.question.strip()[:500]
     if q.agent == "remy":
-        out = await _decide_call(orchestrator.ask_remy(case, question or "What's the status?"))
+        out = await _decide_call(orchestrator.ask_remy(case, question or "What's the status?", q.page))
         orchestrator.save(case)  # a handoff may have made a new plan version
         return out
     if q.agent == "decide":
@@ -372,6 +373,31 @@ async def ask(case_id: str, q: Question):
     if q.finding:
         return await _decide_call(decide.answer_finding(case, q.finding, question or "Tell me more about this"))
     return await orchestrator.answer_status(case, question or "What's the status?")
+
+
+class RemyQuestion(BaseModel):
+    question: str = "What's the status?"
+    page: str = "cases"
+    case_id: str | None = None
+
+
+@app.post("/api/remy/ask", dependencies=ADMIN)
+async def ask_remy_anywhere(q: RemyQuestion):
+    """Ask Remy from any tab. With an open case, the same answer path as the case page's chat; without one,
+    Remy answers from every tab's data and keeps the turns per page (data/remy_chat.json)."""
+    question = q.question.strip()[:500] or "What's the status?"
+    case = _case_or_404(q.case_id) if q.case_id else None
+    if case:
+        out = await _decide_call(orchestrator.ask_remy(case, question, q.page))
+        orchestrator.save(case)
+        return out
+    return await orchestrator.ask_general(question, q.page)
+
+
+@app.get("/api/remy/chat")
+async def remy_chat(page: str = "cases"):
+    """The chat log for a tab with no case open (oldest first)."""
+    return askremy.chat_log(page)
 
 
 async def _decide_call(coro):
@@ -764,6 +790,7 @@ async def reset():
     bus.reset()
     events.delete_cases()  # audit logs stay as the audit trail
     onboarding.clear_local_profiles()  # a saved profile would otherwise change every later demo case for that patient
+    askremy.clear_log()
     return {"ok": True}
 
 

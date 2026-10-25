@@ -203,6 +203,35 @@ def line_review(bill: dict, hospital_name: str | None = None) -> dict:
             "table": table.get("hospital_name") or (h.name if h and table else None)}
 
 
+def line_table(bill: dict, hospital_name: str | None = None, cap: int = 25) -> list[dict]:
+    """Each bill line next to the hospital's posted prices for it (policydb/prices), for the chat agents: billed,
+    and the posted gross, discounted cash and median negotiated rate for the same units. Posted prices are left
+    out (with why) when the file's unit doesn't convert to the code's unit (posted_unit_price)."""
+    h = hospital(hospital_name or bill.get("provider", "")) or hospital(bill.get("provider", ""))
+    table = prices.table(h.id) if h else {}
+    posted_prices, out = table.get("prices", {}), []
+    src = f"{table.get('hospital_name') or (h.name if h else '')} price file, {table.get('last_updated_on', '?')}"
+    for i, li in enumerate((bill.get("line_items") or [])[:cap], 1):
+        code = str(li.get("code") or "").strip().upper()
+        units = li.get("units") or 1
+        row = {"line": i, "description": li.get("description"), "code": code, "units": units,
+               "billed": round(float(li.get("amount") or 0), 2)}
+        posted = posted_prices.get(code)
+        unit_price, how = posted_unit_price(code, posted) if posted else (None, "")
+        if unit_price is None:
+            why = how or ("code not in the hospital's posted price file" if table else "no posted price file for this hospital")
+            out.append({**row, "posted": None, "why": why})
+            continue
+        ratio = unit_price / float(posted["gross"])  # the same unit conversion for cash and negotiated
+
+        def scale(x):
+            return round(float(x) * ratio * units, 2) if x is not None else None
+        out.append({**row, "posted": {"gross": round(unit_price * units, 2), "discounted_cash": scale(posted.get("discounted_cash")),
+                                      "negotiated_median": scale(posted.get("negotiated_median_of_payers")),
+                                      "source": src}})
+    return out
+
+
 def line_corrections(bill: dict, hospital_name: str | None = None) -> list[dict]:
     """Errors on the bill's own lines, each with the amount to take off and its proof: a line identical to an
     earlier one (same code, units and amount), and a line above the hospital's posted gross charge x units
