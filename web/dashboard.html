@@ -157,6 +157,8 @@ const cards = {};
 
 function statusChip(c) {
   if (c.next && c.next.overdue) return `<span class="m3-status warn">${icon('schedule')}Follow-up overdue</span>`;
+  // done, but billing hasn't confirmed the lower balance yet: not "Resolved"
+  if (c.status === 'done' && !c.confirmed) return '<span class="m3-status info">Call done</span>';
   const [label, cls] = STATUS[c.status] || [c.status, ''];
   return `<span class="m3-status ${cls}">${esc(label)}</span>`;
 }

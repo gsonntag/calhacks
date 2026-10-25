@@ -246,7 +246,8 @@
   .plan-who .material-symbols-rounded { color: var(--md-primary); }
   .plan-asks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
   .plan-asks li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 8px; margin: 0 -8px; border-radius: var(--md-shape-m); }
-  .plan-asks li + li { border-top: 1px solid var(--md-outline-variant); }
+  .plan-asks li { position: relative; }
+  .plan-asks li + li::before { content: ''; position: absolute; top: 0; left: 8px; right: 8px; border-top: 1px solid var(--md-outline-variant); }
   .plan-asks .n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--md-secondary-container, var(--md-surface-container-high)); color: var(--md-on-secondary-container, inherit);
     font: 600 13px/24px var(--md-font); text-align: center; }
   .plan-asks .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
@@ -355,7 +356,7 @@
     <p class="body-l now-text" id="nowText"></p>
     <div class="now-money" id="nowMoney" hidden><s id="nowWas"></s><span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span><b id="nowOwe"></b><span class="body-m muted" id="nowSave"></span></div>
     <ol class="now-track" id="nowTrack" aria-label="Progress">
-      <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Plan</span></li><li><span>Call</span></li><li><span>Resolved</span></li>
+      <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Plan</span></li><li><span>Call</span></li><li><span>What’s next</span></li>
     </ol>
     <!-- kept for the render code; the line above replaces them -->
     <div hidden><p id="caseSub"></p><span id="statOrig"></span><span id="statOwe"></span><span id="statOweSupport"></span></div>
@@ -450,7 +451,7 @@
 
       <li class="step" data-step="4">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail4">
-          <span class="row-text"><span class="row-title" id="finalTitle">Resolved</span><span class="row-sum" id="finalLine"></span></span>
+          <span class="row-text"><span class="row-title" id="finalTitle">What’s next</span><span class="row-sum" id="finalLine"></span></span>
           <span class="row-status" id="status4"></span>
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
@@ -698,14 +699,14 @@ function renderAgent(key, m, forceOpen = false) {
   if (!open) return `<section class="term folded" aria-label="${esc(agentName(m, key))}">${head}${done}</section>`;
   return `<section class="term" aria-label="${esc(agentName(m, key))}">${head}
       <div class="t-covers">${esc(covers)}</div>
-      <ol class="t-body">${lines || `<li class="t-idle">${m.error ? 'Did not start' : 'Waiting to start…'}</li>`}</ol>${done}</section>`;
+      <ol class="t-body">${lines || `<li class="t-idle">${m.error ? 'Did not start' : a.started ? 'Starting…' : 'Waiting to start…'}</li>`}</ol>${done}</section>`;
 }
 
 // "Recheck now": the Bright Data agent checks the hospital live (POST /api/cases/{id}/policy/recheck) and every
 // request (tool, URL, found / blocked / empty / timed out) streams into its panel above. Needs live keys.
 function recheckHTML(m, ui) {
   const a = m.agent.policy || {};
-  if (state.active === 'replay' || !a.started) return '';
+  if (state.active === 'replay' || !a.started || (!a.done && !ui.rechecking)) return '';  // first pass still running
   const running = !a.done || ui.rechecking, live = state.liveCrawl;
   const why = live ? 'Check the hospital’s policy live with Bright Data (at most 10 requests)'
     : 'Needs Bright Data and Claude keys on this server';
@@ -719,7 +720,7 @@ function renderTabs() {
     const stage = state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1;
     const dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
     return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
-      <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${STATUS[stage]}</span></button>`;
+      <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${stage === 4 && t.id === state.active && openNext(state.models[t.id]) ? 'What’s next' : STATUS[stage]}</span></button>`;
   });
   setHTML($('tabList'), tabs.join(''));
 }
@@ -858,6 +859,7 @@ function headline(m, ds, tab) {
   if (ds === 2) return ['Your plan is ready', `Check it, then I’ll call ${prov} billing${m.round > 1 ? ' again' : ''}.`];
   if (ds === 3) return [`Calling ${prov}`, m.call ? phaseText(m) : 'Dialing…'];
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
+  if (m.done && openNext(m)) return ['Call done. Here’s what’s next', prov];
   if (m.done) return ['Resolved', prov + (m.done.case_number ? ` · case ${m.done.case_number}` : '')];
   if (planPending) return ['Waiting for your OK', `${prov} · one more decision: the payment plan.`];
   if (m.callDeclined) return ['Call not approved', `You chose not to have BillBack call ${prov} yet.`];
@@ -892,7 +894,7 @@ function render() {
   if (m.bill && now != null && (m.review || ds > 1)) {
     const parts = [], saved = orig - now, p = planOf(m);
     if (awaitingConfirm(m)) parts.push(`Billing still shows this · expected ${money(m.done.expected)} once the correction lands`);
-    else parts.push(saved > 0 ? `Saves ${money(saved)}` : 'Same as the bill');
+    else parts.push(saved > 0 ? `saves ${money(saved)}` : 'same as the bill');
     if (p) parts.push(`${planLabel(p)}, interest-free`);
     if (m.done && m.done.refund) parts.push(`+ ${money(m.done.refund)} back to you`);
     support = parts.join(' · ');
@@ -984,7 +986,7 @@ function render() {
   $('finalWas').textContent = m.bill ? money(m.bill.amount_due) : '';
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
   const nextV = latestPlan(m, m.round + 1), sc = m.scorecards.filter((x) => x.n === m.round).pop();
-  $('finalTitle').textContent = nextV && nextV.next && nextV.next.kind !== 'done' ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
+  $('finalTitle').textContent = openNext(m) || !m.done ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
   setText($('finalLine'), m.done ? `${money(m.done.now)}${awaitingConfirm(m) ? ` now, ${money(m.done.expected)} expected` : ''} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund, waiting = awaitingConfirm(m);
@@ -1042,6 +1044,8 @@ const roundOf = (x) => x.round || 1;
 const decKey = (r) => (r === 1 ? 'decide' : 'decide:' + r);
 const plansOf = (m, r) => m.plans.filter((p) => roundOf(p) === r);
 const latestPlan = (m, r = m.round) => { const vs = plansOf(m, r); return vs[vs.length - 1] || null; };
+// the call is over but step 5's plan still has asks left for another call: not "Resolved" yet
+function openNext(m) { const v = m.done && latestPlan(m, m.round + 1); return !!(v && v.next && v.next.kind !== 'done'); }
 const deciding = (m, r = m.round) => { const a = m.agent[decKey(r)]; return !!(a && a.started && !a.done && !m.error); };
 const secRound = (m, sec) => (sec === 'next' ? m.round + 1 : m.round);
 const callStarted = (m) => !!(m.approvals.caller && m.approvals.caller.resolved !== undefined) || (m.round > 1 && !!m.approvedV);
@@ -1209,7 +1213,7 @@ function renderNext(m, ds, ui) {
     : busy ? '<div class="filling body-m">Working out what’s next…<i style="width:55%"></i><i style="width:85%"></i><i style="width:40%"></i></div>' : '');
   const viewing = cur && ui.nextV && ui.nextV !== cur.v;
   $('nextActions').hidden = !(cur && !busy && !viewing && canChangeNext(m));
-  if (cur) $('nextCallBtn').innerHTML = `${sym('call')}${cur.next && cur.next.kind === 'done' ? 'Call anyway' : 'Call now'} (v${cur.v})`;
+  if (cur) $('nextCallBtn').innerHTML = `${sym('call')}${cur.next && cur.next.kind === 'done' ? 'Call anyway' : 'Call now'}${plansOf(m, r).length > 1 ? ` (v${cur.v})` : ''}`;
   $('nextErr').hidden = !ui.nextErr; setText($('nextErr'), ui.nextErr || '');
 }
 
@@ -1239,7 +1243,7 @@ async function post(url, body, method = 'POST') {
 }
 
 // "Now" panel: the current step (1-5), what is happening inside it, and its state
-const STEP_NAMES = ['Read your bill', 'Review', 'The plan', 'Call billing', 'Resolved'];
+const STEP_NAMES = ['Read your bill', 'Review', 'The plan', 'Call billing', 'What’s next'];
 function nowText(m, ds, a) {
   const prov = m.bill ? m.bill.provider : 'the hospital';
   if (m.error) return a.text;
@@ -1268,7 +1272,7 @@ function renderNow(m, ds, tab, a) {
   const live = !!tab;
   $('nowTrack').hidden = !live;
   $('nowText').hidden = !live;
-  setText($('nowStep'), !live ? '' : m.done && !m.error ? 'Done' : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
+  setText($('nowStep'), !live ? '' : m.done && !m.error ? (openNext(m) ? 'Step 5 of 5 · What’s next' : 'Done') : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
   $('nowDot').className = 'now-dot ' + (!live ? 'off' : m.error ? 'error' : m.done ? 'success' : a.cls === 'success' || a.live ? 'success live' : 'warn live');
   $('nowText').hidden = !live || $('caseTitle').hidden || !!(m.done && !m.error);  // done: the Next box says it
   if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
@@ -1276,6 +1280,7 @@ function renderNow(m, ds, tab, a) {
   $('nowMoney').hidden = !live || orig == null;
   const waiting = awaitingConfirm(m);  // billing still shows the bill's amount: no "was → now" arrow
   setText($('nowWas'), orig != null && !waiting ? money(orig) : '');
+  $('nowWas').hidden = orig == null || waiting;
   $('nowMoney').querySelector('.material-symbols-rounded').style.display = waiting ? 'none' : '';
   setText($('nowOwe'), now != null && (m.review || ds > 1) ? money(now) : 'checking…');
   $('nowOwe').classList.toggle('pending', !(now != null && (m.review || ds > 1)));
