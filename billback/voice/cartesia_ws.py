@@ -71,17 +71,31 @@ class STT:
             await self.ws.close()
 
 
+PCM_24K = {"container": "raw", "encoding": "pcm_s16le", "sample_rate": 24000}  # desk mode: Web Audio in the browser
+
+
 class TTS:
-    def __init__(self, voice: Voice) -> None:
-        self.voice = voice
+    def __init__(self, voice: Voice, output_format: dict | None = None) -> None:
+        self.voice, self.output_format = voice, output_format or MULAW_8K
         self.ws: ClientConnection | None = None
         self._queues: dict[str, asyncio.Queue] = {}
         self._reader: asyncio.Task | None = None
+        self._cancelled: set[str] = set()
+        self._connecting: asyncio.Task | None = None
 
     async def connect(self) -> None:
         self.ws = await connect(f"{WS}/tts/websocket?cartesia_version={cartesia.VERSION}", additional_headers=_headers(),
                                 max_size=None)
         self._reader = asyncio.create_task(self._read())
+
+    async def ensure(self) -> None:
+        """Connect unless already open; concurrent callers share one connection attempt (desk mode warms the
+        socket while Claude is still thinking)."""
+        if self.ws is not None and self.ws.state is State.OPEN:
+            return
+        if self._connecting is None or self._connecting.done():
+            self._connecting = asyncio.create_task(self.connect())
+        await asyncio.shield(self._connecting)
 
     async def _read(self) -> None:
         try:
@@ -96,12 +110,11 @@ class TTS:
 
     def request(self, text: str, context_id: str) -> dict:
         return {"model_id": config.CARTESIA_TTS_MODEL, "transcript": pronounce.normalize(text, self.voice.language),
-                **self.voice.tts_fields(), "output_format": MULAW_8K, "context_id": context_id, "continue": False}
+                **self.voice.tts_fields(), "output_format": self.output_format, "context_id": context_id, "continue": False}
 
     async def stream(self, text: str, context_id: str) -> AsyncIterator[bytes]:
         """μ-law 8 kHz audio for `text`, chunk by chunk as Sonic generates it."""
-        if self.ws is None or self.ws.state is not State.OPEN:
-            await self.connect()
+        await self.ensure()
         q: asyncio.Queue = asyncio.Queue()
         self._queues[context_id] = q
         try:
@@ -117,15 +130,89 @@ class TTS:
         finally:
             self._queues.pop(context_id, None)
 
+    async def stream_many(self, texts: AsyncIterator[str], prefix: str) -> AsyncIterator[bytes]:
+        """Audio for text that arrives piece by piece (sentences streamed from Claude), in order.
+
+        Speech starts as soon as the first sentence is here. Each request gets its own context
+        ("<prefix>_<n>"); the next one goes out when Sonic has finished generating the previous one (far
+        ahead of playback, since generation is faster than real time), joining any sentences that arrived
+        meanwhile. One generation at a time: the Cartesia plan allows 2 concurrent ones, and a context per
+        request instead of continuations on one context means a slow gap between Claude's sentences can't
+        expire the context (contexts expire 1 s after their last audio). cancel(prefix) stops it; the text
+        iterator is still drained (the call brain finishes its turn) but nothing more is sent."""
+        await self.ensure()
+        self._cancelled.discard(prefix)
+        pending: asyncio.Queue = asyncio.Queue()
+
+        async def drain() -> None:
+            try:
+                async for text in texts:
+                    if text.strip():
+                        pending.put_nowait(text)
+            except Exception as e:
+                pending.put_nowait(e)
+            finally:
+                pending.put_nowait(None)
+
+        drainer = asyncio.create_task(drain())
+        n, done = 0, False
+        try:
+            while not done:
+                item = await pending.get()
+                batch = []
+                while True:  # this item plus whatever else is already waiting
+                    if item is None:
+                        done = True
+                        break
+                    if isinstance(item, Exception):
+                        raise item
+                    batch.append(item)
+                    if pending.empty():
+                        break
+                    item = pending.get_nowait()
+                if not batch or prefix in self._cancelled:
+                    continue
+                text = "".join(batch)
+                for attempt in range(2):
+                    n += 1
+                    ctx, q, got = f"{prefix}_{n}", asyncio.Queue(), False
+                    self._queues[ctx] = q
+                    try:
+                        await self.ws.send(json.dumps(self.request(text, ctx)))
+                        while True:
+                            msg = await q.get()
+                            if msg.get("type") == "error":
+                                err = str(msg.get("message") or msg.get("title") or msg)
+                                if attempt == 0 and not got and "concurrency" in err.lower():
+                                    break  # a just-cancelled generation can still count: retry once
+                                raise RuntimeError(f"Cartesia TTS: {err}")
+                            if msg.get("type") == "chunk" and msg.get("data") and prefix not in self._cancelled:
+                                got = True
+                                yield base64.b64decode(msg["data"])
+                            if msg.get("type") == "done" or msg.get("done"):
+                                break
+                    finally:
+                        self._queues.pop(ctx, None)
+                    if got or msg.get("type") != "error":
+                        break
+                    await asyncio.sleep(0.25)
+        finally:
+            with contextlib.suppress(Exception):
+                await drainer
+
     async def cancel(self, context_id: str) -> None:
         """Barge-in: stop generation that hasn't started, and end our stream() for this context now
-        (Cartesia keeps sending an utterance it already started; those chunks are dropped)."""
-        q = self._queues.pop(context_id, None)
-        if q:
-            q.put_nowait({"type": "done", "context_id": context_id})
-        if self.ws and self.ws.state is State.OPEN:
-            with contextlib.suppress(Exception):
-                await self.ws.send(json.dumps({"context_id": context_id, "cancel": True}))
+        (Cartesia keeps sending an utterance it already started; those chunks are dropped). A stream_many
+        prefix cancels every sentence context under it, including ones not sent yet."""
+        self._cancelled.add(context_id)
+        ids = [c for c in self._queues if c == context_id or c.startswith(context_id + "_")] or [context_id]
+        for cid in ids:
+            q = self._queues.pop(cid, None)
+            if q:
+                q.put_nowait({"type": "done", "context_id": cid})
+            if self.ws and self.ws.state is State.OPEN:
+                with contextlib.suppress(Exception):
+                    await self.ws.send(json.dumps({"context_id": cid, "cancel": True}))
 
     async def close(self) -> None:
         if self.ws:

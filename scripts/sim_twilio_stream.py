@@ -143,7 +143,8 @@ class FakeTwilio:
             await self.send({"event": "mark", "streamSid": self.sid, "mark": {"name": name}})
         except Exception:
             pass
-        self.agent_idle.set()
+        if time.monotonic() >= self.play_until - 0.05:  # idle only once everything queued has played
+            self.agent_idle.set()
 
 
 async def main() -> None:
@@ -196,12 +197,13 @@ async def main() -> None:
                 break
             if args.barge_in and i == 2:  # interrupt 1.5 s into the agent's reply
                 await asyncio.wait_for(tw.agent_started.wait(), 30)
+                tw.agent_started.clear()
                 await asyncio.sleep(1.5)
                 tw.outq.put_nowait(audio.silence(1) + clip)
             else:
+                tw.agent_started.clear()  # before the line: a fast (speculative) reply can start as the rep finishes
                 tw.outq.put_nowait(clip)
             await asyncio.sleep(audio.seconds(len(clip)) + 0.2)
-            tw.agent_started.clear()
             try:  # wait for the agent to answer and finish speaking
                 await asyncio.wait_for(tw.agent_started.wait(), 15)
                 while not tw.closed.is_set():
