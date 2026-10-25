@@ -62,6 +62,14 @@ class ApprovalGate:
     def pending_for(self, case_id: str) -> list[dict]:
         return [r for r in self._requests.values() if r["case_id"] == case_id]
 
+    def drop(self, case_id: str) -> None:
+        """A stopped or deleted case: forget its open approvals (the run waiting on them was cancelled)."""
+        for approval_id in [a for a, r in self._requests.items() if r["case_id"] == case_id]:
+            self._requests.pop(approval_id, None)
+            fut = self._pending.pop(approval_id, None)
+            if fut and not fut.done():
+                fut.cancel()
+
 
 gate = ApprovalGate()
 
