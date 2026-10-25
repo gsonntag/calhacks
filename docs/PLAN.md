@@ -4,6 +4,15 @@ Working branch: `after-david-takeover`. Backup of everything before: `pre-david-
 left exactly as submitted (6 PM deadline, history cleaned for judging) until Gavin says otherwise. Push new
 work to `after-david-takeover`, never to `master`.
 
+## Rule: paid API credits
+
+Cartesia ran out of credits on 2026-10-25 (HTTP 402 "Model credits limit reached") after an agent used it for
+live latency benchmarks. From now on:
+- Work offline by default: fixtures, mocks, recorded replays, the realistic cases in demo/scenarios/.
+- Any live call to Cartesia, Bright Data, Twilio, Nessie or Claude-for-measurement needs a small, stated cap,
+  and more than a handful of requests needs the user's OK first. Never benchmark in loops against a voice API.
+- On any 402 / quota / credits error: stop immediately and report it.
+
 ## Decisions
 
 **Focus:** the main user flow only: the case page (find the mistakes → approve → call → outcome) and the
