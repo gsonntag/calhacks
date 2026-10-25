@@ -171,7 +171,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   calling on the patient's behalf).
 - Later: let the patient join the live call (Twilio conference) when billing insists on the patient.
 
-### Step 5: What's next (the Decide agent again) *(design only, not built)*
+### Step 5: What's next (the Decide agent again) *(built 2026-10-25, offline; see below)*
 - Top: a scorecard of every ask: ✓ got it / ✗ refused / ⏳ promised later.
 - Below: the **same Decide agent**, run again with the call outcome as new input (plus everything Nessie and
   Bright Data found and the original plan). Same screen pattern as step 3: what happened, what it concludes,
@@ -179,6 +179,29 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   pause collections, wait for a promised callback), the planner chat, versions, approve.
 - If everything was won, it just confirms and schedules the check-back.
 - A follow-up call reuses this plan with only the unfinished asks.
+
+### Step 5: what's built (2026-10-25, offline while Cartesia has no credits)
+- **Scorecard** (`billback/agents/scorecard.py`): after every call each ask on the plan the call used gets
+  got / refused / promised later / unclear (supervisor: "not needed" when nothing was refused). Plain code
+  reads what the call agent recorded and the rep's words; when Claude is on, the post-call transcript read
+  (`followups.EXTRACT_SYSTEM`, now with an `asks` field) also marks each ask, but its mark only counts if its
+  quote is really in the rep's words. A win is never claimed without evidence. Stored on the call
+  (`calls[n].scorecard`) and sent as a `scorecard` event.
+- **Decide agent, again** (`decide.next_round`): same rules, run with the scorecards. Plan versions now carry
+  `round` (1 = first call; after call n the plan is round n+1). Done asks move to "Already done"; the rest are
+  reworded for the caller (check a promise, ask again with a supervisor, get a clear answer); a refusal adds
+  the supervisor ask. `next` says what to do: call now, wait until the promised date, or nothing left; plus
+  other routes (apply directly, written dispute). Its panel is agent `decide:<round>`.
+- **Case page step 5:** "What the call got", the Decide agent panel, the next plan (versions, "How I
+  decided" with the last call), the planner chat (it moves to step 5), and "Call now (vN)", which approves
+  that version and starts the follow-up call with only those asks (`POST /call-again {v}`, no second
+  approval). Step 3 then shows that round's plan.
+- **Fixture calls:** `demo/outcomes/` (all won, partly won, all refused, promised later), run by
+  `tests/test_scorecard.py`. 280 tests pass.
+- **Not done yet:** no live run (Claude-read marks are tested only with fixture data); the payment-plan
+  approval card after the call is unchanged; the follow-up reminder ("I'll check back by…") is the old one
+  and can disagree with "call again now"; corrections ("This is wrong") in step 5 work in the API but have
+  no button there; replays don't have step 5 yet. The live call agent's prompt was not changed.
 
 ### Call speed (in progress)
 Reply latency is 1.4–2.7 s per turn (Claude 1.3–2.6 s). Fixes being built: stream Claude's reply into

@@ -1,0 +1,72 @@
+{
+ "name": "promised-later",
+ "about": "Billing opens a review and promises a corrected statement; nothing is fixed on the call (offline reading).",
+ "plan": {
+  "asks": [
+   {
+    "id": "insurance",
+    "kind": "insurance",
+    "text": "Apply your insurance: the statement says you owe $1,100, not $8,700"
+   },
+   {
+    "id": "payment",
+    "kind": "payment",
+    "text": "Show the $500 you already paid, bringing it to $600"
+   },
+   {
+    "id": "discount",
+    "kind": "discount",
+    "text": "Ask for free care under their own policy, bringing the bill to $0"
+   },
+   {
+    "id": "refund",
+    "kind": "refund",
+    "text": "Get the $500 you overpaid refunded"
+   },
+   {
+    "id": "hold",
+    "kind": "hold",
+    "text": "Pause collections while it's corrected"
+   },
+   {
+    "id": "case_number",
+    "kind": "case_number",
+    "text": "Get a case number and the rep's name"
+   }
+  ],
+  "money": {
+   "billed": 8700,
+   "owed": 600,
+   "target": 0,
+   "refund": 500,
+   "saved": 9200
+  }
+ },
+ "rep_lines": [
+  "Patient Financial Services, this is Diane, how can I help you?",
+  "Okay, let me pull that up.",
+  "I've opened a financial assistance review and put the account on hold. We'll send a corrected statement within 5 business days.",
+  "Your case number is FA 20931."
+ ],
+ "outcome": {
+  "case_number": "FA20931",
+  "account_on_hold": true,
+  "assistance_review_opened": true
+ },
+ "info": {
+  "promised_actions": [
+   "Send a corrected statement",
+   "Complete the financial-assistance review"
+  ],
+  "timeframe_text": "within 5 business days",
+  "assistance_review_opened": true
+ },
+ "expect": {
+  "insurance": "later",
+  "payment": "later",
+  "discount": "later",
+  "refund": "later",
+  "hold": "got",
+  "case_number": "got"
+ }
+}

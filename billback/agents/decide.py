@@ -1,6 +1,7 @@
-"""Decide agent: step 3, the plan. Turns what the Review found (saved once as case["facts"]), the patient's
-corrections ("This is wrong") and their strategy preferences (planner chat) into a versioned plan: the
-money line, who to call, every ask the findings back up, and how it decided. Format: docs/plan-format.md.
+"""Decide agent: step 3, the plan, and step 5, what's next. Turns what the Review found (saved once as
+case["facts"]), the patient's corrections ("This is wrong"), their strategy preferences (planner chat) and,
+after each call, that call's scorecard (agents/scorecard.py) into a versioned plan: the money line, who to
+call, every ask the findings back up that isn't done yet, and how it decided. Format: docs/plan-format.md.
 
 The decision is plain code and recalculates from scratch on every change (milliseconds, no refetching).
 Claude only writes the "How I decided" paragraph, turns chat requests into preference changes (which the
@@ -10,14 +11,15 @@ import json
 import re
 import time
 
-from .. import config, finance, llm
+from .. import config, finance, followups, llm
 from ..events import bus
+from . import scorecard
 from .report import Report
 
 AGENTS = {"auditor": "Nessie agent", "policy": "Bright Data agent", "decide": "Decide agent"}
 KINDS = ("insurance", "payment", "discount", "refund", "plan", "supervisor", "hold", "case_number")
 SKIPPABLE = ("plan", "hold", "supervisor")
-CORRECTABLE_UNTIL = ("awaiting_call_approval",)  # the call hasn't started
+CORRECTABLE_UNTIL = ("awaiting_call_approval", "done")  # no call is running (done: the plan for the next call)
 
 
 def _fast() -> dict:
@@ -64,6 +66,89 @@ def approved(case: dict) -> dict | None:
     p = case.get("plan") or {}
     v = p.get("approved_v")
     return next((x for x in p.get("versions", []) if x["v"] == v), None) or latest(case)
+
+
+def round_of(case: dict) -> int:
+    """Which call the plan is for: 1 before the first call, 2 after it, and so on."""
+    return len(case.get("calls") or []) + 1
+
+
+def call_results(case: dict) -> dict[str, dict]:
+    """Each ask's latest mark across the calls so far: {ask id: {status, evidence, call, date, rep}}."""
+    out: dict[str, dict] = {}
+    for c in case.get("calls") or []:
+        for x in c.get("scorecard") or []:
+            out[x["id"]] = {**x, "call": c["n"], "date": c.get("date"), "rep": c.get("rep")}
+    return out
+
+
+def _after_call(asks: list[dict], results: dict[str, dict]) -> tuple[list[dict], list[dict]]:
+    """Round 2+: drop what's done, and reword what's left so the caller knows what happened last time.
+    Returns (asks still to make, asks already done)."""
+    left, done = [], []
+    for a in asks:
+        r = results.get(a["id"])
+        if a["kind"] == "case_number":
+            a.update(text="Get a reference number for this call and the rep's name",
+                     goal="Get a reference number for this call and the rep's name; repeat it back to confirm.")
+        elif r and r["status"] == "got":
+            done.append({"id": a["id"], "kind": a["kind"], "text": a["text"], "call": r["call"], "evidence": r["evidence"]})
+            continue
+        elif r and r["status"] in ("later", "refused", "unclear"):
+            when = f"the call on {followups.fmt(r['date'])}" + (f" with {r['rep']}" if r.get("rep") else "") if r.get("date") else "the last call"
+            if r["status"] == "later":
+                a.update(text=f"Check it was done: {a['text']}",
+                         goal=f"On {when} billing promised this ({r['evidence']}). Ask whether it's done now; if not, "
+                              f"get a date. {a['goal']}")
+            elif r["status"] == "refused":
+                a.update(text=f"Ask again, with a supervisor if needed: {a['text']}",
+                         goal=f"On {when} the rep said no to this (“{r['evidence']}”). Restate the evidence once, then "
+                              f"ask for a supervisor or a written review. {a['goal']}")
+            else:
+                a.update(text=f"Get a clear answer: {a['text']}", goal=f"{when[0].upper() + when[1:]} didn't settle this. {a['goal']}")
+        if r and a["kind"] != "case_number":
+            a["last"] = {k: r.get(k) for k in ("status", "label", "evidence", "call")}
+        left.append(a)
+    if all(a["kind"] in ("case_number", "supervisor") for a in left):  # nothing left to argue about
+        left = [a for a in left if a["kind"] != "supervisor"]
+    return left, done
+
+
+def next_step(case: dict, asks: list[dict], results: dict[str, dict]) -> dict | None:
+    """Round 2+: what happens next and when. None before the first call."""
+    calls = case.get("calls") or []
+    if not calls:
+        return None
+    last, pol = calls[-1], case["facts"]["pol"]
+    open_asks = [a for a in asks if a["kind"] not in ("case_number", "supervisor")]
+    status = {a["id"]: (a.get("last") or {}).get("status") for a in open_asks}
+    options = []
+    for a in open_asks:
+        if status[a["id"]] != "refused":
+            continue
+        if a["kind"] == "discount" and pol["policy"].get("apply_how"):
+            options.append(f"Apply for financial assistance yourself: {pol['policy']['apply_how']}")
+        elif a["kind"] in ("insurance", "payment", "refund"):
+            options.append("Send billing a written dispute with the insurance statement and bank record attached")
+        elif a["kind"] == "hold":
+            options.append("Ask in writing for collections to be paused while this is reviewed")
+    later = [a for a in open_asks if status[a["id"]] == "later"]
+    unsettled = [a for a in open_asks if status[a["id"]] in ("refused", "unclear", None)]
+    due = last.get("follow_up_date")
+    if not open_asks:
+        return {"kind": "done", "when": due, "options": [],
+                "text": "Everything on the plan was done on the call. Nothing to call about"
+                        + (f"; I'll check by {followups.fmt(due)} that the corrected bill arrived." if due else ".")}
+    if later and not unsettled:
+        return {"kind": "wait", "when": due, "options": options,
+                "text": f"Billing promised {len(later)} of these for later. Best to call after {followups.fmt(due)}, "
+                        "when they said it'd be done, to check it was." if due else
+                        f"Billing promised {len(later)} of these for later. Call back to check they were done."}
+    n = len(unsettled)
+    return {"kind": "call", "when": None, "options": options,
+            "text": f"{n} ask{'s' if n != 1 else ''} still need{'s' if n == 1 else ''} an answer: call again now."
+                    + (f" {len(later)} more {'were' if len(later) != 1 else 'was'} promised for later; I'll check those on the same call."
+                       if later else "")}
 
 
 # ---------------------------------------------------------------- the rules
@@ -146,15 +231,20 @@ def compute(case: dict) -> dict:
                 f"{plan['months']} monthly payments of {money(plan['monthly'])}.{why} Don't give card details; "
                 f"the patient sets up the payments.",
                 value=f"{plan['months']} × {money(plan['monthly'])}/mo", findings=["policy:plan"], plan=plan)
-    if prefs.get("if_refused") == "supervisor":
+    results = call_results(case)
+    refused_before = any(r["status"] == "refused" for r in results.values())
+    if prefs.get("if_refused") == "supervisor" or refused_before:
         ask("supervisor", "If they say no to anything, ask for a supervisor",
             "If the rep refuses any request, restate the evidence once, then politely ask to speak with a supervisor.",
-            basis="you asked")
+            basis="you asked" if prefs.get("if_refused") == "supervisor" else "they said no last time")
     ask("hold", "Pause collections while it's corrected",
         "Ask for the account to be placed on hold so it isn't sent to collections while this is reviewed.",
         basis="standard")
     ask("case_number", "Get a case number and the rep's name",
         "Get a case or reference number and the rep's name; repeat the case number back to confirm.", basis="standard")
+    done: list[dict] = []
+    if case.get("calls"):
+        asks, done = _after_call(asks, results)
 
     # biggest money first; then the patient's "X first"; then what they asked to leave off
     asks.sort(key=lambda a: (-a["money"], KINDS.index(a["kind"])))
@@ -164,11 +254,23 @@ def compute(case: dict) -> dict:
         asks.remove(a)
         skipped.append({"kind": a["kind"], "text": a["text"], "why": "You asked me to leave this off the call"})
 
-    return {"money": {"billed": billed, "owed": owed, "target": target, "refund": refund,
-                      "saved": round(billed - target + refund, 2)},
-            "math": math_lines, "call": who_to_call(case, d), "asks": asks, "skipped": skipped,
-            "decided": decided(case, share, paid, d, owed, target, refund, plan, bad),
-            "prefs": json.loads(json.dumps(prefs)), "corrections": [c["id"] for c in case["corrections"] if c.get("active")]}
+    nxt = next_step(case, asks, results)
+    out = {"round": round_of(case), "money": {"billed": billed, "owed": owed, "target": target, "refund": refund,
+                                              "saved": round(billed - target + refund, 2)},
+           "math": math_lines, "call": who_to_call(case, d), "asks": asks, "skipped": skipped,
+           "decided": decided(case, share, paid, d, owed, target, refund, plan, bad),
+           "prefs": json.loads(json.dumps(prefs)), "corrections": [c["id"] for c in case["corrections"] if c.get("active")]}
+    if nxt:  # after a call: what's done, what that call got, and what happens next
+        last = case["calls"][-1]
+        out.update(done=done, next=nxt, after_call={"n": last["n"], "date": last.get("date"), "rep": last.get("rep"),
+                                                    "case_number": last.get("case_number"),
+                                                    "marks": last.get("scorecard") or []})
+        out["decided"].update(path=nxt["text"], last_call=[f"{x['label']}: {x['text']}" + (f" (“{x['evidence']}”)" if x["source"] == "rep said" else f" ({x['evidence']})")
+                                                           for x in last.get("scorecard") or []])
+        if nxt["options"]:
+            out["decided"]["fallback"] += ". Other routes: " + "; ".join(nxt["options"])
+        out["decided"]["explanation"] = f"{nxt['text']} {out['decided']['call']}."
+    return out
 
 
 def who_to_call(case: dict, discount: float) -> dict:
@@ -265,14 +367,15 @@ def diff(old: dict | None, new: dict) -> tuple[list[str], list[str]]:
 
 EXPLAIN_SYSTEM = """You are BillBack's Decide agent. In 2-4 short plain sentences, explain to the patient why
 their plan is what it is: which findings it uses (and any they said were wrong), the path chosen, and who
-we'll call. Use ONLY the numbers in the PLAN JSON, copied exactly. No new facts, no legal advice, no lists."""
+we'll call. If the PLAN has "after_call", start with what that call got and what happens next ("next").
+Use ONLY the numbers in the PLAN JSON, copied exactly. No new facts, no legal advice, no lists."""
 
 
 async def explain(case: dict, version: dict) -> str:
     """Claude's plain-language "How I decided"; the template stays when Claude is off or fails."""
     if not llm.available():
         return version["decided"]["explanation"]
-    view = {k: version[k] for k in ("money", "asks", "skipped", "decided", "call")}
+    view = {k: version[k] for k in ("money", "asks", "skipped", "decided", "call", "done", "next", "after_call") if k in version}
     try:
         resp = await llm.create(system=EXPLAIN_SYSTEM, max_tokens=1500, **_fast(),
                                 messages=[{"role": "user", "content": json.dumps(view, default=str)}])
@@ -287,14 +390,15 @@ async def new_version(case: dict, kind: str, text: str) -> dict:
     """Recalculate everything, number it, say what changed, emit it. A new version resets an approval the
     call hasn't used yet."""
     p = case["plan"]
-    prev = latest(case)
     ver = compute(case)
+    # changes are against this call's previous version; a plan for a new call starts fresh
+    prev = next((x for x in reversed(p["versions"]) if x.get("round", 1) == ver["round"]), None)
     ver["decided"]["explanation"] = await explain(case, ver)
     changes, changed = diff(prev, ver)
     ver = {"v": len(p["versions"]) + 1, "ts": time.time(), "reason": {"kind": kind, "text": text}, **ver,
            "changes": changes, "changed": changed}
     p["versions"].append(ver)
-    if p.get("approved_v") is not None and case["status"] != "calling":
+    if p.get("approved_v") is not None and case["status"] == "awaiting_call_approval":
         bus.emit(case["id"], "plan_approval_reset", "decide", v=p["approved_v"], reason=text)
         p["approved_v"] = None
     case["result"].update({"target": ver["money"]["target"], "refund": ver["money"]["refund"]})
@@ -302,8 +406,36 @@ async def new_version(case: dict, kind: str, text: str) -> dict:
     return ver
 
 
-def report(case_id: str) -> Report:
-    return Report(case_id, "decide", AGENTS["decide"], "Both agents’ findings → the plan and who to call")
+def report(case_id: str, rnd: int = 1) -> Report:
+    """Round 1 is "decide" (step 3); after call n it's "decide:<n+1>" (step 5), so each run keeps its own panel."""
+    if rnd == 1:
+        return Report(case_id, "decide", AGENTS["decide"], "Both agents’ findings → the plan and who to call")
+    return Report(case_id, f"decide:{rnd}", AGENTS["decide"], "What the call got → what’s left and what’s next")
+
+
+async def next_round(case: dict) -> dict:
+    """After a call (its scorecard is on case["calls"][-1]): the same rules, run again with the call's result,
+    make the plan for what's left. Step 5 shows it; "Call again" uses it."""
+    rnd, call = round_of(case), case["calls"][-1]
+    r = report(case["id"], rnd)
+    r.start("Reading the call")
+    marks = call.get("scorecard") or []
+    r.step("call", f"Read call {call['n']}", "running")
+    r.step("call", f"Read call {call['n']}", "ok", scorecard.summary(marks),
+           [(f"{x['label']}: {x['text']}", x["evidence"]) for x in marks])
+    ver = compute(case)
+    r.step("left", "Work out what’s left", "running")
+    r.step("left", "Work out what’s left", "ok",
+           f"{len(ver['done'])} done · {sum(1 for a in ver['asks'] if a['kind'] != 'case_number')} still open",
+           [(a["text"], (a.get("last") or {}).get("label") or "new") for a in ver["asks"]])
+    r.step("next", "Choose what’s next", "running")
+    r.step("next", "Choose what’s next", "ok", ver["next"]["text"], [(o, "other route") for o in ver["next"]["options"]])
+    r.step("explain", "Write how I decided", "running")
+    who = f" with {call['rep']}" if call.get("rep") else ""
+    out = await new_version(case, "call_result", f"After call {call['n']}{who}: {scorecard.summary(marks)}")
+    r.step("explain", "Write how I decided", "ok", "Done")
+    r.finish(scorecard.summary(marks), f"plan v{out['v']} for call {rnd}")
+    return out
 
 
 async def run(case: dict) -> dict:
@@ -466,7 +598,8 @@ STRATEGY_TOOL = {"name": "change_strategy", "description": "Change the call stra
 
 def _context(case: dict) -> str:
     f, ver = case["facts"], latest(case)
-    return json.dumps({"plan": {k: ver[k] for k in ("v", "money", "math", "call", "asks", "skipped", "decided", "prefs")},
+    return json.dumps({"plan": {k: ver[k] for k in ("v", "round", "money", "math", "call", "asks", "skipped", "decided", "prefs",
+                                                     "done", "next", "after_call") if k in ver},
                        "findings": f["findings"], "agent_checks": f["steps"],
                        "corrections": [c for c in case["corrections"] if c["active"]],
                        "rules": ["numbers come from code (finance.py), never from chat",
@@ -539,8 +672,9 @@ async def chat(case: dict, message: str) -> dict:
         raise Refused("The plan isn't ready yet")
     msg = message.strip()[:1000]
     p = case["plan"]
-    p["chat"].append({"role": "user", "text": msg, "ts": time.time()})
-    bus.emit(case["id"], "planner_message", "decide", role="user", text=msg)
+    rnd = round_of(case)
+    p["chat"].append({"role": "user", "text": msg, "ts": time.time(), "round": rnd})
+    bus.emit(case["id"], "planner_message", "decide", role="user", text=msg, round=rnd)
     kind, reply, patch = "question", "", None
     if llm.available():
         history = [{"role": "assistant" if m["role"] == "planner" else "user",
@@ -584,9 +718,10 @@ async def chat(case: dict, message: str) -> dict:
         if refused:
             reply = (reply + " " if ver else "") + " ".join(r.rstrip(".") + "." for r in refused)
             kind = "change" if ver else "refused"
-    out = {"role": "planner", "text": reply, "kind": kind, "ts": time.time(), **({"v": ver["v"]} if ver else {})}
+    out = {"role": "planner", "text": reply, "kind": kind, "ts": time.time(), "round": rnd, **({"v": ver["v"]} if ver else {})}
     p["chat"].append(out)
-    bus.emit(case["id"], "planner_message", "decide", role="planner", text=reply, type=kind, **({"v": ver["v"]} if ver else {}))
+    bus.emit(case["id"], "planner_message", "decide", role="planner", text=reply, type=kind, round=rnd,
+             **({"v": ver["v"]} if ver else {}))
     return {"reply": reply, "kind": kind, **({"v": ver["v"], "plan": ver} if ver else {})}
 
 

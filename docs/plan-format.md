@@ -69,9 +69,18 @@ Three separate things, so a correction never loses a strategy choice and vice ve
   "prefs": {...},                   // snapshot of the prefs used
   "corrections": ["c1"],            // active corrections used
   "changes": ["You owe $600 → $1,100", "Plan: 6 × $100/mo → 8 × $138/mo"],   // vs the previous version
-  "changed": ["plan"]               // ask ids new or changed vs the previous version (highlighted briefly)
+  "changed": ["plan"],              // ask ids new or changed vs the previous version of the same round
+  "round": 1,                       // which call this plan is for (after call n: n+1)
+  // only after a call (round 2+):
+  "done": [{"id": "insurance", "kind": "insurance", "text": "…", "call": 1, "evidence": "…"}],
+  "next": {"kind": "call"|"wait"|"done", "when": "2026-10-30"|null, "text": "…", "options": ["Apply … yourself: …"]},
+  "after_call": {"n": 1, "date": "2026-10-24", "rep": "Diane", "case_number": "FA20931", "marks": [<scorecard mark>]}
 }
 ```
+
+Asks in round 2+ carry `last`: {status, label, evidence, call}, the mark from the last call they were on.
+A scorecard mark (`agents/scorecard.py`): `{id, kind, text, status: got|refused|later|unclear|not_needed, label,
+evidence, source: "call record"|"rep said"|""}`.
 
 Ask kinds: `insurance`, `payment`, `discount`, `refund`, `plan`, `hold`, `case_number`, `supervisor`.
 Money asks need a finding that's not marked wrong. `hold` and `case_number` are standard asks (no finding);
@@ -97,6 +106,7 @@ Money asks need a finding that's not marked wrong. `hold` and `case_number` are 
 | `planner_message` | `role`, `text`, `type` (question · change · refused), `v?` | each planner-chat message, both sides |
 | `correction` | `correction`, `v` | "This is wrong" saved (and the version it produced) |
 | `correction_undone` | `id`, `v` | undo |
+| `scorecard` | `n`, `plan_v`, `marks`, `summary` | after each call: one mark per ask on the plan it used |
 | `finding_qa` | `finding`, `agent`, `question`, `answer`, `sources` | "Ask" under a finding (changes nothing) |
 
 ## Endpoints
@@ -106,5 +116,7 @@ Money asks need a finding that's not marked wrong. `hold` and `case_number` are 
 - `POST /api/cases/{id}/plan/restore {v}`: makes a new version with v's preferences (facts stay current)
 - `POST /api/cases/{id}/corrections {finding, note}` · `DELETE /api/cases/{id}/corrections/{cid}`:
   only until the call starts (409 after)
+- `POST /api/cases/{id}/call-again {v?}`: with `v` (must be the latest), approves step 5's plan and starts the
+  follow-up call with its asks; without it, the approval gate asks first
 - `POST /api/cases/{id}/ask {question, finding?}`: with `finding`, answered only from that finding's agent's
   evidence (its findings and steps with proof); without it, the existing status answer

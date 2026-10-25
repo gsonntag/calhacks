@@ -1,0 +1,65 @@
+{
+ "name": "all-won",
+ "about": "Billing fixes everything on the call (offline reading, no Claude).",
+ "plan": {
+  "asks": [
+   {
+    "id": "insurance",
+    "kind": "insurance",
+    "text": "Apply your insurance: the statement says you owe $1,100, not $8,700"
+   },
+   {
+    "id": "payment",
+    "kind": "payment",
+    "text": "Show the $500 you already paid, bringing it to $600"
+   },
+   {
+    "id": "plan",
+    "kind": "plan",
+    "text": "Set up an interest-free payment plan for the $600: 6 × $100/month, as their own billing policy allows"
+   },
+   {
+    "id": "hold",
+    "kind": "hold",
+    "text": "Pause collections while it's corrected"
+   },
+   {
+    "id": "case_number",
+    "kind": "case_number",
+    "text": "Get a case number and the rep's name"
+   }
+  ],
+  "money": {
+   "billed": 8700,
+   "owed": 600,
+   "target": 600,
+   "refund": 0,
+   "saved": 8100
+  }
+ },
+ "rep_lines": [
+  "Patient Financial Services, this is Diane.",
+  "Okay, I've applied the insurance adjustment.",
+  "Yes, I see the payment. The $500 payment has been posted to the account.",
+  "Your balance is now $600.",
+  "Sure, the payment plan is set up: six months at $100.",
+  "I've put the account on hold.",
+  "Your case number is FA 20931."
+ ],
+ "outcome": {
+  "case_number": "FA20931",
+  "rep_name": "Diane",
+  "account_on_hold": true
+ },
+ "info": {
+  "confirmed_balance": 600,
+  "promised_actions": []
+ },
+ "expect": {
+  "insurance": "got",
+  "payment": "got",
+  "plan": "got",
+  "hold": "got",
+  "case_number": "got"
+ }
+}

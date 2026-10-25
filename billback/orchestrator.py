@@ -12,7 +12,7 @@ import uuid
 from datetime import date, timedelta
 
 from . import config, events, followups, llm, voice
-from .agents import auditor, caller, decide, planner, policy
+from .agents import auditor, caller, decide, planner, policy, scorecard
 from .events import bus
 from .harness import gate
 from .integrations import cartesia
@@ -233,25 +233,40 @@ def _call_transcript(case: dict) -> list[dict]:
     return [e for e in bus.history(case["id"]) if e["kind"] == "transcript" and e["ts"] >= case.get("call_started_ts", 0)]
 
 
+def _call_plan(case: dict) -> dict | None:
+    """The plan version this call was made with (old cases from before step 3 have none)."""
+    v = case["result"].get("plan_version")
+    return next((x for x in (case.get("plan") or {}).get("versions") or [] if x["v"] == v), None)
+
+
 async def _fill_outcome(case: dict, mode: str) -> None:
     """After every call (phone or desk): read the transcript for what billing promised and when, fill any
-    outcome fields the call agent didn't record (what it recorded during the call wins), and log the call."""
-    info = await _extract_outcome(case)
-    _log_call(case, mode, info)
+    outcome fields the call agent didn't record (what it recorded during the call wins), mark each ask on
+    the plan (the scorecard), and log the call."""
+    plan_v = _call_plan(case)
+    info = await _extract_outcome(case, plan_v["asks"] if plan_v else [])
+    marks = None
+    if plan_v:
+        rep_lines = [e["text"] for e in _call_transcript(case) if e["speaker"] == "rep"]
+        marks = scorecard.score(plan_v["asks"], case["call_outcome"], info, rep_lines, plan_v["money"])
+    _log_call(case, mode, info, marks, plan_v["v"] if plan_v else None)
 
 
 OUTCOME_KEYS = ("case_number", "rep_name", "account_on_hold", "assistance_review_opened", "adjustment_applied",
                 "payment_applied", "next_step")
 
 
-async def _extract_outcome(case: dict) -> dict:
+async def _extract_outcome(case: dict, asks: list[dict] | None = None) -> dict:
     """Claude reads the finished transcript (polling mode has no mid-call outcome tool); the deterministic
-    reader fills whatever Claude didn't return, and runs alone when Claude is unavailable."""
+    reader fills whatever Claude didn't return, and runs alone when Claude is unavailable. With the plan's
+    asks, Claude also marks each one (info["asks"]; agents/scorecard.py checks its quotes)."""
     turns = _call_transcript(case)
     fallback = followups.fallback_extract([e["text"] for e in turns if e["speaker"] == "rep"])
     out: dict = {}
     if turns and llm.available():
         lines = [f"{'BillBack' if e['speaker'] == 'billback' else 'Billing'}: {e['text']}" for e in turns]
+        if asks:
+            lines.append("\nASKS ON THE PLAN (JSON): " + json.dumps([{"id": a["id"], "ask": a["text"]} for a in asks]))
         try:
             out = await llm.json_out(followups.EXTRACT_SYSTEM, "\n".join(lines), model=config.MODEL_FAST)
         except Exception as e:
@@ -264,9 +279,11 @@ async def _extract_outcome(case: dict) -> dict:
     return info
 
 
-def _log_call(case: dict, mode: str, info: dict) -> dict:
+def _log_call(case: dict, mode: str, info: dict, marks: list[dict] | None = None, plan_v: int | None = None) -> dict:
     kind = "followup" if case["calls"] else "initial"
     call = followups.build_call(len(case["calls"]) + 1, kind, case_now(case), mode, info, case["call_outcome"])
+    if marks is not None:
+        call.update(scorecard=marks, plan_v=plan_v)
     for f in case["followups"]:
         if f["status"] == "open":
             f.update(status="done", closed_by_call=call["n"], closed=call["date"])
@@ -276,6 +293,8 @@ def _log_call(case: dict, mode: str, info: dict) -> dict:
         case["followups"].append(fu)
     save(case)
     bus.emit(case["id"], "call_logged", "caller", call=call)
+    if marks is not None:
+        bus.emit(case["id"], "scorecard", "decide", n=call["n"], plan_v=plan_v, marks=marks, summary=scorecard.summary(marks))
     bus.emit(case["id"], "followup_scheduled", "caller", followup=fu)
     return call
 
@@ -443,6 +462,8 @@ async def run_case(case: dict) -> None:
         if c.get("error"):
             bus.emit(cid, "warning", "planner", text="Couldn't save the plan to your bank")
         case["result"].update({"outcome": outcome, "plan": plan["plan"], "plan_created": plan_created, "final_balance": balance})
+        if ok and case["calls"] and case["calls"][-1].get("scorecard") is not None:
+            await decide.next_round(case)  # step 5: what the call got, and the plan for what's left
         set_status(case, "done")
         bus.emit(cid, "case_done", summary={
             "started_at": case["bill"]["amount_due"], "now": balance, "case_number": outcome.get("case_number"),
@@ -455,23 +476,41 @@ async def run_case(case: dict) -> None:
         raise
 
 
-async def call_again(case: dict) -> None:
-    """Follow-up call on a finished case: same approval gate and call paths, with the earlier calls in the
-    brief. Confirms the corrected balance/write-off, checks the refund, keeps the hold, logs the call."""
+async def call_again(case: dict, v: int | None = None) -> None:
+    """Follow-up call on a finished case, made with the latest plan: step 5's plan for what's left (older
+    cases without one use the follow-up goals). Same call paths, with the earlier calls in the brief.
+    v: the patient already approved that version on screen ("Call now" in step 5), so nothing asks again;
+    without it, the approval gate asks as it does for the first call."""
     cid = case["id"]
     try:
-        brief = {**case["result"]["brief"], "call_type": "follow_up", "goals": followups.followup_goals(case),
+        plan_v = decide.latest(case)
+        plan_v = plan_v if plan_v and plan_v.get("round", 1) > 1 else None
+        brief = {**case["result"]["brief"], "call_type": "follow_up",
+                 "goals": [a["goal"] for a in plan_v["asks"]] if plan_v else followups.followup_goals(case),
                  "previous_calls": followups.previous_calls(case)}
         n = len(case["calls"]) + 1
         bus.emit(cid, "followup_started", "caller", n=n, previous_calls=brief["previous_calls"])
         set_status(case, "awaiting_call_approval")
-        ok = await gate.request(cid, "caller", f"Call {case['hospital']['name']} billing again?", {
-            "asks": followups.followup_asks(case),
-            "say": "Following up on the last call. I won't agree to pay anything on the call."})
+        if plan_v:
+            case["plan"]["approved_v"] = None  # the last call's approval doesn't carry over
+        if v is not None:
+            decide.approve(case, v)
+            ok = True
+        else:
+            ok = await gate.request(cid, "caller", f"Call {case['hospital']['name']} billing again?", {
+                "asks": [a["text"] for a in plan_v["asks"]] if plan_v else followups.followup_asks(case),
+                **({"v": plan_v["v"]} if plan_v else {}),
+                "say": "Following up on the last call. I won't agree to pay anything on the call."})
+        if plan_v:  # corrections or chat while the approval waited may have made a newer version
+            plan_v = decide.approved(case)
+            brief.update(goals=[a["goal"] for a in plan_v["asks"]], plan_version=plan_v["v"])
+        case["result"]["plan_version"] = plan_v["v"] if plan_v else None
         if ok:  # the call's outcome lands in case["calls"] via _fill_outcome
             set_status(case, "calling")
             _reset_call_state(case)
             await (_phone_call(case, brief) if (voice.twilio_ready() or cartesia.phone_ready()) else _desk_call(case, brief))
+            if plan_v and len(case["calls"]) == n and case["calls"][-1].get("scorecard") is not None:
+                await decide.next_round(case)
         res = case["result"]
         confirmed = case["calls"][-1].get("confirmed_balance") if ok and case["calls"] else None
         if isinstance(confirmed, (int, float)) and confirmed != current_balance(case):

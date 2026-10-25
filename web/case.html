@@ -252,6 +252,18 @@
   .plan-asks b { flex: none; font: 600 16px/24px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .plan-asks b.plain { color: var(--md-on-surface); font-weight: 500; }
   .plan-asks li.differs { background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .plan-asks .last { align-self: flex-start; }
+  /* step 5: what the call got, then the plan for what's left */
+  .score-card { display: flex; flex-direction: column; gap: 4px; }
+  .score { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .score li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; }
+  .score li + li { border-top: 1px solid var(--md-outline-variant); }
+  .score .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .score .ev { color: var(--md-on-surface-variant); font: 400 13px/18px var(--md-font); }
+  .score .m3-status, .plan-asks .m3-status { flex: none; white-space: nowrap; }
+  .plan-done { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; color: var(--md-on-surface-variant); }
+  .plan-done li { display: flex; gap: 8px; align-items: flex-start; }
+  .next-area { display: flex; flex-direction: column; gap: 16px; }
   .flash { animation: flash 4s var(--md-ease); }
   @keyframes flash { 0%, 60% { background: var(--st-warn-container); } 100% { background: transparent; } }
   .plan-skipped { margin: 0; color: var(--md-on-surface-variant); }
@@ -364,6 +376,7 @@
         <div class="row-detail" id="detail2" hidden>
           <!-- the Decide agent: big while it works, then a slim bar that opens the planner chat -->
           <div id="decideBox"></div>
+          <div id="plannerSlotPlan">
           <section class="planner" id="plannerBox" hidden aria-label="Talk to the planner">
             <div class="planner-log" id="plannerLog" aria-live="polite"></div>
             <form class="planner-form" id="plannerForm">
@@ -372,6 +385,7 @@
               <button type="submit" class="m3-btn filled" id="plannerSend">Send</button>
             </form>
           </section>
+          </div>
           <div id="planArea"></div>
           <div class="plan-actions" id="planActions" hidden>
             <div class="actions">
@@ -440,6 +454,19 @@
             </div>
           </div>
           <span class="body-m muted" id="finalNote">We’ll check back once billing confirms your new balance.</span>
+          <div class="next-area" id="nextWrap" hidden>
+            <div id="scoreBox"></div>
+            <div id="nextDecideBox"></div>
+            <div id="plannerSlotNext"></div>
+            <div id="nextArea"></div>
+            <div class="plan-actions" id="nextActions" hidden>
+              <div class="actions">
+                <button type="button" class="m3-btn filled" id="nextCallBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call now</button>
+                <a class="m3-btn text" href="/">See all cases</a>
+              </div>
+            </div>
+            <p class="body-m" id="nextErr" style="color:var(--md-error);margin:0" hidden></p>
+          </div>
           <div class="m3-card follow" id="followBox" hidden>
             <p class="body-l" id="followText"></p>
             <span class="body-m muted" id="followPromised"></span>
@@ -491,7 +518,7 @@ function blankModel() {
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
            warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1,
-           plans: [], chat: [], corrections: {}, qa: {}, approvedV: null, flash: null };
+           plans: [], chat: [], corrections: {}, qa: {}, approvedV: null, flash: null, scorecards: [] };
 }
 const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
@@ -545,7 +572,7 @@ function apply(m, e) {
     case 'followup_scheduled': m.followup = e.followup; break;
     case 'followup_started':  // "Call again": steps 3-5 run again for the follow-up call
       Object.assign(m, { approvals: {}, asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {},
-                         callEnded: null, done: null, followup: null, round: e.n || 2 });
+                         callEnded: null, done: null, followup: null, round: e.n || 2, approvedV: null });
       break;
     case 'error': m.error = e.text; break;
     // step 3 (agents/decide.py, docs/plan-format.md)
@@ -554,7 +581,11 @@ function apply(m, e) {
       // changed lines flash when a new version arrives, not when you open the page later
       if (e.plan.v > 1 && e.ts > Date.now() / 1000 - 10) m.flash = { v: e.plan.v, ids: e.plan.changed || [], until: Date.now() + 4000 };
       break;
-    case 'plan_approved': m.approvedV = e.v; break;
+    case 'plan_approved':
+      m.approvedV = e.v;
+      if (!m.approvedAt) m.approvedAt = 'Approved at ' + new Date(e.ts * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      break;
+    case 'scorecard': m.scorecards.push(e); break;  // step 5: each ask's mark after a call (agents/scorecard.py)
     case 'plan_approval_reset': m.approvedV = null; break;
     case 'planner_message': m.chat.push(e); break;
     case 'correction': m.corrections[e.correction.finding] = { ...e.correction, v: e.v }; break;
@@ -569,6 +600,7 @@ function stageOf(m) {
   if (m.done || m.callEnded || m.callDeclined || m.approvals.planner) return 4;
   if (m.call) return 3;
   if (m.approvals.caller && m.approvals.caller.resolved === true) return 3;  // approved, dialing
+  if (m.round > 1 && m.approvedV) return 3;  // "Call now" on step 5's plan: approved, dialing
   if (m.approvals.caller && m.approvals.caller.resolved === undefined) return 2;
   if (m.agent.decide && m.agent.decide.started) return 2;  // the Decide agent is building the plan
   return 1;
@@ -587,7 +619,7 @@ function rowStage(m) {
 const LEGACY_AGENTS = { auditor: ['Nessie agent', 'Your own records: bank, the bill, your insurance statement'],
                         policy: ['Bright Data agent', 'Public rules: the hospital’s own financial-assistance policy'] };
 function reviewAgents(m) {
-  const order = m.order.filter((k) => k !== 'decide');  // the Decide agent lives in step 3
+  const order = m.order.filter((k) => !k.startsWith('decide'));  // the Decide agent lives in steps 3 and 5
   if (order.length) return order;
   const legacy = Object.keys(LEGACY_AGENTS).filter((k) => (m.steps[k] || []).length);
   return legacy.length ? legacy : Object.keys(LEGACY_AGENTS);  // not started yet: show where they'll run
@@ -896,8 +928,9 @@ function render() {
   $('finalAmt').textContent = final != null ? money(final) : '';
   $('finalWas').textContent = m.bill ? money(m.bill.amount_due) : '';
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
-  $('finalTitle').textContent = m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
-  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${outcomeText(m)}` : planPending ? ''
+  const nextV = latestPlan(m, m.round + 1), sc = m.scorecards.filter((x) => x.n === m.round).pop();
+  $('finalTitle').textContent = nextV && nextV.next && nextV.next.kind !== 'done' ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
+  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund;
   $('finalNote').hidden = !refund;
@@ -906,6 +939,7 @@ function render() {
     : 'We’ll check back once billing confirms your new balance.';
   const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
   $('followBox').hidden = !(m.done && fu);
+  $('callAgainBtn').parentNode.hidden = !!nextV;  // step 5's plan has its own "Call now"
   if (fu) {
     const d = new Date(fu.due + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
     $('followText').innerHTML = `<b>Next:</b> I’ll check back by <b>${esc(d)}</b>. If ${esc(fu.condition)}, I’ll call ${esc(m.bill ? m.bill.provider : 'billing')} again.`;
@@ -935,12 +969,24 @@ function render() {
 // ---------- step 3: the plan (agents/decide.py; format: docs/plan-format.md) ----------
 function uiOf(key) {
   return (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1, finds: new Set(), box: {}, drafts: {}, busy: {}, err: {},
-                              planV: null, chatOpen: false, termOpen: false, showAll: false, howOpen: false,
+                              planV: null, nextV: null, planChatOpen: false, nextChatOpen: false, planTermOpen: false, nextTermOpen: false,
+                              showAll: false, howOpen: false,
                               agentOpen: {}, lineOpen: new Set() });
 }
-const deciding = (m) => !!(m.agent.decide && m.agent.decide.started && !m.agent.decide.done && !m.error);
-const latestPlan = (m) => m.plans[m.plans.length - 1] || null;
-const callStarted = (m) => !!(m.approvals.caller && m.approvals.caller.resolved !== undefined);
+// Plans are per call: round 1 is the first call's plan (step 3); after call n, the Decide agent makes round n+1
+// (step 5), which becomes step 3's plan when that follow-up call starts. Its panel is "decide" / "decide:<round>".
+const roundOf = (x) => x.round || 1;
+const decKey = (r) => (r === 1 ? 'decide' : 'decide:' + r);
+const plansOf = (m, r) => m.plans.filter((p) => roundOf(p) === r);
+const latestPlan = (m, r = m.round) => { const vs = plansOf(m, r); return vs[vs.length - 1] || null; };
+const deciding = (m, r = m.round) => { const a = m.agent[decKey(r)]; return !!(a && a.started && !a.done && !m.error); };
+const secRound = (m, sec) => (sec === 'next' ? m.round + 1 : m.round);
+const callStarted = (m) => !!(m.approvals.caller && m.approvals.caller.resolved !== undefined) || (m.round > 1 && !!m.approvedV);
+// step 5's plan can change (chat, go back) once the call is done and until the next call starts
+const canChangeNext = (m) => !!m.done && !m.error && state.active !== 'replay';
+// where the planner chat is: step 5 once there's a plan for the next call
+const chatSec = (m) => (m.done && latestPlan(m, m.round + 1) ? 'next' : 'plan');
+const SCORE_CLS = { got: 'success', refused: 'error', later: 'warn', unclear: 'info', not_needed: '' };
 // "This is wrong" is allowed until the call starts
 const canCorrect = (m) => !!m.plans.length && state.active !== 'replay' && !!m.approvals.caller && !callStarted(m);
 
@@ -990,17 +1036,17 @@ function compareWith(old, cur) {
 }
 const sameAsk = (a, cur) => cur.asks.some((b) => b.id === a.id && b.text === a.text);
 
-function planHTML(m, ui) {
-  const cur = latestPlan(m), v = m.plans.find((x) => x.v === ui.planV) || cur, old = v !== cur;
-  const editable = canCorrect(m);
-  const vers = m.plans.length > 1 ? `<div class="plan-vers"><span class="lbl">Versions</span>${m.plans.map((x) =>
-    `<button type="button" class="m3-chip${x === v ? ' selected' : ''}" data-act="ver" data-v="${x.v}" aria-pressed="${x === v}">v${x.v}${x === cur ? ' · latest' : ''}${m.approvedV === x.v ? ' · approved' : ''}</button>`).join('')}</div>` : '';
+function planHTML(m, ui, sec = 'plan') {
+  const vs = plansOf(m, secRound(m, sec)), cur = vs[vs.length - 1], v = vs.find((x) => x.v === ui[sec + 'V']) || cur, old = v !== cur;
+  const editable = sec === 'next' ? canChangeNext(m) : canCorrect(m), ds = `data-sec="${sec}"`;
+  const vers = vs.length > 1 ? `<div class="plan-vers"><span class="lbl">Versions</span>${vs.map((x) =>
+    `<button type="button" class="m3-chip${x === v ? ' selected' : ''}" data-act="ver" ${ds} data-v="${x.v}" aria-pressed="${x === v}">v${x.v}${x === cur ? ' · latest' : ''}${m.approvedV === x.v ? ' · approved' : ''}</button>`).join('')}</div>` : '';
   let banner = '';
   if (old) {
     const diffs = compareWith(v, cur);
     banner = `<div class="plan-banner"><b>You’re looking at v${v.v}: ${esc(v.reason.text)}</b>${diffs.length ? `<ul>${diffs.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : '<span>Same as the latest.</span>'}
-      <div class="actions">${editable ? `<button type="button" class="m3-btn filled" data-act="restore" data-v="${v.v}">Go back to this version</button>` : ''}
-      <button type="button" class="m3-btn text" data-act="ver" data-v="${cur.v}">See the latest (v${cur.v})</button></div></div>`;
+      <div class="actions">${editable ? `<button type="button" class="m3-btn filled" data-act="restore" ${ds} data-v="${v.v}">Go back to this version</button>` : ''}
+      <button type="button" class="m3-btn text" data-act="ver" ${ds} data-v="${cur.v}">See the latest (v${cur.v})</button></div></div>`;
   } else if (v.changes && v.changes.length) {
     banner = `<div class="plan-banner"><b>What changed in v${v.v}</b><span>${esc(v.reason.text)}</span><ul>${v.changes.map((d) => `<li>${esc(d)}</li>`).join('')}</ul></div>`;
   }
@@ -1010,26 +1056,34 @@ function planHTML(m, ui) {
   const asks = shown.map((a, i) => {
     const cls = (flashOn && m.flash.ids.includes(a.id) ? ' flash' : '') + (old && !sameAsk(a, cur) ? ' differs' : '');
     const why = a.findings.length ? `<button type="button" class="why" data-act="why" data-key="${esc(a.findings[0])}">why ▸</button>`
-      : `<span class="basis">${a.basis === 'standard' ? 'Standard on every call' : 'You asked for this'}</span>`;
-    return `<li class="${cls.trim()}"><span class="n">${i + 1}</span><span class="tx"><span>${esc(a.text)}</span>${why}</span>${a.value ? `<b class="${a.money ? '' : 'plain'}">${esc(a.value)}</b>` : ''}</li>`;
+      : `<span class="basis">${a.basis === 'standard' ? 'Standard on every call' : a.basis === 'you asked' ? 'You asked for this' : cap(a.basis)}</span>`;
+    const last = a.last ? `<span class="m3-status ${SCORE_CLS[a.last.status] || ''} last">Last call: ${esc(a.last.label.toLowerCase())}</span>` : '';
+    return `<li class="${cls.trim()}"><span class="n">${i + 1}</span><span class="tx"><span>${esc(a.text)}</span>${last}${why}</span>${a.value ? `<b class="${a.money ? '' : 'plain'}">${esc(a.value)}</b>` : ''}</li>`;
   }).join('');
   const more = v.asks.length > shown.length ? `<button type="button" class="m3-btn text" data-act="more">Show ${v.asks.length - shown.length} more ▾</button>`
     : ui.showAll && v.asks.length > 4 ? `<button type="button" class="m3-btn text" data-act="more">Show fewer ▴</button>` : '';
+  // after a call: what happens next, and what's already done
+  const nxt = v.next ? `<div class="plan-banner"><b>What’s next</b><span>${esc(v.next.text)}</span>${(v.next.options || []).length
+    ? `<span>Other routes:</span><ul>${v.next.options.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>` : ''}</div>` : '';
+  const done = (v.done || []).length ? `<div><h3 class="title-s sub-h" style="margin-bottom:6px">Already done</h3><ul class="plan-done body-m">${v.done.map((d) =>
+    `<li>${ICON.ok}<span>${esc(d.text)} <span class="body-s">· call ${d.call}</span></span></li>`).join('')}</ul></div>` : '';
+  const asksHead = v.next ? (v.asks.length > 1 ? 'What I’ll ask on the next call' : 'On the next call') : 'What I’ll ask for · biggest money first';
   const skipped = v.skipped.length ? `<ul class="plan-skipped body-s">${v.skipped.map((x) => `<li>Left off: ${esc(x.text)} (${esc(x.why)})</li>`).join('')}</ul>` : '';
   const d = v.decided, list = (xs) => `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
   const how = `<details class="more" data-ui="how"${ui.howOpen ? ' open' : ''}><summary class="body-m">How I decided</summary><div class="how body-m">
       <p style="margin:0">${esc(d.explanation)}</p>
       <div><h4>From your records<span class="agent-lbl">Nessie agent</span></h4>${list(d.nessie)}</div>
       <div><h4>From public rules<span class="agent-lbl">Bright Data agent</span></h4>${list(d.brightdata)}</div>
+      ${d.last_call ? `<div><h4>The last call</h4>${list(d.last_call)}</div>` : ''}
       <div><h4>The math</h4>${list(d.math)}</div>
       <div><h4>The path</h4><p style="margin:0">${esc(d.path)}</p></div>
       <div><h4>Who to call</h4><p style="margin:0">${esc(d.call)}</p></div>
       <div><h4>If billing says no</h4><p style="margin:0">${esc(d.fallback)}</p></div></div></details>`;
-  return `<div class="plan-card" id="planCard">${vers}${banner}
+  return `<div class="plan-card"${sec === 'plan' ? ' id="planCard"' : ''}>${vers}${banner}${nxt}
     <div class="plan-money"><s>${money(mo.billed)}</s>${sym('arrow_forward')}<b>${money(mo.target)}</b><span class="body-m">${esc(extra)}</span></div>
     <p class="plan-who body-m">${sym('call')}<span><b>Who we’ll call:</b> ${esc(v.call.department)} · ${v.call.phone ? esc(v.call.phone) : 'the number on your bill'}<br><span class="muted body-s">${esc(v.call.why)}</span></span></p>
-    <div><h3 class="title-s sub-h" style="margin-bottom:4px">What I’ll ask for · biggest money first</h3><ol class="plan-asks">${asks}</ol>${more}${skipped}</div>
-    ${how}</div>`;
+    <div><h3 class="title-s sub-h" style="margin-bottom:4px">${asksHead}</h3><ol class="plan-asks">${asks}</ol>${more}${skipped}</div>
+    ${done}${how}</div>`;
 }
 
 // Recordings made before step 3 existed (demo/replay_*.json): the asks from the approval, no versions or chat.
@@ -1040,37 +1094,47 @@ function legacyPlanHTML(m) {
       `<li><span class="n">${i + 1}</span><span class="tx"><span>${esc(q)}</span></span></li>`).join('')}</ol></div></div>`;
 }
 
-function renderPlan(m, ds, ui) {
-  const cur = latestPlan(m), busy = deciding(m), replay = state.active === 'replay';
-  // the Decide agent: its terminal big while it works; then a slim bar ("Talk to the planner ▸")
-  let dec = '';
-  if (m.agent.decide) {
-    const term = `<div class="terms">${renderAgent('decide', m, busy || ui.termOpen)}</div>`;
-    if (busy || !cur) dec = term;  // big while it works; the plan below says "filling in…" until it's done
-    else {
-      const chatOk = !replay || m.chat.length;
-      dec = `<div class="slim-bar"><span class="who"><b>Decide agent</b><small>Done · plan v${cur.v}${m.plans.length > 1 ? ` of ${m.plans.length}` : ''}</small></span>
-        <button type="button" class="m3-btn text" data-act="term">${ui.termOpen ? 'Hide' : 'Show'} its checklist</button>
-        ${chatOk ? `<button type="button" class="m3-btn tonal" data-act="chat" aria-expanded="${ui.chatOpen}">Talk to the planner ${ui.chatOpen ? '▾' : '▸'}</button>` : ''}</div>`
-        + (ui.termOpen ? term : '');
-    }
-  }
-  setHTML($('decideBox'), dec);
-  if (replay && m.chat.length) ui.chatOpen = true;  // the replay plays the recorded chat back
-  $('plannerBox').hidden = !(cur && ui.chatOpen);
-  const log = m.chat.map((c) => {
+// The Decide agent's panel for a round: big while it works; then a slim bar ("Talk to the planner ▸")
+function decideHTML(m, ui, sec) {
+  const r = secRound(m, sec), key = decKey(r), cur = latestPlan(m, r), busy = deciding(m, r), replay = state.active === 'replay';
+  if (!m.agent[key]) return '';
+  const termOpen = ui[sec + 'TermOpen'], chatOpen = ui[sec + 'ChatOpen'];
+  const term = `<div class="terms">${renderAgent(key, m, busy || termOpen)}</div>`;
+  if (busy || !cur) return term;  // the plan below says "filling in…" until it's done
+  const n = plansOf(m, r).length, chatOk = !replay || m.chat.some((c) => (c.round || 1) === r);
+  return `<div class="slim-bar"><span class="who"><b>Decide agent</b><small>Done · plan v${cur.v}${n > 1 ? ` (${n} versions)` : ''}</small></span>
+      <button type="button" class="m3-btn text" data-act="term" data-sec="${sec}">${termOpen ? 'Hide' : 'Show'} its checklist</button>
+      ${chatOk ? `<button type="button" class="m3-btn tonal" data-act="chat" data-sec="${sec}" aria-expanded="${!!chatOpen}">Talk to the planner ${chatOpen ? '▾' : '▸'}</button>` : ''}</div>`
+    + (termOpen ? term : '');
+}
+
+// The planner chat sits under the slim bar of the plan it changes: step 3's, or step 5's once that exists
+function renderChat(m, ui) {
+  const sec = chatSec(m), r = secRound(m, sec), cur = latestPlan(m, r);
+  const slot = $(sec === 'next' ? 'plannerSlotNext' : 'plannerSlotPlan');
+  if ($('plannerBox').parentNode !== slot) slot.appendChild($('plannerBox'));
+  if (state.active === 'replay' && m.chat.length) ui.planChatOpen = true;  // the replay plays the recorded chat back
+  $('plannerBox').hidden = !(cur && ui[sec + 'ChatOpen']);
+  const log = m.chat.filter((c) => (c.round || 1) === r).map((c) => {
     const me = c.role === 'user';
     return `<div class="bubble-wrap ${me ? 'me' : 'them'}"><span class="bubble-who">${me ? 'You' : 'Decide agent'}</span><span class="m3-bubble ${me ? 'me' : 'them'}">${esc(c.text)}</span>
-      ${c.v ? `<button type="button" class="made-v" data-act="ver" data-v="${c.v}">→ plan v${c.v}</button>` : ''}</div>`;
+      ${c.v ? `<button type="button" class="made-v" data-act="ver" data-sec="${sec}" data-v="${c.v}">→ plan v${c.v}</button>` : ''}</div>`;
   }).join('') + (ui.chatBusy ? '<div class="bubble-wrap them"><span class="bubble-who">Decide agent</span><span class="m3-bubble them">…</span></div>' : '')
     + (ui.chatErr ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.chatErr)}</p>` : '');
-  const grew = $('plannerLog')._n !== m.chat.length + (ui.chatBusy ? 1 : 0);
+  const n = log.length;
+  const grew = $('plannerLog')._n !== n;
   setHTML($('plannerLog'), log);
-  if (grew) { $('plannerLog')._n = m.chat.length + (ui.chatBusy ? 1 : 0); $('plannerLog').scrollTop = 1e6; }
+  if (grew) { $('plannerLog')._n = n; $('plannerLog').scrollTop = 1e6; }
   $('plannerInput').disabled = $('plannerSend').disabled = !!ui.chatBusy;
+}
+
+function renderPlan(m, ds, ui) {
+  const cur = latestPlan(m), busy = deciding(m);
+  setHTML($('decideBox'), decideHTML(m, ui, 'plan'));
+  renderChat(m, ui);
 
   // the plan
-  if (cur && !busy) setHTML($('planArea'), planHTML(m, ui));
+  if (cur && !busy) setHTML($('planArea'), planHTML(m, ui, 'plan'));
   else if (m.asks.length && !busy) setHTML($('planArea'), legacyPlanHTML(m));
   else if (busy) setHTML($('planArea'), '<div class="filling body-m">Filling in…<i style="width:55%"></i><i style="width:85%"></i><i style="width:70%"></i><i style="width:40%"></i></div>');
   else setHTML($('planArea'), ds < 2 ? '<p class="body-m muted" style="margin:0">After the Review, the Decide agent turns the findings into a call plan for you to check.</p>' : '');
@@ -1078,6 +1142,7 @@ function renderPlan(m, ds, ui) {
 
   const viewing = cur && ui.planV && ui.planV !== cur.v;
   const pending = m.approvals.caller && m.approvals.caller.resolved === undefined;
+  renderNext(m, ds, ui);
   $('planActions').hidden = !(pending && !viewing && !m.error && (cur || m.asks.length));
   $('approveBtn').innerHTML = `${sym('call')}Call now${cur && m.plans.length > 1 ? ` (v${cur.v})` : ''}`;
   const approvedV = m.approvedV || (cur && cur.v);
@@ -1088,6 +1153,31 @@ function renderPlan(m, ds, ui) {
     : busy ? 'Building your plan…'
     : cur ? `v${cur.v} · ${money(cur.money.billed)} → ${money(cur.money.target)} · ${cur.asks.length} asks`
     : pending ? 'Waiting for your OK' : 'The Decide agent turns the findings into a call plan');
+}
+
+// ---------- step 5: what the call got, and the Decide agent's plan for what's left (agents/scorecard.py) ----------
+function scoreHTML(sc, m) {
+  const call = m.calls.find((c) => c.n === sc.n) || {};
+  const who = [call.rep, call.case_number && `case ${call.case_number}`].filter(Boolean).join(' · ');
+  return `<div class="score-card"><h3 class="title-s sub-h" style="margin:0">What the call got</h3>
+    <span class="body-s muted">Call ${sc.n}${who ? ' · ' + esc(who) : ''} · ${esc(sc.summary)}</span>
+    <ul class="score">${sc.marks.map((x) => `<li><span class="m3-status ${SCORE_CLS[x.status] || ''}">${esc(x.label)}</span>
+      <span class="tx"><span class="body-m">${esc(x.text)}</span><span class="ev">${x.source === 'rep said' ? `${esc(call.rep || 'Billing')}: “${esc(x.evidence)}”` : esc(x.evidence)}</span></span></li>`).join('')}</ul></div>`;
+}
+function renderNext(m, ds, ui) {
+  const r = m.round + 1, cur = latestPlan(m, r), busy = deciding(m, r);
+  const sc = m.scorecards.filter((x) => x.n === m.round).pop();
+  const show = ds === 4 && !!(sc || m.agent[decKey(r)]);
+  $('nextWrap').hidden = !show;
+  if (!show) return;
+  setHTML($('scoreBox'), sc ? scoreHTML(sc, m) : '');
+  setHTML($('nextDecideBox'), decideHTML(m, ui, 'next'));
+  setHTML($('nextArea'), cur && !busy ? planHTML(m, ui, 'next')
+    : busy ? '<div class="filling body-m">Working out what’s next…<i style="width:55%"></i><i style="width:85%"></i><i style="width:40%"></i></div>' : '');
+  const viewing = cur && ui.nextV && ui.nextV !== cur.v;
+  $('nextActions').hidden = !(cur && !busy && !viewing && canChangeNext(m));
+  if (cur) $('nextCallBtn').innerHTML = `${sym('call')}${cur.next && cur.next.kind === 'done' ? 'Call anyway' : 'Call now'} (v${cur.v})`;
+  $('nextErr').hidden = !ui.nextErr; setText($('nextErr'), ui.nextErr || '');
 }
 
 function scrollToEl(el) {
@@ -1103,10 +1193,10 @@ function openFinding(key) {
   render(); setTimeout(render, 4100);
   scrollToEl(document.querySelector(`[data-find="${CSS.escape(key)}"]`));
 }
-function showPlan() {
+function showPlan(sec = 'plan') {
   const ui = uiOf(state.active);
-  ui.planV = null; ui.open.add(2); render();
-  setTimeout(() => scrollToEl($('planArea')), 50);
+  ui[sec + 'V'] = null; ui.open.add(sec === 'next' ? 4 : 2); render();
+  setTimeout(() => scrollToEl($(sec === 'next' ? 'nextArea' : 'planArea')), 50);
 }
 async function post(url, body, method = 'POST') {
   const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
@@ -1131,7 +1221,7 @@ function nowText(m, ds, a) {
     return doing.join(' · ');
   }
   if (ds === 2 && deciding(m)) {
-    const st = m.steps.decide || [], run = st.filter((x) => x.status === 'running').pop() || st[st.length - 1];
+    const st = m.steps[decKey(m.round)] || [], run = st.filter((x) => x.status === 'running').pop() || st[st.length - 1];
     return run ? `Decide agent: ${run.label}…` : 'Decide agent: starting…';
   }
   if (ds === 2) return `Check the plan, then tap Call now and I’ll call ${prov} billing.`;
@@ -1171,7 +1261,7 @@ function minGap(e, prev, live) {
     case 'case_started': return 0.6;
     case 'balance': return 1.2;
     case 'agent_started': return 0.6;
-    case 'step': return e.status === 'running' ? 0.35 : e.agent === 'decide' ? 0.9 : 1.5;
+    case 'step': return e.status === 'running' ? 0.35 : (e.agent || '').startsWith('decide') ? 0.9 : 1.5;
     case 'review_started': return 0.6;
     case 'finding': return 1.0;
     case 'evidence': case 'policy_quote': return live ? 0.2 : 0.7;   // live: they don't show in the panels
@@ -1310,23 +1400,23 @@ document.querySelector('main').addEventListener('click', async (e) => {
     try { await post(`/api/cases/${state.active}/corrections/${encodeURIComponent(b.dataset.id)}`, null, 'DELETE'); } catch (err) { alert(err.message); }
   } else if (act === 'why') openFinding(key);
   else if (act === 'goplan') showPlan();
-  else if (act === 'term') { ui.termOpen = !ui.termOpen; render(); }
+  else if (act === 'term') { const k = (b.dataset.sec || 'plan') + 'TermOpen'; ui[k] = !ui[k]; render(); }
   else if (act === 'agent') { const a = model(state.active).agent[key] || {}; ui.agentOpen[key] = !(ui.agentOpen[key] ?? !a.done); render(); }
   else if (act === 'line') {
     if (e.target.closest('a')) return;  // a source link inside the proof opens the source
     if (ui.lineOpen.has(key)) ui.lineOpen.delete(key); else ui.lineOpen.add(key);
     render();
   }
-  else if (act === 'chat') { ui.chatOpen = !ui.chatOpen; render(); if (ui.chatOpen) $('plannerInput').focus(); }
+  else if (act === 'chat') { const k = (b.dataset.sec || 'plan') + 'ChatOpen'; ui[k] = !ui[k]; render(); if (ui[k]) $('plannerInput').focus(); }
   else if (act === 'ver') {
-    const cur = latestPlan(model(state.active)), v = +b.dataset.v;
-    ui.planV = cur && v === cur.v ? null : v;
-    if (b.closest('#plannerLog')) showPlan(); else render();
+    const sec = b.dataset.sec || 'plan', m = model(state.active), cur = latestPlan(m, secRound(m, sec)), v = +b.dataset.v;
+    ui[sec + 'V'] = cur && v === cur.v ? null : v;
+    if (b.closest('#plannerLog')) showPlan(sec); else render();
   } else if (act === 'more') { ui.showAll = !ui.showAll; render(); }
   else if (act === 'restore') {
     if (state.active === 'replay') return;
     b.disabled = true;
-    try { await post(`/api/cases/${state.active}/plan/restore`, { v: +b.dataset.v }); showPlan(); }
+    try { await post(`/api/cases/${state.active}/plan/restore`, { v: +b.dataset.v }); showPlan(b.dataset.sec || 'plan'); }
     catch (err) { ui.planErr = err.message; render(); }
   }
 });
@@ -1366,7 +1456,7 @@ $('plannerForm').addEventListener('submit', async (e) => {
   ui.chatBusy = true; ui.chatErr = ''; $('plannerInput').value = ''; render();
   try {
     const r = await post(`/api/cases/${id}/planner`, { message: msg });
-    if (r.v) { ui.chatBusy = false; showPlan(); }  // a new version: scroll to the plan, its changed lines flash
+    if (r.v) { ui.chatBusy = false; showPlan(chatSec(model(id))); }  // a new version: scroll to the plan, its changed lines flash
   } catch (err) { ui.chatErr = err.message; $('plannerInput').value = msg; }
   finally { ui.chatBusy = false; render(); $('plannerInput').focus(); }
 });
@@ -1377,6 +1467,15 @@ $('callAgainBtn').addEventListener('click', async () => {
   if (!state.active || state.active === 'replay') return;
   $('callAgainBtn').disabled = true;
   try { await fetch(`/api/cases/${state.active}/call-again`, { method: 'POST' }); } finally { $('callAgainBtn').disabled = false; }
+});
+// step 5: "Call now" approves the plan on screen (the latest for the next call) and starts the follow-up call
+$('nextCallBtn').addEventListener('click', async () => {
+  const id = state.active, m = model(id), cur = latestPlan(m, m.round + 1), ui = uiOf(id);
+  if (!cur || id === 'replay') return;
+  $('nextCallBtn').disabled = true; ui.nextErr = '';
+  try { await post(`/api/cases/${id}/call-again`, { v: cur.v }); }
+  catch (err) { ui.nextErr = err.message; }
+  finally { $('nextCallBtn').disabled = false; render(); }
 });
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
 window.addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });

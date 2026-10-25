@@ -349,16 +349,25 @@ async def undo_correction(case_id: str, correction_id: str):
     return out
 
 
+class CallAgain(BaseModel):
+    v: int | None = None
+
+
 @app.post("/api/cases/{case_id}/call-again")
-async def call_again(case_id: str):
-    """Start a follow-up call; it waits on the patient's approval like the first call."""
+async def call_again(case_id: str, p: CallAgain | None = None):
+    """Start a follow-up call. With v ("Call now" on step 5's plan) that version is approved and the call
+    starts; without it, it waits on the patient's approval like the first call."""
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
     if not orchestrator.can_call_again(case):
         return JSONResponse({"error": f"can't call again while the case is {case['status']}"}, 409)
+    v = p.v if p else None
+    cur = decide.latest(case)
+    if v is not None and (not cur or cur["v"] != v):
+        return JSONResponse({"error": "That isn't the latest plan: go back to it first"}, 409)
     case["status"] = "awaiting_call_approval"  # claim it now so a double click can't start two calls
-    _launch(case, orchestrator.call_again(case))
+    _launch(case, orchestrator.call_again(case, v))
     return {"ok": True, "case_id": case_id}
 
 
