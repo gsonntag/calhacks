@@ -157,7 +157,7 @@ Code: `remy/voice/` (`media.py`, `cartesia_ws.py`, `desk.py`, `heard.py`, `prono
 [`docs/voice.md`](docs/voice.md). Voice and pronunciation demo: `/voice.html`.
 
 ### Bright Data (hospital policies and prices)
-- **Policy database** (`policydb/`, committed as crawl evidence): 12 Bay Area hospitals. SERP API finds each
+- **Policy database** (`policydb/`, committed as crawl evidence): 27 hospitals: the 12 Bay Area hospitals with verified tiers, plus 15 major US hospitals crawled on 2026-10-25 (verified tiers at Mayo Clinic, Cleveland Clinic, Northwestern Memorial, Ronald Reagan UCLA and Michigan Medicine; the other 10 are stored with their sources but state no fixed-percent tier, so they give no discount). SERP API finds each
   hospital's financial-assistance policy, Web Unlocker fetches the page and its PDFs, Claude extracts the
   discount tiers and payment-plan rules with quotes, code verifies each quote against the fetched text, and
   SQLite keeps versions. Rechecks compare content hashes and re-extract only on change. All 12 have verified

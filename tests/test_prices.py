@@ -114,7 +114,7 @@ def test_truncation_check():
 
 
 def test_sources_cover_registry():
-    assert set(price_sources.SOURCES) == {h.id for h in registry.SEED}
+    assert set(price_sources.SOURCES) <= {h.id for h in registry.SEED}  # newer hospitals may have a policy but no price file yet
 
 
 def test_discover_demotes_translated_documents_and_flyers():
