@@ -32,11 +32,12 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     acct = f"bill · acct {bill.get('account_number', '?')}"
     billed = float(bill["amount_due"])
     credits = billcheck.bill_credits(bill)
-    # Insured patients get the duplicate-line check too: their share comes from the insurance statement, so the
-    # balance doesn't change, but a line billed twice is its own mistake and is reported apart from insurance.
-    # The posted-price check stays self-pay only: the insurer, not the list price, sets an insured patient's share.
-    corrections = [c for c in billcheck.line_corrections(bill, case.get("hospital", {}).get("name"))
-                   if not insured or c["kind"] == "duplicate_line"]
+    # Every bill gets the line checks. Insured: the share comes from the insurance statement, so the balance
+    # doesn't change, but a line billed twice or above the hospital's own posted price is its own mistake (the
+    # claim was built on it) and is reported apart from the insurance gap. Drug lines are compared only when the
+    # price file's unit converts to the HCPCS unit (billcheck.posted_unit_price); the rest are listed as skipped.
+    review = billcheck.line_review(bill, case.get("hospital", {}).get("name"))
+    corrections = review["corrections"]
     line_total = round(sum(c["amount"] for c in corrections), 2)
     if insured:
         claim = f"{eob.get('insurer', 'insurance statement')} · claim {eob.get('claim_number', '?')}"
@@ -71,16 +72,19 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
                "Uninsured: your share is the bill's own charges, so each line is checked instead")
 
     r.step("lines", "Check the bill's lines", "running")
+    checked = ([(f"{review['compared']} line{'s' if review['compared'] != 1 else ''} compared with the hospital's "
+                 f"posted prices", f"{review['table']} price file")] if review["table"] else [])
+    checked += [(f"Line {s['line']} ({s['code']}) not compared: {s['why']}", "unit check") for s in review["skipped"]]
     if corrections:
         r.step("lines", "Check the bill's lines", "flag",
                f"{len(corrections)} line error{'s' if len(corrections) > 1 else ''}: ${line_total:,.0f} too high",
-               [(c["detail"], c["source"]) for c in corrections])
+               [(c["detail"], c["source"]) for c in corrections] + checked)
         for c in corrections:
             title = (f"{c['code']} billed twice" if c["kind"] == "duplicate_line"
                      else f"{c['code']} charged above the hospital's posted price")
             r.finding(f"{c['kind']}-{c['line']}", title, c["amount"], [c["detail"]], c.get("url") or c["source"])
     else:
-        r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices")
+        r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices", checked)
 
     r.step("bank", f"Pull your bank history ({bank_name})", "running")
     txns = await bank.transactions(account_id)

@@ -27,9 +27,9 @@
     "collection_agency": "",
     "collection_phone": "",
     "line_items": [
-      {"code": "99284", "description": "Emergency dept visit, high severity", "amount": 3150.00},
+      {"code": "99284", "description": "Emergency dept visit, high severity", "amount": 3184.00},
       {"code": "74177", "description": "CT abdomen and pelvis with contrast", "amount": 3890.00},
-      {"code": "80053", "description": "Comprehensive metabolic panel", "amount": 420.00},
+      {"code": "80053", "description": "Comprehensive metabolic panel", "amount": 386.00},
       {"code": "85025", "description": "Complete blood count", "amount": 190.00},
       {"code": "96374", "description": "IV push, single drug", "amount": 610.00},
       {"code": "J2405", "description": "Ondansetron injection", "amount": 440.00}

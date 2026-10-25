@@ -37,7 +37,43 @@ codes taken from the hospital's own CMS price-transparency file (see [Real price
 All Bright Data traffic goes through one function, `billback/integrations/brightdata.py:request()`, and every
 request made during a crawl goes through `billback/policies/crawl.py:Crawl`, which writes a `crawl_log` row
 (product, URL, status, bytes, latency), saves the raw response under `policydb/raw/`, enforces a per-crawl
-request budget, and streams an event to the dashboard.
+request budget (`HARD_CAP` = 10, retries included, whatever the caller asks for), and streams an event to the
+case page.
+
+## Live on the case page
+
+A case reads the stored policy (instant) unless it has to go live. It goes live in three cases, and each one
+streams into the Bright Data agent's panel on the case page, one line per request:
+
+- **The hospital isn't in the policy DB:** a full crawl (SERP API, Web Unlocker, Claude, quote check), saved
+  for next time.
+- **The stored policy is stale** (`agents/policy.py:staleness`): stored as "no tiers" and last tried more
+  than 6 hours ago (`NO_TIERS_RETRY_HOURS`), or last checked more than 30 days ago (`STALE_DAYS`). A "no tiers"
+  hospital is crawled again from Google (refetching the same documents would find nothing new), with its URLs
+  on record as the fallback. Any other is rechecked (same documents, hash compare). Before this, a "no tiers"
+  result was never retried, so Saint Francis (a Spanish application form) and Stanford stayed wrong forever.
+  Failed attempts count as tries, so a hospital that keeps failing isn't paid for on every case.
+- **"Recheck now"** under the panel (`POST /api/cases/{id}/policy/recheck`): the same refresh, on demand. It
+  says whether the rules this case's plan uses still hold; a changed policy is shown, not applied (a new case
+  applies it). One at a time per case, at most 5 per case.
+
+What each line shows (`policies/crawl.py`, `agents/policy.py:streamer`): the tool (SERP API or Web Unlocker),
+the URL, and the outcome: **found** (size, seconds), **empty**, **blocked**, **timed out**, **rate-limited**,
+**not found** or **server error**, plus "request n of at most 10". How failures are handled, in the open:
+
+| What happened | What the crawl does |
+|---|---|
+| Timeout, 429, 5xx | Retried once as a second numbered request (the client's hidden retry is off for crawls) |
+| Google unreachable (blocked, or timed out twice) | Falls back to the policy URLs on record, fetched with Web Unlocker |
+| Google gives no official page | A second search (`site:<domain> ...`); then the URLs on record |
+| A page blocked or empty | Next candidate page |
+| A PDF blocked, timed out or not a PDF | Skipped; the crawl goes on with the other documents |
+| The 10-request cap reached | Stops; goes on with the documents already fetched, if any |
+| The whole live attempt fails (or 300 s pass) | The stored copy is used, labelled "the live check failed"; a new hospital gets no discount |
+
+Each fallback is its own line ("Fallback: ... → ..."), and the verify line lists the quotes it accepted and
+rejected with their source URLs. Tests: `tests/test_live_crawl.py` (Bright Data and Claude faked with replies
+in the real shapes; nothing goes to the network).
 
 ## File map
 
@@ -54,7 +90,7 @@ request budget, and streams an event to the dashboard.
 | `billback/policies/crawl.py` | Crawl session: logging, artifacts, budget, events |
 | `billback/policies/compare.py` | Same bill through every stored policy |
 | `billback/policies/routes.py` | FastAPI router: `/api/hospitals`, `/api/hospitals/{id}`, `/api/compare`, `/api/hospitals/{id}/recheck`, raw artifacts |
-| `billback/agents/policy.py` | Case flow: DB lookup, else live crawl, else (Bright Data not configured) the labelled offline test fixture |
+| `billback/agents/policy.py` | Case flow: DB lookup (refreshed live first when stale), else live crawl, else (Bright Data not configured) the labelled offline test fixture; "Recheck now" |
 | `scripts/crawl_policies.py` | CLI used to seed and recheck the DB |
 | `web/hospitals.html` | The policy DB page and the comparison |
 | `tests/test_policies.py` | Offline tests using the committed crawl artifacts as fixtures |
@@ -343,8 +379,12 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
   those and retries with a `site:` query, which needs the hospital's domain to be known.
 - **Request counting.** `crawl_log` has one row per logical request; the client retries a 429/5xx once, so the
   billed count can be slightly higher.
-- **Rechecks are on demand** (CLI, API, button), not scheduled; a cron entry running `crawl_policies.py recheck`
-  is all that's needed.
+- **Rechecks are on demand** (CLI, API, the hospitals page, "Recheck now" on a case) or triggered by a case
+  that uses a stale policy, not scheduled; a cron entry running `crawl_policies.py recheck` is all that's
+  needed. The CLI's `recheck` still refetches the same documents even for a "no tiers" hospital; the API, the
+  hospitals page and the case flow crawl those again from Google.
+- **The live path hasn't run against Bright Data since it was built** (credits rule): it is tested with replies
+  in the real shapes (`tests/test_live_crawl.py`), and needs one live rehearsal.
 - Income is compared to the 2025 HHS poverty guidelines (`finance.FPL_*`).
 - **"All patients" readings to check.** MarinHealth ("Full charity care (no payment) is for all patients at
   400% or less of the FPL") and El Camino ("full charity care to patients whose Family Income is at or below
@@ -357,4 +397,24 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
 - **Price tables are a curated subset.** About 67 codes, one representative line per code (outpatient,
   facility, no modifiers); other lines with the same code are counted and up to 3 are listed. Negotiated rates
   are what the file states for that line; a real allowed amount also depends on the plan, bundling and units.
-  The tables aren't wired into the bill check yet (`billback/prices.py` is ready for it).
+- **Drug lines are compared only when the units convert.** A drug's HCPCS code is per a dose (J2405: 1 mg)
+  and files price per what they stock (CPMC: 12.25 mL). Mass to mass and volume to volume are converted; a mg
+  dose priced per mL or per "each" is skipped (that needs the concentration) and listed as not compared.
+
+### Where the tables are used: the bill's line check
+
+`billback/billcheck.py:line_review` checks every bill line, insured or self-pay, against the hospital's table:
+a line above the posted gross charge × units is a `price_above_posted` finding with the price file as its
+source. Drug lines go through `posted_unit_price`: compared only when the file's unit (`drug_unit`,
+`drug_unit_type`: ME mg, GR g, ML mL) converts to the HCPCS unit without knowing the concentration. Self-pay,
+the line errors set the share; insured, they are reported apart from the insurance gap (the statement already
+set the share, so the balance doesn't change, but the claim was built on a wrong line).
+
+- Lena (`demo/scenarios/lena-johnmuir`, insured): 71275 billed $6,200, John Muir's posted gross $5,377.50:
+  $822.50, and the insurance finding is the rest ($25,829.55). Her morphine line (file: per 1 mL; HCPCS: per
+  10 mg) is not compared.
+- The old sample bill (`demo/case.json`, CPMC, insured): J2405 $440 against the file's "$16.33" is **not**
+  flagged (per 12.25 mL vs per 1 mg). Its made-up 80053 charge ($420) was $34 above CPMC's posted $386, so
+  the demo data was aligned to the real file: 80053 is now $386 and 99284 $3,184 (posted $5,214), same $8,700
+  total, PDFs regenerated. The sample bill has no line flag, and its findings ($7,600 insurance, $500 payment)
+  match the replays and pitch.
