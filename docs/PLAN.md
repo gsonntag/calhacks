@@ -4,17 +4,16 @@ Working branch: `after-david-takeover`. Backup of everything before: `pre-david-
 left exactly as submitted (6 PM deadline, history cleaned for judging) until Gavin says otherwise. Push new
 work to `after-david-takeover`, never to `master`.
 
-## Open handoff items (2026-10-25 late night)
+## Open handoff items (updated 2026-10-25, 06:50)
 
-- **Merge call speed:** branch `worktree-agent-aff90078fb2699c8e` (backed up as `call-speed-rebased` on GitHub)
-  is done and tested (242 passing on its own). It overlaps only `billback/agents/caller.py`; merge it into
-  `after-david-takeover` once the session editing caller.py has committed, run the tests, push. Then rehearse
-  the new streaming player in `web/rep.html` in Chrome once Cartesia has credits again.
+- **Call speed is merged** (e1fa24f, pushed). Still to do: rehearse the new streaming player in
+  `web/rep.html` in Chrome once Cartesia has credits again.
 - **Cartesia is out of credits** (HTTP 402). Phone path down; desk mode uses the browser voice until topped up.
+- **Next to build:** item 5 below (Bright Data agent: real prices), then step 4's live call screen.
 - **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/`. Uploading
   needs a server with API keys. Only Rosa and Marcus have Nessie bank accounts; Dana, Amara, Lena don't yet.
-- **Contacts:** `billback/contacts.py` + `policydb/contacts/` (merged). Step 3's "Who we'll call" can use
-  `contacts.for_case(case)`.
+- **Contacts:** `billback/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
+  we'll call" still takes the number from the bill; it can use `contacts.for_case(case)`.
 
 ## Rule: paid API credits
 
@@ -47,8 +46,8 @@ bank history and insurer stay synthetic.
 
 ## Rough version (build now, in order)
 
-Status (2026-10-25, 06:10): 1–4 built · 5 not built ·
-6 built (step 3).
+Status (2026-10-25, 06:50): 1–4 built · 5 not built · 6 built (step 3). Outside this list: step 5 built
+(offline), step 4's live call screen not built, call speed merged. 281 tests pass.
 
 1. **Fold New case into Cases.** *(Built.)* Cases is home, with a "+ New case" button that opens the chat intake. With
    no cases yet, go straight to the chat. Top bar: Cases · Hospitals · Under the hood.
@@ -83,7 +82,7 @@ Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
   its versions, the call transcript). Nothing an agent did disappears.
 - **Design rule:** anything that needs the user shows up inside the flow, in its step, never in a separate
   box at the top of the page. (The call approval card is gone: "Call now" is inside step 3. The payment-plan
-  approval after the call is still a card above the steps, until step 5 is rebuilt.)
+  approval after the call is still a card above the steps; step 5 is built but didn't move it.)
 
 ### Asking and correcting in step 2 (in place, no general chat)
 Users don't know what "Nessie" or "Bright Data" are, so they never have to pick an agent:
@@ -157,8 +156,9 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   insurance statement, the bill, matched bank payments, duplicate charges, the math; Bright Data: policy
   quotes, eligibility, plan terms, income) and is told to answer the question and explain the numbers.
   Offline (no Claude key) it still just repeats the finding's proof. Tested by Gavin on 8002 with Claude on.
-- **Ask is hard to find:** it shows only after you expand a finding, only once a plan exists (older cases and
-  replays never show it). Proposed, not built: an Ask button on the finding row, shown once that agent is done.
+- **Ask is on the finding row** (commit 916731b): it shows once that finding's agent is done, without
+  expanding the finding. Before a plan exists it's greyed out ("Available once the plan is ready"). Replays
+  don't show it.
 - **Uninsured call brief fixed:** `caller.build_brief` and the offline call script no longer crash on an
   empty insurance statement.
 
@@ -203,12 +203,13 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   and can disagree with "call again now"; corrections ("This is wrong") in step 5 work in the API but have
   no button there; replays don't have step 5 yet. The live call agent's prompt was not changed.
 
-### Call speed (in progress)
-Reply latency is 1.4–2.7 s per turn (Claude 1.3–2.6 s). Fixes being built: stream Claude's reply into
-Cartesia sentence by sentence, start Claude on Ink's `turn.eager_end`, record outcomes in the background
-instead of a second Claude call, prompt caching. Goal: first audio under ~1 s after the rep stops, in both
-the phone path and desk mode. Moss (Cal Hacks sponsor) was evaluated and skipped: it's fast retrieval, not
-LLM latency.
+### Call speed *(built, merged 2026-10-25, commit e1fa24f)*
+Claude's reply streams into Cartesia sentence by sentence, Claude starts on Ink's `turn.eager_end`, outcomes
+are recorded off the critical path instead of with a second Claude call, and prompts are cached. Desk mode
+streams too (`billback/voice/desk.py`). Measured live before the credits ran out: phone path 1.0–2.7 s →
+0.44–1.1 s (10 of 11 turns under 0.8 s); desk mode median 3.0 s → 0.93 s. Details in `docs/voice.md`.
+Not done: a Chrome rehearsal of the new desk player in `web/rep.html` (needs Cartesia credits). Moss (Cal
+Hacks sponsor) was evaluated and skipped: it's fast retrieval, not LLM latency.
 
 ### Data on hand (added tonight)
 - 12 hospitals in the policy DB (8 new Bay Area); real price tables for 11 in `policydb/prices/`
@@ -218,7 +219,9 @@ LLM latency.
   lena-johnmuir. Making rosa-real the main demo case means updating demo/case.json, PDFs, Nessie seed, tests,
   docs and re-recording the replay.
 - Nessie agent bugs: fixed and merged, commit 7fa5967 (loose payment matching, crash on uninsured patients,
-  credited payments reported as missed), not merged yet.
+  credited payments reported as missed).
+- Poverty-line figures are the 2026 HHS guidelines (commit 4d4fe21); every case's FPL % dropped a few
+  points, and no discount, balance or plan changed.
 
 ### Defaults chosen when building step 3 (2026-10-25; data format in `docs/plan-format.md`)
 - **Planner chat refuses:** changing facts (points to "This is wrong"), asks no finding backs, agreeing to pay
@@ -233,21 +236,25 @@ LLM latency.
   step 3 show the asks from the old approval.
 
 ### Still to design
-- Cases page: drop the totals cards and the "Needs you" box; cases needing you go to the top of the list.
 - A list of UI polish changes for steps 2–3 (to collect, then one polish pass).
+
+(Done: the Cases page lost its totals cards and "Needs you" box; cases needing you sort to the top, commit
+5046d09.)
 
 ## Later (when there's time)
 
 From the audit, roughly in priority order. Details and sources are in `docs/ideas-backlog.md`.
 - Collections and credit-report law check (California: no credit reporting, no lawsuit before day 180,
-  application must come with collection notices). Rosa's "final notice" makes it a strong demo moment.
+  application must come with collection notices). Rosa's "final notice" makes it a strong demo moment. The
+  rules are researched in `docs/legal-check.md` (section 5, HSC 127425); the check itself isn't built.
 - Split "$7,600 insurance" into the two real errors: $3,660 paid but not credited, $3,940 network discount.
 - 12-month medical spending from the bank for the high-medical-cost write-off (today only this bill counts).
 - Medicare-rate cap for low-income/uninsured patients (also unlocks Chinese Hospital's "% of Medicare" tiers).
-- Say in the UI that the plan's "under 4% of income" cap is our choice, not the hospital's policy or law.
 - SF General has no discount tiers in the policy DB, so it always says "no discount".
-- Verify before showing anything legal: 501(r) for UCSF/SF General, NCCI on facility claims, 180-day
-  appeal window, California itemized-bill rule, Marcus's Medi-Cal eligibility.
+- Legal claims are checked in `docs/legal-check.md` (commit 82b3a21): 501(r) for UCSF/SF General, NCCI on
+  facility claims (partly right), 180-day appeal window (insurer appeals only), California itemized-bill
+  rule (partly right), Marcus's Medi-Cal (probably not eligible). Fix the app and pitch wording to match
+  before showing any of it.
 - Roadmap (pitch only): the separate ER physician bill (No Surprises Act), insurance-denial appeals.
 
 ## Data on hand
