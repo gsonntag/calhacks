@@ -62,6 +62,11 @@ def stream_twiml(leg: Leg) -> str:
     return twilio.stream_twiml(twilio.ws_url(STREAM_PATH), {"token": leg.token})
 
 
+def twiml_url(leg: Leg) -> str:
+    """Where Twilio fetches the leg's stream TwiML when the call is answered (routes.twilio_agent)."""
+    return f"{config.PUBLIC_BASE_URL.rstrip('/')}/voice/twilio/agent?token={leg.token}"
+
+
 def status_url(leg: Leg) -> str:
     return f"{config.PUBLIC_BASE_URL.rstrip('/')}/voice/twilio/status?token={leg.token}"
 
@@ -138,7 +143,7 @@ async def _authorize_direct(case: dict, voice: voices.Voice, used: list[Leg]) ->
                        label="patient"))
     used.append(leg)
     try:
-        brain.call_sid = leg.call_sid = await twilio.create_call(phone, stream_twiml(leg), status_url(leg))
+        brain.call_sid = leg.call_sid = await twilio.create_call(phone, twiml_url(leg), status_url(leg))
     except Exception as e:
         bus.emit(case["id"], "warning", "caller", text=f"Couldn't call the patient for verbal authorization: {e}")
         return None
@@ -162,7 +167,7 @@ async def _direct_call(case: dict, session: caller.CallSession, voice: voices.Vo
                        label="hospital"))
     used.append(leg)
     try:
-        leg.call_sid = await twilio.create_call(config.REP_PHONE_NUMBER, stream_twiml(leg), status_url(leg))
+        leg.call_sid = await twilio.create_call(config.REP_PHONE_NUMBER, twiml_url(leg), status_url(leg))
     except Exception as e:
         raise DialError(str(e)) from e
     bus.emit(case["id"], "call_ready", "caller", mode="phone", transport="twilio", call_id=session.id,
