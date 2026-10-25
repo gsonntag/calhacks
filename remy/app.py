@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import auth, config, events, finance, followups, llm, onboarding, orchestrator, tiger
+from . import auth, config, events, finance, followups, llm, offline, onboarding, orchestrator, tiger
 from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
 from .integrations import cartesia, nessie
@@ -281,6 +281,8 @@ _bank_cache: dict[tuple[str, str], dict | None] = {}
 
 async def _bank_income(first: str | None, last: str | None) -> dict | None:
     """Take-home income from the patient's Nessie account (same finance.income a case uses), or None."""
+    if config.OFFLINE:
+        return offline.bank_income(first, last)
     if not (config.NESSIE_API_KEY and first and last):
         return None
     key = (first.lower(), last.lower())
@@ -537,6 +539,8 @@ async def talk_turn(case_id: str, audio: UploadFile | None = File(None), heard: 
             _stt_off_until = time.time() + 600
     if not text.strip() and heard.strip():
         text, by = heard.strip(), "browser"
+    if not text.strip() and config.OFFLINE:  # no-wifi demo: no speech service, so a demo patient line
+        text, by = offline.demo_utterance(case), "demo"
     text = text.strip()[:500]
     if not text:
         return {"heard": "", "heard_by": None, "reply": "Sorry, I didn't catch that. Hold the button and try again.",
@@ -837,7 +841,8 @@ async def reset():
 @app.get("/api/replay")
 async def replay(scenario: str = "default"):
     """Latest recorded run (data/), else the committed fallback recording (demo/)."""
-    for f in (events.DATA_DIR / f"replay_{scenario}.json", config.DEMO_DIR / f"replay_{scenario}.json"):
+    for f in (events.DATA_DIR / f"replay_{scenario}.json", config.ROOT / "data" / f"replay_{scenario}.json",
+              config.DEMO_DIR / f"replay_{scenario}.json"):
         if f.exists():
             return Response(f.read_text(), media_type="application/json")
     return JSONResponse({"error": "no recording yet: finish one case first"}, 404)

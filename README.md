@@ -30,6 +30,23 @@ uv run pytest -q                # offline, no keys needed
 case, the bank mirror in `demo/`, the policy DB committed in `policydb/`, a scripted caller instead of
 Claude, the browser's voice instead of Cartesia. `GET /api/mode` shows which integrations are live.
 
+**No-wifi demo.** `REMY_OFFLINE=1 uv run uvicorn remy.app:app --port 8000` runs the whole flow on one laptop
+with no network, even with a full `.env` (every key is ignored). On top of the offline mode above, mocks in
+`remy/offline.py` cover what needs a network or a second person:
+
+| Feature | Online | No-wifi demo |
+|---|---|---|
+| Fonts and icons | Google Fonts | `web/fonts/` (copied by `scripts/vendor_fonts.py`) |
+| The call | a teammate plays billing on the rep console | billing ("Diane") is played automatically; watch it on the case page |
+| Mic (Ask Remy) | Cartesia Ink or Chrome's speech service | a demo voice says the next sensible thing ("Call them for me", "Yes, go ahead", "Where do things stand?") |
+| Get started bank prefill | Nessie | the sample patients' bank histories in `demo/` (Rosa Martinez, Marcus Lee, ...) |
+| Income by month | Tiger Data | computed from the same transactions |
+| Recheck now (case page, Hospitals) | Bright Data | compared with the stored copy, nothing fetched |
+| Voice samples | Cartesia Sonic | the browser's voice |
+
+Every mock says so where it shows, and an **Offline demo** chip sits in the top bar. The demo keeps its cases
+and profiles in `data/offline/`, so its reset never touches live data.
+
 **Live.** Fill in what you have:
 
 | Variable | For |

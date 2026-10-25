@@ -11,7 +11,7 @@ import time
 import uuid
 from datetime import date, timedelta
 
-from . import config, events, finance, followups, llm, voice
+from . import config, events, finance, followups, llm, offline, voice
 from .agents import auditor, caller, decide, planner, policy, scorecard
 from .events import bus
 from .harness import gate
@@ -219,7 +219,9 @@ async def _desk_call(case: dict, brief: dict) -> dict:
     caller.sessions[session.id] = session
     case["call_id"] = session.id
     bus.emit(case["id"], "call_ready", "caller", mode="desk", call_id=session.id,
-             rep_url=f"/rep.html?call={session.id}")
+             rep_url=f"/rep.html?call={session.id}", auto_rep=config.OFFLINE)
+    if config.OFFLINE:  # no-wifi demo: billing is played by remy/offline.py instead of a teammate on rep.html
+        asyncio.create_task(offline.play_billing(case, session))
     await _wait_call(case)
     case["call_outcome"].update(session.outcome)
     await _fill_outcome(case, "desk")

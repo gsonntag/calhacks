@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
-from .. import llm
+from .. import config, llm
 from ..agents import policy as policy_agent
 from ..auth import ADMIN
 from ..integrations import brightdata
@@ -42,7 +42,7 @@ async def hospitals():
     return {"hospitals": [{"id": h.id, "name": h.name, "system": h.system, "city": h.city,
                            "versions": len(db.versions(h.id)), "current": _summary(db, h.id)} for h in db.hospitals()],
             "bright_data_requests": db.request_counts(),
-            "can_recheck": brightdata.live() and llm.available(),
+            "can_recheck": (brightdata.live() and llm.available()) or config.OFFLINE,
             "can_add": brightdata.live() and brightdata.serp_live() and llm.available()}
 
 
@@ -85,6 +85,11 @@ async def recheck(hospital_id: str):
     """Refetch through Bright Data Web Unlocker, compare content hashes, re-extract only if changed. A hospital
     stored with no verified tiers is crawled again from Google instead (refetching the same documents would find
     nothing new), with its URLs on record as the fallback."""
+    if config.OFFLINE:  # no-wifi demo: compared with the stored copy, nothing fetched
+        cur = PolicyStore().current(hospital_id)
+        if not cur:
+            raise HTTPException(404, "hospital not crawled yet")
+        return {"hospital_id": hospital_id, "changed": False, "version": cur["version"], "requests": 0, "offline": True}
     if not (brightdata.live() and llm.available()):
         raise HTTPException(503, "Bright Data / Anthropic keys not configured on this server")
     db = PolicyStore()

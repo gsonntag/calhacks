@@ -5,6 +5,19 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# No-wifi demo (REMY_OFFLINE=1): every integration runs in its offline mode even with a full .env, and the parts
+# that need a network or a second person are played by mocks (remy/offline.py). Blanked before .env is read:
+# load_dotenv never overrides a variable that is already set.
+OFFLINE = (os.getenv("REMY_OFFLINE") or os.getenv("BILLBACK_OFFLINE") or "").strip().lower() in ("1", "true", "yes", "on")
+LIVE_SETTINGS = ("ANTHROPIC_API_KEY", "NESSIE_API_KEY", "BRIGHTDATA_API_KEY", "BRIGHTDATA_UNLOCKER_ZONE",
+                 "BRIGHTDATA_SERP_ZONE", "CARTESIA_API_KEY", "CARTESIA_AGENT_ID", "CARTESIA_FROM_NUMBER_ID",
+                 "CARTESIA_WEBHOOK_SECRET", "CARTESIA_TOOL_TOKEN", "TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN",
+                 "TWILIO_FROM_NUMBER", "TWILIO_TWIML_APP_SID", "REP_PHONE_NUMBER", "PATIENT_PHONE_NUMBER",
+                 "TIGER_DATABASE_URL", "CENSUS_API_KEY", "REMY_REQUIRE_LIVE", "BILLBACK_REQUIRE_LIVE")
+if OFFLINE:
+    for _k in LIVE_SETTINGS:
+        os.environ[_k] = ""
 load_dotenv(ROOT / ".env")
 
 
@@ -63,9 +76,10 @@ TIGER_DATABASE_URL = _secret("TIGER_DATABASE_URL")
 ADMIN_TOKEN = _secret("REMY_ADMIN_TOKEN") or _secret("BILLBACK_ADMIN_TOKEN")
 # Judging mode: refuse to start without the live keys, and never use the sample policies.
 REQUIRE_LIVE = env("REQUIRE_LIVE").strip().lower() in ("1", "true", "yes", "on")
-DATA_DIR = ROOT / "data"
+# the offline demo keeps its own cases and profiles, so a demo reset never touches live data
+DATA_DIR = ROOT / "data" / "offline" if OFFLINE else ROOT / "data"
 DEMO_DIR = ROOT / "demo"
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def mode() -> dict:
@@ -77,6 +91,7 @@ def mode() -> dict:
         "cartesia": bool(CARTESIA_API_KEY),
         "twilio": bool(TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER),
         "tiger": bool(TIGER_DATABASE_URL),
+        "offline": OFFLINE,
     }
 
 
