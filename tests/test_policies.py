@@ -303,6 +303,37 @@ async def test_crawl_falls_back_to_hcai_when_site_links_no_policy_pdf(monkeypatc
     assert any(l["note"] == "plain HTTPS (not Bright Data)" and l["product"] is None for l in db.crawl_log("zsfg"))
 
 
+def replay_hcai(monkeypatch, hid: str) -> list[str]:
+    """Serve the committed HCAI lookup page and filed PDF(s) for this hospital in place of plain HTTPS."""
+    from billback.policies import hcai
+    filed = {d["url"]: (DB.root / next(a for a in d["artifacts"] if a.endswith(".pdf"))).read_bytes()
+             for d in current(hid)["documents"] if d["role"] == "state_filed"}
+    page = next((DB.raw / hid).glob("hcai-page-*.html")).read_bytes()
+    plain = []
+
+    async def fake_get(crawl, url, timeout=60):
+        plain.append(url)
+        return page if url == hcai.page_url(SEED[hid].hcai) else filed[url]
+    monkeypatch.setattr(hcai, "_get", fake_get)
+    return plain
+
+
+async def test_recheck_keeps_the_hcai_copy_even_when_the_site_links_a_pdf(monkeypatch, tmp_path):
+    """Saint Francis's site links a PDF (a Spanish application form), so "only when no policy document" would
+    drop the HCAI copy on recheck, hash the policy as changed and re-extract it without its tier."""
+    shutil.copytree(DEFAULT_DIR, tmp_path / "db")
+    db = PolicyStore(tmp_path / "db")
+    calls = replay_brightdata(monkeypatch, "ucsf-saint-francis")
+    plain = replay_hcai(monkeypatch, "ucsf-saint-francis")
+
+    async def no_claude(system, prompt, **k):
+        raise AssertionError("an unchanged policy must not be re-extracted")
+    out = await monitor.recheck(db, "ucsf-saint-francis", json_out=no_claude)
+    assert out["changed"] is False and len(plain) == 2
+    assert not any("hcai.ca.gov" in c for c in calls)  # Bright Data never sent to .gov
+    assert db.current("ucsf-saint-francis")["status"] == "ok"
+
+
 # ---- monitor ----
 
 async def test_recheck_detects_change_only_when_content_changes(monkeypatch, tmp_path):

@@ -206,7 +206,7 @@ Francis Memorial (now UCSF Health). Status as `scripts/crawl_policies.py show` p
 | MarinHealth Medical Center, Greenbrae | help-paying-your-bill + community-benefit pages; Financial Assistance Policy PDF; 2024 program letter PDF | "all patients" <= 400% FPL: 100% (see limitations); insured high medical cost <= 400% FPL: 100% |
 | El Camino Hospital, Mountain View | Financial assistance eligibility/procedures PDF (uploaded 2022-04), found directly by Google | <= 400% FPL: 100% ("full charity care to patients whose Family Income is at or below 400%") |
 | Stanford Health Care, Palo Alto | stanfordhealthcare.org health-insurance-plans page; + Charity Care Policy as filed with HCAI (22 pp, effective 2025-03-12, plain HTTPS) | uninsured <= 400% FPL: 100%; insured <= 400% FPL with out-of-pocket > 10% of income: 100% (from the HCAI-filed policy). Version 1 had **no tiers**: Google's results had no Stanford Health Care policy (the top hit was Stanford Children's, a different hospital, correctly not treated as official), so only an insurance page was fetched |
-| UCSF Health Saint Francis Hospital, San Francisco | a Spanish St. Mary's financial-assistance application PDF | **no tiers.** First crawled as "Saint Francis Memorial Hospital (Dignity Health)": no official page, because Dignity sold the hospital to UCSF Health in 2024 and neither dignityhealth.org nor CommonSpirit's price index lists it any more. Re-crawled under UCSF's name: Google's only official hit was the Spanish application form, which the old ranking didn't demote |
+| UCSF Health Saint Francis Hospital, San Francisco | a Spanish St. Mary's financial-assistance application PDF; + Charity Care Policy as filed with HCAI (12 pp, effective 2026-01-16, plain HTTPS) | self-pay <= 400% FPL: 100% (from the HCAI-filed policy); insured with out-of-pocket > 10% of income: written off, stored as verified "other relief" (no FPL limit stated). Version 1 had **no tiers**: first crawled as "Saint Francis Memorial Hospital (Dignity Health)": no official page, because Dignity sold the hospital to UCSF Health in 2024 and neither dignityhealth.org nor CommonSpirit's price index lists it any more. Re-crawled under UCSF's name: Google's only official hit was the Spanish application form, which the old ranking didn't demote |
 
 Crawls in this round: 12 (the cap), 8 first crawls plus 4 re-runs: Stanford (after the 429), Saint Francis
 (after the rename), John Muir twice. John Muir's first crawl picked `johnmuirhealth.com/secure.html` (a
@@ -365,9 +365,12 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
   policy with HCAI, but Web Unlocker refuses government domains ("classified as Government and blocked"). The
   HCAI attachment Google happens to return is still not fetched (for Stanford it was Stanford Children's, a
   different hospital). Instead, a registry entry can name its page on HCAI's Hospital Fair Pricing Policy Lookup
-  (`Hospital.hcai`); when the hospital's own pages link no policy document, `policies/hcai.py` reads that page
+  (`Hospital.hcai`); for those hospitals `policies/hcai.py` always reads that page
   and fetches the newest filed Charity Care / Discount Payment PDF over **plain HTTPS** (logged in `crawl_log`
-  with no Bright Data product, role `state_filed`). Rechecks do the same. Stanford and ZSFG got their tiers
+  with no Bright Data product, role `state_filed`), alongside whatever the site gave. Always, not only when the
+  site links no policy PDF: Saint Francis's site links one, and it is a Spanish application form; and crawls
+  and rechecks must fetch the same sources or an unchanged policy hashes as changed. Stanford, ZSFG and Saint
+  Francis got their tiers
   this way (`scripts/crawl_policies.py hcai <id>`: stored documents rebuilt from committed artifacts + the
   HCAI copy, re-extracted, no Bright Data request).
 - **Verification proves the words, not the reading.** A verified quote is really in the hospital's document and

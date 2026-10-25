@@ -1,5 +1,5 @@
 {
- "exported_at": "2026-10-25T09:17:46+00:00",
+ "exported_at": "2026-10-25T09:38:22+00:00",
  "bright_data_requests": {
   "serp": 23,
   "unlocker": 73
@@ -451,6 +451,29 @@
       "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=d18c2633-51a0-4488-87ad-9230baaa2af8"
      ],
      "fetched_at": "2026-10-25T09:17:46+00:00"
+    }
+   }
+  },
+  {
+   "id": "hcai-20261025T093815-20dc65",
+   "kind": "hcai",
+   "started_at": "2026-10-25T09:38:15+00:00",
+   "finished_at": "2026-10-25T09:38:22+00:00",
+   "hospitals": [
+    "ucsf-saint-francis"
+   ],
+   "summary": {
+    "ucsf-saint-francis": {
+     "version": 2,
+     "status": "ok",
+     "tiers": 1,
+     "tiers_verified": 1,
+     "tiers_rejected": 0,
+     "sources": [
+      "https://sfcommunityhospitals.ucsfhealth.org/-/media/project/ucsf/sfch/pdf/saint-marys-financial-assistance-application-spanish.pdf?rev=554ba29037ed47068cfc2a69bb91d451&hash=B620C08CC4616F7659690A900CD033D2",
+      "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+     ],
+     "fetched_at": "2026-10-25T09:38:22+00:00"
     }
    }
   }
@@ -10415,6 +10438,328 @@
    "hcai": "",
    "versions": [
     {
+     "id": 18,
+     "hospital_id": "ucsf-saint-francis",
+     "version": 2,
+     "fetched_at": "2026-10-25T09:38:22+00:00",
+     "content_sha256": "b2a29745e32fc371f326704dbf6460f8a5626147f9766e2a009fb6d436e460dd",
+     "source_urls": [
+      "https://sfcommunityhospitals.ucsfhealth.org/-/media/project/ucsf/sfch/pdf/saint-marys-financial-assistance-application-spanish.pdf?rev=554ba29037ed47068cfc2a69bb91d451&hash=B620C08CC4616F7659690A900CD033D2",
+      "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+     ],
+     "documents": [
+      {
+       "url": "https://sfcommunityhospitals.ucsfhealth.org/-/media/project/ucsf/sfch/pdf/saint-marys-financial-assistance-application-spanish.pdf?rev=554ba29037ed47068cfc2a69bb91d451&hash=B620C08CC4616F7659690A900CD033D2",
+       "kind": "pdf",
+       "role": "policy_doc",
+       "sha256": "b417d1c58b3b9d9167819e431b5dafb6d265acee27da63bc82854006b374660e",
+       "nbytes": 395756,
+       "via": "unlocker",
+       "title": "St. Mary's Medical Center (SF) Instrucciones del formulario ...",
+       "pages": 5,
+       "artifacts": [
+        "raw/ucsf-saint-francis/pdf-b417d1c58b3b.pdf",
+        "raw/ucsf-saint-francis/pdf-b417d1c58b3b.txt"
+       ],
+       "found_on": "google",
+       "why": [
+        "official domain sfcommunityhospitals.ucsfhealth.org",
+        "mentions 'financial-assistance' (+4)",
+        "mentions 'application' (-3)",
+        "names the hospital (3 words)",
+        "Google rank 4 (-1)"
+       ],
+       "text_sha256": "3113b132bde027d32f8ea3660f299f1ab887c6284fa60afa9726c4c6be020124"
+      },
+      {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+       "kind": "pdf",
+       "role": "state_filed",
+       "sha256": "f7b53527a6cf514d714f00bfd1812206531564985790f0e1f727036e656e63f7",
+       "nbytes": 159464,
+       "via": "https",
+       "title": "Charity Care Policy (filed with HCAI, effective 2026-01-16)",
+       "pages": 12,
+       "artifacts": [
+        "raw/ucsf-saint-francis/pdf-f7b53527a6cf.pdf",
+        "raw/ucsf-saint-francis/pdf-f7b53527a6cf.txt"
+       ],
+       "found_on": "https://hcai.ca.gov/affordability/hospital-billing-policies/st-francis-memorial-hospital/",
+       "why": [
+        "newest Charity Care Policy on the HCAI lookup page"
+       ],
+       "text_sha256": "4684a0fcdc14bd80488d8947a67a7810ae35e49587236986ef323559e54ce03d"
+      }
+     ],
+     "discovery": {
+      "queries": [
+       "UCSF Health Saint Francis Hospital San Francisco financial assistance policy"
+      ],
+      "serp_artifacts": [
+       "raw/ucsf-saint-francis/serp-faebaae75b73.json"
+      ],
+      "candidates": [
+       {
+        "url": "https://sfcommunityhospitals.ucsfhealth.org/-/media/project/ucsf/sfch/pdf/saint-marys-financial-assistance-application-spanish.pdf?rev=554ba29037ed47068cfc2a69bb91d451&hash=B620C08CC4616F7659690A900CD033D2",
+        "title": "St. Mary's Medical Center (SF) Instrucciones del formulario ...",
+        "serp_rank": 4,
+        "kind": "official",
+        "score": 13.0,
+        "is_pdf": true,
+        "reasons": [
+         "official domain sfcommunityhospitals.ucsfhealth.org",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'application' (-3)",
+         "names the hospital (3 words)",
+         "Google rank 4 (-1)"
+        ]
+       },
+       {
+        "url": "https://syfphr.oshpd.ca.gov/SearchData.aspx?aid=12002&subtype=41&data=1",
+        "title": "POLICY ON FINANCIAL ASSISTANCE FOR UNINSURED ...",
+        "serp_rank": 6,
+        "kind": "regulator",
+        "score": 10.5,
+        "is_pdf": false,
+        "reasons": [
+         "regulator domain syfphr.oshpd.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'polic' (+2)",
+         "names the hospital (2 words)",
+         "Google rank 6 (-1.5)"
+        ]
+       },
+       {
+        "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=39576d1e-17c5-4e23-986a-e207a111f1b4",
+        "title": "St. Marys Medical Center (SF) Financial Assistance ...",
+        "serp_rank": 1,
+        "kind": "regulator",
+        "score": 9.75,
+        "is_pdf": true,
+        "reasons": [
+         "regulator domain api.hdc.hcai.ca.gov",
+         "mentions 'financial assistance' (+4)",
+         "names the hospital (2 words)",
+         "Google rank 1 (-0.25)"
+        ]
+       },
+       {
+        "url": "https://billfairly.com/es/hospital/ucsf-health-saint-francis-hospital-ca/financial-assistance",
+        "title": "Asistencia Financiera de UCSF Health Saint Francis Hospital",
+        "serp_rank": 5,
+        "kind": "other",
+        "score": 8.75,
+        "is_pdf": false,
+        "reasons": [
+         "other domain billfairly.com",
+         "mentions 'financial assistance' (+4)",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'application' (-3)",
+         "names the hospital (5 words)",
+         "Google rank 5 (-1.25)"
+        ]
+       },
+       {
+        "url": "https://www.blackhealth.org/hospitals/california/ucsf-health-saint-francis-hospital-050152/",
+        "title": "Ucsf Health Saint Francis Hospital, San Francisco CA",
+        "serp_rank": 7,
+        "kind": "other",
+        "score": 3.25,
+        "is_pdf": false,
+        "reasons": [
+         "other domain blackhealth.org",
+         "names the hospital (5 words)",
+         "Google rank 7 (-1.75)"
+        ]
+       },
+       {
+        "url": "https://www.businesswire.com/news/home/20240805335928/en/Saint-Francis-Foundation-Reaffirms-Commitment-to-Community-Health",
+        "title": "Saint Francis Foundation Reaffirms Commitment to ...",
+        "serp_rank": 2,
+        "kind": "other",
+        "score": 2.5,
+        "is_pdf": false,
+        "reasons": [
+         "other domain businesswire.com",
+         "names the hospital (3 words)",
+         "Google rank 2 (-0.5)"
+        ]
+       },
+       {
+        "url": "https://payerprice.com/hospitals/st-francis-memorial-hospital-san-francisco-050152",
+        "title": "St Francis Memorial Hospital (San Francisco), CA Prices",
+        "serp_rank": 8,
+        "kind": "other",
+        "score": 1.0,
+        "is_pdf": false,
+        "reasons": [
+         "other domain payerprice.com",
+         "mentions 'billing' (+1)",
+         "names the hospital (2 words)",
+         "Google rank 8 (-2)"
+        ]
+       },
+       {
+        "url": "https://studenthealth.ucsf.edu/sites/g/files/tkssra2706/f/wysiwyg/UC%20SHIP%20SBC%20UC%20San%20Francisco%202021-22%20updated%209.17.2021.pdf",
+        "title": "SBC Template Standard Format",
+        "serp_rank": 9,
+        "kind": "other",
+        "score": -0.25,
+        "is_pdf": true,
+        "reasons": [
+         "other domain studenthealth.ucsf.edu",
+         "names the hospital (2 words)",
+         "Google rank 9 (-2.25)"
+        ]
+       },
+       {
+        "url": "https://dcnav.sfserviceguide.org/services/401",
+        "title": "Patient Financial Services",
+        "serp_rank": 3,
+        "kind": "aggregator",
+        "score": -9.75,
+        "is_pdf": false,
+        "reasons": [
+         "aggregator domain dcnav.sfserviceguide.org",
+         "mentions 'billing' (+1)",
+         "Google rank 3 (-0.75)"
+        ]
+       }
+      ],
+      "pages": [
+       {
+        "url": "https://sfcommunityhospitals.ucsfhealth.org/-/media/project/ucsf/sfch/pdf/saint-marys-financial-assistance-application-spanish.pdf?rev=554ba29037ed47068cfc2a69bb91d451&hash=B620C08CC4616F7659690A900CD033D2",
+        "title": "St. Mary's Medical Center (SF) Instrucciones del formulario ...",
+        "serp_rank": 4,
+        "kind": "official",
+        "score": 13.0,
+        "is_pdf": true,
+        "reasons": [
+         "official domain sfcommunityhospitals.ucsfhealth.org",
+         "mentions 'financial-assistance' (+4)",
+         "mentions 'application' (-3)",
+         "names the hospital (3 words)",
+         "Google rank 4 (-1)"
+        ]
+       }
+      ],
+      "regulator_doc": {
+       "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=39576d1e-17c5-4e23-986a-e207a111f1b4",
+       "title": "St. Marys Medical Center (SF) Financial Assistance ...",
+       "serp_rank": 1,
+       "kind": "regulator",
+       "score": 9.75,
+       "is_pdf": true,
+       "reasons": [
+        "regulator domain api.hdc.hcai.ca.gov",
+        "mentions 'financial assistance' (+4)",
+        "names the hospital (2 words)",
+        "Google rank 1 (-0.25)"
+       ]
+      },
+      "hcai_slug": "st-francis-memorial-hospital"
+     },
+     "extracted": {
+      "tiers": [
+       {
+        "max_fpl_pct": 400.0,
+        "discount_pct": 100.0,
+        "applies_to": "uninsured",
+        "min_oop_pct_income": null,
+        "doc": 2,
+        "quote": "Full Charity Care Patient: A patient who: 1.  Is a Self-Pay Patient; and 2.  Has Family Income at or below 400% of the Federal Poverty Level (FPL).",
+        "limit_quote": "",
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+        "source_role": "state_filed",
+        "verified": true
+       }
+      ],
+      "other_relief": [
+       {
+        "what": "Insured patients whose out-of-pocket medical expenses in the prior 12 months exceed 10% of family income can have their patient responsibility fully written off (one-time approval).",
+        "quote": "Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family Income.",
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+        "verified": true,
+        "applies_to": "insured",
+        "max_fpl_pct": null,
+        "min_oop_pct_income": 10.0
+       }
+      ],
+      "no_collections_while_pending": true,
+      "collections_quote": "If a patient is attempting to qualify for eligibility under the policy, and is attempting in good faith to settle the outstanding bill, the hospital shall not send the unpaid bill to any collection agency or other assignee unless that entity has agreed to comply with this policy.",
+      "collections_source": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+      "payment_plan": {
+       "interest_free": true,
+       "quote": "Patients can be offered an extended payment plan. Extended payment plans will be interest-free.",
+       "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+       "max_pct_monthly_income": 10.0,
+       "cap_quote": "If hospital and patient are unable to agree on the terms of a payment plan, the default payment plan shall be a monthly payment of not more than ten percent (10%) of the patient\u2019s Family Income after excluding essential living expenses.",
+       "cap_source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+      },
+      "apply_how": "Apply via MyChart or the UCSF billing website, or call Patient Financial Services at 1-866-433-4035, ideally within 240 days of the first bill.",
+      "apply_quote": "The Financial Assistance application is available by visiting https://www.ucsfhealth.org/billing_and_records/ via MyChart or by calling Patient Financial Services at 1-866-433-4035.",
+      "notes": "Policy is UCSF Medical Center's and covers only medically necessary hospital services; separately billed physician fees, elective services, and prescriptions covered by other benefits are excluded, and approvals are time-limited (current admission, or 6 months for outpatient)."
+     },
+     "verification": {
+      "checks": [
+       {
+        "what": "tier",
+        "quote": "Full Charity Care Patient: A patient who: 1.  Is a Self-Pay Patient; and 2.  Has Family Income at or below 400% of the Federal Poverty Level (FPL).",
+        "limit_quote": "",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+        "tier": {
+         "max_fpl_pct": 400,
+         "discount_pct": 100,
+         "applies_to": "uninsured",
+         "min_oop_pct_income": null
+        }
+       },
+       {
+        "what": "other_relief",
+        "quote": "Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family Income.",
+        "verified": true,
+        "reason": "",
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+        "summary": "Insured patients whose out-of-pocket medical expenses in the prior 12 months exceed 10% of family income can have their patient responsibility fully written off (one-time approval)."
+       },
+       {
+        "what": "collections",
+        "quote": "If a patient is attempting to qualify for eligibility under the policy, and is attempting in good faith to settle the outstanding bill, the hospital shall not send the unpaid bill to any collection agency or other assignee unless that entity has agreed to comply with this policy.",
+        "verified": true,
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+       },
+       {
+        "what": "payment_plan",
+        "quote": "Patients can be offered an extended payment plan. Extended payment plans will be interest-free.",
+        "verified": true,
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+       },
+       {
+        "what": "payment_plan_cap",
+        "quote": "If hospital and patient are unable to agree on the terms of a payment plan, the default payment plan shall be a monthly payment of not more than ten percent (10%) of the patient\u2019s Family Income after excluding essential living expenses.",
+        "verified": true,
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+       },
+       {
+        "what": "apply",
+        "quote": "The Financial Assistance application is available by visiting https://www.ucsfhealth.org/billing_and_records/ via MyChart or by calling Patient Financial Services at 1-866-433-4035.",
+        "verified": true,
+        "source_url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+       }
+      ],
+      "tiers_verified": 1,
+      "tiers_rejected": 0,
+      "method": "squash-substring"
+     },
+     "tiers_verified": 1,
+     "tiers_rejected": 0,
+     "status": "ok",
+     "run_id": "hcai-20261025T093815-20dc65",
+     "is_current": 1
+    },
+    {
      "id": 13,
      "hospital_id": "ucsf-saint-francis",
      "version": 1,
@@ -10661,10 +11006,20 @@
      "tiers_rejected": 0,
      "status": "no_tiers",
      "run_id": "crawl-20261025T034545-1defec",
-     "is_current": 1
+     "is_current": 0
     }
    ],
    "checks": [
+    {
+     "id": 22,
+     "hospital_id": "ucsf-saint-francis",
+     "checked_at": "2026-10-25T09:38:22+00:00",
+     "content_sha256": "b2a29745e32fc371f326704dbf6460f8a5626147f9766e2a009fb6d436e460dd",
+     "changed": 1,
+     "version_id": 18,
+     "note": "added the policy as filed with HCAI: version 2",
+     "run_id": "hcai-20261025T093815-20dc65"
+    },
     {
      "id": 17,
      "hospital_id": "ucsf-saint-francis",
@@ -10970,6 +11325,132 @@
      "latency_ms": 2440,
      "ok": 1,
      "note": "plain HTTPS (not Bright Data)"
+    },
+    {
+     "id": 358,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:15+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "https://hcai.ca.gov/affordability/hospital-billing-policies/st-francis-memorial-hospital/",
+     "status": 200,
+     "bytes": 139053,
+     "latency_ms": 613,
+     "ok": 1,
+     "note": "plain HTTPS (not Bright Data)"
+    },
+    {
+     "id": 359,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:15+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "HCAI https://hcai.ca.gov/affordability/hospital-billing-policies/st-francis-memorial-hospital/: Charity Care Policy effective 2026-01-16: https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50"
+    },
+    {
+     "id": 360,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:16+00:00",
+     "stage": "fetch",
+     "product": null,
+     "url": "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50",
+     "status": 200,
+     "bytes": 159464,
+     "latency_ms": 687,
+     "ok": 1,
+     "note": "plain HTTPS (not Bright Data)"
+    },
+    {
+     "id": 361,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "tier VERIFIED in https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50 | 'Full Charity Care Patient: A patient who: 1.  Is a Self-Pay Patient; and 2.  Has Family Income at or below 400% of the Federal Poverty Level (FPL).'"
+    },
+    {
+     "id": 362,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "other_relief VERIFIED in https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50 | 'Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family '"
+    },
+    {
+     "id": 363,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "collections VERIFIED in https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50 | 'If a patient is attempting to qualify for eligibility under the policy, and is attempting in good faith to settle the outstanding bill, the hospital shall not s'"
+    },
+    {
+     "id": 364,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "payment_plan VERIFIED in https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50 | 'Patients can be offered an extended payment plan. Extended payment plans will be interest-free.'"
+    },
+    {
+     "id": 365,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "payment_plan_cap VERIFIED in https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50 | 'If hospital and patient are unable to agree on the terms of a payment plan, the default payment plan shall be a monthly payment of not more than ten percent (10'"
+    },
+    {
+     "id": 366,
+     "run_id": "hcai-20261025T093815-20dc65",
+     "hospital_id": "ucsf-saint-francis",
+     "ts": "2026-10-25T09:38:22+00:00",
+     "stage": "verify",
+     "product": null,
+     "url": "",
+     "status": null,
+     "bytes": null,
+     "latency_ms": null,
+     "ok": 1,
+     "note": "apply VERIFIED in https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id=41d8671f-ce08-40bf-b2ff-700b01fb1f50 | 'The Financial Assistance application is available by visiting https://www.ucsfhealth.org/billing_and_records/ via MyChart or by calling Patient Financial Servic'"
     }
    ]
   },

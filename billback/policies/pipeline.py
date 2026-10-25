@@ -61,17 +61,18 @@ async def crawl_hospital(store: PolicyStore, hospital: Hospital, *, run_id: str 
 
 
 async def gather(crawl: Crawl, found: dict) -> list[fetch.Document]:
-    """fetch.run, plus the policy as filed with HCAI when the hospital's own site gave no policy document.
-    Used by crawls and rechecks alike, so a recheck refetches the same kinds of sources."""
+    """fetch.run, plus the policy as filed with HCAI whenever the hospital has an HCAI slug. Always, not only
+    when the site gave no policy document: what the site links can be the wrong document (Saint Francis's
+    "policy" PDF is a Spanish application form), and crawls and rechecks must fetch the same sources or an
+    unchanged policy would hash as changed."""
     try:
         docs = await fetch.run(crawl, found)
     except RuntimeError:  # nothing fetchable from the hospital's own site (BudgetExceeded included)
         if not found.get("hcai_slug"):
             raise
+        crawl.fallback("Nothing usable from the hospital's own site → the copy filed with California HCAI")
         docs = []
-    if found.get("hcai_slug") and not any(d.kind == "pdf" and d.role == "policy_doc" for d in docs):
-        if docs:
-            crawl.fallback("The hospital's own pages link no policy document → the copy filed with California HCAI")
+    if found.get("hcai_slug"):
         docs += await hcai.run(crawl, found["hcai_slug"])
     if not docs:
         raise RuntimeError("no policy page or document could be fetched")
