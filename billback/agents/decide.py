@@ -223,14 +223,14 @@ def compute(case: dict) -> dict:
             skipped.append({"kind": "plan", "text": "Payment plan", "why": "You said the payment-plan finding is wrong"})
         else:
             plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
-                                        max_monthly=prefs.get("max_monthly"))
+                                        max_monthly=prefs.get("max_monthly"), monthly_bills=inc.get("bills_monthly"))
             why = " Their own billing policy says payment plans are interest-free." if terms.get("interest_free") else ""
             ask("plan", f"Set up an interest-free payment plan for the {money(target)}: "
-                        f"{plan['months']} × {money(plan['monthly'])}/month, as their own billing policy allows",
+                        f"{plan['text']}, as their own billing policy allows",
                 f"Once the balance is corrected to {money(target)}, set up an interest-free payment plan: "
-                f"{plan['months']} monthly payments of {money(plan['monthly'])}.{why} Don't give card details; "
+                f"{finance.plan_said(plan)}.{why} Don't give card details; "
                 f"the patient sets up the payments.",
-                value=f"{plan['months']} × {money(plan['monthly'])}/mo", findings=["policy:plan"], plan=plan)
+                value=plan["text"], findings=["policy:plan"], plan=plan)
     results = call_results(case)
     refused_before = any(r["status"] == "refused" for r in results.values())
     if prefs.get("if_refused") == "supervisor" or refused_before:
@@ -312,7 +312,7 @@ def decided(case: dict, share: float, paid: float, d: float, owed: float, target
                     + (f" − {money(paid)} paid" if paid else "")
                     + (f" → they owe you {money(refund)}" if refund else f" = {money(target)}"))
     if plan:
-        math.append(f"{money(target)} as {plan['months']} × {money(plan['monthly'])}/mo: {plan['reason']}")
+        math.append(f"{money(target)} as {plan['text']}: {plan['reason']}")
     if d:
         path = f"Fix the balance, then {'free care' if d == 100 else f'a {d:.0f}% discount'} under their own policy"
     elif plan:

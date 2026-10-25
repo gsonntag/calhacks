@@ -38,7 +38,7 @@ def main(argv: list[str]) -> int:
         c = exp["correct"]
         rel = out["dir"].relative_to(config.ROOT)
         pdfs_skipped |= "bill.pdf" not in out["files"]
-        plan = f"{c['plan_months']} x ${c['plan_monthly']:,.0f}/mo" if c["plan_months"] else "no plan"
+        plan = exp["plan"]["text"] if c["plan_months"] else "no plan"
         refund = f", refund ${c['refund']:,.2f}" if c["refund"] else ""
         print(f"{name}: wrote {rel}/ ({', '.join(out['files'])})")
         print(f"  bill ${exp['totals']['amount_due']:,.2f} -> owed ${exp['waterfall']['owed_before_discount']:,.2f}"

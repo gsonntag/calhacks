@@ -246,8 +246,12 @@
   "income": {
     "annual": 63360.0,
     "monthly": 5280.0,
-    "source": "6 Nessie payroll deposits, paid twice a month (avg $2,640 x 24)",
-    "deposits_counted": 6
+    "source": "6 Nessie payroll deposits, paid twice a month (avg $2,640 x 24); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 79200.0,
+    "bills_monthly": 2276.15,
+    "bills_source": "30 regular Nessie payments in the last 90 days (Bay Wireless Co, Farmer Joe's Marketplace, Fruitvale Court Apts, Mi Pueblo Foods…)"
   },
   "discount": {
     "fpl_pct": 292.8,
@@ -257,7 +261,8 @@
     "insured": false,
     "oop_pct_income": 0.0,
     "discount_pct": 50.0,
-    "tier_quote": "50% award for gross monthly household income between 201% and 400% of FPG"
+    "tier_quote": "50% award for gross monthly household income between 201% and 400% of FPG",
+    "at_estimated_gross": null
   },
   "settle": {
     "discounted_share": 2699.28,
@@ -269,12 +274,16 @@
     "refund": 0.0,
     "discount_pct": 50.0,
     "plan_months": 12,
-    "plan_monthly": 200.0
+    "plan_monthly": 200.0,
+    "plan_last": 199.28
   },
   "plan": {
     "months": 12,
     "monthly": 200.0,
-    "reason": "$200/mo stays under 4% of monthly income ($5,280): BillBack's default, not the hospital's rule"
+    "last": 199.28,
+    "total": 2399.28,
+    "reason": "$200/mo stays under 4% of monthly income ($5,280): BillBack's default, not the hospital's rule; you have about $3,004/mo left after regular bills",
+    "text": "11 × $200/mo, then $199.28"
   },
   "finance_reconcile": {
     "billed_due": 6678.57,
@@ -337,7 +346,7 @@
       "agent": "bright_data",
       "title": "Interest-free payment plan",
       "money": 0,
-      "value": "12 x $200/mo"
+      "value": "11 × $200/mo, then $199.28"
     }
   ],
   "must_not_report": [],

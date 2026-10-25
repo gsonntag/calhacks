@@ -137,8 +137,10 @@ async def test_follow_up_then_call_again_end_to_end(client):
     sched = await _wait_for(cid, lambda e: e["kind"] == "followup_scheduled")
     assert sched["followup"]["due"] == "2026-10-30"
     row = (await c.get(f"/api/cases/{cid}/summary")).json()
-    assert row["status"] == "done" and row["original"] == 8700 and row["current_balance"] == 0
-    assert row["case_number"] == "FA20931" and row["refund"] == 500
+    # a review, a hold and a promised statement: nothing is lower yet, so the row shows billing's $8,700
+    assert row["status"] == "done" and row["original"] == 8700 and row["current_balance"] == 8700
+    assert row["target"] == 0 and row["confirmed"] is False
+    assert row["case_number"] == "FA20931" and row["refund"] == 0 and row["expected_refund"] == 500
     call = row["last_call"]
     assert call["rep"] == "Diane" and call["date"] == "2026-10-24" and "Send a corrected statement" in call["promised"]
     assert row["next"]["due"] == "2026-10-30" and row["next"]["overdue"] is False
@@ -172,6 +174,10 @@ async def test_follow_up_then_call_again_end_to_end(client):
 
     case = orchestrator.cases[cid]
     assert case["status"] == "done" and [x["kind"] for x in case["calls"]] == ["initial", "followup"]
+    # "the adjustment is on there": the insurance ask is a "got", so only that comes off; the free care isn't confirmed
+    marks = {m["kind"]: m["status"] for m in case["calls"][1]["scorecard"]}
+    assert marks.get("insurance") == "got" and marks.get("discount") != "got"
+    assert orchestrator.current_balance(case) == 1100 and case["result"]["confirmed"] is False
     second = case["calls"][1]
     assert second["rep"] == "Marco" and second["date"] == "2026-10-31" and second["business_days"] == 10
     assert case["followups"][0]["status"] == "done" and case["followups"][0]["closed_by_call"] == 2
