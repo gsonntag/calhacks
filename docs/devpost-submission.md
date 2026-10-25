@@ -115,11 +115,13 @@ whichever case the video leads with.
 >      hospital's own published financial-assistance policy with Bright Data, works out your income from
 >      payroll deposits, and checks you against the hospital's discount tiers, payment-plan terms and real
 >      prices from its public price file.
->    - Every check and every finding shows up live with its proof and source. You can tap **Ask** on any
->      finding to have the agent that found it explain it, or **This is wrong** to correct it.
+>    - Every check and every finding shows up live with its proof and source. Tap **This is wrong** on any
+>      finding to correct it, or open **Ask BillBack** (the chat button on the case page) and pick who
+>      answers: BillBack, the Nessie agent or the Bright Data agent.
 > 3. **The plan.** A Decide agent turns the findings into a call plan: the money ($8,700 → $600), who to call,
->    and every ask the findings back up, biggest money first. You can talk to the planner ("refund first",
->    "I can do $150 a month") and it makes a new version of the plan. It changes strategy, never facts.
+>    and every ask the findings back up, biggest money first. In Ask BillBack you can also talk to the planner
+>    ("refund first", "I can do $150 a month") and it makes a new version of the plan. It changes strategy,
+>    never facts.
 > 4. **The call.** Once you tap "Call now", BillBack phones billing. It says it's an automated assistant
 >    calling with your authorization, cites the evidence, asks for each correction, the discount and a hold
 >    on collections, and gets a case number. It never agrees to pay anything or gives card details.
@@ -142,18 +144,18 @@ whichever case the video leads with.
 
 > **Architecture:** FastAPI + WebSockets; a vanilla-JS case page that streams every agent step, finding,
 > approval and transcript line live. Our own agent harness gives every tool a permission tier (read / act /
-> consequential). Consequential tools, like placing a call or writing a payment plan, block on the
-> patient's approval. Every tool call and result goes to an audit log.
+> consequential). Placing a call blocks on the patient's approval; the payment plan is only proposed, and the
+> patient decides on it. Every tool call and result goes to an audit log.
 >
 > **Money is computed, never generated.** Reconciliation, income annualization, percent of the federal
 > poverty line (2026 HHS guidelines), discount tiers, settlement, refunds and payment plans are
-> deterministic Python with 281 offline tests. Claude extracts policy text only with verbatim quotes, which
+> deterministic Python with 416 offline tests. Claude extracts policy text only with verbatim quotes, which
 > our code checks against the fetched page before using.
 >
 > **Sponsor technology:**
 > - **Anthropic Claude** (Sonnet 5.5 / Haiku 5.5): reads bills and EOBs (vision); extracts policy rules
->   with quotes; is the brain on the live call (streaming tool use); answers "Ask" questions from one
->   agent's evidence only; turns planner-chat requests into strategy changes that our rules then check;
+>   with quotes; is the brain on the live call (streaming tool use); answers questions in the Ask
+>   BillBack chat (the Nessie and Bright Data agents answer only from what they checked); turns planner requests into strategy changes that our rules then check;
 >   reads the finished call to mark each ask, but its mark only counts if its quote is really in the rep's
 >   words.
 > - **Bright Data** (SERP API + Web Unlocker): discovers and fetches each hospital's financial-assistance
