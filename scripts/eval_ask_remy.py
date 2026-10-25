@@ -322,6 +322,26 @@ async def _plan_ready(c, query: str) -> str:
     return cid
 
 
+async def _play_rep(c, call_id: str, max_turns: int = 16) -> None:
+    """Billing's side of the offline desk call. The app's responsive rep (remy.offline.billing_reply) answers what
+    Remy just asked, so calls with more asks (Raj's line corrections) still finish; without it, REP_LINES."""
+    try:
+        from remy.offline import REP_CORRECTION, REP_CORRECTION_MORE, billing_reply
+    except ImportError:
+        billing_reply = None
+    said, fixes = "", 0
+    for i in range(max_turns):
+        if billing_reply:
+            line = billing_reply(i, said, fixes)
+            fixes += line in (REP_CORRECTION, REP_CORRECTION_MORE)
+        else:
+            line = REP_LINES[i] if i < len(REP_LINES) else "Okay."
+        r = (await c.post(f"/api/calls/{call_id}/turn", json={"rep_said": line})).json()
+        if r.get("ended"):
+            return
+        said = r.get("say") or ""
+
+
 async def build_world(c, names: list[str]) -> dict[str, str]:
     """Reset, then make each named fixture (Claude stays off throughout). Returns fixture -> case id."""
     await c.post("/api/reset")
@@ -337,10 +357,7 @@ async def build_world(c, names: list[str]) -> dict[str, str]:
             e = await _wait(cid, lambda e: e["kind"] == "approval_requested" and e["agent"] == "caller")
             await c.post(f"/api/approvals/{e['approval_id']}", json={"approved": True})
             ready = await _wait(cid, lambda e: e["kind"] == "call_ready")
-            for line in REP_LINES:
-                r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": line})).json()
-                if r.get("ended"):
-                    break
+            await _play_rep(c, ready["call_id"])
             await _wait(cid, lambda e: e["kind"] == "case_done")
         elif n in ("rosa_corrected", "rosa_injected"):
             note = "that was my dentist" if n == "rosa_corrected" else INJECTED_NOTE
