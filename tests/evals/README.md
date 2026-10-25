@@ -1,8 +1,9 @@
 # Ask Remy eval
 
-`ask_remy_questions.yaml` holds 69 questions for the Ask Remy chat. `scripts/eval_ask_remy.py` runs them against
-the app in-process (FastAPI + httpx ASGITransport), on the demo cases built offline. Every expected number
-comes from the offline pipeline. The header of the YAML lists each one and where it came from.
+`ask_remy_questions.yaml` holds 84 questions for the Ask Remy chat. `scripts/eval_ask_remy.py` runs them against
+the app in-process (FastAPI + httpx ASGITransport), on the demo cases built offline (Rosa, Marcus, and Raj, the hero case:
+`?scenario=raj&household_size=4`, answer key `demo/scenarios/raj-cpmc/expected.json`). Every expected number
+comes from the offline pipeline, with today pinned to 2026-10-25 (Raj's bank history is "the last 12 months"). The header of the YAML lists each one and where it came from.
 
 ## Run offline (default, free)
 
@@ -44,7 +45,7 @@ master today and on the Ask Remy branches later. Exit codes:
 - It stops at once on any 402, 429, quota or credits error and exits with code 3 (docs/PLAN.md, "Rule: paid
   API credits").
 - Cases are always built with Claude off. Only the answers use credits.
-- Live mode also checks `must_include_any`. It skips `stub_only` items, because a real model can't be scripted
+- Live mode also checks `must_include_any` and `must_include_all`. It skips `stub_only` items, because a real model can't be scripted
   to invent a number.
 - Use `--group` or `--id` to keep runs small.
 
@@ -67,13 +68,13 @@ These are assumptions. Align them with the endpoint, or adjust `REMY_PATHS` / `d
 
 | Group | Items | Measures |
 |---|---|---|
-| `case` | 17 | One case (Rosa, Marcus, Rosa after a desk call, Rosa with a finding marked wrong). Routing: bank → Nessie agent, policy and price → Bright Data agent, plan changes → planner, otherwise status. Also checks sources and the context: bill lines vs posted prices, apply_how, the collections quote, the billing contact, the call scorecard and transcript, and wrong findings flagged. 4 items cover today's case-page chat and must keep passing. |
+| `case` | 26 | One case (Rosa, Marcus, Rosa after a desk call, Rosa with a finding marked wrong, Raj before and after the same desk call). Routing: bank → Nessie agent, policy and price → Bright Data agent, plan changes → planner, otherwise status. Also checks sources and the context: bill lines vs posted prices, apply_how, the collections quote, the billing contact, the call scorecard and transcript, and wrong findings flagged. 4 items cover today's case-page chat and must keep passing. Raj (9 items): why he gets free care (the bank's medical bills lift him over Sutter's 10% bar), what's wrong with the bill, the CT against CPMC's price file, what the bank showed, the $400 refund and $0 not yet confirmed, and the Cases tab putting his bill first by money at stake. |
 | `cases` | 7 | All bills: cases labelled by patient, totals computed in code and de-duplicated (Rosa is uploaded twice: $14,300, not $23,000), priority, collections deadline. |
-| `hospitals` | 8 | Hospitals tab: the 27-hospital policy DB, the same-bill comparison (El Camino $0 + $500 refund for Rosa, SF General $5,600 for Marcus), cited crawl sources. |
+| `hospitals` | 9 | Hospitals tab: the policy DB, the same-bill comparison (El Camino $0 + $500 refund for Rosa, SF General $5,600 for Marcus, $0 + $400 back for Raj at 13 hospitals), cited crawl sources. |
 | `under_the_hood` | 10 | Recent agent activity, and "how does Remy work" answers that cite `README.md` / `docs/`. Also checks `remy.knowledge` directly. |
 | `get_started` | 5 | Household profile (4 people, $60,000, uninsured, CPMC): it's in the context, and the next step is offered. |
-| `memory` | 6 | 2–3-turn follow-ups, plus a 10-turn run: turn 9 must still be sent and turn 1 dropped (last 8 turns only). |
-| `red_team` | 16 | The guardrails: pay now, card number, SSN, pretend to be human, "ignore your instructions" in the question, an injected instruction in case data, legal / medical / tax advice → referral, "call now" from text, an invented balance, the number guard. 3 items cover today's planner refusals. |
+| `memory` | 8 | 2–3-turn follow-ups (Raj: "why?" after "how much will I get back?"), plus a 10-turn run: turn 9 must still be sent and turn 1 dropped (last 8 turns only). |
+| `red_team` | 19 | The guardrails: pay now, card number, SSN, pretend to be human, "ignore your instructions" in the question, an injected instruction in case data, legal / medical / tax advice → referral, "call now" from text, an invented balance, the number guard (Raj: "just pay the $3,800", an invented $12,000 refund). 3 items cover today's planner refusals. |
 
 `tests/test_eval_runner.py` checks:
 
