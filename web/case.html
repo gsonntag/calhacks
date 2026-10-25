@@ -75,6 +75,10 @@
   /* Review: one live terminal per app agent (dark in both themes) */
   .terms { --t-bg: #191b18; --t-line: #2c2f2a; --t-fg: #e4e6de; --t-dim: #9da396; --t-ok: #8fd17a; --t-flag: #ff8f85; --t-win: #f2c04d; --t-wait: #e8b860;
     display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; align-items: start; }
+  /* each agent's column: its terminal, then what it found (biggest saving first) */
+  .agent-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .agent-col .sub-h { margin: 8px 4px 0; }
+  .agent-col .finds { padding: 0 4px; }
   .term { background: var(--t-bg); color: var(--t-fg); border-radius: var(--md-shape-l); overflow: hidden; min-width: 0; border: 1px solid var(--t-line); }
   .t-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px 2px; }
   .t-head b { flex: 1; min-width: 0; font: 600 15px/22px var(--md-font); letter-spacing: .1px; }
@@ -345,10 +349,6 @@
         </button>
         <div class="row-detail" id="detail1" hidden>
           <div class="terms" id="agents"></div>
-          <div class="m3-stack" id="findBox" hidden>
-            <h3 class="title-s sub-h">What they found · biggest saving first</h3>
-            <ul class="finds" id="findings"></ul>
-          </div>
           <details class="more" id="quoteBox" hidden><summary class="body-m">The hospital’s own policy, word for word</summary>
             <div class="m3-stack" id="quoteList"></div>
           </details>
@@ -839,19 +839,21 @@ function render() {
     ? `<p><strong>${esc(prov)}, ${money(m.bill.amount_due)}</strong>${m.bill.notice ? ' · ' + esc(m.bill.notice) : ''}</p><p class="muted">${esc((m.docs || []).join(', '))}</p>`
     : '<p class="muted">Waiting for your documents.</p>');
 
-  // 2 · Review: a live panel per app agent, then what they found
-  const panels = reviewAgents(m);
-  setHTML($('agents'), panels.map((k) => renderAgent(k, m)).join(''));
+  // 2 · Review: a column per app agent: its live panel, then what it found
+  const panels = reviewAgents(m), finds = findingsOf(m), fk = state.active + '-finds';
+  const acts = { ask: !!m.plans.length && state.active !== 'replay', correct: canCorrect(m) };
+  setHTMLKeep($('agents'), panels.map((k) => {
+    const mine = finds.filter((f) => f.agent === k).map((f) => {
+      const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
+      return findingHTML(f, m, ui, isNew, acts);
+    }).join('');
+    const found = mine ? `<h3 class="title-s sub-h">What it found</h3><ul class="finds">${mine}</ul>`
+      : (m.agent[k] || {}).done ? '<p class="body-m muted sub-h">Nothing to correct here.</p>' : '';
+    return `<div class="agent-col">${renderAgent(k, m)}${found}</div>`;
+  }).join(''));
   const sums = panels.map((k) => [agentName(m, k), ((m.review && m.review[k]) || {}).result || (m.agent[k] || {}).summary]);
   setText($('reviewLine'), sums.some(([, r]) => r) ? sums.map(([n, r]) => `${n}: ${r || 'working…'}`).join(' · ')
     : ds >= 1 && m.bill ? `${sums.map(([n]) => n).join(' and ')} are checking your bill` : 'Two agents check your records and the hospital’s own rules');
-  const finds = findingsOf(m), fk = state.active + '-finds';
-  $('findBox').hidden = !finds.length;
-  const acts = { ask: !!m.plans.length && state.active !== 'replay', correct: canCorrect(m) };
-  setHTMLKeep($('findings'), finds.map((f) => {
-    const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
-    return findingHTML(f, m, ui, isNew, acts);
-  }).join(''));
   const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
   $('quoteBox').hidden = !quotes.some((q) => q.quote);
   setHTML($('quoteList'), quotes.map(quoteHTML).join(''));
@@ -973,7 +975,7 @@ function findingHTML(f, m, ui, isNew, acts) {
       <button type="submit" class="m3-btn filled"${ui.busy['wrong:' + f.key] ? ' disabled' : ''}>Save</button>
       <button type="button" class="m3-btn text" data-act="cancel" data-key="${k}">Cancel</button></form>${err}</div>` : '';
   const tag = c ? `<p class="wrong-tag">${sym('flag')}You said this is wrong${c.note ? ': “' + esc(c.note) + '”' : ''}${c.v ? ` · <button type="button" class="made-v" data-act="goplan">plan v${c.v}</button>` : ''}</p>` : '';
-  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}<small>${esc(agentName(m, f.agent))}${c ? ' · marked wrong' : ''}</small></span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
+  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}${c ? '<small>marked wrong</small>' : ''}</span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
     <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}${askBox}</div></details></li>`;
 }
 

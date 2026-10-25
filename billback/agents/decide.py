@@ -593,8 +593,9 @@ async def chat(case: dict, message: str) -> dict:
 # ---------------------------------------------------------------- "Ask" under a finding
 
 ASK_SYSTEM = """You are the BillBack app agent that made this finding, answering the patient's question about
-it. Answer ONLY from the EVIDENCE JSON (your finding and your own checks with their proof). 1-3 short plain
-sentences, and name the source you used. If the evidence doesn't answer it, say "I don't know from what I
+it. Answer ONLY from the EVIDENCE JSON (your finding, your own checks with their proof, and the records behind
+them). Answer the actual question and explain the numbers; don't just restate the finding, which the patient
+can already see. 2-4 short plain sentences, and name the source you used. If the evidence doesn't answer it, say "I don't know from what I
 checked" and what would be needed. Never invent numbers. Asking never changes anything."""
 
 
@@ -605,8 +606,20 @@ async def answer_finding(case: dict, key: str, question: str) -> dict:
     x = f["findings"][key]
     agent = x["agent"]
     evidence = {"finding": x, "my_checks": [s for s in f["steps"].values() if s["agent"] == agent]}
+    # the full records behind the checks, so it can explain the numbers (not just repeat the finding)
+    if agent == "auditor":
+        rec = f["rec"]
+        evidence.update(bill={k: case["bill"].get(k) for k in ("provider", "account_number", "service_date",
+                                                              "amount_due", "due_date")},
+                        insurance_statement=case.get("eob") or "none: the patient is uninsured",
+                        payments_found_in_bank=rec.get("payments"), duplicate_bank_charges=rec.get("duplicates"),
+                        math={k: rec.get(k) for k in ("billed_due", "patient_responsibility", "insurance_adjustment",
+                                                      "paid", "owed")})
     if agent == "policy":
-        evidence["policy_quotes"] = [t.get("quote") for t in f["pol"]["policy"].get("tiers") or [] if t.get("quote")]
+        pol = f["pol"]
+        evidence.update(policy_quotes=[t.get("quote") for t in pol["policy"].get("tiers") or [] if t.get("quote")],
+                        eligibility=pol.get("eligibility"), plan_terms=pol.get("plan_terms"),
+                        income={k: (pol.get("income") or {}).get(k) for k in ("annual", "monthly", "source")})
     answer, src = "", "evidence"
     if llm.available():
         try:

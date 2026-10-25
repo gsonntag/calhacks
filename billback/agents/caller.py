@@ -86,6 +86,7 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
     """plan: the approved plan version (agents/decide.py). Its asks are the goals, in its order, and its money
     replaces the Review's (corrections and strategy changes are already applied)."""
     rec, elig = audit["reconciliation"], policy["eligibility"]
+    eob = case.get("eob") or {}  # empty for uninsured patients
     brief = {
         "goals": call_goals(rec, elig, policy),
         "patient": f"{case['patient']['first_name']} {case['patient']['last_name']}",
@@ -93,8 +94,8 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
         "account_number": case["bill"]["account_number"],
         "service_date": case["bill"]["service_date"],
         "hospital_says_due": rec["billed_due"],
-        "insurer": case["eob"]["insurer"],
-        "claim_number": case["eob"]["claim_number"],
+        "insurer": eob.get("insurer"),
+        "claim_number": eob.get("claim_number"),
         "eob_patient_responsibility": rec["patient_responsibility"],
         # short reference: a full transaction UUID is unreadable on a phone call
         "payments_made": [{"date": p["date"][:10], "amount": p["amount"], "reference": str(p["id"])[:8].upper()}
@@ -110,7 +111,7 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
         "balance_after_assistance": policy["target"],
         "refund_due_after_assistance": policy.get("refund", 0),
         "patient_date_of_birth": case["patient"].get("dob"),
-        "insurance_member_id": case["eob"].get("member_id"),
+        "insurance_member_id": eob.get("member_id"),
         "deadline_on_notice": case["bill"]["due_date"],
         **({"voice_id": case["voice_id"]} if case.get("voice_id") else {}),
     }
@@ -193,9 +194,10 @@ class CallSession:
             f"Hi, this is an automated assistant calling on behalf of {b['patient']}, with their authorization, "
             f"about account {b['account_number']}. {_follow_up(b)}"
             "The balance looks incorrect and I'd like to get it corrected.",
-            f"Your statement shows ${b['hospital_says_due']:,.0f} due, but {b['insurer']}'s EOB for claim "
-            f"{b['claim_number']} lists patient responsibility of ${b['eob_patient_responsibility']:,.0f}. "
-            "Could you apply the insurance adjustment?",
+            (f"Your statement shows ${b['hospital_says_due']:,.0f} due, but {b['insurer']}'s EOB for claim "
+             f"{b['claim_number']} lists patient responsibility of ${b['eob_patient_responsibility']:,.0f}. "
+             "Could you apply the insurance adjustment?" if b["insurer"] else
+             f"Your statement shows ${b['hospital_says_due']:,.0f} due. The patient is uninsured."),
             (f"There's also a ${pay['amount']:,.0f} payment made on {pay['date']} that should be on the account. "
              "With both applied the balance is "
              f"${b['correct_balance']:,.0f}." if pay else "Could you confirm the corrected balance?"),
