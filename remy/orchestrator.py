@@ -121,12 +121,9 @@ def policy_summary(pol: dict) -> dict:
     result = (f"Free care → ${pol['target']:,.0f}" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}") if d else "No discount"
     if pol.get("refund"):
         result += f" + ${pol['refund']:,.0f} back"
-    plan = pol.get("plan") or {}
-    if not d and plan.get("months"):
-        result = f"${pol['target']:,.0f} · {finance.plan_text(plan)}, 0% interest"
-    return {"result": result,
-            "note": "charity-care discount" if d else "no discount tier fits; interest-free plan under their policy"
-            if plan.get("months") else "income is above the policy's limits"}
+    if not d:
+        result = f"${pol['target']:,.0f}, no discount"  # payment plans are left off: just the final amount
+    return {"result": result, "note": "charity-care discount" if d else "income is above the policy's limits"}
 
 
 def save_replay(case: dict) -> None:
@@ -574,10 +571,7 @@ async def run_case(case: dict) -> None:
         if balance != [e["amount"] for e in bus.history(cid) if e["kind"] == "balance"][-1]:
             bus.emit(cid, "balance", amount=balance, expected=expected, confirmed=confirmed,
                      label="Confirmed by billing" if confirmed else "Billing still shows")
-        plan = await planner.run(case, bank, account_id, expected, pol["income"]["monthly"],
-                                 policy_cap_pct=(pol.get("plan_terms") or {}).get("max_pct_monthly_income"),
-                                 max_monthly=case["plan"]["prefs"].get("max_monthly"),
-                                 monthly_bills=pol["income"].get("bills_monthly"))
+        plan = {"plan": {"months": 0, "monthly": 0.0, "text": ""}, "created": None}  # payment plans are left off entirely
 
         c = plan.get("created") or {}
         plan_created = bool(c) and not c.get("blocked") and not c.get("error")

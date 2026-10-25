@@ -393,7 +393,7 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
   hospitals page and the case flow crawl those again from Google.
 - **The live path hasn't run against Bright Data since it was built** (credits rule): it is tested with replies
   in the real shapes (`tests/test_live_crawl.py`), and needs one live rehearsal.
-- Income is compared to the 2025 HHS poverty guidelines (`finance.FPL_*`).
+- Income is compared to the 2026 HHS poverty guidelines (`finance.FPL_*`).
 - **"All patients" readings to check.** MarinHealth ("Full charity care (no payment) is for all patients at
   400% or less of the FPL") and El Camino ("full charity care to patients whose Family Income is at or below
   400%") were stored as tiers for all patients, so an insured patient like Rosa gets 100% off there. The quotes

@@ -8,11 +8,18 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
+<link rel="stylesheet" href="rail.css">
 <style>
   html, body { height: 100%; }
   .app { height: 100vh; height: 100dvh; min-height: 520px; display: flex; flex-direction: column; }
-  .m3-top-app-bar { flex: none; flex-wrap: wrap; column-gap: 24px; }
-  main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 16px 20px; }
+  .m3-top-app-bar { flex: none; }
+  /* the case rail beside the chat (rail.css); the chat keeps the full height and scrolls its own thread */
+  .app > .case-shell { flex: 1; min-height: 0; }
+  .app > .case-shell .case-rail { top: 0; max-height: 100%; align-self: stretch; }
+  .app.no-cases > .case-shell { grid-template-columns: minmax(0, 1fr); }
+  .app.no-cases .case-rail { display: none; }
+  main { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; padding: 0 16px 20px; }
+  @media (max-width: 960px) { .app > .case-shell { display: flex; flex-direction: column; } .app > .case-shell .case-rail { flex: none; } }
   .col { max-width: 760px; width: 100%; margin: 0 auto; }
 
   /* empty state: hero + composer centred */
@@ -81,18 +88,25 @@
 </style>
 </head>
 <body>
-<div class="app empty" id="app">
+<div class="app empty no-cases" id="app">
   <header class="m3-top-app-bar">
     <a href="/" class="m3-brand" aria-label="Remy home">
       <span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span>
       <span class="m3-brand-name">Remy</span>
     </a>
     <nav class="m3-tabs" aria-label="Main">
+      <a class="m3-tab" href="onboarding.html">Get started</a>
       <a class="m3-tab" href="/" aria-current="page">Cases</a>
       <a class="m3-tab" href="hospitals.html">Hospitals</a>
       <a class="m3-tab" href="ops.html">Under the hood</a>
     </nav>
   </header>
+
+  <div class="case-shell">
+  <aside class="case-rail" aria-labelledby="railHead">
+    <div class="rail-head"><h2 class="title-m" id="railHead">Cases</h2></div>
+    <ul class="rail-list" id="tabList"></ul>
+  </aside>
 
   <main>
     <section class="hero col" aria-labelledby="heroTitle">
@@ -124,9 +138,11 @@
       <p class="note body-s muted">Demo only. Please don't upload real medical bills.</p>
     </div>
   </main>
+  </div>
 </div>
 
 <script src="/auth.js"></script>
+<script src="/rail.js"></script>
 <script>
 const state = { files: [], sentFiles: [], typing: false, gmail: 'off', history: [], caseId: null };
 const $ = (id) => document.getElementById(id);
@@ -222,6 +238,12 @@ gmailBtn.addEventListener('click', async () => {
   }
 });
 refresh();
+// the case rail: "New case" is the current item; the rail stays hidden until there is a case to switch to
+Rail.newPage = true;
+(async function rail() {
+  try { await Rail.load(); app.classList.toggle('no-cases', !Rail.cases.length); Rail.render(); } catch (e) {}
+  setTimeout(rail, 5000);
+})();
 </script>
 </body>
 </html>

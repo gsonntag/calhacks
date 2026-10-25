@@ -8,22 +8,54 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
+<link rel="stylesheet" href="rail.css">
 <!--
-  Remy — live case timeline, driven by the backend.
-  Case tabs = /api/cases. The active case streams events over /ws/cases/{id}; render() derives the
-  top summary (headline, stat cards, what needs you), the Steps card and the assistant line from those events.
+  Remy — the Cases page (served at /): the case rail (rail.js, /api/dashboard) on the left, the open case on the right.
+  The active case streams events over /ws/cases/{id}; render() derives the top summary (headline, money, progress),
+  the Progress view (the Steps card) and the assistant line from those events. The "Calls & follow-ups" view shows
+  the case's saved history from its /api/dashboard row: calls, promises, follow-ups, Call again and the demo clock.
 -->
 <style>
-  .m3-top-app-bar { flex-wrap: wrap; column-gap: 24px; }
+  .case-shell > main.m3-page { margin: 0; max-width: none; width: 100%; padding-left: 0; padding-right: 0; }
+  @media (max-width: 960px) { .case-shell > main.m3-page { padding-left: 16px; padding-right: 16px; } }
 
-  /* case tabs (one per case) */
-  .case-tabs { display: flex; align-items: center; gap: 8px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--md-outline-variant); }
-  .case-tabs::-webkit-scrollbar { display: none; }
-  .tab, .new-case { min-height: 40px; height: auto; flex: none; }
-  .tab .status { font-weight: 400; opacity: .85; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); flex: none; }
-  .dot.live { background: var(--st-warn); animation: m3-pulse 1.4s var(--md-ease) infinite; }
-  .dot.amber { background: var(--st-warn); } .dot.green { background: var(--st-success); }
+  /* in-case views: the live steps, and the case's history (calls, promises, follow-ups) */
+  .view-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--md-outline-variant); margin-bottom: -8px; overflow-x: auto; scrollbar-width: none; }
+  .view-tabs::-webkit-scrollbar { display: none; }
+  .vt { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px; border: 0; background: none; cursor: pointer;
+        color: var(--md-on-surface-variant); font: 500 14px/20px var(--md-font); letter-spacing: .1px; white-space: nowrap; border-radius: var(--md-shape-s) var(--md-shape-s) 0 0; }
+  .vt .material-symbols-rounded { font-size: 20px; }
+  .vt:hover { color: var(--md-on-surface); background: var(--md-surface-container-low); }
+  .vt:focus-visible { outline: 2px solid var(--md-primary); outline-offset: -2px; }
+  .vt[aria-selected="true"] { color: var(--md-primary); }
+  .vt[aria-selected="true"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: var(--md-primary); }
+  .vt .badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; display: inline-grid; place-items: center;
+               font: 600 11px/20px var(--md-font); background: var(--md-surface-container-high); color: var(--md-on-surface-variant); }
+  .vt .badge.warn { background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .view[hidden] { display: none; }
+  .hist { display: flex; flex-direction: column; gap: 20px; }
+  .hist-money { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-variant-numeric: tabular-nums; }
+  .hist-money .from { font: 400 16px/24px var(--md-font); color: var(--md-on-surface-variant); }
+  .hist-money .now { font: 700 28px/36px var(--md-font); letter-spacing: -.3px; }
+  .hist-money .now.down, .hist-money .back { color: var(--st-money); }
+  .hist-money .back { font: 500 14px/20px var(--md-font); }
+  .hist-money .material-symbols-rounded { font-size: 18px; align-self: center; color: var(--md-on-surface-variant); }
+  .hist-next { display: flex; align-items: flex-start; gap: 8px; font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .hist-next .material-symbols-rounded { font-size: 18px; margin-top: 1px; }
+  .hist-next .nx { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .hist-next .act { color: var(--md-on-surface); font-weight: 500; }
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font: 400 14px/20px var(--md-font); }
+  .facts dt { color: var(--md-on-surface-variant); }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .hist .sub-h { margin: 0 0 2px; color: var(--md-on-surface); }
+  .hist .m3-list-item { min-height: 48px; padding: 10px 0; }
+  .hist .li-leading .material-symbols-rounded { font-size: 20px; }
+  .none { margin: 4px 0 0; font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .clock { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 16px; border-radius: var(--md-shape-m); border: 1px dashed var(--md-outline-variant); font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .clock b { color: var(--md-on-surface); font-weight: 500; }
+  .clock .lbl .material-symbols-rounded { font-size: 18px; vertical-align: -4px; margin-right: 6px; }
+  .clock .m3-chip { height: 40px; }
+  @media (max-width: 560px) { .facts { grid-template-columns: 1fr; gap: 0; } .facts dt { margin-top: 6px; } }
 
   main.m3-page { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; }
   #caseError { margin: 0; }
@@ -160,7 +192,7 @@
 
   .in { animation: fadein .35s var(--md-ease); }
   @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .replay #endCallBtn, .replay #newCase, .replay #callAgainBtn { display: none !important; }
+  .replay #endCallBtn, .replay #callAgainBtn { display: none !important; }
 
   @media (max-width: 640px) {
     .m3-top-app-bar { padding: 8px 12px; }
@@ -170,7 +202,6 @@
     .row-btn { width: calc(100% + 16px); margin: 0 -8px; padding: 12px 8px; gap: 8px; }
     .m3-card { padding: 16px; }
   }
-  @media (pointer: coarse), (max-width: 640px) { .case-tabs button, .case-tabs a { min-height: 44px; } }
   /* Header: which step, what is happening right now, the money, progress */
   .now { display: flex; flex-direction: column; gap: 10px; }
   .now h1 { margin: 0; overflow-wrap: anywhere; }
@@ -203,7 +234,8 @@
   .now-ctl { display: flex; align-items: center; gap: 4px; margin-left: auto; }
   .now-ctl .m3-btn { min-height: 32px; padding: 0 12px; white-space: nowrap; }
   .now-ctl .m3-select { width: auto; max-width: 120px; min-width: 0; min-height: 32px; padding-top: 0; padding-bottom: 0; }
-  .replay .case-tabs { display: none; }
+  .replay .case-rail, .replay .view-tabs { display: none; }
+  .replay .case-shell { grid-template-columns: minmax(0, 1fr); max-width: 1120px; margin: 0 auto; }
   .finds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
   .finds li + li { border-top: 1px solid var(--md-outline-variant); }
   .finds summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; }
@@ -312,6 +344,21 @@
   .chat-src { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; overflow-wrap: anywhere; }
   .chat-form { display: flex; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid var(--md-outline-variant); }
   .chat-form .m3-input { flex: 1; min-width: 0; }
+  /* talk to Remy: hold the mic, ask or tell it what to do, hear the answer (POST /api/cases/{id}/talk) */
+  .mic { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+         background: var(--md-secondary-container); color: var(--md-on-secondary-container); touch-action: none; user-select: none; -webkit-user-select: none; }
+  .mic:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 2px; }
+  .mic.listening { background: var(--md-primary); color: var(--md-on-primary); box-shadow: 0 0 0 6px color-mix(in srgb, var(--md-primary) 25%, transparent); animation: m3-pulse 1.2s var(--md-ease) infinite; }
+  .mic.thinking, .mic.speaking { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+  .talk { display: flex; flex-direction: column; gap: 6px; margin: 0 16px; padding: 12px 14px; border-radius: var(--md-shape-l); background: var(--md-surface-container); }
+  .talk[hidden] { display: none; }
+  .talk p { margin: 0; font: 400 15px/22px var(--md-font); overflow-wrap: anywhere; }
+  .talk .you { color: var(--md-on-surface-variant); }
+  .talk .bb { display: flex; gap: 10px; align-items: flex-start; }
+  .talk .bb .material-symbols-rounded { font-size: 20px; color: var(--md-primary); margin-top: 1px; }
+  .talk .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .talk .meta .m3-chip { height: 28px; min-height: 28px; padding: 0 10px; margin-left: auto; }
+  .replay .mic { display: none; }
   @media (max-width: 640px) {
     .chat-fab { right: 16px; bottom: 16px; }
     .chat-panel { right: 16px; left: 16px; bottom: 84px; width: auto; height: calc(100dvh - 160px); }
@@ -332,15 +379,18 @@
     <span class="m3-brand-name">Remy</span>
   </a>
   <nav class="m3-tabs" aria-label="Main">
+    <a class="m3-tab" href="onboarding.html">Get started</a>
     <a class="m3-tab" href="/" aria-current="page">Cases</a>
     <a class="m3-tab" href="hospitals.html">Hospitals</a>
     <a class="m3-tab" id="hoodLink" href="ops.html">Under the hood</a>
   </nav>
 </header>
-<nav class="case-tabs" aria-label="Cases">
-  <div id="tabList" style="display:contents"></div>
-  <a class="m3-chip new-case" id="newCase" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
-</nav>
+
+<div class="case-shell">
+<aside class="case-rail" aria-labelledby="railHead">
+  <div class="rail-head"><h2 class="title-m" id="railHead">Cases</h2></div>
+  <ul class="rail-list" id="tabList"></ul>
+</aside>
 
 <main class="m3-page">
   <div id="caseError" class="m3-card error" role="alert" hidden></div>
@@ -369,8 +419,18 @@
 
   <div id="planSlotTop"></div>
 
+  <div class="view-tabs" role="tablist" aria-label="Case views" id="viewTabs">
+    <button type="button" class="vt" role="tab" id="vtProgress" data-view="progress" aria-controls="viewProgress" aria-selected="true">
+      <span class="material-symbols-rounded" aria-hidden="true">checklist</span>Progress</button>
+    <button type="button" class="vt" role="tab" id="vtHistory" data-view="history" aria-controls="viewHistory" aria-selected="false" tabindex="-1">
+      <span class="material-symbols-rounded" aria-hidden="true">history</span>Calls &amp; follow-ups<span class="badge" id="histBadge" hidden></span></button>
+  </div>
+
+  <!-- History: what's on file for this case (calls, promises, follow-ups), from /api/dashboard -->
+  <section class="view m3-card hist" id="viewHistory" role="tabpanel" aria-labelledby="vtHistory" hidden></section>
+
   <!-- Steps -->
-  <section class="m3-card steps-card" aria-labelledby="stepsHead">
+  <section class="view m3-card steps-card" id="viewProgress" role="tabpanel" aria-labelledby="vtProgress">
     <h2 class="sr-only" id="stepsHead">Steps</h2>
     <ol class="steps">
       <li class="step" data-step="0">
@@ -480,7 +540,6 @@
             <div class="plan-actions" id="nextActions" hidden>
               <div class="actions">
                 <button type="button" class="m3-btn filled" id="nextCallBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call now</button>
-                <a class="m3-btn text" href="/">See all cases</a>
               </div>
             </div>
             <p class="body-m" id="nextErr" style="color:var(--md-error);margin:0" hidden></p>
@@ -490,7 +549,6 @@
             <span class="body-m muted" id="followPromised"></span>
             <div class="actions">
               <button type="button" class="m3-btn filled" id="callAgainBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call again</button>
-              <a class="m3-btn text" href="/">See all cases</a>
             </div>
           </div>
         </div>
@@ -505,6 +563,7 @@
     <span class="m3-status" id="asstChip">Voice agent ready</span>
   </section>
 </main>
+</div>
 
 <!-- the agent chat: the only place to ask any agent anything (it replaced Ask on findings and the planner chat) -->
 <button type="button" class="chat-fab" id="chatFab" aria-label="Ask Remy" aria-expanded="false" aria-controls="chatPanel" hidden>
@@ -517,13 +576,16 @@
   </div>
   <div class="chat-who" id="chatWho" role="radiogroup" aria-label="Who answers"></div>
   <div class="chat-log" id="chatLog" aria-live="polite"></div>
+  <div class="talk" id="talkBox" aria-live="polite" hidden></div>
   <form class="chat-form" id="chatForm">
+    <button type="button" class="mic" id="micBtn" aria-label="Talk to Remy: hold to talk, or tap to start and stop" title="Hold to talk (or tap to start, tap again to send)"><span class="material-symbols-rounded" aria-hidden="true">mic</span></button>
     <input class="m3-input" id="chatInput" autocomplete="off" maxlength="500" aria-label="Your message">
     <button type="submit" class="m3-btn filled" id="chatSend">Send</button>
   </form>
 </section>
 
 <script src="/auth.js"></script>
+<script src="/rail.js"></script>
 <script>
 const STATUS = ['Upload', 'Reviewing', 'Your plan', 'On call', 'Resolved'];
 const AGENT_STATUS = {created: 1, reviewing: 1, deciding: 2, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
@@ -556,7 +618,7 @@ function blankModel() {
            warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1,
            plans: [], chat: [], corrections: {}, qa: [], approvedV: null, flash: null, scorecards: [] };
 }
-const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
+const state = { tabs: [], active: null, view: 'progress', models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
 
 function apply(m, e) {
@@ -722,15 +784,115 @@ function recheckHTML(m, ui) {
     <span class="body-s muted">${esc(ui.recheckErr || (live ? 'Live: watch each Bright Data request above' : why))}</span></div>`;
 }
 
-function renderTabs() {
-  const tabs = state.tabs.map((t) => {
-    const stage = state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1;
-    const dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
-    return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
-      <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${stage === 4 && t.id === state.active && openNext(state.models[t.id]) ? 'What’s next' : STATUS[stage]}</span></button>`;
-  });
-  setHTML($('tabList'), tabs.join(''));
+// the case rail (rail.js): the open case shows its live stage, the others their last poll
+Rail.live = (c) => {
+  const m = c.id === state.active && state.models[c.id];
+  if (!m || !m.bill) return null;
+  if (m.error) return ['Error', ''];
+  const stage = stageOf(m);
+  if (stage === 4) return openNext(m) ? ['What’s next', 'amber'] : null;  // the poll knows whether billing confirmed it
+  return [STATUS[stage], stage === 2 ? 'amber' : 'live'];
+};
+Rail.pick = (id) => { openCase(id); if (matchMedia('(max-width: 960px)').matches) scrollTo({ top: 0 }); };
+function renderTabs() { Rail.active = state.active; Rail.render(); renderHistory(); }
+
+// ---------- views: Progress (the live steps) and Calls & follow-ups (the case's saved history) ----------
+const day = (iso) => { if (!iso) return ''; const [y, mo, d] = iso.split('-').map(Number); return new Date(y, mo - 1, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); };
+function setView(v, focus = false) {
+  state.view = v;
+  for (const b of $('viewTabs').querySelectorAll('[data-view]')) {
+    const on = b.dataset.view === v;
+    b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+    if (on && focus) b.focus();
+  }
+  $('viewProgress').hidden = v !== 'progress';
+  $('viewHistory').hidden = v !== 'history';
 }
+$('viewTabs').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+$('viewTabs').addEventListener('keydown', (e) => {
+  const views = ['progress', 'history'], i = views.indexOf(state.view);
+  const j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? views.length - 1 : null;
+  if (j === null) return;
+  e.preventDefault(); setView(views[(j + views.length) % views.length], true);
+});
+
+function whenHTML(n) {
+  if (!n.due) return '';
+  if (n.overdue) return `<span>Was due ${day(n.due)}</span><span class="m3-status warn">Overdue</span>`;
+  if (n.due_today) return `<span>Due today, ${day(n.due)}</span><span class="m3-status info">Today</span>`;
+  if (n.days_left != null) return `<span>By ${day(n.due)} · in ${n.days_left} day${n.days_left === 1 ? '' : 's'}</span>`;
+  return `<span>${day(n.due)}</span>`;
+}
+function historyHTML(c) {
+  const n = c.next || {}, last = c.last_call, down = c.current_balance < c.original;
+  const moneyLine = `<div class="hist-money">${c.current_balance !== c.original
+      ? `<span class="from">${money(c.original)} billed</span>${sym('arrow_forward')}<span class="now ${down ? 'down' : ''}">${money(c.current_balance)}</span>`
+      : `<span class="now">${money(c.current_balance)}</span><span class="from">billed</span>`}
+    ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}
+    ${c.target != null && c.target < c.current_balance && !c.confirmed ? `<span class="from">expected ${money(c.target)}${c.expected_refund ? ` + ${money(c.expected_refund)} back` : ''} once billing confirms</span>` : ''}</div>
+    ${n.action ? `<div class="hist-next">${sym(n.overdue ? 'warning' : 'event')}<span class="nx"><span class="act">Next: ${esc(n.action)}</span>${whenHTML(n)}</span></div>` : ''}`;
+  const acts = c.status === 'awaiting_call_approval'
+    ? `<div class="actions"><button type="button" class="m3-btn filled" data-hist="approve">${sym('how_to_reg')}Approve the call</button></div>`
+    : c.can_call_again ? `<div class="actions"><button type="button" class="m3-btn ${n.overdue || n.due_today ? 'filled' : 'tonal'}" data-hist="call">${sym('call')}Call again</button></div>` : '';
+  const facts = [
+    `<dt>Case number</dt><dd>${c.case_number ? `<b>${esc(c.case_number)}</b>` : '<span class="muted">none yet</span>'}</dd>`,
+    `<dt>Patient</dt><dd>${esc(c.patient)}</dd>`,
+    `<dt>Opened</dt><dd>${day(c.created)}</dd>`,
+    `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}` : '<span class="muted">not called yet</span>'}</dd>`,
+  ];
+  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${esc(c.plan.text || `${c.plan.months} × ${money(c.plan.monthly)}/mo`)} <span class="muted">interest-free</span></dd>`);
+  const calls = c.calls.length ? `<ul class="m3-list">${c.calls.map((x) => `<li class="m3-list-item">
+      <span class="li-leading">${sym('call')}</span>
+      <span class="li-text"><span class="li-headline">${day(x.date)} · ${x.kind === 'followup' ? 'Follow-up call' : 'Call'} with ${esc(x.rep || 'billing')}${x.case_number ? ` · case ${esc(x.case_number)}` : ''}</span>
+      <span class="li-support" style="display:block">${esc(x.summary || '')}</span></span></li>`).join('')}</ul>`
+    : '<p class="none">No calls yet.</p>';
+  const promised = c.calls.flatMap((x) => (x.promised || []).map((p) => ({ p, x })));
+  const promises = promised.length ? `<ul class="m3-list">${promised.map(({ p, x }) => `<li class="m3-list-item">
+      <span class="li-leading">${sym('handshake')}</span>
+      <span class="li-text"><span class="li-headline">${esc(p)}</span>
+      <span class="li-support" style="display:block">${esc(x.rep || 'Billing')} on ${day(x.date)}${x.timeframe_text ? ` · ${esc(x.timeframe_text)}` : ''}${x.follow_up_date ? ` · check back by ${day(x.follow_up_date)}${x.timeframe_assumed ? ' (no timeframe given; default 5 business days)' : ''}` : ''}</span></span></li>`).join('')}</ul>`
+    : '<p class="none">No promises recorded yet.</p>';
+  const fus = c.followups.length ? `<ul class="m3-list">${c.followups.map((f) => {
+      const done = f.status === 'done', overdue = !done && n.overdue && n.due === f.due;
+      const chip = done ? `<span class="m3-status success">${sym('check')}Done</span>` : overdue ? '<span class="m3-status warn">Overdue</span>' : '<span class="m3-status info">Scheduled</span>';
+      return `<li class="m3-list-item">
+        <span class="li-text"><span class="li-headline">${esc(f.action || 'Follow-up')}</span>
+        <span class="li-support" style="display:block">${done ? `Set ${day(f.created)} · closed by the call on ${day(f.closed)}` : `Set ${day(f.created)} · due ${day(f.due)}`}</span></span>
+        <span class="li-trailing">${chip}</span></li>`; }).join('')}</ul>`
+    : '<p class="none">No follow-ups scheduled.</p>';
+  const clock = `<div class="clock"><span class="lbl">${sym('schedule')}Demo clock: <b>${day(c.today)}</b>${c.clock_days ? ` (+${c.clock_days} day${c.clock_days === 1 ? '' : 's'} simulated)` : ''}</span>
+    <button type="button" class="m3-chip" data-clock="1">+1 day</button>
+    <button type="button" class="m3-chip" data-clock="7">+1 week</button>
+    ${n.due && !n.overdue ? '<button type="button" class="m3-chip" data-clock="due">Skip past due date</button>' : ''}
+    ${c.clock_days ? '<button type="button" class="m3-chip" data-clock="reset">Reset</button>' : ''}</div>`;
+  return `<div class="m3-stack" style="gap:8px">${moneyLine}</div>${acts}<dl class="facts">${facts.join('')}</dl>
+    <div><h3 class="title-m sub-h">Calls</h3>${calls}</div>
+    <div><h3 class="title-m sub-h">Promises</h3>${promises}</div>
+    <div><h3 class="title-m sub-h">Follow-ups</h3>${fus}</div>${clock}`;
+}
+function renderHistory() {
+  const c = Rail.byId(state.active);
+  setHTML($('viewHistory'), c ? historyHTML(c) : '<p class="none">Loading this case’s history…</p>');
+  const overdue = !!(c && c.next && c.next.overdue), n = c ? c.calls.length : 0;
+  $('histBadge').hidden = !overdue && !n;
+  $('histBadge').className = 'badge' + (overdue ? ' warn' : '');
+  setText($('histBadge'), overdue ? '!' : String(n));
+  $('histBadge').setAttribute('aria-label', overdue ? 'follow-up overdue' : `${n} call${n === 1 ? '' : 's'}`);
+}
+$('viewHistory').addEventListener('click', async (e) => {
+  const id = state.active, c = Rail.byId(id); if (!c || id === 'replay') return;
+  const b = e.target.closest('[data-hist]');
+  if (b && b.dataset.hist === 'approve') { const ui = uiOf(id); ui.open.add(2); ui.touched.add(2); setView('progress'); render(); scrollToEl($('planArea')); return; }
+  if (b && b.dataset.hist === 'call') {
+    b.disabled = true;
+    try { await fetch(`/api/cases/${id}/call-again`, { method: 'POST' }); setView('progress'); } finally { b.disabled = false; Rail.refresh().then(renderHistory); }
+    return;
+  }
+  const clk = e.target.closest('[data-clock]'); if (!clk) return;
+  const v = clk.dataset.clock, days = v === 'reset' ? null : v === 'due' ? Math.max(1, ((c.next && c.next.days_left) || 0) + 1) : +v;
+  await fetch(`/api/cases/${id}/clock`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ days }) });
+  await Rail.refresh(); renderHistory();
+});
 
 function phaseText(m) {
   if (m.outcome.case_number) return `Billing agreed · case ${m.outcome.case_number}`;
@@ -771,8 +933,7 @@ function awaitingConfirm(m) {
 // the plan exactly as the server wrote it ("17 × $88/mo, then $78.98"); older events only have months × monthly
 const planLabel = (p) => p.text || `${p.months} × ${money(p.monthly)}/mo`;
 function planOf(m) {
-  if (m.done && m.done.plan && m.done.plan.months > 0) return m.done.plan;
-  return m.plan && m.plan.months > 0 ? m.plan : null;
+  return null;  // payment plans are left off: the page shows only the final amount
 }
 
 // what the agents found, biggest saving first (things that aren't money off the bill, like a plan, go last)
@@ -794,7 +955,7 @@ function legacyFindings(m) {
     out.push({ key: 'discount', agent: 'policy', title: now === 0 ? 'Free care under their policy' : 'Discount under their policy',
                saved: owed - now, value: '−' + money(owed - now), proof: pol.note ? [cap(pol.note)] : [], source: '' });
   const pm = /(\d+)\s*×\s*\$([\d,]+)\/mo/.exec(pol.result || '');
-  if (pm) out.push({ key: 'plan', agent: 'policy', title: 'Interest-free payment plan', saved: 0, value: `${pm[1]} × $${pm[2]}/mo`, proof: [], source: '' });
+  void pm;  // payment plans are left off
   return out;
 }
 const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
@@ -1227,6 +1388,7 @@ function renderNext(m, ds, ui) {
 
 function scrollToEl(el) {
   if (!el) return;
+  if (state.view === 'history' && $('viewProgress').contains(el)) setView('progress');
   const bar = document.querySelector('.m3-top-app-bar');
   scrollTo({ top: el.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 16, behavior: 'smooth' });
 }
@@ -1403,12 +1565,13 @@ function liveFeed(id) {
 
 // ---------- data ----------
 async function loadTabs() {
-  const list = await (await fetch('/api/cases')).json();
-  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status }));
+  await Rail.load();
+  state.tabs = Rail.cases.map((c) => ({ id: c.id, name: c.provider, status: c.status }));
 }
 function openCase(id) {
   state.active = id;
-  history.replaceState(null, '', `case.html?id=${id}`);
+  history.replaceState(null, '', `${location.pathname}?id=${encodeURIComponent(id)}${location.hash}`);
+  if (voice.id !== id) $('talkBox').hidden = true;  // the voice answer belongs to the case it was asked on
   if (state.ws) { state.ws.onclose = null; state.ws.close(); }
   if (state.models[id]) state.watched[id] = true;  // seen it on this page already: no second slow play
   state.models[id] = blankModel();
@@ -1425,10 +1588,6 @@ async function decide(agent, ok) {
 }
 
 // ---------- events ----------
-$('tabList').addEventListener('click', (e) => {
-  const b = e.target.closest('[data-tab]'); if (!b || b.dataset.tab === state.active) return;
-  openCase(b.dataset.tab);
-});
 document.querySelector('.steps').addEventListener('click', (e) => {
   const b = e.target.closest('.row-btn'); if (!b) return;
   const i = +b.closest('.step').dataset.step;
@@ -1537,7 +1696,7 @@ const CHAT_AGENTS = [
     hint: 'Ask about your payments, bill or insurance' },
   { k: 'policy', name: 'Bright Data agent', what: 'checked public rules: the hospital’s own financial-assistance policy and payment-plan terms.',
     hint: 'Ask about the hospital’s policy' },
-  { k: 'decide', name: 'Planner', what: 'built your call plan. Ask why, or tell it what to change (“I can do $150/mo”) and it makes a new version.',
+  { k: 'decide', name: 'Planner', what: 'built your call plan. Ask why, or tell it what to change (“refund first”) and it makes a new version.',
     hint: 'Ask why, or tell it what to change' },
 ];
 const CHAT_NAME = Object.fromEntries(CHAT_AGENTS.map((a) => [a.k, a.name]));
@@ -1621,6 +1780,120 @@ $('chatForm').addEventListener('submit', async (e) => {
   } catch (err) { chat.err = err.message; $('chatInput').value = msg; }
   finally { chat.busy = false; chat.pending = null; render(); $('chatInput').focus(); }
 });
+// ---------- talk to Remy: the mic in the chat (POST /api/cases/{id}/talk, agents/talk.py) ----------
+// Hold to talk (or tap to start, tap again to send). The recording goes to Cartesia Ink on the server; the
+// browser's own speech recognition runs alongside and is used when Cartesia can't. The answer is spoken with
+// Cartesia Sonic (/api/tts), or the browser's voice when that fails. Actions wait for your spoken yes.
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const voice = { id: null, state: 'idle', rec: null, chunks: [], stream: null, sr: null, final: '', interim: '', downAt: 0, tapMode: false, audio: null };
+const MIC_ICON = { idle: 'mic', listening: 'mic', thinking: 'more_horiz', speaking: 'graphic_eq' };
+function setMic(state) {
+  voice.state = state;
+  const b = $('micBtn');
+  b.className = 'mic' + (state !== 'idle' ? ' ' + state : '');
+  b.setAttribute('aria-pressed', String(state === 'listening'));
+  b.firstElementChild.textContent = MIC_ICON[state];
+}
+function showTalk(parts) {
+  const { you, youLive, reply, pending, by, note } = parts, box = $('talkBox');
+  box.hidden = false;
+  box.innerHTML = `${you || youLive ? `<p class="you">${youLive ? esc(youLive) + '…' : '“' + esc(you) + '”'}</p>` : ''}
+    ${reply ? `<p class="bb">${sym('graphic_eq')}<span>${esc(reply)}</span></p>` : ''}
+    <span class="meta">${pending ? '<span class="m3-status warn">Waiting for your yes</span>' : ''}${note ? `<span>${esc(note)}</span>` : ''}
+      ${by ? `<span>Heard by ${by === 'cartesia' ? 'Cartesia' : 'your browser'}</span>` : ''}
+      <button type="button" class="m3-chip" data-talk-close>Close</button></span>`;
+}
+function stopSpeaking() {
+  try { speechSynthesis.cancel(); } catch (e) {}
+  if (voice.audio) { voice.audio.pause(); voice.audio = null; }
+  if (voice.state === 'speaking') setMic('idle');
+}
+async function startTalk(id) {
+  stopSpeaking();
+  Object.assign(voice, { id, chunks: [], final: '', interim: '', rec: null, stream: null, sr: null });
+  setMic('listening');
+  showTalk({ youLive: 'Listening', note: 'Let go when you’re done' });
+  try {
+    voice.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voice.rec = new MediaRecorder(voice.stream);
+    voice.rec.ondataavailable = (e) => { if (e.data.size) voice.chunks.push(e.data); };
+    voice.rec.start();
+  } catch (e) { voice.rec = null; }
+  if (SR) {
+    const sr = new SR(); sr.lang = 'en-US'; sr.interimResults = true; sr.continuous = true;
+    sr.onresult = (e) => {
+      let fin = '', mid = '';
+      for (const r of e.results) { if (r.isFinal) fin += r[0].transcript; else mid += r[0].transcript; }
+      voice.final = fin; voice.interim = mid;
+      if (voice.state === 'listening') showTalk({ youLive: (fin + ' ' + mid).trim() || 'Listening', note: 'Let go when you’re done' });
+    };
+    sr.onerror = () => {};
+    try { sr.start(); voice.sr = sr; } catch (e) {}
+  }
+  if (!voice.rec && !voice.sr) { setMic('idle'); showTalk({ reply: 'I can’t use the microphone here. Allow it for this site, or use Chrome.' }); }
+}
+async function stopTalk() {
+  const id = voice.id;
+  if (voice.state !== 'listening') return;
+  setMic('thinking');
+  const recDone = voice.rec && voice.rec.state !== 'inactive' ? new Promise((res) => { voice.rec.onstop = res; voice.rec.stop(); }) : null;
+  const srDone = voice.sr ? new Promise((res) => { voice.sr.onend = res; voice.sr.stop(); setTimeout(res, 1500); }) : null;
+  await Promise.all([recDone, srDone]);
+  if (voice.stream) voice.stream.getTracks().forEach((t) => t.stop());
+  const heard = (voice.final + ' ' + voice.interim).trim();
+  showTalk({ you: heard || '…', note: 'Thinking…' });
+  const fd = new FormData();
+  fd.append('heard', heard);
+  if (voice.chunks.length) fd.append('audio', new Blob(voice.chunks, { type: voice.rec.mimeType || 'audio/webm' }), 'speech.webm');
+  let r;
+  try { r = await (await fetch(`/api/cases/${id}/talk`, { method: 'POST', body: fd })).json(); }
+  catch (e) { r = { reply: 'Sorry, I couldn’t reach Remy.' }; }
+  if (state.active === id) showTalk({ you: r.heard, reply: r.reply, pending: r.pending, by: r.heard_by });
+  Rail.refresh().then(renderHistory);
+  await say(id, r.reply);
+}
+async function say(id, text) {
+  if (!text) return setMic('idle');
+  setMic('speaking');
+  const done = () => { if (voice.id === id && voice.state === 'speaking') setMic('idle'); };
+  try {
+    if (voice.ttsOff) throw new Error('tts off');
+    const res = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+    if (!res.ok) { voice.ttsOff = true; throw new Error('tts ' + res.status); }  // e.g. no credits: stop asking this visit
+    if (voice.state !== 'speaking' || voice.id !== id) return;  // you pressed the mic again while it loaded
+    voice.audio = new Audio(URL.createObjectURL(await res.blob()));
+    voice.audio.onended = done; voice.audio.onerror = done;
+    await voice.audio.play();
+  } catch (e) {  // no Cartesia (or no credits): the browser's voice
+    if (voice.state !== 'speaking' || voice.id !== id) return;
+    const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = done; u.onerror = done;
+    speechSynthesis.speak(u);
+  }
+}
+// press: start (or, in tap mode, send); release after a hold: send; a quick tap switches to tap mode
+function micDown() {
+  if (!state.active || state.active === 'replay') return;
+  if (voice.state === 'listening' && voice.tapMode) { voice.tapMode = false; return stopTalk(); }
+  if (voice.state === 'thinking') return;
+  voice.downAt = performance.now(); voice.tapMode = false;
+  startTalk(state.active);
+}
+function micUp() {
+  if (voice.state !== 'listening' || voice.tapMode) return;
+  if (performance.now() - voice.downAt < 300) { voice.tapMode = true; showTalk({ youLive: 'Listening', note: 'Tap the mic again to send' }); return; }
+  stopTalk();
+}
+$('micBtn').addEventListener('pointerdown', (e) => {
+  if (e.button > 0) return;
+  e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+  micDown();
+});
+$('micBtn').addEventListener('pointerup', micUp);
+$('micBtn').addEventListener('pointercancel', micUp);
+$('micBtn').addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) micDown(); } });
+$('micBtn').addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); micUp(); } });
+$('talkBox').addEventListener('click', (e) => { if (e.target.closest('[data-talk-close]')) { stopSpeaking(); $('talkBox').hidden = true; } });
+
 $('planYes').addEventListener('click', () => decide('planner', true));
 $('planNo').addEventListener('click', () => decide('planner', false));
 $('endCallBtn').addEventListener('click', () => { if (state.active) fetch(`/api/cases/${state.active}/end-call`, { method: 'POST' }); });
@@ -1646,7 +1919,7 @@ setInterval(() => {
   if (m && m.call && !m.callEnded) render();
   else if (m && m.prog && !m.done && !m.error) paintTrack(m, m.prog.ds);  // keep the current step's bar creeping
 }, 500);
-setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);
+setInterval(async () => { if (state.active === 'replay') return; try { await loadTabs(); } catch (e) { return; } renderTabs(); }, 4000);
 
 // ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5][&jump=call] ----------
 // Plays a recorded run entirely in the browser, paced so each step can be watched (&speed=0 for recorded timing). Approvals are shown and then
@@ -1720,6 +1993,7 @@ async function startReplay(params) {
   if (params.get('replay')) return startReplay(params);
   try { state.liveCrawl = !!(await (await fetch('/api/mode')).json()).live_crawl; } catch (e) { state.liveCrawl = false; }
   await loadTabs();
+  if (location.hash === '#history') setView('history');  // e.g. a link straight to a case's calls and follow-ups
   const want = new URLSearchParams(location.search).get('id');
   if (want && state.tabs.some((t) => t.id === want)) openCase(want);
   else if (state.tabs.length) openCase(state.tabs[0].id);

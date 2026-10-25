@@ -229,24 +229,7 @@ def compute(case: dict) -> dict:
                 f"Ask for the {money(refund)} the patient already paid to be refunded once the assistance is applied.",
                 refund, findings=["policy:discount", *[f"auditor:paid-{p['id']}" for p in payments]])
 
-    plan = None
-    if not d and target > 0:
-        terms = pol.get("plan_terms") or {}
-        if "policy:plan" not in finds:
-            skipped.append({"kind": "plan", "text": "Payment plan",
-                            "why": "The Bright Data agent didn't find payment-plan terms to back it up"})
-        elif "policy:plan" in bad:
-            skipped.append({"kind": "plan", "text": "Payment plan", "why": "You said the payment-plan finding is wrong"})
-        else:
-            plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
-                                        max_monthly=prefs.get("max_monthly"), monthly_bills=inc.get("bills_monthly"))
-            why = " Their own billing policy says payment plans are interest-free." if terms.get("interest_free") else ""
-            ask("plan", f"Set up an interest-free payment plan for the {money(target)}: "
-                        f"{plan['text']}, as their own billing policy allows",
-                f"Once the balance is corrected to {money(target)}, set up an interest-free payment plan: "
-                f"{finance.plan_said(plan)}.{why} Don't give card details; "
-                f"the patient sets up the payments.",
-                value=plan["text"], findings=["policy:plan"], plan=plan)
+    plan = None  # payment plans are left off entirely: the plan keeps the final amount
     results = call_results(case)
     refused_before = any(r["status"] == "refused" for r in results.values())
     if prefs.get("if_refused") == "supervisor" or refused_before:
@@ -593,8 +576,8 @@ number and source. If the data doesn't say, say you don't know.
 
 Strategy change requests: call change_strategy in the same reply, right away; never ask the patient to
 confirm first (every version is kept and they can go back). You can only change: which asks go first ("first"), leaving
-the plan / collections-hold / supervisor asks off ("skip"; "include" puts one back), what the patient can pay
-per month ("max_monthly"), asking for a supervisor if billing says no ("if_refused": "supervisor"), or
+the collections-hold / supervisor asks off ("skip"; "include" puts one back), asking for a supervisor if billing
+says no ("if_refused": "supervisor"), or
 "reset" to the default strategy. Then say in one sentence what you changed; the plan updates on its own.
 The plan in CASE DATA already includes every earlier change: only call change_strategy for a new change asked
 for in the patient's latest message, never to repeat an earlier one.
@@ -606,7 +589,8 @@ Refuse, briefly and kindly, and explain why:
 - agreeing to pay, giving card or bank details on the call, or hiding that the caller is an automated assistant.
 - dropping the case-number ask; leaving off money the findings show they don't owe.
 - anything unrelated to this bill.
-Never write numbers that aren't in the data. Never claim you changed something you didn't."""
+Never write numbers that aren't in the data. Never claim you changed something you didn't.
+Never suggest or discuss payment plans: Remy only works out the final amount; the patient decides how to pay."""
 
 STRATEGY_TOOL = {"name": "change_strategy", "description": "Change the call strategy; the plan is recalculated by the rules",
                  "input_schema": {"type": "object", "properties": {
