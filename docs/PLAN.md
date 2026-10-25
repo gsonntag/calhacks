@@ -40,49 +40,76 @@ bank history and insurer stay synthetic.
 
 Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
 
-6. **Step 2B: the Decide agent** (see below), between the Review and Your approval.
+6. **Step 3: the plan (Decide agent) and in-place Ask / "This is wrong"** (see below).
 
-## The flow: Step 2A and Step 2B
+## The flow (settled 2026-10-25)
 
-- **2A, Review:** the Nessie agent and the Bright Data agent run in parallel, each checklist visible live.
-- **2B, Decide:** a third agent takes what both found and works out the plan. Then Your approval.
+1. Read your bill → 2. **Review** → 3. **The plan** → 4. Call → 5. Resolved.
 
-**Every past stage stays reopenable.** Click any finished stage to see everything it did: each check, each
-piece of evidence and source, the decision, the call transcript. Nothing an agent did disappears.
+- **Step 2, Review:** the Nessie agent and the Bright Data agent run side by side; you watch each one's
+  checklist live. (Built: shared report format + one terminal per agent, commit 6563e09.)
+- **Step 3, The plan:** the Decide agent lives only here. There is no separate "2B" stage: the decision is
+  rules-based code and would flash by.
+- **Every past stage stays reopenable** with its full record (each check, evidence and source, the plan and
+  its versions, the call transcript). Nothing an agent did disappears.
+- **Design rule:** anything that needs the user shows up inside the flow, in its step, never in a separate
+  box at the top of the page. (Today the call approval is still a card above the steps; step 3 replaces it.)
 
-### What the Decide agent shows
-- What it got: "Nessie found you paid $500. Bright Data found you qualify for free care."
-- What it concluded: "You owe $0, and the hospital owes you $500 back."
-- The path and why: e.g. refund first, then confirm a $0 balance; or apply insurance, then a plan.
-- Who it will negotiate with: billing, the financial-assistance office, or the collections agency.
-- The exact asks, in order, with fallbacks. These feed the approval card.
+### Asking and correcting in step 2 (in place, no general chat)
+Users don't know what "Nessie" or "Bright Data" are, so they never have to pick an agent:
+- Each finding has **"Ask"**: a small box opens under that finding and the agent that found it answers there,
+  only from its own evidence, with the source; it says so when it doesn't know. Agent names show as small
+  labels on answers (for judges). Asking never changes anything.
+- Each finding has **"This is wrong"**: saved as an explicit correction on that finding (logged in the case
+  history). Allowed until the call starts; a change after approval resets the approval.
+- Reuse the existing "Ask BillBack" endpoint (`/api/cases/{id}/ask`) scoped to one agent's evidence.
 
-The decision is **rules-based code** (today's logic lives in `finance.settle` and `orchestrator.call_asks`,
-hidden from the user); Claude only writes the plain-English explanation.
+### What reruns (no change-tracking needed)
+- **Fetched data** (Nessie transactions, Bright Data policy/prices) is slow and costs money: fetched once and
+  saved. Only an explicit **"Start over"** (new bill, different hospital, new bank data) fetches again.
+- **Everything calculated** (what you paid, what you owe, the discount, the plan and asks) is plain code and
+  takes milliseconds: any correction or strategy change **recalculates all of it from scratch**, then the UI
+  shows the difference from the previous result ("owed $600 → $1,100; plan changed: no refund").
+- The user's **strategy preferences** are stored separately from facts, so they survive corrections.
 
-### Talking to the Decide agent
-The user can chat to change the strategy ("ask for the refund first", "don't mention a plan", "I can do
-$150/mo", "ask for a supervisor if they say no"). The plan updates on screen with what changed and why, and
-the user approves that plan; the caller follows it.
+### Step 3 layout: vertical
+- **While the Decide agent works:** its panel is big at the top, with filler text ("Building your plan…" and
+  placeholder lines). The plan area below shows "filling in…".
+- **When done:** the panel shrinks to a slim bar ("Talk to the planner ▸") and the plan takes the full width.
+- Vertical, not side by side: one layout for phone and laptop, reads top to bottom, plan gets full width.
+  When a chat change creates a new version, scroll to the plan and highlight the changed lines.
 
-Guardrails: the chat changes strategy, never facts. Numbers always come from the code. Every ask must be
-backed by something Nessie or Bright Data found; if not, the agent says why it can't. Hard rules stay: never
-agree to pay on a call, always say it's an automated assistant.
+### The plan (a versioned report)
+- **Money line:** $billed → $owed.
+- **Who we'll call:** department and phone number (billing, financial assistance, or the collections agency).
+- **Every ask the plan can back up**, in order, biggest money first; each shows its money and a "why ▸" link
+  to the finding in step 2 that supports it. Show the top 4, then "Show N more ▾". Every ask goes on the call.
+- **"How I decided ▸"** (closed by default): what came from Nessie, what came from Bright Data, the math, the
+  path chosen, who to call, and the fallback if billing refuses.
+- **Buttons:** "Call now" (approves the version on screen) · "Not now". Caller voice and the fixed rules
+  ("never agrees to pay", "says it's an automated assistant") sit behind a small "Call settings" link.
+- **Versions:** v1, v2…; changed lines are marked briefly; tap an older version to compare or go back.
 
-### Questioning and correcting (when to rerun)
-- **Asking** ("why do you think I paid $500?") changes nothing; the agent answers from its own evidence.
-- **Correcting** ("that $500 was to my dentist") is saved as an explicit fix on that finding. Then only what
-  depends on it is redone: the money math recalculates instantly; Nessie/Bright Data do NOT re-fetch (their
-  data didn't change); the Decide agent re-plans and shows the difference.
-- The user's strategy preferences are stored separately from facts, so they survive corrections.
-- A full rerun only happens when inputs truly change (new bill, different hospital, new bank data), via an
-  explicit "Start over" button, never silently.
-- Corrections are allowed until the call starts. A change after approval resets the approval.
-- Every correction is logged in the case history (what changed, and how the plan changed).
+### Talking to the planner (the Decide agent)
+- Opened from the slim bar. The chat never puts text into the report.
+- It has every finding from both agents with its proof, plus the math and the rules applied, and each plan
+  line records which findings it came from, so "why did you do X with this data?" gets an answer that
+  points at the exact data.
+- **Questions** are answered in the chat only. **Change requests** ("refund first", "don't mention a plan",
+  "I can do $150/mo", "ask for a supervisor if they say no") produce a new version of the plan.
+- The decision is **rules-based code** (today's logic: `finance.settle`, `orchestrator.call_asks`); Claude
+  writes the explanation and turns chat requests into plan changes, which the rules check.
+- Guardrails: the chat changes strategy, never facts; numbers always come from the code; every ask must be
+  backed by a finding (otherwise it explains why not); never agree to pay, always say it's automated.
 
-### Later: ask Nessie or Bright Data directly
-Each agent answers questions only from what it found (transactions, policy text, quotes), shows the
-source, and says when it doesn't know. Reuse the existing "Ask BillBack" endpoint (`/api/cases/{id}/ask`).
+### Still to design
+- What the planner chat refuses, in detail.
+- "This is wrong": which things can be corrected (a transaction, income, household size, insurance) and
+  how that looks.
+- Who it calls: where department names and phone numbers come from.
+- The demo version: how step 3 and the chat play in the replay without live typing.
+- Cases page: drop the totals cards and the "Needs you" box; cases needing you go to the top of the list.
+- A list of UI polish changes for steps 2–3 (to collect, then one polish pass).
 
 ## Later (when there's time)
 
