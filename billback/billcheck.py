@@ -49,10 +49,22 @@ def payee_names(payee: str) -> list[str]:
     return out
 
 
+# a bill payment, as banks print it ("SUTTER HEALTH PYMT", "ONLINE PMT", "BILL PAY"); premiums are never one
+PAYMENT_WORDS = re.compile(r" (pymt|pmt|payment|bill ?pay|patient pay) ")
+NOT_A_BILL_PAYMENT = re.compile(r" (premium|insurance|health plan|dues) ")
+
+
 def is_payment_to(txn: dict, payee: str, account: str | None = None) -> bool:
+    """A payment to this hospital: its own name or an alias, the bill's account number, or its health system's
+    name on a bill payment ("SUTTER HEALTH PYMT" for a Sutter hospital: the system bills centrally)."""
     text = f"{txn.get('merchant') or ''} {txn.get('description') or ''}"
     hay = _words(text)
     if any(f" {n} " in hay for n in payee_names(payee)):
+        return True
+    h = hospital(payee)
+    system = _words(h.system).strip() if h else ""
+    if (system and len(system.split()) > 1 and f" {system} " in hay and PAYMENT_WORDS.search(hay)
+            and not NOT_A_BILL_PAYMENT.search(hay)):
         return True
     acct = _compact(account)
     return len(acct) >= 6 and acct in _compact(text)

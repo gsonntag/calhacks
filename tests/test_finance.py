@@ -124,7 +124,7 @@ def test_clean_tiers_coerces_and_drops():
 
 
 def test_reconcile_without_payments(demo):
-    txns = [t for t in demo["transactions"] if "Pacific" not in t.get("merchant", "")]
+    txns = [t for t in demo["transactions"] if "SUTTER" not in t.get("merchant", "")]
     rec = finance.reconcile(demo["bill"], demo["eob"], txns)
     assert rec["paid"] == 0 and rec["owed"] == 1100
 

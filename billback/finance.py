@@ -134,6 +134,38 @@ def income(txns: list[dict], today: date | None = None, lookback_days: int = 90)
             "source": how}
 
 
+# What counts as medical spending in a bank history: whole words in the merchant or description. Insurance
+# premiums, gyms and health-food shops never count. Every match is shown with its transaction, so the patient
+# can check it (and mark it wrong).
+MEDICAL_WORDS = re.compile(r"\b(pharmacy|pharm|rx|cvs|walgreens|rite aid|urgent care|clinic|medical|hospital|dental|"
+                           r"dentist|orthodontics?|doctor|physician|pediatrics?|labcorp|quest diagnostics|radiology|"
+                           r"imaging|optometry|optometrist|physical therapy|chiropractic|copay|co pay|prescriptions?)\b")
+NOT_MEDICAL = re.compile(r"\b(premium|insurance|health plan|fitness|gym|club|foods?)\b")
+
+
+def medical_spending(txns: list[dict], bill: dict, eob: dict | None = None, today: date | None = None,
+                     days: int = 365) -> dict:
+    """Medical purchases in the bank over the last `days` (the high-medical-cost rule's "prior 12 months"),
+    apart from payments toward this bill (already part of the bill's share, so they'd count twice) and the copy
+    of a double charge (the patient disputes it with the bank; it isn't money spent on care)."""
+    today = today or date.today()
+    start = today - timedelta(days=days)
+    copies = {id(d["duplicate"]) for d in find_duplicates(txns)}
+    hits = []
+    for t in txns:
+        if (t["type"] not in ("purchase", "withdrawal") or not t.get("date") or id(t) in copies
+                or not start < _d(t["date"]) <= today):
+            continue
+        text = " " + re.sub(r"[^a-z0-9]+", " ", f"{t.get('merchant') or ''} {t.get('description') or ''}".lower()) + " "
+        if not MEDICAL_WORDS.search(text) or NOT_MEDICAL.search(text):
+            continue
+        if billcheck.on_or_after_service(t, bill, eob) and _matches_payee(t, bill["provider"], bill.get("account_number")):
+            continue
+        hits.append(t)
+    hits.sort(key=lambda t: t["date"])
+    return {"txns": hits, "total": round(sum(t["amount"] for t in hits), 2), "since": start.isoformat(), "days": days}
+
+
 def _num(v, discount: bool = False) -> float | None:
     """Coerce an LLM-extracted tier value: 200, "200%", "up to 400" -> float; "free"/"full" discount -> 100."""
     if isinstance(v, bool):

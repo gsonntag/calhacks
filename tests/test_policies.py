@@ -279,7 +279,8 @@ def test_same_bill_different_hospitals():
     # shares only above 10% of income, Chinese Hospital's free care is self-pay only, ZSFG has no tier: $600 everywhere
     assert rosa["sutter-cpmc"]["balance"] == 600 and rosa["sutter-cpmc"]["refund"] == 0
     assert rosa["sutter-cpmc"]["fpl_pct"] == pytest.approx(228.1, abs=0.1)
-    assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(3.0, abs=0.1)
+    # her $1,100 share + $93 other medical bills in her bank (urgent-care copay, a prescription; not the double charge)
+    assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(3.3, abs=0.1)
     assert "not above 10%" in rosa["sutter-cpmc"]["why_not"]
     assert rosa["chinese-hospital"]["balance"] == 600 and rosa["chinese-hospital"]["discount_pct"] == 0
     assert rosa["zsfg"]["balance"] == 600  # ZSFG publishes no fixed-percent tier on its own site

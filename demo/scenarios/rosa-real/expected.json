@@ -1,7 +1,7 @@
 {
   "scenario": "rosa-real",
   "generator": "billback/scenarios.py",
-  "generator_version": 1,
+  "generator_version": 2,
   "seed": 1101,
   "as_of": "2026-10-25",
   "story": "Rosa's ER visit at CPMC Van Ness (abdominal pain, CT with contrast), rebuilt from CPMC's real price file. Insured, about 228% of the poverty line. The bill ignores her insurance, misses her $500 payment and lists the IV push twice.",
@@ -85,7 +85,7 @@
       "type": "uncredited_payment",
       "what": "$500.00 paid on 2026-09-14 is not on the bill",
       "effect_on_amount_owed": -500.0,
-      "txn_id": "mirror-026",
+      "txn_id": "mirror-207",
       "date": "2026-09-14",
       "amount": 500.0
     }
@@ -296,18 +296,31 @@
     "owed_before_discount": 1574.98
   },
   "income": {
-    "annual": 36400.0,
-    "monthly": 3033.33,
-    "source": "7 Nessie payroll deposits, paid every two weeks (avg $1,400 x 26)",
+    "annual": 36589.21,
+    "monthly": 3049.1,
+    "source": "7 Nessie payroll deposits, paid every two weeks (avg $1,407 x 26)",
     "deposits_counted": 7
   },
+  "medical_spending": {
+    "since": "2025-10-25",
+    "bank_total": 101.59,
+    "this_bill": 2074.98,
+    "out_of_pocket": 2176.57,
+    "txn_ids": [
+      "mirror-051",
+      "mirror-104",
+      "mirror-179"
+    ],
+    "discount_without_bank": 0,
+    "bank_decides_eligibility": false
+  },
   "discount": {
-    "fpl_pct": 228.1,
+    "fpl_pct": 229.3,
     "fpl_amount": 15960,
     "fpl_year": 2026,
     "household_size": 1,
     "insured": true,
-    "oop_pct_income": 5.7,
+    "oop_pct_income": 5.9,
     "discount_pct": 0,
     "tier_quote": null
   },
@@ -326,7 +339,7 @@
   "plan": {
     "months": 18,
     "monthly": 88.0,
-    "reason": "$88/mo stays under 4% of monthly income ($3,033): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
+    "reason": "$88/mo stays under 4% of monthly income ($3,049): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
   },
   "finance_reconcile": {
     "billed_due": 15414.33,
@@ -336,7 +349,7 @@
     "owed": 1574.98,
     "overbilled_by": 13839.35,
     "payment_txn_ids": [
-      "mirror-026"
+      "mirror-207"
     ],
     "duplicate_txn_ids": []
   },
@@ -357,11 +370,11 @@
       "note": "Excludes the duplicate line and overcharge, reported separately. The app's current auditor reports amount_due - responsibility as one number ($13,339.35)."
     },
     {
-      "id": "paid-mirror-026",
+      "id": "paid-mirror-207",
       "agent": "nessie",
       "title": "A payment you made was missed",
       "money": 500.0,
-      "proof": "bank txn mirror-026 on 2026-09-14"
+      "proof": "bank txn mirror-207 on 2026-09-14"
     },
     {
       "id": "plan",

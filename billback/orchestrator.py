@@ -15,10 +15,11 @@ from . import config, events, followups, llm, voice
 from .agents import auditor, caller, decide, planner, policy, scorecard
 from .events import bus
 from .harness import gate
-from .integrations import cartesia
+from .integrations import cartesia, nessie
 from .integrations.nessie import get_bank
 
 cases: dict[str, dict] = {}
+banks: dict[str, tuple] = {}  # case id -> (bank, account id, label) the Review used, for later writes
 RUNTIME = ("call_done", "turns_seen", "wh_counts", "wh_turn_ids")
 ACTIVE = ("created", "reviewing", "deciding", "awaiting_call_approval", "calling", "planning")
 
@@ -250,6 +251,28 @@ async def _fill_outcome(case: dict, mode: str) -> None:
         rep_lines = [e["text"] for e in _call_transcript(case) if e["speaker"] == "rep"]
         marks = scorecard.score(plan_v["asks"], case["call_outcome"], info, rep_lines, plan_v["money"])
     _log_call(case, mode, info, marks, plan_v["v"] if plan_v else None)
+    await mark_bank_bill(case)
+
+
+async def mark_bank_bill(case: dict) -> dict | None:
+    """Billing confirmed a balance on the last call: mark the hospital bill updated in the patient's bank
+    (Nessie; the sample bank offline or after a fallback), so the bank stops showing the old amount."""
+    call = case["calls"][-1] if case.get("calls") else {}
+    confirmed = call.get("confirmed_balance")
+    if isinstance(confirmed, bool) or not isinstance(confirmed, (int, float)):
+        return None
+    try:
+        if case["id"] not in banks:  # e.g. a follow-up call after a restart
+            bank, acct, label = await get_bank(case)
+            banks[case["id"]] = (bank, acct, label)
+        bank, acct, label = banks[case["id"]]
+        res = await nessie.mark_bill_corrected(bank, acct, case["bill"], confirmed, case_now(case).isoformat())
+    except Exception as e:
+        bus.emit(case["id"], "warning", "auditor", text=f"Couldn't update the bill in your bank: {type(e).__name__}: {e}")
+        return None
+    if res:
+        bus.emit(case["id"], "bank_bill_updated", "auditor", bank=getattr(bank, "label", label), **res)
+    return res
 
 
 OUTCOME_KEYS = ("case_number", "rep_name", "account_on_hold", "assistance_review_opened", "adjustment_applied",
@@ -409,6 +432,7 @@ async def run_case(case: dict) -> None:
     cid = case["id"]
     try:
         bank, account_id, bank_label = await get_bank(case)
+        banks[cid] = (bank, account_id, bank_label)
         bus.emit(cid, "case_started", modes=config.mode(), bank=bank_label, documents=case.get("documents", []),
                  bill={k: case["bill"][k] for k in ("provider", "amount_due", "notice", "due_date")})
         bus.emit(cid, "balance", amount=case["bill"]["amount_due"], label="Hospital says")

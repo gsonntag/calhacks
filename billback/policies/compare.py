@@ -23,14 +23,17 @@ def patient_facts(case: dict) -> dict:
     insured = billcheck.insured(case)
     rec = finance.reconcile(case["bill"], case["eob"] if insured else {}, txns,
                             corrections=None if insured else billcheck.line_corrections(case["bill"], case["hospital"]["name"]))
+    med = finance.medical_spending(txns, case["bill"], case["eob"] if insured else {}, today=today)  # 12 months, from the bank
     return {"annual_income": inc["annual"], "income_source": inc["source"], "household_size": case["patient"]["household_size"],
+            "other_medical": med["total"],
             "insured": insured, "patient_responsibility": rec["patient_responsibility"], "paid": rec["paid"],
             "owed_before_policy": rec["owed"], "billed_due": rec["billed_due"]}
 
 
 def evaluate(facts: dict, policy: dict) -> dict:
     elig = finance.charity_discount(facts["annual_income"], facts["household_size"], policy["tiers"],
-                                    insured=facts["insured"], out_of_pocket=facts["patient_responsibility"])
+                                    insured=facts["insured"],
+                                    out_of_pocket=round(facts["patient_responsibility"] + facts.get("other_medical", 0), 2))
     st = finance.settle(facts["patient_responsibility"], facts["paid"], elig["discount_pct"])
     t = elig["tier"]
     rule = None
