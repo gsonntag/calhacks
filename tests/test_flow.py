@@ -13,7 +13,7 @@ from remy.events import bus
 # Kinds web/case.html renders from the /ws/cases/{id} stream.
 CASE_HTML_KINDS = {"case_started", "agent_started", "agent_finished", "step", "review_done", "balance",
                    "approval_requested", "approval_resolved", "call_ready", "transcript", "call_outcome",
-                   "call_ended", "plan_proposed", "tool_result", "policy_quote", "case_done", "finding"}
+                   "call_ended", "tool_result", "policy_quote", "case_done", "finding"}
 
 
 class _Today(date):
@@ -74,7 +74,7 @@ async def test_offline_end_to_end(client):
     assert s["started_at"] == 8700 and s["now"] == 8700 and s["refund"] == 0
     assert s["expected"] == 600 and s["confirmed"] is False
     assert s["case_number"] == "58213"
-    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is False
+    assert s["plan"]["months"] == 0 and s["plan_created"] is False  # payment plans are left off entirely
 
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
@@ -91,7 +91,7 @@ async def test_offline_end_to_end(client):
     finds = {e["title"]: e for e in hist if e["kind"] == "finding"}
     assert finds["Insurance wasn’t applied"]["saved"] == 7600
     assert finds["A payment you made was missed"]["saved"] == 500
-    assert finds["Interest-free payment plan"]["saved"] == 0 and finds["Interest-free payment plan"]["value"] == "6 × $100/mo"
+    assert not any("payment plan" in t.lower() for t in finds)  # payment plans are left off entirely
     assert all(f["proof"] and f["source"] for f in finds.values())
     assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600, 8700]
     assert [e for e in hist if e["kind"] == "balance"][-1]["label"] == "Billing still shows"

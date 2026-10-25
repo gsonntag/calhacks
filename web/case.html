@@ -793,7 +793,7 @@ function legacyFindings(m) {
     out.push({ key: 'discount', agent: 'policy', title: now === 0 ? 'Free care under their policy' : 'Discount under their policy',
                saved: owed - now, value: '−' + money(owed - now), proof: pol.note ? [cap(pol.note)] : [], source: '' });
   const pm = /(\d+)\s*×\s*\$([\d,]+)\/mo/.exec(pol.result || '');
-  if (pm) out.push({ key: 'plan', agent: 'policy', title: 'Interest-free payment plan', saved: 0, value: `${pm[1]} × $${pm[2]}/mo`, proof: [], source: '' });
+  void pm;  // payment plans are left off
   return out;
 }
 const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
@@ -1536,7 +1536,7 @@ const CHAT_AGENTS = [
     hint: 'Ask about your payments, bill or insurance' },
   { k: 'policy', name: 'Bright Data agent', what: 'checked public rules: the hospital’s own financial-assistance policy and payment-plan terms.',
     hint: 'Ask about the hospital’s policy' },
-  { k: 'decide', name: 'Planner', what: 'built your call plan. Ask why, or tell it what to change (“I can do $150/mo”) and it makes a new version.',
+  { k: 'decide', name: 'Planner', what: 'built your call plan. Ask why, or tell it what to change (“refund first”) and it makes a new version.',
     hint: 'Ask why, or tell it what to change' },
 ];
 const CHAT_NAME = Object.fromEntries(CHAT_AGENTS.map((a) => [a.k, a.name]));

@@ -416,28 +416,13 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     terms = found.get("payment_plan") or {}
     plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
                                 monthly_bills=inc["bills_monthly"])
-    if plan["months"]:
-        r.step("plan", "Payment plan terms", "running")
-        rules = [x for x in ("interest-free" if terms.get("interest_free") else "",
-                             f"max {terms['max_pct_monthly_income']:g}% of monthly income"
-                             if terms.get("max_pct_monthly_income") else "") if x]
-        quotes = [(q, qs or source) for q, qs in ((terms.get("quote"), terms.get("source_url")),
-                                                   (terms.get("cap_quote"), terms.get("cap_source_url"))) if q]
-        r.step("plan", "Payment plan terms", "win" if rules else "ok",
-               (f"Their policy: {', '.join(rules)} → " if rules else "")
-               + f"${target:,.2f} as {plan['text']}, no interest", quotes)
-        for q, qs in quotes:
-            bus.emit(cid, "policy_quote", "policy", quote=q, source=qs, live=live, verified=True,
-                     origin=got["origin"], matched=True, topic="payment_plan")
-        r.finding("plan", "Interest-free payment plan", 0,
-                  [f"“{q}”" for q, _ in quotes] or ["Their billing policy allows an interest-free plan."],
-                  quotes[0][1] if quotes else source, value=plan["text"])
+    # payment plans are left off entirely: no step, no finding, no quote (the plan keeps the final amount)
 
     result = ((f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}") if d else "No discount")
     if st["refund"]:
         result += f" + ${st['refund']:,.0f} refund"
-    if not d and plan["months"]:
-        result = f"${target:,.0f}, interest-free plan"
+    if not d:
+        result = f"${target:,.0f}, no discount"
     note = "charity-care discount" if d else _why_not_free(elig, free) if free else "no discount tier matched"
     r.finish(result, note)
     return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live,

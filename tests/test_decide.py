@@ -26,8 +26,8 @@ async def test_v1_backs_every_ask_with_a_finding(client):
     assert v1["money"] == {"billed": 8700, "owed": 600, "target": 600, "refund": 0, "saved": 8100}
     # biggest money first, then the plan, then the standard asks
     assert [a["kind"] for a in v1["asks"]] == ["insurance", "payment", "hold", "case_number"]
-    # payment plans are never put to billing: the plan keeps the final amount and says so
-    assert [x["kind"] for x in v1["skipped"]] == ["plan"]
+    # payment plans are left off entirely: not asked, not listed
+    assert not v1["skipped"]
     assert [a["money"] for a in v1["asks"][:2]] == [7600, 500]
     findings = case["facts"]["findings"]
     for a in v1["asks"]:
