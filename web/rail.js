@@ -10,10 +10,10 @@ const Rail = (() => {
     calling: ['On a call', 'live'], planning: ['Planning', 'live'], done: ['Resolved', 'green'], interrupted: ['Interrupted', ''], error: ['Error', ''],
   };
   const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0)) + (c.refund || 0);
-  // needs the patient: a call or payment plan waiting for approval, or a follow-up past due
+  // needs the patient: a call or a call plan waiting for approval, or a follow-up past due
   function needsYou(c) {
     if (c.status === 'awaiting_call_approval') return 'Approve the call';
-    if (c.needs_plan_ok) return 'Approve the plan';
+    if (c.needs_plan_ok) return 'Approve the call plan';
     if (c.next && c.next.overdue) return 'Follow-up overdue';
     return '';
   }
@@ -30,7 +30,7 @@ const Rail = (() => {
     async load() {
       const list = await (await fetch('/api/dashboard')).json();
       // newest first from the server; what needs you floats to the top (stable sort keeps the rest in order)
-      R.cases = [...list].sort((a, b) => !needsYou(b) - !needsYou(a));
+      R.cases = [...list].sort((a, b) => !needsYou(a) - !needsYou(b));
       return R.cases;
     },
     render() {

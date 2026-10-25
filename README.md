@@ -83,7 +83,7 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
    money first, each linked to its proof. Mark a finding "This is wrong", or open **Ask Remy** (the round
    button bottom-right of the case page) and pick who answers: Remy (the whole case), the Nessie agent, the
    Bright Data agent, or the Planner ("I can do $150/mo"). Every plan change makes a new version; "Call now"
-   approves the version on screen. On the Cases page, each case has a hold-to-talk mic: ask where things
+   approves the version on screen. In the Ask Remy chat panel, a hold-to-talk mic: ask where things
    stand or say "call them"; anything with consequences is said back first and runs only after a spoken yes.
 4. **The call.** Remy phones billing (or the desk console), says it's an automated assistant, works
    through the asks, reads the case number back, and records what billing agreed. **Guardrails are enforced
