@@ -1,7 +1,7 @@
 {
   "scenario": "dana-altabates-refund",
   "generator": "billback/scenarios.py",
-  "generator_version": 1,
+  "generator_version": 2,
   "seed": 1103,
   "as_of": "2026-10-25",
   "story": "Dana's abdominal-pain visit at Alta Bates Summit (ultrasound, then CT), real Sutter prices. Insured, household of 2 at about 184% of the poverty line. The bill applies her insurance and credits the $750 she has paid, but her share is over 10% of her income, so Sutter's policy writes it off and the $750 must come back. Also a gym double charge in her bank.",
@@ -67,8 +67,8 @@
       "what": "Lakeshore Fitness charged $39.99 twice (not part of the hospital bill: dispute with the bank)",
       "effect_on_amount_owed": 0.0,
       "txn_ids": [
-        "mirror-021",
-        "mirror-024"
+        "mirror-198",
+        "mirror-201"
       ],
       "amount": 39.99
     },
@@ -323,20 +323,44 @@
     "owed_before_discount": 3646.2
   },
   "income": {
-    "annual": 39000.0,
-    "monthly": 3250.0,
-    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,500 x 26)",
-    "deposits_counted": 6
+    "annual": 39235.21,
+    "monthly": 3269.6,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,509 x 26); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 49044.01,
+    "bills_monthly": 2428.13,
+    "bills_source": "45 regular Nessie payments in the last 90 days (ATM WITHDRAWAL OAKLAND CA, Amazon Marketplace, Bay Wireless Co, Netflix…)"
+  },
+  "medical_spending": {
+    "since": "2025-10-25",
+    "bank_total": 254.5,
+    "this_bill": 4396.2,
+    "out_of_pocket": 4650.7,
+    "txn_ids": [
+      "mirror-060",
+      "mirror-088",
+      "mirror-164"
+    ],
+    "discount_without_bank": 100.0,
+    "bank_decides_eligibility": false
   },
   "discount": {
-    "fpl_pct": 180.2,
+    "fpl_pct": 181.3,
     "fpl_amount": 21640,
     "fpl_year": 2026,
     "household_size": 2,
     "insured": true,
-    "oop_pct_income": 11.3,
+    "oop_pct_income": 11.9,
     "discount_pct": 100.0,
-    "tier_quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income)."
+    "tier_quote": "A write-off of the Patient Responsibility amount for Hospital Services to insured patients earning 400% or less of the FPIG and with high medical costs (medical expenses over the past 12 months exceeding 10% of family income).",
+    "at_estimated_gross": {
+      "gross_annual_est": 49044.01,
+      "fpl_pct": 226.6,
+      "oop_pct_income": 9.5,
+      "discount_pct": 0,
+      "text": "Based on take-home pay. If the hospital counts gross pay (about $49,044/yr, 227% of the poverty line, medical bills 10% of income), the discount would be 0%, not 100%. Have pay stubs ready."
+    }
   },
   "settle": {
     "discounted_share": 0.0,
@@ -348,11 +372,15 @@
     "refund": 750.0,
     "discount_pct": 100.0,
     "plan_months": 0,
-    "plan_monthly": 0.0
+    "plan_monthly": 0.0,
+    "plan_last": 0.0
   },
   "plan": {
     "months": 0,
     "monthly": 0.0,
+    "last": 0.0,
+    "total": 0.0,
+    "text": "nothing owed",
     "reason": "nothing owed"
   },
   "finance_reconcile": {
@@ -363,14 +391,14 @@
     "owed": 3646.2,
     "overbilled_by": 0.0,
     "payment_txn_ids": [
-      "mirror-011",
-      "mirror-027",
-      "mirror-038"
+      "mirror-185",
+      "mirror-205",
+      "mirror-219"
     ],
     "duplicate_txn_ids": [
       [
-        "mirror-021",
-        "mirror-024"
+        "mirror-198",
+        "mirror-201"
       ]
     ]
   },
@@ -381,7 +409,7 @@
       "title": "Double charge at Lakeshore Fitness",
       "money": 0,
       "bank_amount": 39.99,
-      "proof": "Nessie txns mirror-021 + mirror-024"
+      "proof": "Nessie txns mirror-198 + mirror-201"
     },
     {
       "id": "discount",
@@ -396,20 +424,20 @@
       "agent": "bright_data",
       "title": "Refund owed",
       "money": 750.0,
-      "proof": "bank txn mirror-011 $250.00 on 2026-08-12; bank txn mirror-027 $250.00 on 2026-09-12; bank txn mirror-038 $250.00 on 2026-10-02"
+      "proof": "bank txn mirror-185 $250.00 on 2026-08-12; bank txn mirror-205 $250.00 on 2026-09-12; bank txn mirror-219 $250.00 on 2026-10-02"
     }
   ],
   "must_not_report": [
     {
-      "what": "Payment mirror-011 ($250.00 on 2026-08-12) as 'missed'",
+      "what": "Payment mirror-185 ($250.00 on 2026-08-12) as 'missed'",
       "why": "the bill credits it under 'Patient payments'"
     },
     {
-      "what": "Payment mirror-027 ($250.00 on 2026-09-12) as 'missed'",
+      "what": "Payment mirror-205 ($250.00 on 2026-09-12) as 'missed'",
       "why": "the bill credits it under 'Patient payments'"
     },
     {
-      "what": "Payment mirror-038 ($250.00 on 2026-10-02) as 'missed'",
+      "what": "Payment mirror-219 ($250.00 on 2026-10-02) as 'missed'",
       "why": "the bill credits it under 'Patient payments'"
     },
     {

@@ -87,7 +87,7 @@ def test_freecare_scenario():
 def test_demo_plan(demo):
     inc = finance.income(demo["transactions"], today=DEMO_TODAY)
     plan = finance.payment_plan(150, inc["monthly"])
-    assert plan == {"months": 3, "monthly": 50.0, "reason": plan["reason"]}
+    assert plan == {"months": 3, "monthly": 50.0, "last": 50.0, "total": 150.0, "text": "3 × $50/mo", "reason": plan["reason"]}
     assert finance.payment_plan(0, inc["monthly"])["months"] == 0
 
 
@@ -124,7 +124,7 @@ def test_clean_tiers_coerces_and_drops():
 
 
 def test_reconcile_without_payments(demo):
-    txns = [t for t in demo["transactions"] if "Pacific" not in t.get("merchant", "")]
+    txns = [t for t in demo["transactions"] if "SUTTER" not in t.get("merchant", "")]
     rec = finance.reconcile(demo["bill"], demo["eob"], txns)
     assert rec["paid"] == 0 and rec["owed"] == 1100
 

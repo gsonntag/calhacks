@@ -3,6 +3,7 @@ case dashboard (persisted cases, follow-ups, "what's the status?", call again)."
 import asyncio
 import hmac
 import json
+import time
 from contextlib import asynccontextmanager
 
 import anthropic
@@ -12,8 +13,9 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import config, events, followups, llm, orchestrator
-from .agents import caller, decide, intake
+from . import auth, config, events, followups, llm, orchestrator
+from .agents import caller, decide, intake, policy, talk
+from .auth import ADMIN
 from .integrations import cartesia
 from .events import bus
 from .harness import gate
@@ -23,6 +25,9 @@ from .policies.store import PolicyStore
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    config.check_live()  # judging mode: refuse to start on sample data
+    if warning := auth.startup_warning():
+        print(warning)
     n = orchestrator.load_cases()
     if n:
         print(f"loaded {n} saved case(s) from {events.DATA_DIR / 'cases'}")
@@ -142,10 +147,10 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
 
 @app.get("/api/mode")
 async def mode():
-    return config.mode()
+    return {**config.mode(), "live_crawl": policy.can_crawl()}
 
 
-@app.post("/api/chat")
+@app.post("/api/chat", dependencies=ADMIN)
 async def chat(history: str = Form("[]"), message: str = Form(""), case_id: str = Form(""),
                files: list[UploadFile] = File(default=[])):
     """history: JSON list of {role, content} (text only). Returns {reply, case_id?, started?}; started is
@@ -203,7 +208,7 @@ async def gmail_scan():
         {"type": "eob", "from": c["eob"]["insurer"], "subject": f"Explanation of Benefits - claim {c['eob']['claim_number']}"}]}
 
 
-@app.post("/api/cases")
+@app.post("/api/cases", dependencies=ADMIN)
 async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default",
                      household_size: int | None = None):
     """Start a case from uploaded bill/EOB files, or the sample bill when none are sent.
@@ -239,17 +244,32 @@ async def case_summary(case_id: str):
 
 class Question(BaseModel):
     question: str = "What's the status?"
-    finding: str | None = None  # "Ask" under one finding: answered only from that agent's evidence
+    finding: str | None = None  # one finding: answered only from that agent's evidence
+    agent: str | None = None  # the agent chat: billback | auditor | policy | decide
 
 
-@app.post("/api/cases/{case_id}/ask")
+@app.post("/api/cases/{case_id}/ask", dependencies=ADMIN)
 async def ask(case_id: str, q: Question):
     """"What's the status?" answered from the case's stored calls, promises, follow-ups and amounts; with
-    `finding`, the agent that found it answers from its own evidence (changes nothing)."""
+    `finding`, the agent that found it answers from its own evidence (changes nothing). With `agent` (the case
+    page's agent chat): BillBack answers about the whole case and hands plan changes to the planner; the Nessie
+    and Bright Data agents answer from everything they checked; the planner is the planner chat."""
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
     question = q.question.strip()[:500]
+    if q.agent == "billback":
+        out = await _decide_call(orchestrator.ask_billback(case, question or "What's the status?"))
+        orchestrator.save(case)  # a handoff may have made a new plan version
+        return out
+    if q.agent == "decide":
+        if not question:
+            return JSONResponse({"error": "empty message"}, 400)
+        out = await _decide_call(decide.chat(case, question))
+        orchestrator.save(case)
+        return out if isinstance(out, JSONResponse) else {**out, "answer": out["reply"], "agent": "decide", "agent_name": "Planner"}
+    if q.agent:
+        return await _decide_call(decide.answer_agent(case, q.agent, question or "What did you find?"))
     if q.finding:
         return await _decide_call(decide.answer_finding(case, q.finding, question or "Tell me more about this"))
     return await orchestrator.answer_status(case, question or "What's the status?")
@@ -268,7 +288,7 @@ class PlannerMsg(BaseModel):
     message: str
 
 
-@app.post("/api/cases/{case_id}/planner")
+@app.post("/api/cases/{case_id}/planner", dependencies=ADMIN)
 async def planner_chat(case_id: str, m: PlannerMsg):
     """Talk to the planner: questions are answered here; change requests make a new plan version."""
     case = _case_or_404(case_id)
@@ -285,7 +305,7 @@ class PlanPick(BaseModel):
     v: int
 
 
-@app.post("/api/cases/{case_id}/plan/approve")
+@app.post("/api/cases/{case_id}/plan/approve", dependencies=ADMIN)
 async def plan_approve(case_id: str, p: PlanPick):
     """"Call now": approves the version on screen (must be the latest) and lets the call start."""
     case = _case_or_404(case_id)
@@ -302,7 +322,7 @@ async def plan_approve(case_id: str, p: PlanPick):
     return {"ok": gate.resolve(pending["approval_id"], True), "v": p.v}
 
 
-@app.post("/api/cases/{case_id}/plan/decline")
+@app.post("/api/cases/{case_id}/plan/decline", dependencies=ADMIN)
 async def plan_decline(case_id: str):
     """"Not now": no call; the case can still call again later."""
     case = _case_or_404(case_id)
@@ -312,7 +332,7 @@ async def plan_decline(case_id: str):
     return {"ok": bool(pending) and gate.resolve(pending["approval_id"], False)}
 
 
-@app.post("/api/cases/{case_id}/plan/restore")
+@app.post("/api/cases/{case_id}/plan/restore", dependencies=ADMIN)
 async def plan_restore(case_id: str, p: PlanPick):
     """Go back to an older version: a new version with its choices (facts stay current)."""
     case = _case_or_404(case_id)
@@ -328,7 +348,7 @@ class Correction(BaseModel):
     note: str = ""
 
 
-@app.post("/api/cases/{case_id}/corrections")
+@app.post("/api/cases/{case_id}/corrections", dependencies=ADMIN)
 async def add_correction(case_id: str, c: Correction):
     """"This is wrong" on a finding: saved as a correction, and the plan is recalculated. Until the call starts."""
     case = _case_or_404(case_id)
@@ -339,7 +359,7 @@ async def add_correction(case_id: str, c: Correction):
     return out
 
 
-@app.delete("/api/cases/{case_id}/corrections/{correction_id}")
+@app.delete("/api/cases/{case_id}/corrections/{correction_id}", dependencies=ADMIN)
 async def undo_correction(case_id: str, correction_id: str):
     case = _case_or_404(case_id)
     if not case:
@@ -349,11 +369,36 @@ async def undo_correction(case_id: str, correction_id: str):
     return out
 
 
+_rechecks: dict[str, asyncio.Lock] = {}
+MAX_RECHECKS_PER_CASE = 5  # each is capped at policy.LIVE_MAX_REQUESTS Bright Data requests
+
+
+@app.post("/api/cases/{case_id}/policy/recheck", dependencies=ADMIN)
+async def policy_recheck(case_id: str):
+    """"Recheck now" on the Bright Data agent's panel: check the case's hospital live and stream every request
+    into the panel. Needs Bright Data + Claude keys; one at a time per case, at most MAX_RECHECKS_PER_CASE."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    lock = _rechecks.setdefault(case_id, asyncio.Lock())
+    if lock.locked():
+        return JSONResponse({"error": "A recheck is already running"}, 409)
+    if len(case.get("policy_rechecks") or []) >= MAX_RECHECKS_PER_CASE:
+        return JSONResponse({"error": f"This case already used its {MAX_RECHECKS_PER_CASE} live rechecks"}, 429)
+    async with lock:
+        try:
+            out = await policy.recheck_case(case)
+        except policy.RecheckRefused as e:
+            return JSONResponse({"error": str(e)}, 409 if "Review" in str(e) else 503)
+    orchestrator.save(case)
+    return out
+
+
 class CallAgain(BaseModel):
     v: int | None = None
 
 
-@app.post("/api/cases/{case_id}/call-again")
+@app.post("/api/cases/{case_id}/call-again", dependencies=ADMIN)
 async def call_again(case_id: str, p: CallAgain | None = None):
     """Start a follow-up call. With v ("Call now" on step 5's plan) that version is approved and the call
     starts; without it, it waits on the patient's approval like the first call."""
@@ -371,11 +416,56 @@ async def call_again(case_id: str, p: CallAgain | None = None):
     return {"ok": True, "case_id": case_id}
 
 
+_stt_off_until = 0.0  # after Cartesia refuses (e.g. 402, no credits), use the browser's transcript for a while
+
+
+@app.post("/api/cases/{case_id}/talk", dependencies=ADMIN)
+async def talk_turn(case_id: str, audio: UploadFile | None = File(None), heard: str = Form("")):
+    """The mic on the Cases page: one spoken turn. Cartesia Ink transcribes the recording; `heard` is the
+    browser's own transcript, used when Cartesia can't. Actions run only after a spoken yes (agents/talk.py),
+    through the same code as the buttons."""
+    global _stt_off_until
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    text, by = "", None
+    if audio is not None and config.CARTESIA_API_KEY and time.time() > _stt_off_until:
+        try:
+            text, by = await cartesia.transcribe(await audio.read(), audio.filename or "speech.webm",
+                                                 audio.content_type or "audio/webm"), "cartesia"
+        except Exception as e:
+            print("Cartesia STT failed, using the browser's transcript:", e)
+            _stt_off_until = time.time() + 600
+    if not text.strip() and heard.strip():
+        text, by = heard.strip(), "browser"
+    text = text.strip()[:500]
+    if not text:
+        return {"heard": "", "heard_by": None, "reply": "Sorry, I didn't catch that. Hold the button and try again.",
+                "did": None, "pending": None}
+
+    async def run(kind: str, opt: dict) -> str | None:
+        if kind == "start_call":
+            out = await plan_approve(case_id, PlanPick(v=opt["v"]))
+        elif kind == "not_now":
+            out = await plan_decline(case_id)
+        elif kind == "call_again":
+            out = await call_again(case_id, CallAgain(v=opt["v"]))
+        else:  # the payment plan after the call
+            out = {"ok": gate.resolve(opt["approval_id"], kind == "approve_payment_plan")}
+        if isinstance(out, JSONResponse):
+            return json.loads(out.body).get("error") or "something went wrong"
+        return None if out.get("ok", True) else "it was already decided"
+
+    out = await talk.turn(case, text, run)
+    orchestrator.save(case)
+    return {"heard": text, "heard_by": by, **out}
+
+
 class Clock(BaseModel):
     days: int | None = 1  # null resets the clock to today
 
 
-@app.post("/api/cases/{case_id}/clock")
+@app.post("/api/cases/{case_id}/clock", dependencies=ADMIN)
 async def clock(case_id: str, c: Clock):
     """Demo control: simulate days passing on this case so a follow-up comes due on stage."""
     case = _case_or_404(case_id)
@@ -418,7 +508,7 @@ class Decision(BaseModel):
     approved: bool
 
 
-@app.post("/api/approvals/{approval_id}")
+@app.post("/api/approvals/{approval_id}", dependencies=ADMIN)
 async def resolve_approval(approval_id: str, d: Decision):
     return {"ok": gate.resolve(approval_id, d.approved)}
 
@@ -427,7 +517,7 @@ class Turn(BaseModel):
     rep_said: str | None = None
 
 
-@app.post("/api/calls/{call_id}/turn")
+@app.post("/api/calls/{call_id}/turn", dependencies=ADMIN)
 async def call_turn(call_id: str, t: Turn):
     s = caller.sessions.get(call_id)
     if not s:
@@ -444,7 +534,7 @@ async def call_turn(call_id: str, t: Turn):
     return {"say": say, "ended": s.ended, "outcome": s.outcome}
 
 
-@app.post("/api/calls/{call_id}/hangup")
+@app.post("/api/calls/{call_id}/hangup", dependencies=ADMIN)
 async def hangup(call_id: str):
     s = caller.sessions.get(call_id)
     if s and not s.ended:
@@ -453,7 +543,7 @@ async def hangup(call_id: str):
     return {"ok": True}
 
 
-@app.post("/api/cases/{case_id}/end-call")
+@app.post("/api/cases/{case_id}/end-call", dependencies=ADMIN)
 async def end_call(case_id: str):
     """Manual hang-up for either call mode, so a call that never ends can't stall the case."""
     case = orchestrator.cases.get(case_id)
@@ -534,7 +624,7 @@ class VoicePick(BaseModel):
     voice_id: str
 
 
-@app.post("/api/cases/{case_id}/voice")
+@app.post("/api/cases/{case_id}/voice", dependencies=ADMIN)
 async def pick_voice(case_id: str, v: VoicePick):
     """The caller voice/accent for this case's calls (phone pipeline and desk-mode speech)."""
     case = orchestrator.cases.get(case_id)
@@ -552,7 +642,7 @@ class Speak(BaseModel):
     call_id: str | None = None
 
 
-@app.post("/api/tts")
+@app.post("/api/tts", dependencies=ADMIN)
 async def speak(s: Speak):
     """Desk-mode voice: Cartesia Sonic if configured, else the browser speaks it."""
     if not config.CARTESIA_API_KEY:
@@ -564,7 +654,7 @@ async def speak(s: Speak):
     return Response(await cartesia.tts(s.text, voice_id), media_type="audio/wav")
 
 
-@app.post("/api/reset")
+@app.post("/api/reset", dependencies=ADMIN)
 async def reset():
     for t in list(_tasks):
         t.cancel()

@@ -11,14 +11,15 @@ import time
 import uuid
 from datetime import date, timedelta
 
-from . import config, events, followups, llm, voice
+from . import config, events, finance, followups, llm, voice
 from .agents import auditor, caller, decide, planner, policy, scorecard
 from .events import bus
 from .harness import gate
-from .integrations import cartesia
+from .integrations import cartesia, nessie
 from .integrations.nessie import get_bank
 
 cases: dict[str, dict] = {}
+banks: dict[str, tuple] = {}  # case id -> (bank, account id, label) the Review used, for later writes
 RUNTIME = ("call_done", "turns_seen", "wh_counts", "wh_turn_ids")
 ACTIVE = ("created", "reviewing", "deciding", "awaiting_call_approval", "calling", "planning")
 
@@ -122,7 +123,7 @@ def policy_summary(pol: dict) -> dict:
         result += f" + ${pol['refund']:,.0f} back"
     plan = pol.get("plan") or {}
     if not d and plan.get("months"):
-        result = f"${pol['target']:,.0f} · {plan['months']} × ${plan['monthly']:,.0f}/mo, 0% interest"
+        result = f"${pol['target']:,.0f} · {finance.plan_text(plan)}, 0% interest"
     return {"result": result,
             "note": "charity-care discount" if d else "no discount tier fits; interest-free plan under their policy"
             if plan.get("months") else "income is above the policy's limits"}
@@ -250,6 +251,28 @@ async def _fill_outcome(case: dict, mode: str) -> None:
         rep_lines = [e["text"] for e in _call_transcript(case) if e["speaker"] == "rep"]
         marks = scorecard.score(plan_v["asks"], case["call_outcome"], info, rep_lines, plan_v["money"])
     _log_call(case, mode, info, marks, plan_v["v"] if plan_v else None)
+    await mark_bank_bill(case)
+
+
+async def mark_bank_bill(case: dict) -> dict | None:
+    """Billing confirmed a balance on the last call: mark the hospital bill updated in the patient's bank
+    (Nessie; the sample bank offline or after a fallback), so the bank stops showing the old amount."""
+    call = case["calls"][-1] if case.get("calls") else {}
+    confirmed = call.get("confirmed_balance")
+    if isinstance(confirmed, bool) or not isinstance(confirmed, (int, float)):
+        return None
+    try:
+        if case["id"] not in banks:  # e.g. a follow-up call after a restart
+            bank, acct, label = await get_bank(case)
+            banks[case["id"]] = (bank, acct, label)
+        bank, acct, label = banks[case["id"]]
+        res = await nessie.mark_bill_corrected(bank, acct, case["bill"], confirmed, case_now(case).isoformat())
+    except Exception as e:
+        bus.emit(case["id"], "warning", "auditor", text=f"Couldn't update the bill in your bank: {type(e).__name__}: {e}")
+        return None
+    if res:
+        bus.emit(case["id"], "bank_bill_updated", "auditor", bank=getattr(bank, "label", label), **res)
+    return res
 
 
 OUTCOME_KEYS = ("case_number", "rep_name", "account_on_hold", "assistance_review_opened", "adjustment_applied",
@@ -304,10 +327,30 @@ def open_followup(case: dict) -> dict | None:
 
 
 def current_balance(case: dict) -> float:
+    """What billing's own records say now: the bill's amount until a call confirms a lower one. The Review's
+    corrected figure is the expected balance (result["target"]), never shown as what the patient owes."""
     if case["result"].get("final_balance") is not None:
         return case["result"]["final_balance"]
-    bal = [e["amount"] for e in bus.history(case["id"]) if e["kind"] == "balance"]
-    return bal[-1] if bal else case["bill"]["amount_due"]
+    return case["bill"]["amount_due"]
+
+
+MONEY_ASKS = ("insurance", "payment", "discount")
+
+
+def confirmed_balance(case: dict, start: float, expected: float, plan_v: dict | None) -> tuple[float, bool]:
+    """(balance, confirmed) after the latest call. A hold or an open review is not a reduction: the balance
+    only moves when the rep states the new balance, or the scorecard marks a money ask "got" (adjustment
+    applied, payment credited, discount applied). start: the balance before this call."""
+    last = (case.get("calls") or [{}])[-1]
+    said = last.get("confirmed_balance")
+    if isinstance(said, (int, float)) and not isinstance(said, bool):
+        return round(float(said), 2), said <= expected + 0.5
+    money = {a["id"]: a.get("money", 0) for a in (plan_v or {}).get("asks") or [] if a["kind"] in MONEY_ASKS}
+    got = sum(money.get(m["id"], 0) for m in last.get("scorecard") or [] if m["status"] == "got")
+    bal = round(max(0.0, start - got), 2)
+    if bal <= expected + 0.5:
+        return expected, True
+    return bal, False
 
 
 def next_action(case: dict) -> dict:
@@ -336,6 +379,13 @@ def can_call_again(case: dict) -> bool:
     return case["status"] in ("done", "interrupted") and bool(case["result"].get("brief"))
 
 
+def is_confirmed(res: dict) -> bool:
+    """Billing confirmed the corrected balance (cases saved before this flag existed: final == target)."""
+    if "confirmed" in res:
+        return bool(res["confirmed"])
+    return res.get("final_balance") is not None and res.get("final_balance") == res.get("target")
+
+
 def summary(case: dict) -> dict:
     """One row of the case dashboard."""
     calls, res = case.get("calls") or [], case["result"]
@@ -344,7 +394,8 @@ def summary(case: dict) -> dict:
     return {"id": case["id"], "patient": f"{case['patient']['first_name']} {case['patient']['last_name']}",
             "provider": case["bill"]["provider"], "hospital": case["hospital"]["name"], "status": case["status"],
             "original": case["bill"]["amount_due"], "current_balance": current_balance(case), "target": res.get("target"),
-            "refund": res.get("refund", 0) if res.get("final_balance") is not None and res.get("final_balance") == res.get("target") else 0,
+            "confirmed": is_confirmed(res), "refund": res.get("refund", 0) if is_confirmed(res) else 0,
+            "expected_refund": res.get("refund", 0),
             "case_number": num, "calls": calls, "last_call": last, "followups": case.get("followups") or [],
             "next": next_action(case), "today": case_now(case).isoformat(), "clock_days": case.get("clock_days", 0),
             "created": case.get("today"), "created_at": case.get("created_at"), "can_call_again": can_call_again(case),
@@ -356,7 +407,8 @@ def _history_for_llm(s: dict) -> dict:
     """The stored history with every date pre-formatted ("Fri Oct 30"), so the model never computes a weekday."""
     f, nxt = followups.fmt, s["next"]
     return {"today": f(s["today"]), "patient": s["patient"], "hospital": s["hospital"], "case_status": s["status"],
-            "billed_amount": s["original"], "balance_after_corrections": s["target"], "refund_owed_to_patient": s["refund"],
+            "billed_amount": s["original"], "balance_billing_shows_now": s["current_balance"],
+            "balance_after_corrections": s["target"], "refund_owed_to_patient": s["expected_refund"],
             "case_number": s["case_number"], "payment_plan": s["plan"],
             "next_step": {**nxt, "due": f(nxt.get("due"))},
             "calls": [{"date": f(c["date"]), "type": c["kind"], "rep": c.get("rep"), "case_number": c.get("case_number"),
@@ -386,6 +438,61 @@ async def answer_status(case: dict, question: str) -> dict:
     return {"answer": followups.fallback_status(s), "source": "history"}
 
 
+BILLBACK_SYSTEM = """You are BillBack, the AI agent running this patient's hospital-bill case, answering in the
+case page's agent chat. You know the whole case: the CASE JSON has the stored history (calls, promises, follow-ups,
+next step), every finding from the Nessie agent (the patient's bank, bill and insurance statement) and the Bright
+Data agent (the hospital's own policy and public rules), and the current call plan. Answer in the first person, in
+at most 4 short plain sentences, only from the CASE JSON; copy dates exactly as written there. Never invent facts,
+amounts or dates. Plain text, no markdown. "balance_after_corrections" is what the bill should come down to once
+billing applies everything, not what it is now: only call it confirmed if a call has balance_confirmed_by_rep.
+If the patient asks to change the call plan (what to ask first, what they can pay per month, leaving an ask off,
+asking for a supervisor), call hand_to_planner instead of answering: the planner makes a new plan version. You
+can't change facts: if a finding is wrong, tell them to use "This is wrong" on it in the Review step."""
+
+HANDOFF_TOOL = {"name": "hand_to_planner", "description": "Pass the patient's request to change the call plan to the "
+                "planner (the Decide agent), which checks it against the rules and makes a new plan version.",
+                "input_schema": {"type": "object", "properties": {}}}
+
+
+def _whole_case(case: dict) -> dict:
+    ctx = {"history": _history_for_llm(summary(case))}
+    if not case.get("calls"):  # "done" can mean the patient said "Not now": never let that read as a won call
+        ctx["note"] = ("No call to billing has been made yet, so billing hasn't agreed to, confirmed or promised "
+                       "anything. Lower balances are what the bill should come down to once billing applies the "
+                       "corrections, not what it has come down to. Calling now would be the first call.")
+    if f := case.get("facts"):
+        ctx["findings"] = list(f["findings"].values())
+        ctx["corrections"] = [c for c in case.get("corrections") or [] if c.get("active")]
+    if ver := decide.latest(case):
+        ctx["plan"] = {k: ver[k] for k in ("v", "round", "money", "call", "asks", "skipped", "next") if k in ver}
+    return ctx
+
+
+async def ask_billback(case: dict, question: str) -> dict:
+    """The agent chat's default: BillBack answers about the whole case, and hands plan changes to the planner."""
+    answer, handoff = "", False
+    if llm.available():
+        try:
+            resp = await llm.create(system=BILLBACK_SYSTEM, model=config.MODEL_FAST, max_tokens=1500, effort="low",
+                                    tools=[HANDOFF_TOOL], messages=[{"role": "user", "content":
+                                        f"CASE (JSON):\n{json.dumps(_whole_case(case), default=str)}\n\nPatient asks: {question}"}])
+            handoff = any(b.type == "tool_use" for b in resp.content)
+            answer = "".join(b.text for b in resp.content if b.type == "text").strip()
+        except Exception as e:
+            print("billback chat LLM error, using template:", type(e).__name__)
+    else:
+        handoff = decide._offline_intent(question)[0] == "change"
+    if handoff and decide.latest(case):
+        out = await decide.chat(case, question, via="billback")
+        return {**out, "answer": out["reply"], "agent": "decide", "agent_name": "Planner", "via": "billback"}
+    if handoff:
+        answer = "Your plan isn't ready yet. Once the Review is done, the planner can change it."
+    if not answer:
+        answer = (await answer_status(case, question))["answer"]
+    bus.emit(case["id"], "agent_qa", "billback", question=question, answer=answer, sources=[])
+    return {"answer": answer, "agent": "billback", "agent_name": "BillBack", "sources": []}
+
+
 calls_by_cartesia_id: dict[str, str] = {}
 
 
@@ -409,6 +516,7 @@ async def run_case(case: dict) -> None:
     cid = case["id"]
     try:
         bank, account_id, bank_label = await get_bank(case)
+        banks[cid] = (bank, account_id, bank_label)
         bus.emit(cid, "case_started", modes=config.mode(), bank=bank_label, documents=case.get("documents", []),
                  bill={k: case["bill"][k] for k in ("provider", "amount_due", "notice", "due_date")})
         bus.emit(cid, "balance", amount=case["bill"]["amount_due"], label="Hospital says")
@@ -451,25 +559,34 @@ async def run_case(case: dict) -> None:
             outcome = await (_phone_call(case, brief) if (voice.twilio_ready() or cartesia.phone_ready()) else _desk_call(case, brief))
 
         set_status(case, "planning")
-        balance = target if outcome.get("assistance_review_opened") or outcome.get("account_on_hold") else owed
-        if balance != target:
-            bus.emit(cid, "balance", amount=balance, label="Still owed")
-        plan = await planner.run(case, bank, account_id, balance, pol["income"]["monthly"],
+        # expected: what she'll owe once billing applies what the call set in motion. balance: what billing's
+        # records say now. A hold or an open review is not a reduction, so the balance only moves on a
+        # confirmed number or a "got" on a money ask (confirmed_balance).
+        expected = target if outcome.get("assistance_review_opened") or outcome.get("account_on_hold") else owed
+        balance, confirmed = (confirmed_balance(case, case["bill"]["amount_due"], expected, plan_v)
+                              if ok and case["calls"] else (case["bill"]["amount_due"], False))
+        if balance != [e["amount"] for e in bus.history(cid) if e["kind"] == "balance"][-1]:
+            bus.emit(cid, "balance", amount=balance, expected=expected, confirmed=confirmed,
+                     label="Confirmed by billing" if confirmed else "Billing still shows")
+        plan = await planner.run(case, bank, account_id, expected, pol["income"]["monthly"],
                                  policy_cap_pct=(pol.get("plan_terms") or {}).get("max_pct_monthly_income"),
-                                 max_monthly=case["plan"]["prefs"].get("max_monthly"))
+                                 max_monthly=case["plan"]["prefs"].get("max_monthly"),
+                                 monthly_bills=pol["income"].get("bills_monthly"))
 
         c = plan.get("created") or {}
         plan_created = bool(c) and not c.get("blocked") and not c.get("error")
         if c.get("error"):
             bus.emit(cid, "warning", "planner", text="Couldn't save the plan to your bank")
-        case["result"].update({"outcome": outcome, "plan": plan["plan"], "plan_created": plan_created, "final_balance": balance})
+        case["result"].update({"outcome": outcome, "plan": plan["plan"], "plan_created": plan_created,
+                               "final_balance": balance, "expected_balance": expected, "confirmed": confirmed})
         if ok and case["calls"] and case["calls"][-1].get("scorecard") is not None:
             await decide.next_round(case)  # step 5: what the call got, and the plan for what's left
         set_status(case, "done")
         bus.emit(cid, "case_done", summary={
-            "started_at": case["bill"]["amount_due"], "now": balance, "case_number": outcome.get("case_number"),
-            "plan": plan["plan"], "plan_created": plan_created,
-            "refund": plan_v["money"]["refund"] if balance == target else 0})
+            "started_at": case["bill"]["amount_due"], "now": balance, "expected": expected, "confirmed": confirmed,
+            "case_number": outcome.get("case_number"), "plan": plan["plan"], "plan_created": plan_created,
+            "refund": plan_v["money"]["refund"] if confirmed and expected == target else 0,
+            "expected_refund": plan_v["money"]["refund"] if expected == target else 0})
         save_replay(case)
     except Exception as e:
         set_status(case, "error")
@@ -513,17 +630,21 @@ async def call_again(case: dict, v: int | None = None) -> None:
             if plan_v and len(case["calls"]) == n and case["calls"][-1].get("scorecard") is not None:
                 await decide.next_round(case)
         res = case["result"]
-        confirmed = case["calls"][-1].get("confirmed_balance") if ok and case["calls"] else None
-        if isinstance(confirmed, (int, float)) and confirmed != current_balance(case):
-            res["final_balance"] = confirmed
-            bus.emit(cid, "balance", amount=confirmed, label="Confirmed by billing")
-        balance = current_balance(case)
+        before = current_balance(case)
+        expected = res.get("expected_balance", res.get("target"))
+        if ok and len(case["calls"]) == n:  # this call was logged: what did it confirm?
+            bal, conf = confirmed_balance(case, before, expected if expected is not None else before, plan_v)
+            res.update(final_balance=bal, confirmed=conf)
+            if bal != before:
+                bus.emit(cid, "balance", amount=bal, expected=expected, confirmed=conf,
+                         label="Confirmed by billing" if conf else "Billing now shows")
+        balance, confirmed = current_balance(case), is_confirmed(res)
         set_status(case, "done")
         bus.emit(cid, "case_done", summary={
-            "started_at": case["bill"]["amount_due"], "now": balance,
+            "started_at": case["bill"]["amount_due"], "now": balance, "expected": expected, "confirmed": confirmed,
             "case_number": summary(case)["case_number"], "plan": res.get("plan") or {"months": 0},
             "plan_created": res.get("plan_created", False), "followup_call": n if ok else None,
-            "refund": res.get("refund", 0) if balance == res.get("target") else 0})
+            "refund": res.get("refund", 0) if confirmed else 0, "expected_refund": res.get("refund", 0)})
     except Exception as e:
         set_status(case, "error")
         bus.emit(cid, "error", text=f"{type(e).__name__}: {e}")

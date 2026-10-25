@@ -82,6 +82,19 @@ async def poll_call(call_id: str, on_turn, on_done, every: float = 1.5, max_minu
         await asyncio.sleep(every)
 
 
+async def transcribe(audio: bytes, filename: str = "speech.webm", content_type: str = "audio/webm") -> str:
+    """Ink batch STT for one short recording (the mic on the Cases page). Written while the account had no
+    credits (HTTP 402), so not yet run live; the page falls back to the browser's own transcript."""
+    async with httpx.AsyncClient(timeout=30) as c:
+        r = await c.post(f"{API}/stt", headers={"Authorization": f"Bearer {config.CARTESIA_API_KEY}",
+                                                "Cartesia-Version": VERSION},
+                         files={"file": (filename, audio, content_type)},
+                         data={"model": config.CARTESIA_STT_BATCH_MODEL, "language": "en"})
+    if r.status_code >= 400:
+        raise RuntimeError(f"Cartesia STT -> {r.status_code}: {r.text[:200]}")
+    return (r.json().get("text") or "").strip()
+
+
 async def tts(text: str, voice_id: str | None = None, pronounce: bool = True) -> bytes:
     """Sonic TTS as WAV (desk-mode call page, voice previews). Text goes through the same pronunciation
     normalizer as the phone pipeline; pronounce=False sends it raw (used to demo before/after)."""

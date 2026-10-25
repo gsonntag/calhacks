@@ -60,20 +60,21 @@ async def test_offline_end_to_end(client):
     rep_lines = ["Patient Financial Services, this is Diane, how can I help you?",
                  "Okay, let me pull that up.", "I see it.", "Okay.",
                  "Yes, I've opened a financial assistance review and put the account on hold.",
-                 "Your case number is 58213."]
+                 "Your case number is 58213.", "Yes, that's right."]
     for line in rep_lines:
         r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": line})).json()
         assert r["say"]
     assert r["ended"] is True
     assert r["outcome"]["case_number"] == "58213"
 
-    # $600 is still owed: the interest-free plan (Sutter's terms) waits for the patient's OK, then goes to the bank
-    await _approve(c, case_id, "planner")
+    # $600 is still owed: the interest-free plan (Sutter's terms) is proposed; the patient decides on it, no OK asked
     done = await _wait_for(case_id, lambda e: e["kind"] == "case_done")
     s = done["summary"]
-    assert s["started_at"] == 8700 and s["now"] == 600 and s["refund"] == 0
+    # a review and a hold are not a reduction: billing still shows $8,700 until it confirms the $600
+    assert s["started_at"] == 8700 and s["now"] == 8700 and s["refund"] == 0
+    assert s["expected"] == 600 and s["confirmed"] is False
     assert s["case_number"] == "58213"
-    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is True
+    assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is False
 
     hist = bus.history(case_id)
     kinds = {e["kind"] for e in hist}
@@ -92,10 +93,50 @@ async def test_offline_end_to_end(client):
     assert finds["A payment you made was missed"]["saved"] == 500
     assert finds["Interest-free payment plan"]["saved"] == 0 and finds["Interest-free payment plan"]["value"] == "6 × $100/mo"
     assert all(f["proof"] and f["source"] for f in finds.values())
-    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600]
+    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600, 8700]
+    assert [e for e in hist if e["kind"] == "balance"][-1]["label"] == "Billing still shows"
+    # nothing asks to set the plan up in the bank: the patient decides at the end
+    assert not any(e["kind"] == "approval_requested" and e["agent"] == "planner" for e in hist)
+    assert not any(e["kind"] == "tool_call" and e.get("tool") == "create_payment_plan" for e in hist)
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)
+
+
+async def _offline_call(c, scenario: str) -> tuple[dict, list[str], dict]:
+    """Runs a demo case's offline call; returns (call brief, what BillBack said, the call's outcome)."""
+    case_id = (await c.post(f"/api/cases?scenario={scenario}")).json()["case_id"]
+    await _approve(c, case_id, "caller")
+    ready = await _wait_for(case_id, lambda e: e["kind"] == "call_ready")
+    for _ in range(10):
+        r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": "Your case number is 58213."})).json()
+        if r["ended"]:
+            break
+    said = [e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "billback"]
+    return orchestrator.cases[case_id]["result"]["brief"], said, r["outcome"]
+
+
+async def test_offline_caller_says_only_the_plans_asks(client):
+    """Every line on the call is backed by an ask in the approved plan (docs/PLAN.md guardrails)."""
+    # Rosa: 228% of the poverty line, not eligible at her hospital; the plan asks insurance, payment, payment plan
+    brief, said, outcome = await _offline_call(client, "default")
+    assert "discount" not in brief["ask_kinds"] and "plan" in brief["ask_kinds"]
+    assert brief["income_pct_fpl"] is None and brief["policy_quotes"] == [] and brief["policy_tier"] is None
+    text = " ".join(said).lower()
+    assert "qualif" not in text and "financial assistance" not in text and "poverty" not in text
+    assert "insurance adjustment" in text and "$500 payment" in text and "6 monthly payments of $100" in text
+    assert outcome["case_number"] == "58213" and outcome["account_on_hold"] is True
+    assert not outcome.get("assistance_review_opened")
+    await client.post("/api/reset")
+
+    # Marcus: the bill already matches his insurance; the plan asks for free care only
+    brief, said, outcome = await _offline_call(client, "freecare")
+    assert "insurance" not in brief["ask_kinds"] and "discount" in brief["ask_kinds"]
+    assert brief["income_pct_fpl"] is not None and brief["policy_quotes"]
+    text = " ".join(said).lower()
+    assert "insurance adjustment" not in text and "corrected balance" not in text
+    assert "qualifies under your own financial assistance policy" in text
+    assert outcome["case_number"] == "58213" and outcome["assistance_review_opened"] is True
 
 
 async def test_chat_starts_exactly_one_case(client):

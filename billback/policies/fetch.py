@@ -8,7 +8,7 @@ from urllib.parse import urljoin, urlparse
 from pypdf import PdfReader
 
 from ..integrations.brightdata import BrightDataError
-from .crawl import BudgetExceeded
+from .crawl import BudgetExceeded, classify
 from .store import MAX_BINARY, sha256
 
 LANGS = ("spanish", "español", "espanol", "chinese", "arabic", "armenian", "french", "german", "greek", "gujarati",
@@ -135,6 +135,8 @@ async def _pdf(crawl, url: str, role: str, title: str, found_on: str, why: list[
         raise
     except Exception as e:  # one bad document (HTTP error, not a PDF, unreadable) must not sink the crawl
         crawl.note("fetch", f"could not use {url}: {type(e).__name__}: {e}")
+        what = classify(e).replace("_", " ") if isinstance(e, BrightDataError) else "not a readable PDF"
+        crawl.fallback(f"{_short(url)}: {what} → skipped, the crawl goes on with the other sources")
         return None
     digest = sha256(resp.body)
     arts = [crawl.save(f"pdf-{digest[:12]}.txt", text)]
@@ -149,8 +151,32 @@ async def run(crawl, discovery: dict, max_pages: int = 3) -> list[Document]:
     """Fetch candidate pages (best first) until one links to the policy document(s), then fetch those documents.
     Pages without document links are kept: some state the FPL rules themselves."""
     docs: list[Document] = []
-    for cand in discovery["pages"][:max_pages]:
+    try:
+        await _pages(crawl, discovery, max_pages, docs)
+    except BudgetExceeded:
+        if not docs:
+            raise
+        crawl.fallback(f"Request cap ({crawl.max_requests}) reached → going on with the {len(docs)} "
+                       f"document{'s' if len(docs) != 1 else ''} already fetched")
+    if reg := discovery.get("regulator_doc"):
+        crawl.note("fetch", f"state-filed copy kept as a reference, not fetched (Bright Data blocks government "
+                            f"domains): {reg['url']}")
+    if not docs:
+        raise RuntimeError("no policy page or document could be fetched")
+    return docs
+
+
+def _short(url: str) -> str:
+    u = urlparse(url)
+    tail = u.path.rstrip("/").rsplit("/", 1)[-1]
+    return u.netloc.removeprefix("www.") + (f"/…/{tail}" if tail else "")
+
+
+async def _pages(crawl, discovery: dict, max_pages: int, docs: list[Document]) -> None:
+    cands = discovery["pages"][:max_pages]
+    for i, cand in enumerate(cands):
         url = cand["url"]
+        nxt = "next candidate" if i + 1 < len(cands) else "no candidates left"
         if cand.get("is_pdf"):
             if d := await _pdf(crawl, url, "policy_doc", cand["title"], "google", cand["reasons"]):
                 docs.append(d)
@@ -161,6 +187,11 @@ async def run(crawl, discovery: dict, max_pages: int = 3) -> list[Document]:
             resp = await crawl.page(url)
         except BrightDataError as e:
             crawl.note("fetch", f"page failed, trying next candidate: {e}")
+            crawl.fallback(f"{_short(url)}: {classify(e).replace('_', ' ')} → {nxt}")
+            continue
+        if len(resp.body.strip()) < 200:
+            crawl.note("fetch", f"page came back empty ({len(resp.body)} B), trying next candidate: {url}")
+            crawl.fallback(f"{_short(url)}: empty page ({len(resp.body)} bytes) → {nxt}")
             continue
         md = resp.text
         digest = sha256(resp.body)
@@ -175,9 +206,3 @@ async def run(crawl, discovery: dict, max_pages: int = 3) -> list[Document]:
                 docs.append(d)
         if found:
             break
-    if reg := discovery.get("regulator_doc"):
-        crawl.note("fetch", f"state-filed copy kept as a reference, not fetched (Bright Data blocks government "
-                            f"domains): {reg['url']}")
-    if not docs:
-        raise RuntimeError("no policy page or document could be fetched")
-    return docs

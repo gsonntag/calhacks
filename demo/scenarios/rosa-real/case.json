@@ -175,17 +175,1176 @@
   },
   "transactions": [
     {
+      "type": "purchase",
+      "date": "2025-10-25",
+      "amount": 12.23,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-10-28",
+      "amount": 39.43,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-10-29",
+      "amount": 18.95,
+      "merchant": "Venmo",
+      "description": "VENMO *4809"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-01",
+      "amount": 12.71,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-02",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-03",
+      "amount": 36.36,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-03",
+      "amount": 58.45,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*3639F758"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-03",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-06",
+      "amount": 34.27,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
       "type": "deposit",
-      "date": "2026-07-17",
-      "amount": 1400.0,
+      "date": "2025-11-07",
+      "amount": 1438.27,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
-      "date": "2026-07-18",
-      "amount": 8.27,
+      "date": "2025-11-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-11",
+      "amount": 54.13,
+      "merchant": "Monterey Market",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-13",
+      "amount": 11.66,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-14",
+      "amount": 21.87,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4C34E3A8"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-14",
+      "amount": 27.81,
+      "merchant": "Venmo",
+      "description": "VENMO *9736"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-17",
+      "amount": 37.23,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-17",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-18",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-20",
+      "amount": 13.52,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-11-21",
+      "amount": 1435.86,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-25",
+      "amount": 26.91,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-26",
+      "amount": 32.74,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 1360"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-29",
+      "amount": 27.55,
+      "merchant": "POS DEBIT BART CLIPPER RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-29",
+      "amount": 65.06,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*1D0951A0"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-02",
+      "amount": 27.64,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-03",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-04",
+      "amount": 51.48,
+      "merchant": "POS DEBIT SHELL GAS UNIVERSITY AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-05",
+      "amount": 1366.13,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-05",
+      "amount": 48.66,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5855"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-12-07",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-09",
+      "amount": 30.95,
+      "merchant": "Monterey Market",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-13",
+      "amount": 12.3,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-18",
+      "amount": 9.46,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-19",
+      "amount": 1413.56,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-20",
+      "amount": 76.79,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4CBD5C46"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-20",
+      "amount": 45.46,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8840"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-21",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-22",
+      "amount": 39.67,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-27",
+      "amount": 30.78,
+      "merchant": "Monterey Market",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-12-28",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-31",
+      "amount": 11.71,
       "merchant": "Cafe Leila",
       "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-02",
+      "amount": 1392.91,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-02",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-04",
+      "amount": 8.65,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-08",
+      "amount": 71.64,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-11",
+      "amount": 36.98,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*6A3D08B4"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-11",
+      "amount": 48.18,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2818"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-13",
+      "amount": 35.83,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-13",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-14",
+      "amount": 23.17,
+      "merchant": "WALGREENS #4410",
+      "description": "Prescription"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-15",
+      "amount": 40.81,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-16",
+      "amount": 1417.21,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-17",
+      "amount": 95.03,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-22",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-22",
+      "amount": 9.14,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-22",
+      "amount": 77.35,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*5CA8B5AC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-25",
+      "amount": 40.78,
+      "merchant": "Shell Gas University Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-27",
+      "amount": 12.44,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-27",
+      "amount": 47.95,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5687"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-27",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-30",
+      "amount": 1439.79,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-30",
+      "amount": 65.13,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-01",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-02",
+      "amount": 13.38,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-03",
+      "amount": 43.55,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*705EA9F2"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-06",
+      "amount": 45.05,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 36.69,
+      "merchant": "POS DEBIT SHELL GAS UNIVERSITY AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-13",
+      "amount": 1428.82,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-14",
+      "amount": 10.24,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-15",
+      "amount": 28.67,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 3434"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-19",
+      "amount": 55.08,
+      "merchant": "Shell Gas University Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-20",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-22",
+      "amount": 9.58,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-25",
+      "amount": 71.78,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4F0D657F"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-02-26",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-27",
+      "amount": 1426.63,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-27",
+      "amount": 43.74,
+      "merchant": "MONTEREY MARKET #632",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-28",
+      "amount": 50.96,
+      "merchant": "Venmo",
+      "description": "VENMO *6579"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-01",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-04",
+      "amount": 35.87,
+      "merchant": "Monterey Market",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-06",
+      "amount": 73.76,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-08",
+      "amount": 79.82,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*32B571E7"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-11",
+      "amount": 40.37,
+      "merchant": "Shell Gas University Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-13",
+      "amount": 1399.24,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-16",
+      "amount": 60.69,
+      "merchant": "BERKELEY BOWL #542",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-17",
+      "amount": 30.45,
+      "merchant": "Venmo",
+      "description": "VENMO *8601"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 10.19,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-22",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-25",
+      "amount": 33.23,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-27",
+      "amount": 1390.16,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-29",
+      "amount": 56.94,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-29",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-31",
+      "amount": 84.04,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*1FCD3B0"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-01",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-01",
+      "amount": 61.55,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-04",
+      "amount": 41.92,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-06",
+      "amount": 5.99,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-07",
+      "amount": 17.14,
+      "merchant": "Venmo",
+      "description": "VENMO *9867"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 35.58,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 60.0,
+      "merchant": "Elmwood Dental Group",
+      "description": "Cleaning copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-10",
+      "amount": 1437.56,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-13",
+      "amount": 69.32,
+      "merchant": "BERKELEY BOWL #542",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-15",
+      "amount": 11.33,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-18",
+      "amount": 45.42,
+      "merchant": "POS DEBIT MONTEREY MARKET",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-19",
+      "amount": 37.66,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*131847A"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-04-19",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-20",
+      "amount": 58.8,
+      "merchant": "BERKELEY BOWL #542",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-22",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-22",
+      "amount": 39.48,
+      "merchant": "POS DEBIT BART CLIPPER RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-24",
+      "amount": 1391.83,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-24",
+      "amount": 13.44,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-26",
+      "amount": 35.3,
+      "merchant": "Venmo",
+      "description": "VENMO *7642"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-29",
+      "amount": 73.62,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 41.29,
+      "merchant": "Shell Gas University Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-04",
+      "amount": 25.23,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-07",
+      "amount": 93.27,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-08",
+      "amount": 1416.23,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-08",
+      "amount": 38.27,
+      "merchant": "Venmo",
+      "description": "VENMO *6282"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 33.0,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 30.09,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*50597088"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-05-09",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-13",
+      "amount": 24.84,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-17",
+      "amount": 40.27,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-19",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-19",
+      "amount": 6.42,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-20",
+      "amount": 59.96,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*2EEC3BBD"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-21",
+      "amount": 45.01,
+      "merchant": "Shell Gas University Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-22",
+      "amount": 1412.04,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-24",
+      "amount": 19.74,
+      "merchant": "Venmo",
+      "description": "VENMO *7521"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-05-25",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-26",
+      "amount": 60.0,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-28",
+      "amount": 61.15,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-01",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-02",
+      "amount": 8.76,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-03",
+      "amount": 51.27,
+      "merchant": "Venmo",
+      "description": "VENMO *4965"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-04",
+      "amount": 59.85,
+      "merchant": "Shell Gas University Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-05",
+      "amount": 1438.53,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-07",
+      "amount": 8.51,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-11",
+      "amount": 79.29,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-13",
+      "amount": 34.63,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*6FA91768"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-15",
+      "amount": 40.27,
+      "merchant": "Venmo",
+      "description": "VENMO *4529"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-16",
+      "amount": 44.35,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-06-18",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-19",
+      "amount": 1370.27,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-19",
+      "amount": 45.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-20",
+      "amount": 35.91,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-23",
+      "amount": 47.38,
+      "merchant": "MONTEREY MARKET #632",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-25",
+      "amount": 49.13,
+      "merchant": "POS DEBIT MONTEREY MARKET",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-27",
+      "amount": 70.87,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*5BEBB8C4"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-29",
+      "amount": 12.29,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 10.67,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-03",
+      "amount": 1364.25,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-03",
+      "amount": 1050.0,
+      "merchant": "Sacramento St Apts",
+      "description": "Rent (shared apt)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-06",
+      "amount": 63.17,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-06",
+      "amount": 32.43,
+      "merchant": "Venmo",
+      "description": "VENMO *9165"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-08",
+      "amount": 74.15,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*34C618EB"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 54.83,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-11",
+      "amount": 7.53,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-16",
+      "amount": 26.95,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-17",
+      "amount": 1376.42,
+      "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-07-17",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-19",
+      "amount": 31.48,
+      "merchant": "POS DEBIT BART CLIPPER RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-19",
+      "amount": 25.99,
+      "merchant": "Venmo",
+      "description": "VENMO *2517"
     },
     {
       "type": "purchase",
@@ -196,30 +1355,37 @@
     },
     {
       "type": "purchase",
-      "date": "2026-07-21",
-      "amount": 53.48,
-      "merchant": "Monterey Market",
-      "description": "Groceries"
+      "date": "2026-07-20",
+      "amount": 54.19,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*485B588E"
     },
     {
       "type": "purchase",
       "date": "2026-07-24",
-      "amount": 34.47,
-      "merchant": "BART Clipper Reload",
-      "description": "Transit"
+      "amount": 83.27,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-07-27",
-      "amount": 28.95,
+      "amount": 36.13,
       "merchant": "Monterey Market",
       "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-07-31",
-      "amount": 1400.0,
+      "amount": 1433.17,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-31",
+      "amount": 61.98,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
     },
     {
       "type": "purchase",
@@ -230,84 +1396,132 @@
     },
     {
       "type": "purchase",
-      "date": "2026-08-01",
-      "amount": 25.34,
-      "merchant": "BART Clipper Reload",
-      "description": "Transit"
+      "date": "2026-08-03",
+      "amount": 18.42,
+      "merchant": "WALGREENS #4410",
+      "description": "Prescription"
     },
     {
       "type": "purchase",
-      "date": "2026-08-04",
-      "amount": 49.52,
-      "merchant": "Monterey Market",
-      "description": "Groceries"
+      "date": "2026-08-05",
+      "amount": 55.96,
+      "merchant": "POS DEBIT SHELL GAS UNIVERSITY AVE",
+      "description": "Gas"
     },
     {
       "type": "purchase",
-      "date": "2026-08-06",
-      "amount": 35.75,
+      "date": "2026-08-09",
+      "amount": 45.24,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*3CD57E3"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-10",
+      "amount": 37.7,
       "merchant": "Shell Gas University Ave",
       "description": "Gas"
     },
     {
       "type": "purchase",
-      "date": "2026-08-10",
-      "amount": 20.54,
-      "merchant": "BART Clipper Reload",
-      "description": "Transit"
+      "date": "2026-08-11",
+      "amount": 12.39,
+      "merchant": "Venmo",
+      "description": "VENMO *8950"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-12",
+      "amount": 5.12,
+      "merchant": "Cafe Leila",
+      "description": "Coffee"
     },
     {
       "type": "deposit",
       "date": "2026-08-14",
-      "amount": 1400.0,
+      "amount": 1435.36,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
       "date": "2026-08-15",
-      "amount": 45.14,
-      "merchant": "Monterey Market",
-      "description": "Groceries"
+      "amount": 53.03,
+      "merchant": "POS DEBIT SHELL GAS UNIVERSITY AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-08-16",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
     },
     {
       "type": "purchase",
       "date": "2026-08-17",
-      "amount": 41.65,
-      "merchant": "Berkeley Bowl",
+      "amount": 47.05,
+      "merchant": "POS DEBIT MONTEREY MARKET",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-20",
+      "date": "2026-08-18",
       "amount": 45.0,
       "merchant": "East Bay Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
+      "date": "2026-08-20",
+      "amount": 57.53,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*61FE24E0"
+    },
+    {
+      "type": "purchase",
       "date": "2026-08-21",
-      "amount": 12.71,
+      "amount": 9.9,
       "merchant": "Cafe Leila",
       "description": "Coffee"
     },
     {
       "type": "purchase",
-      "date": "2026-08-24",
-      "amount": 69.93,
-      "merchant": "Berkeley Bowl",
+      "date": "2026-08-23",
+      "amount": 37.23,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-25",
+      "amount": 20.11,
+      "merchant": "POS DEBIT MONTEREY MARKET",
       "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-27",
+      "amount": 48.92,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2000"
     },
     {
       "type": "deposit",
       "date": "2026-08-28",
-      "amount": 1400.0,
+      "amount": 1382.06,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
       "date": "2026-08-29",
-      "amount": 38.94,
-      "merchant": "Monterey Market",
+      "amount": 81.56,
+      "merchant": "Berkeley Bowl",
       "description": "Groceries"
     },
     {
@@ -319,51 +1533,71 @@
     },
     {
       "type": "purchase",
-      "date": "2026-09-02",
-      "amount": 9.16,
-      "merchant": "Cafe Leila",
-      "description": "Coffee"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-09-05",
-      "amount": 39.26,
-      "merchant": "Berkeley Bowl",
+      "date": "2026-09-03",
+      "amount": 45.68,
+      "merchant": "POS DEBIT MONTEREY MARKET",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-09-09",
-      "amount": 49.14,
+      "date": "2026-09-06",
+      "amount": 22.81,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*47B644BC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-08",
+      "amount": 60.3,
       "merchant": "Shell Gas University Ave",
       "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-10",
+      "amount": 34.72,
+      "merchant": "BART Clipper Reload",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-09-11",
-      "amount": 1400.0,
+      "amount": 1427.51,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
-      "date": "2026-09-13",
-      "amount": 38.14,
-      "merchant": "Shell Gas University Ave",
-      "description": "Gas"
+      "date": "2026-09-14",
+      "amount": 34.14,
+      "merchant": "POS DEBIT BART CLIPPER RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-09-14",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
     },
     {
       "type": "purchase",
       "date": "2026-09-14",
       "amount": 500.0,
-      "merchant": "California Pacific Medical Center",
-      "description": "Payment acct CPMC-48213977"
+      "merchant": "SUTTER HEALTH PYMT",
+      "description": "POS DEBIT"
     },
     {
       "type": "purchase",
-      "date": "2026-09-18",
-      "amount": 10.3,
-      "merchant": "Cafe Leila",
-      "description": "Coffee"
+      "date": "2026-09-17",
+      "amount": 46.24,
+      "merchant": "SHELL GAS UNIVERSITY AVE #633",
+      "description": "Gas"
     },
     {
       "type": "purchase",
@@ -374,34 +1608,55 @@
     },
     {
       "type": "purchase",
-      "date": "2026-09-23",
-      "amount": 91.88,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
+      "date": "2026-09-20",
+      "amount": 42.59,
+      "merchant": "Venmo",
+      "description": "VENMO *7708"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-21",
+      "amount": 39.77,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-09-25",
-      "amount": 1400.0,
+      "amount": 1432.49,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
-      "date": "2026-09-27",
-      "amount": 27.55,
-      "merchant": "BART Clipper Reload",
+      "date": "2026-09-25",
+      "amount": 22.51,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*782F1F4F"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-26",
+      "amount": 38.3,
+      "merchant": "POS DEBIT BART CLIPPER RELOAD",
       "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2026-09-30",
-      "amount": 27.64,
-      "merchant": "BART Clipper Reload",
+      "date": "2026-09-28",
+      "amount": 27.16,
+      "merchant": "BART CLIPPER RELOAD #619",
       "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-10-01",
+      "amount": 80.08,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-02",
       "amount": 1050.0,
       "merchant": "Sacramento St Apts",
       "description": "Rent (shared apt)"
@@ -409,70 +1664,104 @@
     {
       "type": "purchase",
       "date": "2026-10-04",
-      "amount": 59.36,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
+      "amount": 8.12,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-08",
+      "amount": 11.64,
+      "merchant": "CAFE LEILA #379",
+      "description": "Coffee"
     },
     {
       "type": "deposit",
       "date": "2026-10-09",
-      "amount": 1400.0,
+      "amount": 1364.42,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
       "date": "2026-10-09",
-      "amount": 30.95,
-      "merchant": "Monterey Market",
-      "description": "Groceries"
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
     },
     {
       "type": "purchase",
-      "date": "2026-10-11",
-      "amount": 46.89,
-      "merchant": "Shell Gas University Ave",
-      "description": "Gas"
+      "date": "2026-10-10",
+      "amount": 28.78,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*52E6A2A8"
     },
     {
       "type": "purchase",
       "date": "2026-10-13",
-      "amount": 8.43,
-      "merchant": "Cafe Leila",
-      "description": "Coffee"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-18",
-      "amount": 31.27,
+      "amount": 34.0,
       "merchant": "BART Clipper Reload",
       "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2026-10-20",
+      "date": "2026-10-14",
+      "amount": 47.19,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5004"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-15",
+      "amount": 5.1,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-18",
       "amount": 45.0,
       "merchant": "East Bay Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
+      "date": "2026-10-18",
+      "amount": 13.08,
+      "merchant": "POS DEBIT CAFE LEILA",
+      "description": "Coffee"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-10-19",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
       "date": "2026-10-22",
-      "amount": 39.67,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
+      "amount": 71.01,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*15B0E7D4"
     },
     {
       "type": "deposit",
       "date": "2026-10-23",
-      "amount": 1400.0,
+      "amount": 1375.93,
       "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"
     },
     {
       "type": "purchase",
-      "date": "2026-10-24",
-      "amount": 10.88,
-      "merchant": "Cafe Leila",
-      "description": "Coffee"
+      "date": "2026-10-23",
+      "amount": 39.56,
+      "merchant": "BART CLIPPER RELOAD #619",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-25",
+      "amount": 52.76,
+      "merchant": "Monterey Market",
+      "description": "Groceries"
     }
   ]
 }

@@ -17,5 +17,7 @@ def offline(monkeypatch, tmp_path):
               "BRIGHTDATA_SERP_ZONE", "CARTESIA_API_KEY", "CARTESIA_AGENT_ID", "CARTESIA_FROM_NUMBER_ID",
               "REP_PHONE_NUMBER", "CARTESIA_WEBHOOK_SECRET", "CARTESIA_TOOL_TOKEN"):
         monkeypatch.setattr(config, k, "")
+    monkeypatch.setattr(config, "ADMIN_TOKEN", "")  # tests call from localhost, which is allowed without one
+    monkeypatch.setattr(config, "REQUIRE_LIVE", False)  # judging mode is off: tests run on the fixtures
     monkeypatch.setattr(llm, "_client", None)
     monkeypatch.setattr(events, "DATA_DIR", tmp_path)  # keep audit logs out of data/

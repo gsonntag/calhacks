@@ -1,7 +1,7 @@
 {
   "scenario": "lena-johnmuir",
   "generator": "billback/scenarios.py",
-  "generator_version": 1,
+  "generator_version": 2,
   "seed": 1105,
   "as_of": "2026-10-25",
   "story": "Lena's chest-pain workup at John Muir Walnut Creek (CT angiogram, troponins, ECG), real John Muir prices. Insured, single, about 515% of the poverty line: no charity discount. The bill ignores her insurance and charges the CT angiogram above John Muir's posted price. Also a double charge in her bank.",
@@ -83,8 +83,8 @@
       "what": "Gregory Lane Cleaners charged $26.50 twice (not part of the hospital bill: dispute with the bank)",
       "effect_on_amount_owed": 0.0,
       "txn_ids": [
-        "mirror-033",
-        "mirror-034"
+        "mirror-214",
+        "mirror-216"
       ],
       "amount": 26.5
     }
@@ -289,20 +289,37 @@
     "owed_before_discount": 967.52
   },
   "income": {
-    "annual": 80600.0,
-    "monthly": 6716.67,
-    "source": "6 Nessie payroll deposits, paid every two weeks (avg $3,100 x 26)",
-    "deposits_counted": 6
+    "annual": 81064.19,
+    "monthly": 6755.35,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $3,118 x 26); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 101330.24,
+    "bills_monthly": 3111.28,
+    "bills_source": "39 regular Nessie payments in the last 90 days (ATM WITHDRAWAL PLEASANT HILL CA, Amazon Marketplace, Diablo Wireless, Gregory Lane Residences…)"
+  },
+  "medical_spending": {
+    "since": "2025-10-25",
+    "bank_total": 132.99,
+    "this_bill": 967.52,
+    "out_of_pocket": 1100.51,
+    "txn_ids": [
+      "mirror-143",
+      "mirror-201"
+    ],
+    "discount_without_bank": 0,
+    "bank_decides_eligibility": false
   },
   "discount": {
-    "fpl_pct": 505.0,
+    "fpl_pct": 507.9,
     "fpl_amount": 15960,
     "fpl_year": 2026,
     "household_size": 1,
     "insured": true,
-    "oop_pct_income": 1.2,
+    "oop_pct_income": 1.4,
     "discount_pct": 0,
-    "tier_quote": null
+    "tier_quote": null,
+    "at_estimated_gross": null
   },
   "settle": {
     "discounted_share": 967.52,
@@ -314,12 +331,16 @@
     "refund": 0.0,
     "discount_pct": 0,
     "plan_months": 6,
-    "plan_monthly": 162.0
+    "plan_monthly": 162.0,
+    "plan_last": 157.52
   },
   "plan": {
     "months": 6,
     "monthly": 162.0,
-    "reason": "$162/mo stays under 4% of monthly income ($6,717): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%"
+    "last": 157.52,
+    "total": 967.52,
+    "reason": "$162/mo stays under 4% of monthly income ($6,755): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%; you have about $3,644/mo left after regular bills",
+    "text": "5 × $162/mo, then $157.52"
   },
   "finance_reconcile": {
     "billed_due": 27619.57,
@@ -331,8 +352,8 @@
     "payment_txn_ids": [],
     "duplicate_txn_ids": [
       [
-        "mirror-033",
-        "mirror-034"
+        "mirror-214",
+        "mirror-216"
       ]
     ]
   },
@@ -359,14 +380,14 @@
       "title": "Double charge at Gregory Lane Cleaners",
       "money": 0,
       "bank_amount": 26.5,
-      "proof": "Nessie txns mirror-033 + mirror-034"
+      "proof": "Nessie txns mirror-214 + mirror-216"
     },
     {
       "id": "plan",
       "agent": "bright_data",
       "title": "Interest-free payment plan",
       "money": 0,
-      "value": "6 x $162/mo"
+      "value": "5 × $162/mo, then $157.52"
     }
   ],
   "must_not_report": [

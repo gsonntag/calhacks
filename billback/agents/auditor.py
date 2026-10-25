@@ -32,7 +32,13 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     acct = f"bill · acct {bill.get('account_number', '?')}"
     billed = float(bill["amount_due"])
     credits = billcheck.bill_credits(bill)
-    corrections = []
+    # Every bill gets the line checks. Insured: the share comes from the insurance statement, so the balance
+    # doesn't change, but a line billed twice or above the hospital's own posted price is its own mistake (the
+    # claim was built on it) and is reported apart from the insurance gap. Drug lines are compared only when the
+    # price file's unit converts to the HCPCS unit (billcheck.posted_unit_price); the rest are listed as skipped.
+    review = billcheck.line_review(bill, case.get("hospital", {}).get("name"))
+    corrections = review["corrections"]
+    line_total = round(sum(c["amount"] for c in corrections), 2)
     if insured:
         claim = f"{eob.get('insurer', 'insurance statement')} · claim {eob.get('claim_number', '?')}"
         resp = float(eob["patient_responsibility"])
@@ -45,12 +51,16 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
                  f"you owe ${resp:,.2f}", claim)])
 
         r.step("insurance", "Compare the bill with the insurance statement", "running")
-        if billed > expect:
+        ins_gap = round(billed - expect - line_total, 2)
+        if ins_gap > 0:
+            also = f" (plus ${line_total:,.0f} in line errors, below)" if line_total else ""
             r.step("insurance", "Compare the bill with the insurance statement", "flag",
-                   f"The bill ignores your insurance: ${billed - expect:,.0f} too high",
+                   f"The bill ignores your insurance: ${ins_gap:,.0f} too high{also}",
                    [(f"Bill asks for ${billed:,.2f}", acct), (f"Insurance statement says ${resp:,.2f}", claim)])
-            r.finding("insurance", "Insurance wasn’t applied", billed - expect,
-                      [f"The bill asks for ${billed:,.2f}, but your insurance statement says your share is ${resp:,.2f}."], claim)
+            proof = f"The bill asks for ${billed:,.2f}, but your insurance statement says your share is ${resp:,.2f}."
+            if line_total:
+                proof += f" ${line_total:,.2f} of the difference is line errors, reported separately."
+            r.finding("insurance", "Insurance wasn’t applied", ins_gap, [proof], claim)
         else:
             r.step("insurance", "Compare the bill with the insurance statement", "clear", "The bill matches your insurance statement")
     else:
@@ -61,26 +71,33 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
         r.step("insurance", "Check for insurance", "clear",
                "Uninsured: your share is the bill's own charges, so each line is checked instead")
 
-        r.step("lines", "Check the bill's lines", "running")
-        corrections = billcheck.line_corrections(bill, case.get("hospital", {}).get("name"))
-        if corrections:
-            r.step("lines", "Check the bill's lines", "flag",
-                   f"{len(corrections)} line error{'s' if len(corrections) > 1 else ''}: "
-                   f"${sum(c['amount'] for c in corrections):,.0f} too high",
-                   [(c["detail"], c["source"]) for c in corrections])
-            for c in corrections:
-                title = (f"{c['code']} billed twice" if c["kind"] == "duplicate_line"
-                         else f"{c['code']} charged above the hospital's posted price")
-                r.finding(f"{c['kind']}-{c['line']}", title, c["amount"], [c["detail"]], c.get("url") or c["source"])
-        else:
-            r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices")
+    r.step("lines", "Check the bill's lines", "running")
+    checked = ([(f"{review['compared']} line{'s' if review['compared'] != 1 else ''} compared with the hospital's "
+                 f"posted prices", f"{review['table']} price file")] if review["table"] else [])
+    checked += [(f"Line {s['line']} ({s['code']}) not compared: {s['why']}", "unit check") for s in review["skipped"]]
+    if corrections:
+        r.step("lines", "Check the bill's lines", "flag",
+               f"{len(corrections)} line error{'s' if len(corrections) > 1 else ''}: ${line_total:,.0f} too high",
+               [(c["detail"], c["source"]) for c in corrections] + checked)
+        for c in corrections:
+            title = (f"{c['code']} billed twice" if c["kind"] == "duplicate_line"
+                     else f"{c['code']} charged above the hospital's posted price")
+            r.finding(f"{c['kind']}-{c['line']}", title, c["amount"], [c["detail"]], c.get("url") or c["source"])
+    else:
+        r.step("lines", "Check the bill's lines", "clear", "No repeated lines or charges above posted prices", checked)
 
     r.step("bank", f"Pull your bank history ({bank_name})", "running")
     txns = await bank.transactions(account_id)
     txns_ready.set_result(txns)
     dates = sorted(t["date"][:10] for t in txns if t.get("date"))
+    notice = getattr(bank, "notice", "")
+    if notice:  # no Capital One account for this patient, or Nessie didn't answer: sample data, said plainly
+        bank_label = getattr(bank, "label", bank_label)
+        bank_name = bank_label.split(" (")[0]
+        bus.emit(cid, "warning", "auditor", text=notice)
     r.step("bank", f"Pull your bank history ({bank_name})", "ok",
-           f"{len(txns)} transactions" + (f", {dates[0]} to {dates[-1]}" if dates else ""))
+           (f"{notice} · " if notice else "")
+           + f"{len(txns)} transactions" + (f", {dates[0]} to {dates[-1]}" if dates else ""))
 
     rec = finance.reconcile(bill, eob, txns, corrections=corrections)
     missed = rec["uncredited_payments"]
@@ -120,6 +137,8 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     else:
         r.step("dupes", "Check your bank for duplicate charges", "clear", "No double charges")
 
+    med = medical_step(r, case, txns, eob, bank_name)
+
     r.step("balance", "Work out what you actually owe", "running")
     r.step("balance", "Work out what you actually owe", "ok", _balance_text(rec))
     bus.emit(cid, "reconciliation", "auditor", **{k: rec[k] for k in ("lines", "owed", "billed_due", "overbilled_by")})
@@ -130,7 +149,31 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     note = (_dup_note(rec["duplicates"][0]) if rec["duplicates"]
             else "no errors on the bill")
     r.finish(f"${rec['owed']:,.0f} owed", note)
-    return {"reconciliation": rec, "transactions": txns}
+    return {"reconciliation": rec, "transactions": txns, "medical": med}
+
+
+MEDICAL_LABEL = "Add up your medical spending (last 12 months)"
+
+
+def medical_step(r: Report, case: dict, txns: list[dict], eob: dict, bank_name: str) -> dict:
+    """The bank's last 12 months of medical purchases (pharmacies, clinics, doctors), apart from payments toward
+    this bill. Hospitals' high-medical-cost rules count them (the Bright Data agent applies the rule)."""
+    med = finance.medical_spending(txns, case["bill"], eob, today=finance._d(case["today"]) if case.get("today") else None)
+    r.step("medical", MEDICAL_LABEL, "running")
+    if not med["txns"]:
+        r.step("medical", MEDICAL_LABEL, "clear", "No other medical spending in your bank history")
+        return med
+    n = len(med["txns"])
+    proof = [(f"${t['amount']:,.2f} on {t['date'][:10]}: {t.get('merchant') or t.get('description') or 'purchase'}",
+              f"{bank_name} · txn {t['id']}") for t in med["txns"]]
+    r.step("medical", MEDICAL_LABEL, "ok",
+           f"${med['total']:,.2f} in other medical bills since {med['since']} ({n} payment{'s' if n != 1 else ''})", proof)
+    r.finding("medical", "Other medical bills in the last 12 months", 0,
+              [f"Your bank shows ${med['total']:,.2f} paid to pharmacies, clinics and doctors since {med['since']}, "
+               "apart from this bill. Hospitals' high-medical-cost rules count these toward your out-of-pocket costs.",
+               *[f"{t} ({s})" for t, s in proof]],
+              f"{bank_name} · {n} txn{'s' if n != 1 else ''}", value=f"${med['total']:,.0f} · 12 months")
+    return med
 
 
 def _balance_text(rec: dict) -> str:

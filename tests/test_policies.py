@@ -207,10 +207,10 @@ def replay_brightdata(monkeypatch, hid: str) -> list[str]:
         calls.append(url)
         return BDResponse(product, url, 200, body, "application/pdf" if body[:5] == b"%PDF-" else "text/plain", 1)
 
-    async def serp(query):
+    async def serp(query, **k):
         return brightdata.parse_serp(serp_body.decode()), resp("serp", f"google: {query}", serp_body)
 
-    async def page(url):
+    async def page(url, **k):
         if url not in by_url:
             raise BrightDataError("unlocker", url, "HTTP 404", 404)
         return resp("unlocker", url, by_url[url])
@@ -239,7 +239,10 @@ async def test_crawl_pipeline_end_to_end_offline(monkeypatch, tmp_path):
     products = [l["product"] for l in db.crawl_log("sutter-cpmc") if l["product"]]
     assert products == ["serp", "unlocker", "unlocker", "unlocker"]
     assert any("REJECTED" in l["note"] for l in db.crawl_log("sutter-cpmc"))
-    assert {k for k, _ in seen} == {"crawl_stage", "brightdata"}
+    assert {k for k, _ in seen} == {"crawl_stage", "brightdata_request", "brightdata"}
+    done = [e for k, e in seen if k == "brightdata"]
+    assert [e["n"] for e in done] == [1, 2, 3, 4] and {e["outcome"] for e in done} == {"found"}
+    assert all(e["cap"] == 10 for e in done)
     assert {e["stage"] for k, e in seen if k == "crawl_stage"} >= {"discover", "fetch", "extract", "verify", "store"}
 
 
@@ -279,7 +282,8 @@ def test_same_bill_different_hospitals():
     # shares only above 10% of income, Chinese Hospital's free care is self-pay only, ZSFG has no tier: $600 everywhere
     assert rosa["sutter-cpmc"]["balance"] == 600 and rosa["sutter-cpmc"]["refund"] == 0
     assert rosa["sutter-cpmc"]["fpl_pct"] == pytest.approx(228.1, abs=0.1)
-    assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(3.0, abs=0.1)
+    # her $1,100 share + $93 other medical bills in her bank (urgent-care copay, a prescription; not the double charge)
+    assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(3.3, abs=0.1)
     assert "not above 10%" in rosa["sutter-cpmc"]["why_not"]
     assert rosa["chinese-hospital"]["balance"] == 600 and rosa["chinese-hospital"]["discount_pct"] == 0
     assert rosa["zsfg"]["balance"] == 600  # ZSFG publishes no fixed-percent tier on its own site

@@ -1,7 +1,7 @@
 {
   "scenario": "amara-kaiser-uninsured",
   "generator": "billback/scenarios.py",
-  "generator_version": 1,
+  "generator_version": 2,
   "seed": 1104,
   "as_of": "2026-10-25",
   "story": "Amara, uninsured, twisted her ankle and was seen at Kaiser's Oakland emergency department (real Kaiser prices). Household of 2 at about 300% of the poverty line: Kaiser's policy gives 50% off. The bill charges the ankle X-ray above Kaiser's own posted price, lists the foot X-ray twice, and misses the $300 she paid at discharge. Also a double charge in her bank.",
@@ -88,7 +88,7 @@
       "type": "uncredited_payment",
       "what": "$300.00 paid on 2026-08-22 is not on the bill",
       "effect_on_amount_owed": -300.0,
-      "txn_id": "mirror-016",
+      "txn_id": "mirror-183",
       "date": "2026-08-22",
       "amount": 300.0
     },
@@ -97,8 +97,8 @@
       "what": "StreamBox Video charged $17.99 twice (not part of the hospital bill: dispute with the bank)",
       "effect_on_amount_owed": 0.0,
       "txn_ids": [
-        "mirror-028",
-        "mirror-030"
+        "mirror-203",
+        "mirror-205"
       ],
       "amount": 17.99
     }
@@ -244,20 +244,37 @@
     "owed_before_discount": 5098.57
   },
   "income": {
-    "annual": 63360.0,
-    "monthly": 5280.0,
-    "source": "6 Nessie payroll deposits, paid twice a month (avg $2,640 x 24)",
-    "deposits_counted": 6
+    "annual": 62790.08,
+    "monthly": 5232.51,
+    "source": "6 Nessie payroll deposits, paid twice a month (avg $2,616 x 24); take-home pay",
+    "deposits_counted": 6,
+    "basis": "take-home",
+    "gross_annual_est": 78487.6,
+    "bills_monthly": 2581.0,
+    "bills_source": "42 regular Nessie payments in the last 90 days (ATM WITHDRAWAL OAKLAND CA, Amazon Marketplace, Bay Wireless Co, Farmer Joe's Marketplace…)"
+  },
+  "medical_spending": {
+    "since": "2025-10-25",
+    "bank_total": 109.99,
+    "this_bill": 0.0,
+    "out_of_pocket": 109.99,
+    "txn_ids": [
+      "mirror-119",
+      "mirror-184"
+    ],
+    "discount_without_bank": 50.0,
+    "bank_decides_eligibility": false
   },
   "discount": {
-    "fpl_pct": 292.8,
+    "fpl_pct": 290.2,
     "fpl_amount": 21640,
     "fpl_year": 2026,
     "household_size": 2,
     "insured": false,
-    "oop_pct_income": 0.0,
+    "oop_pct_income": 0.2,
     "discount_pct": 50.0,
-    "tier_quote": "50% award for gross monthly household income between 201% and 400% of FPG"
+    "tier_quote": "50% award for gross monthly household income between 201% and 400% of FPG",
+    "at_estimated_gross": null
   },
   "settle": {
     "discounted_share": 2699.28,
@@ -269,12 +286,16 @@
     "refund": 0.0,
     "discount_pct": 50.0,
     "plan_months": 12,
-    "plan_monthly": 200.0
+    "plan_monthly": 200.0,
+    "plan_last": 199.28
   },
   "plan": {
     "months": 12,
     "monthly": 200.0,
-    "reason": "$200/mo stays under 4% of monthly income ($5,280): BillBack's default, not the hospital's rule"
+    "last": 199.28,
+    "total": 2399.28,
+    "reason": "$200/mo stays under 4% of monthly income ($5,233): BillBack's default, not the hospital's rule; you have about $2,652/mo left after regular bills",
+    "text": "11 × $200/mo, then $199.28"
   },
   "finance_reconcile": {
     "billed_due": 6678.57,
@@ -284,12 +305,12 @@
     "owed": 5098.57,
     "overbilled_by": 1580.0,
     "payment_txn_ids": [
-      "mirror-016"
+      "mirror-183"
     ],
     "duplicate_txn_ids": [
       [
-        "mirror-028",
-        "mirror-030"
+        "mirror-203",
+        "mirror-205"
       ]
     ]
   },
@@ -310,11 +331,11 @@
       "proof": "bill line 2 $1,350.00 vs posted $1,080.00 (KAISER FOUNDATION HOSPITAL - OAKLAND/RICHMOND price file, 4/1/2026)"
     },
     {
-      "id": "paid-mirror-016",
+      "id": "paid-mirror-183",
       "agent": "nessie",
       "title": "A payment you made was missed",
       "money": 300.0,
-      "proof": "bank txn mirror-016 on 2026-08-22"
+      "proof": "bank txn mirror-183 on 2026-08-22"
     },
     {
       "id": "dupe",
@@ -322,7 +343,7 @@
       "title": "Double charge at StreamBox Video",
       "money": 0,
       "bank_amount": 17.99,
-      "proof": "Nessie txns mirror-028 + mirror-030"
+      "proof": "Nessie txns mirror-203 + mirror-205"
     },
     {
       "id": "discount",
@@ -337,7 +358,7 @@
       "agent": "bright_data",
       "title": "Interest-free payment plan",
       "money": 0,
-      "value": "12 x $200/mo"
+      "value": "11 × $200/mo, then $199.28"
     }
   ],
   "must_not_report": [],

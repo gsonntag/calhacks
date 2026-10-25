@@ -39,7 +39,8 @@ from .policies.store import PolicyStore
 
 OUT_DIR = config.DEMO_DIR / "scenarios"
 DEFAULT_AS_OF = "2026-10-25"
-GENERATOR_VERSION = 1
+GENERATOR_VERSION = 2  # 2: a year of messier bank history, medical spending for the high-medical-cost rule
+BANK_DAYS = 365
 
 ALLOWED_STATISTIC = ("median of the payer-specific dollar rates the hospital's file lists for the code "
                      "(price table field `negotiated_median_of_payers`) x billed units")
@@ -66,6 +67,9 @@ SPECS: dict[str, dict] = {
         "merchants": [("Berkeley Bowl", "Groceries", 38, 96), ("Monterey Market", "Groceries", 18, 55),
                       ("Shell Gas University Ave", "Gas", 34, 62), ("Cafe Leila", "Coffee", 5, 14),
                       ("BART Clipper Reload", "Transit", 20, 40), ("East Bay Wireless", "Phone bill", 45, 45)],
+        "medical": [("WALGREENS #4410", "Prescription", 23.17, "2026-01-14"),
+                    ("Elmwood Dental Group", "Cleaning copay", 60.00, "2026-04-09"),
+                    ("WALGREENS #4410", "Prescription", 18.42, "2026-08-03")],
         "insurance": {"insurer": "Fogline Health Plan", "member_id": "FHP-7712093", "claim_number": "C-2026-0815-44917",
                       "deductible_remaining": 750.00, "coinsurance_pct": 20, "oop_max_remaining": 3000.00,
                       "processed": "2026-08-21"},
@@ -95,6 +99,22 @@ SPECS: dict[str, dict] = {
         "merchants": [("Berkeley Bowl", "Groceries", 90, 210), ("Grocery Outlet Berkeley", "Groceries", 40, 120),
                       ("Chevron San Pablo Ave", "Gas", 40, 70), ("Golden Bear Pharmacy", "Pharmacy", 12, 30),
                       ("East Bay Wireless", "Phone bill", 85, 85)],
+        # a year of a family's care plus the crash's follow-up (brace, orthopedics, imaging, PT, refills): with
+        # his share it stays over UCSF's 10% bar even on estimated gross pay (finance.gross_check)
+        "medical": [("Kids First Pediatrics", "Office visit copay", 30.00, "2026-01-22"),
+                    ("Kids First Pediatrics", "Urgent visit copay", 75.00, "2026-03-11"),
+                    ("Kids First Pediatrics", "Office visit copay", 30.00, "2026-05-07"),
+                    ("WALGREENS #2291", "Prescription", 38.60, "2026-07-21"),
+                    ("Bay Area Orthopedic Clinic", "Splint and brace", 214.50, "2026-07-24"),
+                    ("Bay Area Orthopedic Clinic", "Follow-up visit copay", 150.00, "2026-07-30"),
+                    ("East Bay Imaging Center", "X-ray copay", 185.00, "2026-08-05"),
+                    ("Bay Physical Therapy", "PT session copay", 45.00, "2026-08-12"),
+                    ("WALGREENS #2291", "Prescription refill", 38.60, "2026-08-19"),
+                    ("Bay Physical Therapy", "PT session copay", 45.00, "2026-08-26"),
+                    ("Bay Area Orthopedic Clinic", "Follow-up visit copay", 150.00, "2026-09-02"),
+                    ("Bay Physical Therapy", "PT session copay", 45.00, "2026-09-09"),
+                    ("Bay Physical Therapy", "PT session copay", 45.00, "2026-09-23"),
+                    ("Bay Physical Therapy", "PT session copay", 45.00, "2026-10-07")],
         "insurance": {"insurer": "Tidewater Arc Health HDHP", "member_id": "TAH-55120847",
                       "claim_number": "C-2026-0731-90215", "deductible_remaining": 5000.00, "coinsurance_pct": 30,
                       "oop_max_remaining": 7000.00, "processed": "2026-08-04"},
@@ -124,6 +144,9 @@ SPECS: dict[str, dict] = {
         "merchants": [("Temescal Produce", "Groceries", 30, 95), ("Rockridge Market Hall", "Groceries", 25, 80),
                       ("Arco 51st St", "Gas", 30, 58), ("Bakesale Betty", "Lunch", 9, 18),
                       ("Bay Wireless Co", "Phone bill", 60, 60)],
+        "medical": [("Oakland Urgent Care", "Visit copay", 75.00, "2026-02-03"),
+                    ("Rockridge Family Dental", "Filling copay", 145.00, "2026-03-18"),
+                    ("CVS/PHARMACY #9921", "Prescription", 34.50, "2026-07-11")],
         "insurance": {"insurer": "Fogline Health Plan", "member_id": "FHP-2048811", "claim_number": "C-2026-0716-31842",
                       "deductible_remaining": 4000.00, "coinsurance_pct": 25, "oop_max_remaining": 6500.00,
                       "processed": "2026-07-30"},
@@ -155,6 +178,8 @@ SPECS: dict[str, dict] = {
         "merchants": [("Farmer Joe's Marketplace", "Groceries", 35, 120), ("Mi Pueblo Foods", "Groceries", 20, 70),
                       ("Valero MacArthur Blvd", "Gas", 32, 60), ("Peet's Coffee", "Coffee", 5, 12),
                       ("Bay Wireless Co", "Phone bill", 70, 70)],
+        "medical": [("Fruitvale Walk-In Clinic", "Visit", 95.00, "2026-05-12"),
+                    ("CVS/PHARMACY #3381", "Prescription", 14.99, "2026-08-23")],
         "insurance": None,
         "visit": {"service_date": "2026-08-22", "statement_date": "2026-10-12", "due_date": "2026-11-11",
                   "account_number": "KPOAK-60331972",
@@ -184,6 +209,8 @@ SPECS: dict[str, dict] = {
         "merchants": [("Pleasant Hill Safeway", "Groceries", 45, 140), ("Trader Vic Grocers", "Groceries", 20, 75),
                       ("Shell Contra Costa Blvd", "Gas", 40, 75), ("Sideboard Cafe", "Coffee", 6, 16),
                       ("Diablo Wireless", "Phone bill", 75, 75)],
+        "medical": [("Diablo Valley Optometry", "Eye exam", 120.00, "2026-06-03"),
+                    ("WALGREENS #7710", "Prescription", 12.99, "2026-09-06")],
         "insurance": {"insurer": "Tidewater Arc Health", "member_id": "TAH-30918477", "claim_number": "C-2026-0905-11873",
                       "deductible_remaining": 500.00, "coinsurance_pct": 20, "oop_max_remaining": 4000.00,
                       "processed": "2026-09-22"},
@@ -336,69 +363,117 @@ def adjudicate(spec: dict, prov: list[dict]) -> dict:
 # ------------------------------------------------------------------------------------------- the bank
 
 def _paydays(pay: dict, start: date, end: date) -> list[date]:
+    """Paydays in [start, end]. `first_payday` anchors the schedule (any real payday); pay runs before it too."""
     f = pay["frequency"]
-    d = date.fromisoformat(pay["first_payday"])
+    anchor = date.fromisoformat(pay["first_payday"])
     out = []
     if f in ("weekly", "biweekly"):
         step = timedelta(days=7 if f == "weekly" else 14)
+        d = anchor - step * ((anchor - start).days // step.days + 1) if anchor > start else anchor
         while d <= end:
             if d >= start:
                 out.append(d)
             d += step
     elif f in ("semimonthly", "monthly"):
-        y, m = d.year, d.month
+        y, m = start.year, start.month
         while date(y, m, 1) <= end:
             nxt = date(y + (m == 12), m % 12 + 1, 1)
             days = [nxt - timedelta(days=1)] if f == "monthly" else [date(y, m, 15), nxt - timedelta(days=1)]
-            out += [x for x in days if d <= x <= end and x >= start]
+            out += [x for x in days if start <= x <= end]
             y, m = nxt.year, nxt.month
     else:
         raise ValueError(f"unknown pay frequency {f}")
     return out
 
 
-def bank(spec: dict, provider: str, start: date, end: date) -> tuple[list[dict], dict]:
-    """Nessie-shaped transactions (the case.json format seed_nessie.py consumes) and what was planted."""
-    rng = random.Random(spec["seed"])
-    errs = spec.get("errors", {})
-    acct = spec["visit"]["account_number"]
-    txns: list[dict] = []
-    for d in _paydays(spec["pay"], start, end):
-        txns.append({"type": "deposit", "date": _iso(d), "amount": spec["pay"]["amount"],
-                     "description": f"PAYROLL DIRECT DEP - {spec['pay']['employer']}"})
-    r = spec["rent"]
-    m = date(start.year, start.month, 1)
+def _months(start: date, end: date, day: int) -> list[date]:
+    out, m = [], date(start.year, start.month, day)
     while m <= end:
         if m >= start:
-            txns.append({"type": "purchase", "date": _iso(m), "amount": r["amount"], "merchant": r["merchant"],
-                         "description": r["description"]})
-        m = date(m.year + (m.month == 12), m.month % 12 + 1, 1)
-    # fixed-amount merchants (lo == hi) are monthly bills on the 20th; the rest are everyday purchases, about
-    # two a week, with cents so nothing repeats by accident
+            out.append(m)
+        m = date(m.year + (m.month == 12), m.month % 12 + 1, day)
+    return out
+
+
+# Unrelated noise every bank history has (spread over the year, amounts with cents): online shopping, Venmo,
+# a streaming subscription. Cash (ATM withdrawals) is added in bank().
+NOISE = [("Amazon Marketplace", ("AMZN Mktp US*{code}", "AMAZON.COM*{code}"), 9, 85),
+         ("Venmo", ("VENMO PAYMENT {num}", "VENMO *{num}"), 12, 60),
+         ("Netflix", ("NETFLIX.COM",), 15.49, 15.49)]
+
+
+def _variant(rng: random.Random, name: str, store: int) -> str:
+    """How a card statement prints a merchant: as named, upper case with a store number, or with a POS prefix."""
+    return rng.choice([name, f"{name.upper()} #{store}", f"POS DEBIT {name.upper()}"])
+
+
+def bank(spec: dict, provider: str, start: date, end: date,
+         payee_descriptor: str | None = None) -> tuple[list[dict], dict]:
+    """Nessie-shaped transactions (the case.json format seed_nessie.py consumes) and what was planted.
+
+    Messy on purpose, like a real statement: pay varies a little from check to check (hours, overtime), card
+    merchants print under different names, there's cash, online shopping and Venmo, a few medical bills (spec
+    `medical`, which the high-medical-cost rule counts), and payments to the hospital carry the health system's
+    billing name ("SUTTER HEALTH PYMT"), not the hospital account number."""
+    rng = random.Random(spec["seed"])
+    pay_rng = random.Random(spec["seed"] * 31 + 7)
+    errs = spec.get("errors", {})
+    pay = spec["pay"]
+    vary = pay.get("vary_pct", 3) / 100
+    txns: list[dict] = []
+    for d in _paydays(pay, start, end):
+        txns.append({"type": "deposit", "date": _iso(d),
+                     "amount": round(pay["amount"] * (1 + pay_rng.uniform(-vary, vary)), 2),
+                     "description": f"PAYROLL DIRECT DEP - {pay['employer']}"})
+    r = spec["rent"]
+    for m in _months(start, end, 1):  # rent goes out on the 1st or a day or two later
+        txns.append({"type": "purchase", "date": _iso(m + timedelta(days=rng.choice((0, 0, 1, 2)))),
+                     "amount": r["amount"], "merchant": r["merchant"], "description": r["description"]})
+    # fixed-amount merchants (lo == hi) are monthly bills around the 20th; the rest are everyday purchases,
+    # about two a week, with cents so nothing repeats by accident
     for merchant, desc, lo, hi in spec["merchants"]:
         if lo == hi:
-            m = date(start.year, start.month, 20)
-            while m <= end:
-                if m >= start:
-                    txns.append({"type": "purchase", "date": _iso(m), "amount": float(lo), "merchant": merchant,
-                                 "description": desc})
-                m = date(m.year + (m.month == 12), m.month % 12 + 1, 20)
+            for m in _months(start, end, 20):
+                txns.append({"type": "purchase", "date": _iso(m + timedelta(days=rng.randint(-2, 2))),
+                             "amount": float(lo), "merchant": merchant, "description": desc})
     everyday = [x for x in spec["merchants"] if x[2] != x[3]]
+    stores = {x[0]: rng.randint(2, 980) for x in everyday}
     d = start + timedelta(days=rng.randint(0, 2))
     while d <= end:
         merchant, desc, lo, hi = rng.choice(everyday)
         txns.append({"type": "purchase", "date": _iso(d), "amount": round(rng.uniform(lo, hi), 2),
-                     "merchant": merchant, "description": desc})
+                     "merchant": _variant(rng, merchant, stores[merchant]), "description": desc})
         d += timedelta(days=rng.randint(2, 5))
+    for name, descs, lo, hi in NOISE:
+        if lo == hi:
+            for m in _months(start, end, 9):
+                txns.append({"type": "purchase", "date": _iso(m), "amount": lo, "merchant": name, "description": descs[0]})
+            continue
+        d = start + timedelta(days=rng.randint(3, 12))
+        while d <= end:
+            desc = rng.choice(descs).format(code=f"{rng.randint(0, 36 ** 6 - 1):06X}", num=rng.randint(1000, 9999))
+            txns.append({"type": "purchase", "date": _iso(d), "amount": round(rng.uniform(lo, hi), 2),
+                         "merchant": name, "description": desc})
+            d += timedelta(days=rng.randint(9, 24))
+    d = start + timedelta(days=rng.randint(5, 20))
+    while d <= end:  # cash
+        txns.append({"type": "withdrawal", "date": _iso(d), "amount": float(rng.choice((40, 60, 60, 100, 200))),
+                     "description": f"ATM WITHDRAWAL {spec['patient']['address']['city'].upper()} CA"})
+        d += timedelta(days=rng.randint(14, 35))
+    for merchant, desc, amount, when in spec.get("medical", []):
+        if start <= date.fromisoformat(when) <= end:
+            txns.append({"type": "purchase", "date": when, "amount": amount, "merchant": merchant, "description": desc})
     planted = {"hospital_payments": [], "duplicate": None}
+    descriptor = payee_descriptor or f"{provider.upper()} PYMT"
+    pay_desc = iter(rng.sample(["ONLINE PMT", "WEB PYMT", "BILL PAY", "POS DEBIT"], 4) * 3)
     if errs.get("uncredited_payment"):
         p = errs["uncredited_payment"]
-        txns.append({"type": "purchase", "date": p["date"], "amount": p["amount"], "merchant": provider,
-                     "description": f"Payment acct {acct}"})
+        txns.append({"type": "purchase", "date": p["date"], "amount": p["amount"], "merchant": descriptor,
+                     "description": next(pay_desc)})
         planted["hospital_payments"].append({**p, "credited": False})
     for p in (errs.get("refund_owed") or {}).get("payments", []):
-        txns.append({"type": "purchase", "date": p["date"], "amount": p["amount"], "merchant": provider,
-                     "description": f"Payment acct {acct}"})
+        txns.append({"type": "purchase", "date": p["date"], "amount": p["amount"], "merchant": descriptor,
+                     "description": next(pay_desc)})
         planted["hospital_payments"].append({**p, "credited": True})
     if errs.get("duplicate_bank_charge"):
         dc = errs["duplicate_bank_charge"]
@@ -436,8 +511,11 @@ def build(name: str) -> dict:
     over_c = sum(cents(p["billed"]) - cents(p["posted_gross"]) for p in prov if p["planted_error"] == "price_above_posted")
     correct_charges = total - dup_c - over_c
 
-    # bank history
-    txns, planted = bank(spec, hosp.name, as_of - timedelta(days=100), as_of)
+    # bank history: a year, so the high-medical-cost rule's "prior 12 months" comes from the bank. Payments to
+    # the hospital carry its health system's billing name when billcheck can match that, like real statements
+    descriptor = spec.get("payee_descriptor") or (
+        f"{hosp.system.upper()} PYMT" if len(hosp.system.split()) > 1 else f"{hosp.name.upper()} PYMT")
+    txns, planted = bank(spec, hosp.name, as_of - timedelta(days=BANK_DAYS), as_of, descriptor)
     credited = sum(cents(p["amount"]) for p in planted["hospital_payments"] if p["credited"])
     uncredited = sum(cents(p["amount"]) for p in planted["hospital_payments"] if not p["credited"])
 
@@ -519,11 +597,23 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
     eob_for_finance = eob if insured else {"patient_responsibility": dollars(m["share"]), "claim_number": "self-pay"}
     rec = finance.reconcile(bill, eob_for_finance, txns)
     inc = finance.income(txns, today=as_of)
+    # out-of-pocket for high-medical-cost rules: this bill's share + the bank's other medical bills (12 months)
+    med = finance.medical_spending(txns, bill, eob if insured else {}, today=as_of)
+    bill_oop = float(eob.get("patient_responsibility") or 0) if insured else 0.0
     elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], pol["tiers"], insured=insured,
-                                    out_of_pocket=float(eob.get("patient_responsibility") or 0) if insured else 0.0)
+                                    out_of_pocket=round(bill_oop + med["total"], 2))
+    bill_only = finance.charity_discount(inc["annual"], case["patient"]["household_size"], pol["tiers"],
+                                         insured=insured, out_of_pocket=bill_oop)
+    want_med = {(w, cents(a)) for _, _, a, w in spec.get("medical", [])}
+    if not want_med <= {(t["date"], cents(t["amount"])) for t in med["txns"]}:
+        raise AssertionError(f"{name}: finance.medical_spending misses a planted medical bill (rename the merchant)")
     st = finance.settle(rec["patient_responsibility"], rec["paid"], elig["discount_pct"])
     terms = pol["payment_plan"]
-    plan = finance.payment_plan(st["balance"], inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"))
+    bills = finance.monthly_bills(txns, today=as_of, bill=bill)
+    plan = finance.payment_plan(st["balance"], inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
+                                monthly_bills=bills["monthly"])
+    gross = finance.gross_check(inc, case["patient"]["household_size"], pol["tiers"], insured,
+                                round(bill_oop + med["total"], 2), elig)  # the same out-of-pocket as eligibility
 
     if cents(rec["owed"]) != owed_c:
         raise AssertionError(f"{name}: finance.reconcile owes {rec['owed']}, generator says {dollars(owed_c)}")
@@ -610,7 +700,7 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
                                             for t in rec["payments"])})
     if plan["months"]:
         findings.append({"id": "plan", "agent": "bright_data", "title": "Interest-free payment plan", "money": 0,
-                         "value": f"{plan['months']} x ${plan['monthly']:,.0f}/mo"})
+                         "value": plan["text"]})
 
     must_not = []
     for t in rec["payments"]:
@@ -684,13 +774,21 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
                       "steps": [{"error": k, "label": lbl, "amount": dollars(a)} for k, lbl, a in steps],
                       "owed_before_discount": dollars(owed_c)},
         "income": {"annual": inc["annual"], "monthly": inc["monthly"], "source": inc["source"],
-                   "deposits_counted": len(inc["deposits"])},
+                   "deposits_counted": len(inc["deposits"]), "basis": inc["basis"],
+                   "gross_annual_est": inc["gross_annual_est"], "bills_monthly": bills["monthly"],
+                   "bills_source": bills["source"]},
+        "medical_spending": {"since": med["since"], "bank_total": med["total"], "this_bill": bill_oop,
+                             "out_of_pocket": round(bill_oop + med["total"], 2),
+                             "txn_ids": [t["id"] for t in med["txns"]],
+                             "discount_without_bank": bill_only["discount_pct"],
+                             "bank_decides_eligibility": elig["discount_pct"] > bill_only["discount_pct"]},
         "discount": {k: elig[k] for k in ("fpl_pct", "fpl_amount", "fpl_year", "household_size", "insured",
                                           "oop_pct_income", "discount_pct")}
-                    | {"tier_quote": elig["tier"].get("quote") if elig["tier"] else None},
+                    | {"tier_quote": elig["tier"].get("quote") if elig["tier"] else None,
+                       "at_estimated_gross": gross},
         "settle": st,
         "correct": {"balance": st["balance"], "refund": st["refund"], "discount_pct": elig["discount_pct"],
-                    "plan_months": plan["months"], "plan_monthly": plan["monthly"]},
+                    "plan_months": plan["months"], "plan_monthly": plan["monthly"], "plan_last": plan["last"]},
         "plan": plan,
         "finance_reconcile": {"billed_due": rec["billed_due"], "patient_responsibility": rec["patient_responsibility"],
                               "insurance_adjustment": rec["insurance_adjustment"], "paid": rec["paid"],

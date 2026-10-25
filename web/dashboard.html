@@ -34,7 +34,8 @@
   }
   .case-head { padding: 14px 20px; gap: 0; }
   .ch-top { align-items: center; }
-  .ch-saved { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+  /* fixed width so every row's mic lines up, whatever the amount says */
+  .ch-saved { flex: none; width: 128px; display: flex; flex-direction: column; align-items: flex-end; text-align: right; font-variant-numeric: tabular-nums; }
   .ch-saved b { font: 700 22px/28px var(--md-font); color: var(--st-money); letter-spacing: -.2px; }
   .ch-saved span { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
   .ch-saved.zero span { font-size: 14px; line-height: 20px; }
@@ -48,7 +49,26 @@
   .ch-who span { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
   .ch-right { flex: none; display: flex; align-items: center; gap: 4px; }
   .chev { color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
-  .case-head[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .case.open .chev { transform: rotate(180deg); }
+  /* the row: case name (toggles), the mic, money saved + chevron (also toggles) */
+  .head-row { display: flex; align-items: center; }
+  .head-row .case-head { flex: 1; min-width: 0; padding-right: 8px; }
+  .case-toggle { flex: none; display: flex; align-items: center; gap: 12px; padding: 14px 20px 14px 12px; align-self: stretch; cursor: pointer; }
+
+  /* talk to BillBack: hold the mic, ask or tell it what to do, hear the answer */
+  .mic { flex: none; width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+         background: var(--md-secondary-container); color: var(--md-on-secondary-container); touch-action: none; user-select: none; -webkit-user-select: none; }
+  .mic:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 2px; }
+  .mic.listening { background: var(--md-primary); color: var(--md-on-primary); box-shadow: 0 0 0 6px color-mix(in srgb, var(--md-primary) 25%, transparent); animation: m3-pulse 1.2s var(--md-ease) infinite; }
+  .mic.thinking, .mic.speaking { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+  .talk { display: flex; flex-direction: column; gap: 6px; margin: 0 20px 14px; padding: 12px 14px; border-radius: var(--md-shape-l); background: var(--md-surface-container-low); }
+  .talk[hidden] { display: none; }
+  .talk p { margin: 0; font: 400 15px/22px var(--md-font); overflow-wrap: anywhere; }
+  .talk .you { color: var(--md-on-surface-variant); }
+  .talk .bb { display: flex; gap: 10px; align-items: flex-start; }
+  .talk .bb .material-symbols-rounded { font-size: 20px; color: var(--md-primary); margin-top: 1px; }
+  .talk .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .talk .meta .m3-chip { height: 28px; min-height: 28px; padding: 0 10px; margin-left: auto; }
   .ch-money { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-variant-numeric: tabular-nums; }
   .ch-money .from { font: 400 16px/24px var(--md-font); color: var(--md-on-surface-variant); }
   .ch-money .arrow { font-size: 18px; color: var(--md-on-surface-variant); align-self: center; }
@@ -94,7 +114,9 @@
   .clock .m3-chip { height: 40px; }
 
   @media (max-width: 560px) {
-    .case-head { padding: 16px; } .case-body { padding: 4px 16px 16px; }
+    .case-head { padding: 16px 8px 16px 16px; } .case-toggle { padding: 16px 16px 16px 8px; gap: 8px; } .case-body { padding: 4px 16px 16px; }
+    .talk { margin: 0 16px 12px; }
+    .ch-saved { width: 84px; } .ch-saved.zero span { font-size: 12px; line-height: 16px; }
     .facts { grid-template-columns: 1fr; gap: 0; } .facts dt { margin-top: 6px; }
     .ask-row .m3-btn { padding: 0 16px; }
   }
@@ -118,6 +140,7 @@
   <div id="cases" aria-live="polite"></div>
 </main>
 
+<script src="/auth.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -156,14 +179,17 @@ function needsYou(c) {
 
 const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0)) + (c.refund || 0);
 
-/* collapsed row: hospital and patient on the left, money saved on the right; everything else is one click away */
+/* collapsed row: hospital and patient on the left, the mic, money saved on the right; everything else is one click away */
 function headHTML(c) {
-  const saved = savedOf(c), flag = needsYou(c);
+  const flag = needsYou(c);
   return `<span class="ch-top">
       <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}${flag ? ` · <span class="m3-status ${flag[1]}">${esc(flag[0])}</span>` : ''}</span></span>
-      <span class="ch-saved ${saved ? '' : 'zero'}">${saved ? `<b>${money(saved)}</b><span>saved</span>` : '<span>Nothing saved yet</span>'}</span>
-      ${icon('expand_more', 'chev')}
     </span>`;
+}
+function endHTML(c) {
+  const saved = savedOf(c);
+  return `<span class="ch-saved ${saved ? '' : 'zero'}">${saved ? `<b>${money(saved)}</b><span>saved</span>` : '<span>Nothing saved yet</span>'}</span>
+    ${icon('expand_more', 'chev')}`;
 }
 
 /* first thing in the expanded card: status, billed -> now, and the next action */
@@ -174,7 +200,8 @@ function sumHTML(c) {
     <span class="ch-money">${c.current_balance !== c.original
         ? `<span class="from">${money(c.original)} billed</span>${icon('arrow_forward', 'arrow')}<span class="now ${down ? 'down' : ''}">${money(c.current_balance)}</span>`
         : `<span class="now">${money(c.current_balance)}</span><span class="from">billed</span>`}
-      ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}</span>
+      ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}
+      ${c.target != null && c.target < c.current_balance && !c.confirmed ? `<span class="from">expected ${money(c.target)}${c.expected_refund ? ` + ${money(c.expected_refund)} back` : ''} once billing confirms</span>` : ''}</span>
     <span class="ch-next">${icon(n.overdue ? 'warning' : 'event')}<span class="nx"><span class="act">Next: ${esc(n.action || '')}</span>${when(n)}</span></span>`;
 }
 
@@ -193,7 +220,7 @@ function detailHTML(c) {
     `<dt>Case number</dt><dd>${c.case_number ? `<b>${esc(c.case_number)}</b>` : '<span class="muted">none yet</span>'}</dd>`,
     `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}` : '<span class="muted">not called yet</span>'}</dd>`,
   ];
-  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${c.plan.months} × ${money(c.plan.monthly)}/mo <span class="muted">interest-free</span></dd>`);
+  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${esc(c.plan.text || `${c.plan.months} × ${money(c.plan.monthly)}/mo`)} <span class="muted">interest-free</span></dd>`);
 
   const calls = c.calls.length ? `<ul class="m3-list">${c.calls.map((x) => `<li class="m3-list-item">
       <span class="li-leading">${icon('call')}</span>
@@ -236,7 +263,13 @@ function ensureCard(c) {
   if (cards[c.id]) return cards[c.id];
   const el = document.createElement('article');
   el.className = 'm3-card case card'; el.id = 'case-' + c.id;
-  el.innerHTML = `<button type="button" class="case-head" aria-expanded="false" aria-controls="body-${c.id}"><span class="main"></span></button>
+  el.innerHTML = `<div class="head-row">
+      <button type="button" class="case-head" aria-expanded="false" aria-controls="body-${c.id}"><span class="main"></span></button>
+      <button type="button" class="mic" data-mic="${c.id}" aria-label="Talk to BillBack about this case: hold to talk, or tap to start and stop"
+        title="Hold to talk (or tap to start, tap again to send)">${icon('mic')}</button>
+      <span class="case-toggle" aria-hidden="true"></span>
+    </div>
+    <div class="talk" aria-live="polite" hidden></div>
     <div class="case-body" id="body-${c.id}" hidden>
       <div class="sum"></div>
       <div class="acts"></div>
@@ -255,6 +288,7 @@ function ensureCard(c) {
 
 function setOpen(el, open) {
   el.querySelector('.case-head').setAttribute('aria-expanded', String(open));
+  el.classList.toggle('open', open);
   el.querySelector('.case-body').hidden = !open;
 }
 
@@ -275,6 +309,7 @@ function render(list) {
     // open what needs attention, unless the user has already toggled this case
     if (!el._touched && (fresh || needsYou(c))) setOpen(el, !!needsYou(c));
     setHTML(el.querySelector('.main'), headHTML(c));
+    setHTML(el.querySelector('.case-toggle'), endHTML(c));
     setHTML(el.querySelector('.sum'), sumHTML(c));
     setHTML(el.querySelector('.acts'), actsHTML(c));
     setHTML(el.querySelector('.tl'), detailHTML(c));
@@ -304,8 +339,10 @@ document.addEventListener('submit', (e) => {
   e.preventDefault(); const q = f.q.value.trim(); f.q.value = ''; ask(f.dataset.ask, q);
 });
 document.addEventListener('click', async (e) => {
-  const head = e.target.closest('.case-head');
-  if (head) { const el = head.closest('.case'); el._touched = true; setOpen(el, head.getAttribute('aria-expanded') !== 'true'); return; }
+  const head = e.target.closest('.case-head, .case-toggle');
+  if (head) { const el = head.closest('.case'); el._touched = true; setOpen(el, !el.classList.contains('open')); return; }
+  const shush = e.target.closest('[data-talk-close]');
+  if (shush) { stopSpeaking(); shush.closest('.talk').hidden = true; return; }
   const chip = e.target.closest('[data-q]');
   if (chip) return ask(chip.closest('.card').id.slice(5), chip.dataset.q);
   const call = e.target.closest('[data-call]');
@@ -323,6 +360,132 @@ document.addEventListener('click', async (e) => {
     refresh();
   }
 });
+// ---------- talk to BillBack: the mic on each case (POST /api/cases/{id}/talk, agents/talk.py) ----------
+// Hold to talk (or tap to start, tap again to send). The recording goes to Cartesia Ink on the server; the
+// browser's own speech recognition runs alongside and is used when Cartesia can't. The answer is spoken with
+// Cartesia Sonic (/api/tts), or the browser's voice when that fails. Actions wait for your spoken yes.
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const voice = { id: null, state: 'idle', rec: null, chunks: [], stream: null, sr: null, final: '', interim: '', downAt: 0, tapMode: false, audio: null };
+const MIC_ICON = { idle: 'mic', listening: 'mic', thinking: 'more_horiz', speaking: 'graphic_eq' };
+
+function setMic(id, state) {
+  voice.state = state;
+  document.querySelectorAll('.mic').forEach((b) => {
+    const mine = b.dataset.mic === id && state !== 'idle';
+    b.className = 'mic' + (mine ? ' ' + state : '');
+    b.setAttribute('aria-pressed', String(mine && state === 'listening'));
+    b.firstElementChild.textContent = MIC_ICON[mine ? state : 'idle'];
+  });
+}
+function showTalk(id, parts) {
+  const box = cards[id] && cards[id].querySelector('.talk'); if (!box) return;
+  const { you, youLive, reply, pending, by, note } = parts;
+  box.hidden = false;
+  box.innerHTML = `${you || youLive ? `<p class="you">${youLive ? esc(youLive) + '…' : '“' + esc(you) + '”'}</p>` : ''}
+    ${reply ? `<p class="bb">${icon('graphic_eq')}<span>${esc(reply)}</span></p>` : ''}
+    <span class="meta">${pending ? '<span class="m3-status warn">Waiting for your yes</span>' : ''}${note ? `<span>${esc(note)}</span>` : ''}
+      ${by ? `<span>Heard by ${by === 'cartesia' ? 'Cartesia' : 'your browser'}</span>` : ''}
+      <button type="button" class="m3-chip" data-talk-close>Close</button></span>`;
+}
+function stopSpeaking() {
+  try { speechSynthesis.cancel(); } catch (e) {}
+  if (voice.audio) { voice.audio.pause(); voice.audio = null; }
+  if (voice.state === 'speaking') setMic(voice.id, 'idle');
+}
+
+async function startTalk(id) {
+  stopSpeaking();
+  Object.assign(voice, { id, chunks: [], final: '', interim: '', rec: null, stream: null, sr: null });
+  setMic(id, 'listening');
+  showTalk(id, { youLive: 'Listening', note: 'Let go when you’re done' });
+  try {
+    voice.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voice.rec = new MediaRecorder(voice.stream);
+    voice.rec.ondataavailable = (e) => { if (e.data.size) voice.chunks.push(e.data); };
+    voice.rec.start();
+  } catch (e) { voice.rec = null; }
+  if (SR) {
+    const sr = new SR(); sr.lang = 'en-US'; sr.interimResults = true; sr.continuous = true;
+    sr.onresult = (e) => {
+      let fin = '', mid = '';
+      for (const r of e.results) { if (r.isFinal) fin += r[0].transcript; else mid += r[0].transcript; }
+      voice.final = fin; voice.interim = mid;
+      if (voice.state === 'listening') showTalk(id, { youLive: (fin + ' ' + mid).trim() || 'Listening', note: 'Let go when you’re done' });
+    };
+    sr.onerror = () => {};
+    try { sr.start(); voice.sr = sr; } catch (e) {}
+  }
+  if (!voice.rec && !voice.sr) { setMic(id, 'idle'); showTalk(id, { reply: 'I can’t use the microphone here. Allow it for this site, or use Chrome.' }); }
+}
+
+async function stopTalk() {
+  const id = voice.id;
+  if (voice.state !== 'listening') return;
+  setMic(id, 'thinking');
+  const recDone = voice.rec && voice.rec.state !== 'inactive' ? new Promise((res) => { voice.rec.onstop = res; voice.rec.stop(); }) : null;
+  const srDone = voice.sr ? new Promise((res) => { voice.sr.onend = res; voice.sr.stop(); setTimeout(res, 1500); }) : null;
+  await Promise.all([recDone, srDone]);
+  if (voice.stream) voice.stream.getTracks().forEach((t) => t.stop());
+  const heard = (voice.final + ' ' + voice.interim).trim();
+  showTalk(id, { you: heard || '…', note: 'Thinking…' });
+  const fd = new FormData();
+  fd.append('heard', heard);
+  if (voice.chunks.length) fd.append('audio', new Blob(voice.chunks, { type: voice.rec.mimeType || 'audio/webm' }), 'speech.webm');
+  let r;
+  try { r = await (await fetch(`/api/cases/${id}/talk`, { method: 'POST', body: fd })).json(); }
+  catch (e) { r = { reply: 'Sorry, I couldn’t reach BillBack.' }; }
+  showTalk(id, { you: r.heard, reply: r.reply, pending: r.pending, by: r.heard_by });
+  refresh();
+  await say(id, r.reply);
+}
+
+async function say(id, text) {
+  if (!text) return setMic(id, 'idle');
+  setMic(id, 'speaking');
+  const done = () => { if (voice.id === id && voice.state === 'speaking') setMic(id, 'idle'); };
+  try {
+    if (voice.ttsOff) throw new Error('tts off');
+    const res = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+    if (!res.ok) { voice.ttsOff = true; throw new Error('tts ' + res.status); }  // e.g. no credits: stop asking this visit
+    if (voice.state !== 'speaking' || voice.id !== id) return;  // you pressed the mic again while it loaded
+    voice.audio = new Audio(URL.createObjectURL(await res.blob()));
+    voice.audio.onended = done; voice.audio.onerror = done;
+    await voice.audio.play();
+  } catch (e) {  // no Cartesia (or no credits): the browser's voice
+    if (voice.state !== 'speaking' || voice.id !== id) return;
+    const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = done; u.onerror = done;
+    speechSynthesis.speak(u);
+  }
+}
+
+// press: start (or, in tap mode, send); release after a hold: send; a quick tap switches to tap mode
+function micDown(b) {
+  const id = b.dataset.mic;
+  if (voice.state === 'listening' && voice.tapMode) { voice.tapMode = false; return stopTalk(); }
+  if (voice.state === 'thinking') return;
+  voice.downAt = performance.now(); voice.tapMode = false;
+  startTalk(id);
+}
+function micUp() {
+  if (voice.state !== 'listening' || voice.tapMode) return;
+  if (performance.now() - voice.downAt < 300) { voice.tapMode = true; showTalk(voice.id, { youLive: 'Listening', note: 'Tap the mic again to send' }); return; }
+  stopTalk();
+}
+document.addEventListener('pointerdown', (e) => {
+  const b = e.target.closest('.mic'); if (!b || e.button > 0) return;
+  e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (err) {}
+  micDown(b);
+});
+document.addEventListener('pointerup', (e) => { if (e.target.closest('.mic')) micUp(); });
+document.addEventListener('pointercancel', (e) => { if (e.target.closest('.mic')) micUp(); });
+document.addEventListener('keydown', (e) => {
+  const b = e.target.closest && e.target.closest('.mic');
+  if (b && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); if (!e.repeat) micDown(b); }
+});
+document.addEventListener('keyup', (e) => {
+  if (e.target.closest && e.target.closest('.mic') && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); micUp(); }
+});
+
 addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
 refresh();

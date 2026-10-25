@@ -11,6 +11,8 @@ spoken forms and Cartesia markup before the text leaves our server:
                character by character; spaces inside the tag become short pauses between groups)
 - phones       "+14155551212" -> "(415) 555-1212"  (the canonical form Cartesia's normalizer groups well)
 - acronyms     "EOB" -> "<spell>EOB</spell>", "FPL" -> "federal poverty level"
+- read-backs   "Let me read that back: FA209-31" -> "... <spell>F A 2 0 9</spell> dash <spell>3 1</spell>"
+               (every character on its own, dashes said out loud, so the rep can catch a misheard ID)
 - drug and lab terms -> inline IPA phonemes "<<...>>" (Sonic 3.x phoneme syntax). A Cartesia pronunciation
                dictionary is the same search-and-replace done server side; keeping it here keeps it in
                version control and unit-tested.
@@ -119,6 +121,17 @@ def spell_id(token: str) -> str:
     return f"<spell>{' '.join(groups)}</spell>"
 
 
+def read_back_id(token: str) -> str:
+    """FA209-31 -> <spell>F A 2 0 9</spell> dash <spell>3 1</spell>; "FA 20931" -> <spell>F A</spell>, <spell>2 0 9 3 1</spell>.
+    Slower than spell_id on purpose: one character at a time, the written dashes and gaps kept, so a
+    misheard number sounds different from the right one."""
+    out = []
+    for i, word in enumerate(token.split()):
+        parts = [" ".join(p.upper()) for p in re.split(r"[-–]", word) if p]
+        out.append((", " if i else "") + " dash ".join(f"<spell>{p}</spell>" for p in parts))
+    return "".join(out)
+
+
 _UNIT_SUFFIX = re.compile(r"^\d+(st|nd|rd|th|s|am|pm|mg|mcg|ml|kg|lb|lbs|k|x|h|hr|hrs|min)$", re.I)
 
 
@@ -140,6 +153,12 @@ _US_DATE = re.compile(r"(?<![\w/])(\d{1,2})/(\d{1,2})/(\d{4})(?![\w/])")
 _PHONE = re.compile(r"(?<![\w-])(?:\+?1[\s.-]?)?(?:\((\d{3})\)\s?|(\d{3})[\s.-])(\d{3})[.-](\d{4})(?![\w-])"
                     r"|(?<![\w+])\+1(\d{3})(\d{3})(\d{4})(?!\d)")
 _TOKEN = re.compile(r"(?<![\w\x00-])[A-Za-z0-9]+(?:[-–][A-Za-z0-9]+)*(?![\w\x00-])")
+# "Let me read that back: FA-20931." / "read it back, case number FA 20931": an ID (groups with a digit, or
+# short capitals like "FA") right after "read that back"; the caller's prompt asks for this wording.
+_GROUP = r"(?:[A-Z]{1,4}|[A-Za-z0-9]*\d[A-Za-z0-9]*)"
+_READ_BACK = re.compile(r"(\bread (?:that|it|this|the number) back\b[,:;. —-]*(?:(?:case|reference|ref|confirmation|"
+                        r"claim|number|is|it's|that's)\s+)*)(" + _GROUP + r"(?:(?:[-–]| (?=" + _GROUP + r"\b))" + _GROUP
+                        + r")*)(?![\w-])")
 _MARKUP = re.compile(r"<<[^>]*>>|<spell>.*?</spell>|<(?:break|speed|volume|emotion)\b[^>]*/>")
 
 
@@ -152,6 +171,7 @@ def normalize(text: str, language: str = "en") -> str:
         return f"\x00{len(kept) - 1}\x00"
 
     text = _MARKUP.sub(lambda m: keep(m[0]), re.sub(r"[*`]+", "", text or ""))
+    text = _READ_BACK.sub(lambda m: m[1] + keep(read_back_id(m[2])) if re.search(r"\d", m[2]) else m[0], text)
     if language.lower().startswith("en"):
         text = _MONEY_RANGE.sub(lambda m: keep(f"{number_words(int(m[1].replace(',', '')))} to "
                                                f"{money_words(int(m[2].replace(',', '')))}"), text)

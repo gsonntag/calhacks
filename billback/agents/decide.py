@@ -17,7 +17,7 @@ from . import scorecard
 from .report import Report
 
 AGENTS = {"auditor": "Nessie agent", "policy": "Bright Data agent", "decide": "Decide agent"}
-KINDS = ("insurance", "payment", "discount", "refund", "plan", "supervisor", "hold", "case_number")
+KINDS = ("insurance", "bill_line", "payment", "discount", "refund", "plan", "supervisor", "hold", "case_number")
 SKIPPABLE = ("plan", "hold", "supervisor")
 CORRECTABLE_UNTIL = ("awaiting_call_approval", "done")  # no call is running (done: the plan for the next call)
 
@@ -128,7 +128,7 @@ def next_step(case: dict, asks: list[dict], results: dict[str, dict]) -> dict | 
             continue
         if a["kind"] == "discount" and pol["policy"].get("apply_how"):
             options.append(f"Apply for financial assistance yourself: {pol['policy']['apply_how']}")
-        elif a["kind"] in ("insurance", "payment", "refund"):
+        elif a["kind"] in ("insurance", "bill_line", "payment", "refund"):
             options.append("Send billing a written dispute with the insurance statement and bank record attached")
         elif a["kind"] == "hold":
             options.append("Ask in writing for collections to be paused while this is reviewed")
@@ -163,7 +163,14 @@ def compute(case: dict) -> dict:
 
     billed, eob_share = float(rec["billed_due"]), float(rec["patient_responsibility"])
     ins_wrong = "auditor:insurance" in bad
+    line_errors = [c for c in rec.get("line_errors") or [] if f"auditor:{c['kind']}-{c['line']}" not in bad]
+    line_total = round(sum(c["amount"] for c in line_errors), 2)
     share = billed if ins_wrong else eob_share
+    if not rec.get("insured", True):  # self-pay: a line marked wrong goes back into the share
+        share = round(billed - line_total, 2)
+    elif ins_wrong:
+        share = round(billed - line_total, 2)
+    ins_gap = round(billed - share - line_total, 2)  # what's left once the line errors are taken out
     payments = [p for p in rec["payments"] if f"auditor:paid-{p['id']}" not in bad]
     paid = round(sum(p["amount"] for p in payments), 2)
     elig, inc = pol["eligibility"], pol["income"]
@@ -173,8 +180,11 @@ def compute(case: dict) -> dict:
     target, refund = st["balance"], st["refund"]
 
     math_lines = [{"label": "Hospital says you owe", "amount": billed, "source": acct}]
-    if billed > share:
-        math_lines.append({"label": "Insurance not applied", "amount": -round(billed - share, 2), "source": claim,
+    for c in line_errors:
+        math_lines.append({"label": c.get("label", "Bill error"), "amount": -c["amount"], "source": c.get("source", acct),
+                           "finding": f"auditor:{c['kind']}-{c['line']}"})
+    if ins_gap > 0:
+        math_lines.append({"label": "Insurance not applied", "amount": -ins_gap, "source": claim,
                            "finding": "auditor:insurance"})
     for p in payments:
         math_lines.append({"label": f"Payment you already made {p['date'][:10]}", "amount": -p["amount"],
@@ -194,10 +204,16 @@ def compute(case: dict) -> dict:
         asks.append({"id": kind, "kind": kind, "money": round(amount, 2), "value": value or (f"−{money(amount)}" if amount else ""),
                      "text": text, "goal": goal, "findings": findings or [], "basis": basis, **extra})
 
-    if billed > share:
-        ask("insurance", f"Apply your insurance: the statement says you owe {money(share)}, not {money(billed)}",
-            f"Get the insurance adjustment applied: the EOB says the patient owes {money(share)}, not {money(billed)}.",
-            billed - share, findings=["auditor:insurance"])
+    for c in line_errors:
+        what = (f"line {c['line']} bills {c['code']} a second time" if c["kind"] == "duplicate_line"
+                else f"line {c['line']} charges {c['code']} above the hospital's posted price")
+        ask("bill_line", f"Remove the error on your bill: {what} ({money(c['amount'])})",
+            f"Get the bill corrected: {c['detail']} Source: {c['source']}.",
+            c["amount"], findings=[f"auditor:{c['kind']}-{c['line']}"], id=f"bill_line-{c['line']}")
+    if ins_gap > 0:
+        ask("insurance", f"Apply your insurance: the statement says you owe {money(eob_share)}, not {money(billed)}",
+            f"Get the insurance adjustment applied: the EOB says the patient owes {money(eob_share)}, not {money(billed)}.",
+            ins_gap, findings=["auditor:insurance"])
     if paid:
         ask("payment", f"Show the {money(paid)} you already paid, bringing it to {money(owed)}",
             f"Get the {money(paid)} already paid applied (give date and reference when asked).",
@@ -223,14 +239,14 @@ def compute(case: dict) -> dict:
             skipped.append({"kind": "plan", "text": "Payment plan", "why": "You said the payment-plan finding is wrong"})
         else:
             plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
-                                        max_monthly=prefs.get("max_monthly"))
+                                        max_monthly=prefs.get("max_monthly"), monthly_bills=inc.get("bills_monthly"))
             why = " Their own billing policy says payment plans are interest-free." if terms.get("interest_free") else ""
             ask("plan", f"Set up an interest-free payment plan for the {money(target)}: "
-                        f"{plan['months']} × {money(plan['monthly'])}/month, as their own billing policy allows",
+                        f"{plan['text']}, as their own billing policy allows",
                 f"Once the balance is corrected to {money(target)}, set up an interest-free payment plan: "
-                f"{plan['months']} monthly payments of {money(plan['monthly'])}.{why} Don't give card details; "
+                f"{finance.plan_said(plan)}.{why} Don't give card details; "
                 f"the patient sets up the payments.",
-                value=f"{plan['months']} × {money(plan['monthly'])}/mo", findings=["policy:plan"], plan=plan)
+                value=plan["text"], findings=["policy:plan"], plan=plan)
     results = call_results(case)
     refused_before = any(r["status"] == "refused" for r in results.values())
     if prefs.get("if_refused") == "supervisor" or refused_before:
@@ -312,7 +328,7 @@ def decided(case: dict, share: float, paid: float, d: float, owed: float, target
                     + (f" − {money(paid)} paid" if paid else "")
                     + (f" → they owe you {money(refund)}" if refund else f" = {money(target)}"))
     if plan:
-        math.append(f"{money(target)} as {plan['months']} × {money(plan['monthly'])}/mo: {plan['reason']}")
+        math.append(f"{money(target)} as {plan['text']}: {plan['reason']}")
     if d:
         path = f"Fix the balance, then {'free care' if d == 100 else f'a {d:.0f}% discount'} under their own policy"
     elif plan:
@@ -666,15 +682,16 @@ def _offline_answer(case: dict, msg: str) -> str:
     return f"{d['path']}. The math: {' '.join(d['math'])}. {d['call']}."
 
 
-async def chat(case: dict, message: str) -> dict:
-    """One planner-chat turn. Questions get an answer; change requests become a new version via the rules."""
+async def chat(case: dict, message: str, via: str = "") -> dict:
+    """One planner-chat turn. Questions get an answer; change requests become a new version via the rules.
+    via="billback": BillBack handed the patient's message over from the agent chat."""
     if not latest(case):
         raise Refused("The plan isn't ready yet")
     msg = message.strip()[:1000]
     p = case["plan"]
     rnd = round_of(case)
-    p["chat"].append({"role": "user", "text": msg, "ts": time.time(), "round": rnd})
-    bus.emit(case["id"], "planner_message", "decide", role="user", text=msg, round=rnd)
+    p["chat"].append({"role": "user", "text": msg, "ts": time.time(), "round": rnd, **({"via": via} if via else {})})
+    bus.emit(case["id"], "planner_message", "decide", role="user", text=msg, round=rnd, **({"via": via} if via else {}))
     kind, reply, patch = "question", "", None
     if llm.available():
         history = [{"role": "assistant" if m["role"] == "planner" else "user",
@@ -734,14 +751,11 @@ can already see. 2-4 short plain sentences, and name the source you used. If the
 checked" and what would be needed. Never invent numbers. Asking never changes anything."""
 
 
-async def answer_finding(case: dict, key: str, question: str) -> dict:
-    f = case.get("facts")
-    if not f or key not in f["findings"]:
-        raise Refused("No such finding")
-    x = f["findings"][key]
-    agent = x["agent"]
-    evidence = {"finding": x, "my_checks": [s for s in f["steps"].values() if s["agent"] == agent]}
-    # the full records behind the checks, so it can explain the numbers (not just repeat the finding)
+def _records(case: dict, agent: str) -> dict:
+    """An app agent's own checks plus the full records behind them, so it can explain the numbers (not just
+    repeat a finding)."""
+    f = case["facts"]
+    evidence = {"my_checks": [s for s in f["steps"].values() if s["agent"] == agent]}
     if agent == "auditor":
         rec = f["rec"]
         evidence.update(bill={k: case["bill"].get(k) for k in ("provider", "account_number", "service_date",
@@ -755,18 +769,59 @@ async def answer_finding(case: dict, key: str, question: str) -> dict:
         evidence.update(policy_quotes=[t.get("quote") for t in pol["policy"].get("tiers") or [] if t.get("quote")],
                         eligibility=pol.get("eligibility"), plan_terms=pol.get("plan_terms"),
                         income={k: (pol.get("income") or {}).get(k) for k in ("annual", "monthly", "source")})
-    answer, src = "", "evidence"
+    return evidence
+
+
+async def _answer(system: str, evidence: dict, question: str, what: str) -> tuple[str, str]:
     if llm.available():
         try:
-            resp = await llm.create(system=ASK_SYSTEM, max_tokens=1500, **_fast(),
+            resp = await llm.create(system=system, max_tokens=1500, **_fast(),
                                     messages=[{"role": "user", "content": f"EVIDENCE (JSON):\n{json.dumps(evidence, default=str)}"
                                                                           f"\n\nPatient asks: {question}"}])
             answer = "".join(b.text for b in resp.content if b.type == "text").strip()
-            src = "claude"
+            if answer:
+                return answer, "claude"
         except Exception as e:
-            print("finding ask LLM error, using evidence:", type(e).__name__)
+            print(f"{what} LLM error, using evidence:", type(e).__name__)
+    return "", "evidence"
+
+
+async def answer_finding(case: dict, key: str, question: str) -> dict:
+    f = case.get("facts")
+    if not f or key not in f["findings"]:
+        raise Refused("No such finding")
+    x = f["findings"][key]
+    agent = x["agent"]
+    answer, src = await _answer(ASK_SYSTEM, {"finding": x, **_records(case, agent)}, question, "finding ask")
     if not answer:
         answer = f"What I found: {' '.join(x['proof'])} Source: {x['source']}."
     sources = [x["source"]] if x.get("source") else []
     bus.emit(case["id"], "finding_qa", agent, finding=key, question=question, answer=answer, sources=sources)
     return {"answer": answer, "agent": agent, "agent_name": AGENTS.get(agent, agent), "sources": sources, "source": src}
+
+
+# ---------------------------------------------------------------- the agent chat: one Review agent, all it checked
+
+AGENT_ASK_SYSTEM = """You are one of BillBack's app agents, answering the patient's question about what you
+checked on their hospital bill. Answer ONLY from the EVIDENCE JSON (all your findings, your own checks with their
+proof, and the records behind them). Answer the actual question and explain the numbers. 2-4 short plain
+sentences, and name the source you used. If the evidence doesn't answer it, say "I don't know from what I
+checked" and which other agent might (BillBack knows the whole case; the planner owns the call plan). Never
+invent numbers. Asking never changes anything."""
+
+
+async def answer_agent(case: dict, agent: str, question: str) -> dict:
+    """The Nessie or Bright Data agent answers from everything it checked (not one finding)."""
+    if agent not in ("auditor", "policy"):
+        raise Refused("No such agent")
+    f = case.get("facts")
+    if not f:
+        raise Refused(f"The {AGENTS[agent]} is still checking. Ask again once the plan is ready.")
+    mine = [x for x in f["findings"].values() if x["agent"] == agent]
+    answer, src = await _answer(AGENT_ASK_SYSTEM, {"my_findings": mine, **_records(case, agent)}, question, "agent ask")
+    if not answer:
+        answer = ("What I found: " + " ".join(f"{x['title']} ({x['value']}): {' '.join(x['proof'])}" for x in mine)
+                  if mine else "I found nothing to correct in what I checked.")
+    sources = list(dict.fromkeys(x["source"] for x in mine if x.get("source")))
+    bus.emit(case["id"], "agent_qa", agent, question=question, answer=answer, sources=sources)
+    return {"answer": answer, "agent": agent, "agent_name": AGENTS[agent], "sources": sources, "source": src}

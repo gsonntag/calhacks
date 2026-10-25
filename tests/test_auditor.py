@@ -137,7 +137,10 @@ async def test_policy_agent_treats_no_eob_as_uninsured():
     txns.set_result(c["transactions"])
     owed.set_result({"owed": 8200.0, "responsibility": 8700.0, "paid": 500.0, "insured": False})
     out = await policy.run(c, txns, owed)
-    assert out["eligibility"]["insured"] is False and out["eligibility"]["oop_pct_income"] == 0
+    elig = out["eligibility"]
+    assert elig["insured"] is False and elig["bill_out_of_pocket"] == 0  # no insurance statement share counted
+    # only the bank's other medical bills (the urgent-care copays) count toward out-of-pocket
+    assert elig["oop_pct_income"] == round(100 * elig["bank_medical"] / out["income"]["annual"], 1)
 
 
 # ---- bug 3: payments the bill already credits ---------------------------------------------------------------
