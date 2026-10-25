@@ -684,8 +684,19 @@ NEEDS = re.compile(r"\b(need from me|what do you need|what should i (give|provid
 FREE = re.compile(r"\bfree\b|100%|nothing|\$0\b|write[- ]?off|wipe|forgive|cancel|zero", re.I)
 FOLLOW = re.compile(r"^\s*(and |so |ok(ay)?,? )?(what about |how about |tell me (more )?about )?(the )?"
                     r"(first|second|third|fourth|fifth|sixth|last|other|next) (one|bill|hospital|ask|finding)?\s*\??\s*$|"
-                    r"^\s*(and |so )?(what about |how about )?(that|this|it)( one)?\s*\??\s*$|^\s*(and )?why( is that| not)?\s*\??\s*$",
+                    r"^\s*(and |so )?(what about |how about )?(that|this|it)( one)?\s*\??\s*$|^\s*(and )?why( is that| not)?\s*\??\s*$|"
+                    r"\bthe (first|second|third|fourth|fifth|sixth|last|other) one\b|\bthat one\b|"
+                    r"^\s*(tell me |say )?more( about (that|it|this))?\s*\??\s*$|^\s*tell me more\b.{0,20}$|^\s*go on\b",
                     re.I)
+NEEDS_ITEMS = [
+    {"kind": "need", "label": "The bill and insurance statement", "text": "The bill and, if you're insured, the insurance "
+     "statement (EOB).", "why": "they're the facts I check: what the hospital charged and what your insurance says you owe"},
+    {"kind": "need", "label": "Household size", "text": "Your household size.",
+     "why": "financial-assistance tiers are a percent of the poverty line, which depends on household size"},
+    {"kind": "need", "label": "Income before taxes", "text": "Your income before taxes.",
+     "why": "it decides which discount tier you fit; I check it against your bank deposits"},
+    {"kind": "need", "label": "Insurance yes or no", "text": "Whether you have insurance.",
+     "why": "hospitals' policies have different tiers for insured and uninsured patients"}]
 ORDINAL = {"first": 0, "second": 1, "third": 2, "fourth": 3, "fifth": 4, "sixth": 5, "next": 1, "other": 1, "last": -1}
 NEEDS_TEXT = ("To work on a bill I need: the bill itself (a photo or PDF) and, if you're insured, the insurance "
               "statement (EOB), which shows what insurance says you owe; your household size and income before "
@@ -958,16 +969,25 @@ async def follow_up(case: dict | None, question: str, ctx: dict, turns: list[dic
     if not FOLLOW.search(question):
         return None
     turns = [t for t in turns or [] if t.get("q")]
-    # the question that listed the items: the last turn that wasn't itself a follow-up; the item picked since
-    base = next((i for i in range(len(turns) - 1, -1, -1) if not FOLLOW.search(turns[i]["q"])), None)
-    if base is None:
+    # the question that listed the items: the latest non-follow-up turn (of the last 4) whose answer listed some
+    bases = [i for i in range(len(turns) - 1, -1, -1) if not FOLLOW.search(turns[i]["q"])][:4]
+    if not bases:
         return Ans("Which one do you mean? Ask me about a bill, a hospital or a finding by name.", [], "remy")
-    picked = 0
+    base, prev = bases[0], None
+    for i in bases:
+        a = await route(case, turns[i]["q"], ctx, [])
+        if prev is None or a.items:
+            base, prev = i, a
+        if a.items:
+            break
+    picked = 0  # the item picked since ("the second one", then "why?")
     for t in turns[base + 1:]:
         if m := re.search(r"\b(first|second|third|fourth|fifth|sixth|last|other|next)\b", t["q"].lower()):
             picked = ORDINAL[m.group(1)]
-    prev = await route(case, turns[base]["q"], ctx, [])
     low = question.lower()
+    m = re.search(r"\b(first|second|third|fourth|fifth|sixth|last|other|next)\b", low)
+    if m:
+        picked = ORDINAL[m.group(1)]
     ok = lambda i: prev.items and -len(prev.items) <= i < len(prev.items)  # noqa: E731
     if re.search(r"\bwhy\b", low):
         if ok(picked) and prev.items[picked].get("why"):
@@ -976,8 +996,7 @@ async def follow_up(case: dict | None, question: str, ctx: dict, turns: list[dic
         if case:
             return waterfall_text(case)
         return Ans("Which part do you mean? Ask me about a bill, a hospital or a finding by name.", [], "remy")
-    m = re.search(r"\b(first|second|third|fourth|fifth|sixth|last|other|next)\b", low)
-    idx = ORDINAL[m.group(1)] if m else picked
+    idx = picked
     if prev.items and -len(prev.items) <= idx < len(prev.items):
         it = prev.items[idx]
         return Ans(it["text"], prev.sources if idx == 0 else [], prev.route, [it])
@@ -1038,12 +1057,15 @@ def general(question: str, ctx: dict) -> Ans:
     if NEEDS.search(question):
         p = (ctx.get("get_started") or [None])[0]
         return Ans(NEEDS_TEXT + (" Nothing is saved from Get started yet." if not p else
-                                 " Your Get started answers are saved, so you only need the bill and statement."), [], "remy")
+                                 " Your Get started answers are saved, so you only need the bill and statement."),
+                   [], "remy", NEEDS_ITEMS)
     if named_hospitals(question):
         return hospitals_text(question, ctx)
-    if ctx.get("how_it_works") and knowledge.is_how_question(question):
-        h = ctx["how_it_works"][0]
-        return Ans(f"From {_doc_source(h)}: {plain(h['text'])}", sources(ctx), "remy")
+    if knowledge.is_how_question(question) and (hs := knowledge.relevant(question)):
+        # this question's own sections (a follow-up re-routes it), and "tell me more" gets the same one, longer
+        items = [{"kind": "doc", "label": _doc_source(h), "why": "", "text": f"From {_doc_source(h)}: {plain(h['text'], 1200)}"}
+                 for h in hs]
+        return Ans(f"From {_doc_source(hs[0])}: {plain(hs[0]['text'])}", [_doc_source(h) for h in hs[:2]], "remy", items)
     people = named_cases(question)
     if TOTAL.search(question):
         return totals_text(ctx["all_cases"])

@@ -607,3 +607,21 @@ async def test_b9_bright_data_agent_answer_has_full_sentences(client):
     case_id = await _plan_ready(client)
     r = (await client.post(f"/api/cases/{case_id}/ask", json={"question": "What did you find?", "agent": "policy"})).json()
     assert ") No discount" not in r["answer"] and "). No discount" in r["answer"]
+
+
+async def test_b6_follow_ups_reach_back_past_an_answer_that_listed_nothing(client):
+    """From the browser rerun: a list, an unrelated question, then "the second one" means the list's second item."""
+    rosa = await _plan_ready(client)
+    for q in ("What did the Nessie agent find?", "Who do I call?"):
+        await _ask(client, rosa, q)
+    r = await _ask(client, rosa, "what about the second one?")
+    assert r["answer"].startswith("A payment you made was missed")
+    s = {"page": "get-started", "session_id": "g1"}
+    await client.post("/api/remy/ask", json={"question": "What do you need from me?", **s})
+    r = (await client.post("/api/remy/ask", json={"question": "why do you need the second one?", **s})).json()
+    assert r["answer"].startswith("Household size:") and "poverty line" in r["answer"]
+    o = {"page": "under-the-hood", "session_id": "o1"}
+    first = (await client.post("/api/remy/ask", json={"question": "What happens if billing interrupts Remy?", **o})).json()
+    more = (await client.post("/api/remy/ask", json={"question": "tell me more about that", **o})).json()
+    assert first["answer"].startswith("From ") and more["answer"].startswith(first["answer"].split(":")[0])
+    assert len(more["answer"]) >= len(first["answer"]) and "**" not in more["answer"]
