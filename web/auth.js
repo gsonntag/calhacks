@@ -1,7 +1,8 @@
 // Admin key for actions that place a call, spend credits or wipe state (remy/auth.py).
 // Open any page once with ?key=<REMY_ADMIN_TOKEN>: it's kept in this browser (localStorage, so tabs the
 // app opens get it too), removed from the address bar, and sent as X-Remy-Key on same-origin requests.
-// Pages that only read (replays, Cases, Hospitals) work without it. A refused action asks for the key once.
+// Without it, pages show only the sample cases (a case from uploaded documents needs the key), plus Hospitals and
+// the committed replays. A refused request asks for the key once. remyKeyQuery() is the ?key= for WebSockets.
 (() => {
   const KEY = 'remy-admin-key';
   const get = () => { try { return localStorage.getItem(KEY) || localStorage.getItem('billback-admin-key') || ''; } catch (e) { return ''; } };
@@ -12,6 +13,7 @@
     url.searchParams.delete('key');
     history.replaceState(history.state, '', url.pathname + url.search + url.hash);
   }
+  window.remyKeyQuery = () => { const k = get(); return k ? '?key=' + encodeURIComponent(k) : ''; };
   const plain = window.fetch.bind(window);
   const send = (input, init, key) => {
     const target = new URL(input instanceof Request ? input.url : String(input), location.href);

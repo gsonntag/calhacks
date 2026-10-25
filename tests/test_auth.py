@@ -133,3 +133,78 @@ def test_desk_listen_websocket_needs_the_key(monkeypatch):
             assert e.value.code == 1008
         with tc.websocket_connect(f"/api/calls/nope/listen?key={TOKEN}") as ws:  # let in: no such call
             assert json.loads(ws.receive_text())["type"] == "unavailable"
+
+
+@pytest.fixture
+def two_cases(monkeypatch):
+    """A built-in sample case and one made from uploaded documents (a real patient's details)."""
+    from remy import orchestrator
+    monkeypatch.setattr(orchestrator, "cases", {})
+    sample, mine = orchestrator.new_case(), orchestrator.new_case()
+    sample["sample"] = True
+    return sample, mine
+
+
+async def test_uploaded_case_needs_the_key_to_read(monkeypatch, two_cases):
+    sample, mine = two_cases
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    async with _client(("203.0.113.9", 1)) as c:
+        assert [r["id"] for r in (await c.get("/api/dashboard")).json()] == [sample["id"]]
+        assert [r["id"] for r in (await c.get("/api/cases")).json()] == [sample["id"]]
+        for path in (f"/api/cases/{sample['id']}", f"/api/cases/{sample['id']}/summary",
+                     f"/api/approvals?case={sample['id']}"):
+            assert (await c.get(path)).status_code == 200, path
+        for path in (f"/api/cases/{mine['id']}", f"/api/cases/{mine['id']}/summary", f"/api/approvals?case={mine['id']}"):
+            r = await c.get(path)
+            assert r.status_code == 401 and r.headers["x-remy-auth"] == "required", path
+            assert (await c.get(path, headers={"X-Remy-Key": TOKEN})).status_code == 200, path
+        assert len((await c.get("/api/dashboard", headers={"X-Remy-Key": TOKEN})).json()) == 2
+
+
+def test_uploaded_case_websocket_needs_the_key(monkeypatch, two_cases):
+    from starlette.testclient import TestClient
+    from starlette.websockets import WebSocketDisconnect
+    sample, mine = two_cases
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    with TestClient(app_mod.app) as tc:
+        from remy import orchestrator
+        orchestrator.cases.update({sample["id"]: sample, mine["id"]: mine})  # lifespan may reload saved cases
+        with pytest.raises(WebSocketDisconnect) as e:
+            with tc.websocket_connect(f"/ws/cases/{mine['id']}") as ws:
+                ws.receive_text()
+        assert e.value.code == 1008
+        with tc.websocket_connect(f"/ws/cases/{mine['id']}?key={TOKEN}"):
+            pass
+        with tc.websocket_connect(f"/ws/cases/{sample['id']}"):
+            pass
+
+
+async def test_upload_refused_before_the_body_is_read(monkeypatch):
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    async with _client(("203.0.113.9", 1)) as c:
+        for path in ("/api/chat", "/api/cases"):
+            r = await c.post(path, files={"files": ("bill.pdf", b"%PDF-1.4 x", "application/pdf")})
+            assert r.status_code == 401 and r.headers["x-remy-auth"] == "required"
+
+
+async def test_oversized_body_is_refused(monkeypatch):
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    monkeypatch.setattr(app_mod, "MAX_BODY", 1000)
+    big = {"files": ("bill.pdf", b"x" * 5000, "application/pdf")}
+    async with _client(("203.0.113.9", 1)) as c:
+        assert (await c.post("/api/cases", files=big, headers={"X-Remy-Key": TOKEN})).status_code == 413
+
+        async def chunks():  # no Content-Length: counted as it arrives
+            for _ in range(10):
+                yield b"y" * 500
+        r = await c.post("/api/voices/normalize", content=chunks(), headers={"content-type": "application/json"})
+        assert r.status_code == 413
+
+
+async def test_recorded_replay_needs_the_key(monkeypatch, tmp_path):
+    from remy import events
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    (events.DATA_DIR / "replay_default.json").write_text('[{"recorded": true}]')
+    async with _client(("203.0.113.9", 1)) as c:
+        assert (await c.get("/api/replay")).json() != [{"recorded": True}]
+        assert (await c.get("/api/replay", headers={"X-Remy-Key": TOKEN})).json() == [{"recorded": True}]

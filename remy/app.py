@@ -35,6 +35,42 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Remy", lifespan=lifespan)
+
+MAX_BODY = 25 * 1024 * 1024  # a few bill/EOB PDFs or phone photos
+UPLOAD_PATHS = {"/api/chat", "/api/cases"}
+
+
+class BodyGuard:
+    """Checks a request body before FastAPI reads it: form bodies are parsed (and spooled to disk) before route
+    dependencies run, so an upload route checks the key here first, and every body is capped at MAX_BODY."""
+
+    def __init__(self, inner):
+        self.inner = inner
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http" or scope["method"] not in ("POST", "PUT", "PATCH"):
+            return await self.inner(scope, receive, send)
+        req = Request(scope)
+        if scope["path"] in UPLOAD_PATHS and not auth.allowed(req):
+            resp = JSONResponse({"detail": "admin key required"}, 401, headers={"X-Remy-Auth": "required"})
+            return await resp(scope, receive, send)
+        length = req.headers.get("content-length", "")
+        if length.isdigit() and int(length) > MAX_BODY:
+            return await JSONResponse({"detail": "request too large"}, 413)(scope, receive, send)
+        seen = 0
+
+        async def capped():  # no (or a false) Content-Length: count what actually arrives
+            nonlocal seen
+            msg = await receive()
+            seen += len(msg.get("body", b""))
+            if seen > MAX_BODY:
+                raise HTTPException(413, "request too large")
+            return msg
+
+        await self.inner(scope, capped, send)
+
+
+app.add_middleware(BodyGuard)
 WEB = config.ROOT / "web"
 _tasks: set[asyncio.Task] = set()
 
@@ -148,6 +184,8 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
     household_size, income_annual (before taxes): what the patient told us in chat."""
     live = llm.available()
     case = orchestrator.new_case(scenario=scenario, from_documents=live)
+    case["sample"] = not uploads  # no patient documents: a built-in demo case anyone may read (auth.can_read)
+    orchestrator.save(case)
     if household_size and 1 <= household_size <= 20:  # not on a bill or EOB: the patient tells us
         case["patient"]["household_size"] = int(household_size)
     else:
@@ -280,11 +318,16 @@ async def list_examples():
     return examples.listing()
 
 
+def _readable(request: Request) -> list[dict]:
+    """The cases this request may see: all of them with the key, else only the sample cases."""
+    return [c for c in orchestrator.cases.values() if auth.can_read(request, c)]
+
+
 @app.get("/api/cases")
-async def list_cases():
+async def list_cases(request: Request):
     return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
              "status": c["status"], "case_number": orchestrator.summary(c)["case_number"],
-             "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
+             "next": orchestrator.next_action(c)} for c in _readable(request)]
 
 
 class Onboarding(BaseModel):
@@ -343,9 +386,9 @@ async def onboarding_save(o: Onboarding):
 
 
 @app.get("/api/dashboard")
-async def dashboard():
-    """Every case, newest first: balances, calls, follow-ups and the next action with its due date."""
-    rows = [orchestrator.summary(c) for c in orchestrator.cases.values()]
+async def dashboard(request: Request):
+    """Every case this request may see, newest first: balances, calls, follow-ups and the next action."""
+    rows = [orchestrator.summary(c) for c in _readable(request)]
     return sorted(rows, key=lambda r: r.get("created_at") or 0, reverse=True)
 
 
@@ -354,8 +397,10 @@ def _case_or_404(case_id: str) -> dict | None:
 
 
 @app.get("/api/cases/{case_id}/summary")
-async def case_summary(case_id: str):
+async def case_summary(case_id: str, request: Request):
     case = _case_or_404(case_id)
+    if case:
+        auth.require_read(request, case)
     return orchestrator.summary(case) if case else JSONResponse({"error": "not found"}, 404)
 
 
@@ -630,15 +675,19 @@ async def clock(case_id: str, c: Clock):
 
 
 @app.get("/api/cases/{case_id}")
-async def get_case(case_id: str):
+async def get_case(case_id: str, request: Request):
     case = orchestrator.cases.get(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
+    auth.require_read(request, case)
     return {"case": orchestrator.public(case), "events": bus.history(case_id), "approvals": gate.pending_for(case_id)}
 
 
 @app.websocket("/ws/cases/{case_id}")
 async def case_ws(ws: WebSocket, case_id: str):
+    if not auth.can_read(ws, orchestrator.cases.get(case_id)):
+        await ws.close(code=1008)
+        return
     await ws.accept()
     q = bus.subscribe(case_id)
     try:
@@ -654,7 +703,8 @@ async def case_ws(ws: WebSocket, case_id: str):
 
 
 @app.get("/api/approvals")
-async def approvals(case: str):
+async def approvals(case: str, request: Request):
+    auth.require_read(request, orchestrator.cases.get(case))
     return gate.pending_for(case)
 
 
@@ -708,8 +758,10 @@ async def end_call(case_id: str):
 
 
 @app.get("/api/calls/{call_id}")
-async def call_info(call_id: str):
+async def call_info(call_id: str, request: Request):
     s = caller.sessions.get(call_id)
+    if s:  # the brief holds the DOB, member id and account number the caller verifies with
+        auth.require_read(request, orchestrator.cases.get(s.case_id))
     return {"brief": s.brief, "ended": s.ended, "outcome": s.outcome} if s else JSONResponse({}, 404)
 
 
@@ -891,10 +943,11 @@ async def reset():
 
 
 @app.get("/api/replay")
-async def replay(scenario: str = "default"):
-    """Latest recorded run (data/), else the committed fallback recording (demo/)."""
-    for f in (events.DATA_DIR / f"replay_{scenario}.json", config.ROOT / "data" / f"replay_{scenario}.json",
-              config.DEMO_DIR / f"replay_{scenario}.json"):
+async def replay(request: Request, scenario: str = "default"):
+    """Latest recorded run (data/), else the committed fallback recording (demo/). A recorded run may come from
+    uploaded documents, so without the key only the committed (synthetic) recording is served."""
+    recorded = (events.DATA_DIR / f"replay_{scenario}.json", config.ROOT / "data" / f"replay_{scenario}.json")
+    for f in (*(recorded if auth.allowed(request) else ()), config.DEMO_DIR / f"replay_{scenario}.json"):
         if f.exists():
             return Response(f.read_text(), media_type="application/json")
     return JSONResponse({"error": "no recording yet: finish one case first"}, 404)
