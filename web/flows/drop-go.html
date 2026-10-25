@@ -4,114 +4,137 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Drop &amp; Go · BillBack</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="base.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="../m3.css">
 <!-- LIVE flow: POST multipart `files` to /api/cases, then open /case.html?id=<case_id>. No chat, no questions. -->
 <style>
-  main{max-width:880px;margin:0 auto;padding:8px 16px 48px;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
-  .hero{display:flex;flex-direction:column;gap:12px;align-items:center}
-  .zone{position:relative;width:100%;border:2px dashed #E3C4C5;border-radius:28px;background:linear-gradient(180deg,#FFFFFF, #FFF9F9);
-    padding:22px;display:flex;flex-direction:column;gap:16px;transition:border-color .25s,background .25s,transform .25s var(--ease),box-shadow .25s}
-  .zone.dragging{border-color:var(--accent);background:var(--tint);transform:scale(1.01);box-shadow:var(--shadow)}
-  .zone-hint{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;color:var(--muted);font-weight:500}
-  .zone-hint .arrow{width:40px;height:40px;border-radius:999px;background:var(--tint);display:flex;align-items:center;justify-content:center;color:var(--accent)}
-  .zone.dragging .arrow{animation:bob .8s infinite var(--ease)}
-  @keyframes bob{50%{transform:translateY(5px)}}
-  .slots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .slot{position:relative;min-height:160px;border:1.5px dashed var(--border);border-radius:20px;background:#FFFFFF;padding:20px;cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:border-color .25s,background .25s,box-shadow .3s}
-  .slot:hover{background:var(--tint-2);border-color:#E3B9BA}
-  .slot input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
-  .slot .ph{width:62px;height:76px;border-radius:10px;border:2px solid #EBD5D5;position:relative;background:#FFFFFF;transition:all .4s var(--ease)}
-  .slot .ph::before,.slot .ph::after{content:"";position:absolute;left:12px;right:12px;height:4px;border-radius:4px;background:#F1E1E1}
-  .slot .ph::before{top:20px} .slot .ph::after{top:32px;right:22px}
-  .slot h3{margin:0;font-size:16px;font-weight:700}
-  .slot p{margin:0;font-size:13px;color:var(--muted-2)}
-  .slot.filled{border-style:solid;border-color:var(--green-border);background:var(--green-bg);box-shadow:var(--shadow-sm)}
-  .slot.filled .ph{border-color:var(--green);background:#FFFFFF;transform:rotate(-4deg)}
-  .slot.filled .ph::before,.slot.filled .ph::after{background:#CFE0D0}
-  .slot .ok{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:999px;background:var(--green);color:#FFFFFF;display:none;align-items:center;justify-content:center}
-  .slot.filled .ok{display:flex;animation:pop .4s var(--ease)}
-  .slot .fname{font-size:13px;font-weight:600;color:var(--green-ink);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .slot .x{position:absolute;bottom:10px;right:10px;border:0;background:transparent;font-size:12px;font-weight:600;color:var(--muted-2);cursor:pointer;padding:6px 8px;border-radius:999px;display:none}
-  .slot.filled .x{display:block} .slot .x:hover{background:#FFFFFF;color:var(--accent)}
-  .go{width:176px;height:176px;max-width:60vw;max-height:60vw;border-radius:999px;font-size:34px;font-weight:800;letter-spacing:-.02em;flex-direction:column;gap:2px}
-  .go small{font-size:13px;font-weight:600;opacity:.85;letter-spacing:0}
-  .go.ready{animation:breathe 2.4s infinite var(--ease)}
-  @keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(190,51,55,.35),0 18px 40px -16px rgba(190,51,55,.8)}50%{box-shadow:0 0 0 18px rgba(190,51,55,0),0 18px 40px -16px rgba(190,51,55,.8)}}
-  .go.working{pointer-events:none}
-  .below{display:flex;flex-direction:column;gap:10px;align-items:center}
-  .hh{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;font-weight:600}
-  .hh input{width:64px;padding:6px 8px;font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px;text-align:center}
-  .link{background:none;border:0;padding:8px;color:var(--muted);font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-  .link:hover{color:var(--accent)}
-  .link.small{font-size:13px;color:var(--muted-2);padding:2px 8px;margin-top:-8px}
-  .trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-  .err{color:var(--accent);font-size:14px;font-weight:600;min-height:20px}
-  .progress{display:none;gap:8px;flex-wrap:wrap;justify-content:center}
-  .working-on .progress{display:flex}
-  .progress .chip{opacity:.35;transition:opacity .3s}
-  .progress .chip.on{opacity:1}
-  @media (max-width:600px){
-    .slots{grid-template-columns:1fr 1fr;gap:10px} .slot{min-height:150px;padding:14px 10px} .slot .ph{width:46px;height:58px}
-    .zone{padding:16px;border-radius:22px} .zone-hint{font-size:14px}
-    .go{width:170px;height:170px;font-size:28px}
+  body { overflow-x: hidden; }
+  .aside { margin-left: auto; }
+  main { max-width: 720px; margin: 0 auto; padding: 8px 16px 48px; display: flex; flex-direction: column; gap: 24px; }
+  .hero h1 { margin: 0; }
+  .hero p { margin: 8px 0 0; }
+
+  /* drop zone holding the two upload cards */
+  .zone { border-radius: var(--md-shape-xl); outline: 2px dashed transparent; outline-offset: 8px;
+    transition: outline-color var(--md-dur-m) var(--md-ease), background var(--md-dur-m) var(--md-ease); }
+  .zone.dragging { outline-color: var(--md-primary); background: var(--md-surface-container-low); }
+  .zone-hint { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
+  .zone-hint .material-symbols-rounded { font-size: 20px; color: var(--md-primary); }
+  .zone.dragging .zone-hint .material-symbols-rounded { animation: bob .8s infinite var(--md-ease); }
+  @keyframes bob { 50% { transform: translateY(4px); } }
+  .slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .slot { position: relative; display: flex; align-items: flex-start; gap: 16px; padding: 20px; min-height: 120px; cursor: pointer;
+    border-style: dashed; transition: background var(--md-dur-s) var(--md-ease), border-color var(--md-dur-s) var(--md-ease); }
+  .slot:hover { background: var(--md-surface-container-low); }
+  .slot:focus-within { outline: 3px solid var(--md-primary); outline-offset: 2px; }
+  .slot input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .slot .lead { flex: none; width: 48px; height: 48px; border-radius: var(--md-shape-m); display: grid; place-items: center;
+    background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+  .slot .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .slot h3 { margin: 0; }
+  .slot p { margin: 0; }
+  .slot .fname { font: 500 14px/20px var(--md-font); color: var(--st-on-success-container); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .slot .fname:empty { display: none; }
+  .slot .add { color: var(--md-primary); font: 500 14px/20px var(--md-font); display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; }
+  .slot .add .material-symbols-rounded { font-size: 18px; }
+  .slot .ok { display: none; color: var(--st-success); }
+  .slot .x { display: none; align-self: flex-start; margin: 6px 0 0 -12px; height: 40px; }
+  .slot.filled { border-style: solid; border-color: transparent; background: var(--st-success-container); }
+  .slot.filled .lead { background: var(--md-surface-container-lowest); color: var(--st-success); }
+  .slot.filled .ok { display: block; }
+  .slot.filled .x { display: inline-flex; }
+  .slot.filled .add { display: none; }
+
+  .below { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
+  .hh { max-width: 280px; }
+  .go { width: 100%; height: 72px; border-radius: var(--md-shape-l); flex-direction: column; gap: 0; font: 500 22px/28px var(--md-font); }
+  .go small { font: 400 14px/20px var(--md-font); opacity: .9; }
+  .go.ready { box-shadow: var(--md-elev-2); }
+  .go.working { pointer-events: none; }
+  .err { min-height: 20px; margin: -8px 0 0; }
+  .err:empty { display: none; }
+  .progress { display: none; gap: 8px; flex-wrap: wrap; }
+  .working-on .progress { display: flex; }
+  .progress .chip { opacity: .45; transition: opacity var(--md-dur-m) var(--md-ease); }
+  .progress .chip .material-symbols-rounded { display: none; }
+  .progress .chip.on { opacity: 1; background: var(--st-success-container); color: var(--st-on-success-container); }
+  .progress .chip.on .material-symbols-rounded { display: inline-block; }
+  .alt { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-left: -12px; }
+  .alt .m3-btn { height: 40px; }
+  .trust { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 600px) {
+    .slots { grid-template-columns: 1fr; gap: 12px; }
+    .slot { min-height: 0; padding: 16px; }
+    .hero h1 { font-size: 28px; line-height: 36px; }
+    .aside { display: none; }
   }
 </style>
 </head>
 <body>
-<header class="topbar">
-  <a class="logo" href="/" target="_top" aria-label="BillBack home">
-    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#BE3337"/><path d="M10 7h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 12h6M13 16h4" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/></svg>
-    <b>Bill<span>Back</span></b>
+<header class="m3-top-app-bar">
+  <a class="m3-brand" href="/" target="_top" aria-label="BillBack home">
+    <span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span>
+    <span class="m3-brand-name">BillBack</span>
   </a>
-  <span class="aside">No account needed</span>
+  <span class="aside body-m muted">No account needed</span>
 </header>
 <main id="main">
-  <div class="hero fade-up">
-    <h1 class="title">Drop your bill. <span>We'll take it from here.</span></h1>
-    <p class="sub">Add the hospital bill and your insurance statement, then press Go.</p>
+  <div class="hero">
+    <h1 class="headline-l">Drop your bill. We'll take it from here.</h1>
+    <p class="body-l muted">Add the hospital bill and your insurance statement, then press Go.</p>
   </div>
 
-  <section class="zone fade-up" id="zone" aria-label="Drop files here">
-    <div class="zone-hint"><span class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>Drop both files anywhere here, or tap a slot</div>
+  <section class="zone" id="zone" aria-label="Drop files here">
+    <p class="zone-hint body-m muted"><span class="material-symbols-rounded" aria-hidden="true">arrow_downward</span>Drop both files anywhere here, or tap a card</p>
     <div class="slots">
-      <label class="slot" id="slot-bill">
+      <label class="slot m3-card" id="slot-bill">
         <input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic" data-slot="bill" aria-label="Choose your hospital bill">
-        <span class="ok" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        <span class="ph" aria-hidden="true"></span>
-        <h3>Hospital bill</h3>
-        <p class="hint">The one asking you to pay</p>
-        <span class="fname"></span>
-        <button class="x" type="button" data-clear="bill">Remove</button>
+        <span class="lead" aria-hidden="true"><span class="material-symbols-rounded">receipt_long</span></span>
+        <span class="txt">
+          <h3 class="title-m">Hospital bill</h3>
+          <p class="hint body-m muted">The one asking you to pay</p>
+          <span class="fname"></span>
+          <span class="add" aria-hidden="true"><span class="material-symbols-rounded">upload</span>Choose file</span>
+          <button class="x m3-btn text" type="button" data-clear="bill">Remove</button>
+        </span>
+        <span class="ok material-symbols-rounded icon-fill" aria-hidden="true">check_circle</span>
       </label>
-      <label class="slot" id="slot-eob">
+      <label class="slot m3-card" id="slot-eob">
         <input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic" data-slot="eob" aria-label="Choose your insurance statement">
-        <span class="ok" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        <span class="ph" aria-hidden="true"></span>
-        <h3>Insurance statement</h3>
-        <p class="hint">Often called an EOB. Shows what insurance covered</p>
-        <span class="fname"></span>
-        <button class="x" type="button" data-clear="eob">Remove</button>
+        <span class="lead" aria-hidden="true"><span class="material-symbols-rounded">health_and_safety</span></span>
+        <span class="txt">
+          <h3 class="title-m">Insurance statement (EOB)</h3>
+          <p class="hint body-m muted">Shows what insurance covered</p>
+          <span class="fname"></span>
+          <span class="add" aria-hidden="true"><span class="material-symbols-rounded">upload</span>Choose file</span>
+          <button class="x m3-btn text" type="button" data-clear="eob">Remove</button>
+        </span>
+        <span class="ok material-symbols-rounded icon-fill" aria-hidden="true">check_circle</span>
       </label>
     </div>
   </section>
 
   <div class="below">
-    <label class="hh">People in your household <input id="hh" type="number" min="1" max="20" value="1" inputmode="numeric"></label>
-    <button class="btn go" id="go" type="button" disabled>Go<small id="goSub">add your bill</small></button>
-    <div class="progress" id="progress" aria-live="polite">
-      <span class="chip" data-p="0">Reading your documents</span>
-      <span class="chip" data-p="1">Checking what's paid</span>
-      <span class="chip" data-p="2">Opening your case</span>
+    <div class="m3-field hh">
+      <label for="hh">People in your household</label>
+      <input class="m3-input" id="hh" type="number" min="1" max="20" value="1" inputmode="numeric">
     </div>
-    <div class="err" id="err" role="alert"></div>
-    <button class="link" id="sample" type="button">Don't have it handy? Use a sample bill</button>
-    <button class="link small" id="freecare" type="button">Try the free-care example</button>
+    <button class="m3-btn filled go" id="go" type="button" disabled>Go<small id="goSub">add your bill</small></button>
+    <div class="progress" id="progress" aria-live="polite">
+      <span class="chip m3-status" data-p="0"><span class="material-symbols-rounded" aria-hidden="true">check</span>Reading your documents</span>
+      <span class="chip m3-status" data-p="1"><span class="material-symbols-rounded" aria-hidden="true">check</span>Checking what's paid</span>
+      <span class="chip m3-status" data-p="2"><span class="material-symbols-rounded" aria-hidden="true">check</span>Opening your case</span>
+    </div>
+    <div class="err body-m text-error" id="err" role="alert"></div>
+    <div class="alt">
+      <button class="m3-btn text" id="sample" type="button">Don't have it handy? Use a sample bill</button>
+      <button class="m3-btn text" id="freecare" type="button">Try the free-care example</button>
+    </div>
     <div class="trust">
-      <span class="chip green"><span class="dot green"></span>Nothing is paid without your OK</span>
-      <span class="chip">Your files stay private</span>
+      <span class="m3-status success"><span class="material-symbols-rounded" aria-hidden="true">verified_user</span>Nothing is paid without your OK</span>
+      <span class="m3-status"><span class="material-symbols-rounded" aria-hidden="true">lock</span>Your files stay private</span>
     </div>
   </div>
 </main>
