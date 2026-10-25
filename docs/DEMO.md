@@ -1,76 +1,120 @@
-# BillBack — demo runbook
+# BillBack: 2-minute demo
 
-## The 3-minute script
+Demo first: one complete case (Marcus Lee, $5,600 at UCSF Medical Center → $0 under UCSF's own policy), with
+a live Bright Data recheck and a live Cartesia call in it. Then 20 seconds of problem and how it's built.
 
-**0:00 Hook** (narrator, holding the printed bill)
-> "Rosa got this. Final notice from California Pacific Medical Center: **$8,700**, collections in 10 days.
-> Her insurance was supposed to cover the ER visit. Most people either pay it or give up."
+Two people: the **presenter** (laptop, projector) and the **rep** (a teammate playing UCSF billing on the
+rep console). Numbers below are what the app computes for Marcus; live income can differ by a few tenths of a
+percent depending on the Nessie data.
 
-**0:20 Drop it in**: drag `demo/sample-hospital-bill.pdf` + `demo/sample-insurance-eob.pdf`, click Go.
-> "No forms, no questions. BillBack reads the bill and the insurance statement."
+## The script (2:00)
 
-**0:35 Review**: the two agent checklists fill in side by side.
-- Auditor (Capital One Nessie): reads the insurance statement (claim C-2026-0815-44917): the plan allowed
-  $4,760 and paid $3,660, so her share is **$1,100**. The hospital never applied it. Then it finds the
-  **$500 she already paid** on Sep 14, which the bill doesn't show, and flags a **duplicate $75 copay**:
-  **$1,100 − $500 = $600**, 93% less than the bill.
-- Policy (Bright Data): pulls **Sutter Health's own policies** from our policy database (crawled from
-  sutterhealth.org and its policy PDFs, every quote verified against the source). Her payroll deposits
-  ($1,400 every two weeks, $36,400/yr) put her at 228% of the poverty line. Sutter writes off an insured
-  patient's share only if medical bills are over 10% of income; hers are 3%. It says so plainly: **not
-  eligible for the write-off**. But Sutter's billing and collections policy says **"All payment plans shall
-  be interest-free"**, capped at 10% of monthly family income → **6 × $100/month, 0% interest**.
-> "Notice the Policy agent waits for the Auditor; they're working in parallel, sharing results."
+**0:00–0:10 · Hook** (presenter, holding the printed bill)
+> "Marcus got a $5,600 bill from UCSF for an ER visit. His insurance already paid its part. This $5,600 is
+> his share, and he can't pay it. Watch BillBack handle it."
 
-**1:15 Approval**: "Can BillBack call billing for you?" lists exactly what it will ask for: apply the
-insurance, credit the $500, an interest-free plan for the $600, pause collections. Pick the caller voice
-(e.g. Indian English) and hit ▶ to hear it.
-> "Nothing happens on her behalf without her OK. It will never agree to pay on a call."
+**0:10–0:20 · Start the case**
+- Click: `/flows/drop-go.html` → **Try the free-care example** (Marcus's bill + insurance statement,
+  household of 3). The case page opens.
+> "He drops in the bill and the insurance statement. Claude reads them. No forms."
+- If reading fails: "The model's slow on venue Wi-Fi", open the replay (see Fallbacks).
 
-**1:25 The call** (the wow): teammate's phone rings (Twilio) or the rep console opens (desk mode). Diane
-pushes back ("the full $8,700 is due", "I don't see a $500 payment", "can you pay by card today?").
-BillBack cites the claim number, the payment date and reference, and Sutter's own billing policy, refuses
-to pay on the call, and asks for the interest-free plan and a pause on collections. Diane gives **case FA
-20931**, sets up the plan and pauses collections.
+**0:20–0:45 · Review: two agents, side by side**
+- Point at the **Nessie agent** column: the bill matches the insurance statement (plan paid $1,700, his
+  share is $5,600); bank history pulled from Capital One Nessie; no payments yet, no double charges; his
+  last 12 months of medical spending from the bank.
+- The income step: payroll deposits → **$46,332 a year, 170% of the poverty line** (household of 3).
+- Point at the **Bright Data agent** column: UCSF's policy from our database, crawled from ucsfhealth.org;
+  the verified quote: *"Has out-of-pocket medical expenses in the prior twelve months … that exceed 10% of
+  Family Income."* His are 12% ("You qualify for free care"). Result: **$5,600 written off = $0**.
+> "Every number has a source. The policy figure needs an exact quote from UCSF's own page, and code does the
+> math. Claude never makes up a number."
 
-**2:20 Resolved**: **$600** (struck-through $8,700), **6 × $100/month, 0% interest**, collections paused,
-case FA 20931. With her OK, the plan is saved to her Capital One (Nessie) account as a recurring bill.
-"I'll check back by Fri Oct 30 if the corrected statement hasn't arrived."
+**0:45–1:00 · Live Bright Data**
+- Click: **Recheck now** under the Bright Data panel.
+- Lines stream in, one per request: Web Unlocker → ucsfhealth.org page, then the policy PDFs: "Found (KB,
+  seconds) · request n of at most 10", then **"Still holds: version 1 has the same rules this plan uses"**.
+> "That's live: Bright Data fetching UCSF's policy right now, checking it hasn't changed since we built the
+> plan. Blocked pages, timeouts and retries show up as their own lines."
+- If it fails or is slow: "The venue network is blocking it. It falls back to the stored copy and says so."
+  The panel shows "Live recheck failed: the plan keeps the policy it used". Move on.
 
-**2:35 Follow-up**: open **All cases** (dashboard) → "What's the status?" → click **+1 week**: the case
-goes overdue → **Call again**: the follow-up call opens with "On the October 24th call, Diane opened case
-FA 20931…".
+**1:00–1:10 · The plan**
+- Step 3, the plan: call UCSF financial assistance (through Patient Financial Services) with 3 asks, each
+  with a "why ▸" link: free care under their own policy ($5,600 → $0), pause collections while it's
+  corrected, a case number and the rep's name. Click **Call now**.
+> "Nothing happens without his OK. It never agrees to pay on a call, and it always says it's automated."
 
-**2:50 Close**
-> "**$8,700 → $600, interest-free, collections stopped.** BillBack fights your hospital bill so you don't
-> have to."
+**1:10–1:32 · The call (Cartesia)**
+- Click: **open the billing-rep console** (desk mode link on the case page). The rep clicks **Answer**. The
+  header says "listening with Cartesia Ink".
+- BillBack opens: "Hi, this is an automated assistant calling on behalf of Marcus Lee, with his
+  authorization. This call is transcribed…"
+- The rep says, in order:
+  1. "Can you pay the fifty-six hundred by card today?" → BillBack refuses to pay and asks for a
+     financial-assistance review under UCSF's policy.
+  2. While BillBack is still answering: **"Wait, sorry, what's his income?"** → audio stops (barge-in);
+     the bubble shows the unheard part struck through; BillBack answers the question.
+  3. "OK, I've opened a financial assistance review and put the account on hold. Case number FA 20931." →
+     BillBack reads it back: "F A, 2 0 9 3 1. Is that right?" Rep: "Yes. Goodbye."
+> "Cartesia Ink hears her, Sonic speaks, and when she interrupts, BillBack stops and only remembers what she
+> actually heard."
+- If Cartesia fails (no credits, HTTP 402): the console says so and falls back to Chrome's speech and voice;
+  the rep holds the mic button or types. Say: "Same call brain; the browser is standing in for Cartesia's
+  voice." If the console won't open: open the replay at the call (`&jump=call`).
 
-Optional for the Bright Data judge: `/hospitals.html`: the policy DB (4 SF hospitals, verified quotes,
-sources, recheck button) and **the same bill at each hospital**. It defaults to Marcus's bill: CPMC and
-UCSF: $0; Chinese Hospital and ZSFG: $5,600. (For Rosa every hospital gives $600.)
+**1:32–1:40 · Resolved**
+- The case shows: billing still shows **$5,600**; BillBack **expects $0 once UCSF confirms**, not before.
+  Case FA 20931, account on hold, follow-up scheduled for the date billing gave.
+> "It doesn't claim a win until the hospital confirms it. It'll check back, and call again if needed."
 
-## Real vs simulated (say it before they ask)
-- **Real:** Bright Data crawls of real hospital policies, Nessie records (seeded synthetic patient), Claude
-  reading the PDFs and reasoning, Cartesia speech, the approval gate, the audit log.
-- **Simulated:** the patient, bill, insurance statement and bank history are synthetic (watermarked SAMPLE).
-  "Billing" is a teammate.
-- **Live mode** builds the case only from the uploaded bill + EOB (Claude reads name, DOB, bill, EOB); the
-  bank account is found in Nessie by her name; the policy comes from the Bright Data policy DB. "Use the
-  sample bill" sends the sample PDFs through the same reading. The sample data only feeds the offline mock.
+**1:40–2:00 · Problem and how it's built**
+- Optional click: `/hospitals.html` (the same bill at all 12 hospitals: $0 at 7; $5,600 at Chinese Hospital and Highland, whose tiers are
+  for uninsured patients, and at Stanford, Saint Francis and SF General, which have no verified tiers on record).
+> "Hospitals publish charity-care policies, and most patients never hear about them. BillBack reads the
+> bill with Claude, checks the bank with Capital One Nessie, finds the hospital's real policy and prices
+> with Bright Data, and makes the call with Cartesia. The same bill is $0 under seven of these hospitals'
+> policies; for the other five the page shows why not. BillBack knows which, and calls for you."
 
-## Pre-flight (T-30 min)
-- [ ] `.env` has Anthropic, Nessie, Bright Data (+ zones), Cartesia; Twilio (+ `PUBLIC_BASE_URL` tunnel) if doing a real call
-- [ ] `uv run uvicorn billback.app:app --port 8000`, open http://localhost:8000/
-- [ ] One full rehearsal run; if phone: teammate's ringer ON, on speaker, number verified on the Twilio trial
-- [ ] Backup: no Twilio → desk mode (rep console opens from the case page)
-- [ ] Backup 2: replay mode: `case.html?replay=1` (or `&scenario=freecare`) replays the last finished run. Do one clean rehearsal right before judging so the latest recording is a good one.
-- [ ] Second case: the free-care link on Drop & Go: Marcus Lee, UCSF, $5,600 → $0.
-- [ ] Demo PDFs on the desktop for drag-and-drop (`/samples/` serves them)
+## Before judging (T-30 min)
+- [ ] `.env`: `ANTHROPIC_API_KEY`, `NESSIE_API_KEY`, `BRIGHTDATA_API_KEY` + both zones, `CARTESIA_API_KEY`,
+      `BILLBACK_ADMIN_TOKEN` (16+ characters), `BILLBACK_REQUIRE_LIVE=1`. Twilio + `PUBLIC_BASE_URL` only for
+      a real phone call.
+- [ ] Start the server (`uv run uvicorn billback.app:app --port <port>`). With `BILLBACK_REQUIRE_LIVE=1` it
+      won't start if a key is missing. Check `GET /api/mode`: Claude, Nessie, Bright Data, Cartesia true;
+      `live_crawl` true.
+- [ ] Open `/case.html?key=<token>` once in the presenter's browser (the key is saved and removed from the
+      address bar). The rep console opens in a new tab of the same browser, so it has the key too.
+- [ ] Nessie has Marcus: `uv run python scripts/seed_nessie.py freecare` was run on this key. If not, the case
+      says "using sample bank data" and still runs.
+- [ ] One full rehearsal of Marcus, including "Recheck now" (UCSF: about 3 Web Unlocker requests, one per stored source; no SERP, no Claude
+      call unless the policy changed) and the call. That also records a fresh replay
+      (`data/replay_freecare.json`). Paid credits: one rehearsal, not loops.
+- [ ] Rep: headphones on the laptop (or check the echo handling on speakers), Chrome mic permission granted.
+- [ ] Tabs ready: `/flows/drop-go.html`, `/hospitals.html` (it opens on Marcus's bill).
 
-## Fallbacks during the demo
+## Fallbacks
 | What breaks | Say / do |
 |---|---|
-| Call doesn't ring in 15 s | "Venue cell signal" → desk mode: teammate plays billing in the rep console |
-| Claude slow | Keep narrating the checklist; the agents stream step by step |
-| Wi-Fi dies | Replay mode: "here's the exact run from an hour ago" |
-| Judge asks about another hospital | `/hospitals.html` comparison, or add one: `scripts/crawl_policies.py crawl` |
+| Intake or Review slow | Keep narrating the checklist; the agents stream step by step |
+| "Recheck now" fails or is disabled | "It falls back to the stored copy and says so." Show the stored policy's crawl date and quote |
+| Cartesia out of credits / socket fails | The rep console falls back to Chrome speech by itself; "the browser stands in for Cartesia" |
+| Rep console doesn't open | Replay: `/case.html?replay=1&scenario=freecare&jump=call` |
+| Wi-Fi dies | Replay: `/case.html?replay=1&scenario=freecare`: "the exact run from our rehearsal" |
+| A 401 / key prompt | Paste the admin key once; it is remembered |
+| Judge asks about another hospital | `/hospitals.html`: same bill through every stored policy, with quotes and sources |
+
+Replays are recorded live runs. The committed ones (`demo/replay_*.json`) are older than the current build:
+they end on the old "$X → $Y" result and older wording. Rehearse once before judging so the replay is fresh.
+
+## Second case if asked: Rosa ($8,700 → $600)
+`/flows/drop-go.html` → **Use a sample bill**. California Pacific Medical Center billed $8,700. The insurance
+statement says her share is $1,100 (the hospital never applied it), and Nessie shows a $500 payment the bill
+doesn't show: $600. She's at 228% of the poverty line but her bill is only about 3% of income, so Sutter's
+write-off doesn't apply (it says so). Sutter's policy makes the plan interest-free: 6 × $100/month.
+
+## Real vs simulated (say it before they ask)
+- **Real:** the hospital policies and prices (Bright Data crawls, committed in `policydb/`, and the live
+  recheck), Nessie API records, Claude, Cartesia speech, the approval gate, the audit log.
+- **Simulated:** the patient, bill, insurance statement and bank history are synthetic (watermarked SAMPLE).
+  Billing is a teammate.
