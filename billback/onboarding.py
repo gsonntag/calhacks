@@ -11,12 +11,18 @@ patient could still be. Its spread is the metric:
 
 So a question that can't move the outcome is never asked: with a bank-verified income far under every
 limit, household size doesn't matter and onboarding ends early. Bank income (Nessie) is take-home pay;
-policies test gross, so it stands for a range (take-home / 0.85 .. / 0.75), never a single number."""
+policies test gross, so it stands for a range (take-home / 0.85 .. / 0.75), never a single number. A before-tax
+income the patient gives is checked against that range (finance.stated_check): one below it counts as the bank's
+lowest gross figure.
+
+What the patient told us is kept for their next case (save_profile / find_profile): in Tiger Data when it's on,
+else a small JSON file per profile under data/profiles/. Same id either way: tiger.profile_id (name + DOB)."""
 import json
 import math
 from collections import Counter
+from datetime import datetime, timezone
 
-from . import finance
+from . import events, finance, tiger
 from .policies.store import PolicyStore
 
 FIELDS = ("hospital_id", "household_size", "income", "insured", "medical_oop")
@@ -24,7 +30,8 @@ FIELDS = ("hospital_id", "household_size", "income", "insured", "medical_oop")
 # Plausible values for an unknown. Income in gross dollars a year; medical bills as a share of income.
 HOUSEHOLD = (1, 2, 3, 4, 5, 6)
 INCOME = (12_000, 20_000, 28_000, 36_000, 45_000, 55_000, 65_000, 80_000, 95_000, 115_000, 140_000, 180_000)
-GROSS_FROM_TAKE_HOME = (0.85, 0.80, 0.75)  # take-home is ~75-85% of gross (finance.TAKE_HOME_SHARE)
+# take-home is ~75-85% of gross (finance.TAKE_HOME_SHARE)
+GROSS_FROM_TAKE_HOME = (finance.TAKE_HOME_HIGH, finance.TAKE_HOME_SHARE, finance.TAKE_HOME_LOW)
 OOP_SHARE = (0.0, 0.05, 0.15)
 
 QUESTIONS = {
@@ -118,6 +125,10 @@ def assess(answers: dict, bank: dict | None = None, skipped: list[str] | None = 
         return {"certainty": 0.0, "decided": False, "next": None, "fpl_range": None, "outcome": None,
                 "per_hospital": [], "asked_why": "No verified hospital policies on file"}
     tiers = {h["id"]: h["tiers"] for h in hospitals}
+    check = (finance.stated_check(bank, a["income"]) if a.get("income") is not None and bank and bank.get("annual")
+             else None)
+    if check:  # the same double check a case makes: never count less than the bank shows
+        a["income"] = check["used"]
     pts = _grid(a, bank, hospitals)
     res = [_outcome(p, a, tiers) for p in pts]
     discounts = [d for d, _ in res]
@@ -154,7 +165,7 @@ def assess(answers: dict, bank: dict | None = None, skipped: list[str] | None = 
     fpls = [f for _, f in res]
     return {"certainty": round(certainty, 3), "decided": decided, "outcome": _label(top, per),
             "discount_pct": top, "fpl_range": [min(fpls), max(fpls)], "next": nxt, "per_hospital": per,
-            "possibilities": len(pts)}
+            "possibilities": len(pts), "income_check": check}
 
 
 def _label(top: float, per: list[dict]) -> str:
@@ -184,3 +195,61 @@ def clean(answers: dict) -> dict:
     if isinstance(a.get("insured"), bool):
         out["insured"] = a["insured"]
     return out
+
+
+PROFILE_FIELDS = ("household_size", "insured", "income", "medical_oop")
+
+
+def _profiles_dir():
+    d = events.DATA_DIR / "profiles"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def clear_local_profiles() -> int:
+    """Demo reset: forget the onboarding answers kept on this server (Tiger Data profiles stay)."""
+    d = events.DATA_DIR / "profiles"
+    n = 0
+    for f in d.glob("*.json") if d.exists() else []:
+        f.unlink()
+        n += 1
+    return n
+
+
+async def save_profile(answers: dict, assessment: dict, hospital: str | None) -> dict:
+    """Keep what the patient told us for their next case. Tiger Data when it's on; otherwise (or if Tiger fails)
+    data/profiles/<profile_id>.json, with the answers only (no name or DOB). saved: stored in Tiger Data."""
+    if tiger.enabled():
+        try:
+            return {"profile_id": await tiger.save_onboarding(answers, assessment, hospital), "saved": True,
+                    "stored": "tiger"}
+        except Exception as e:
+            print("Tiger onboarding save failed, keeping it locally:", type(e).__name__)
+    pid = tiger.profile_id(answers)
+    row = {"id": pid, **{k: answers.get(k) for k in PROFILE_FIELDS}, "hospital": hospital,
+           "onboarded_at": datetime.now(timezone.utc).isoformat()}
+    d = _profiles_dir()
+    tmp = d / f".{pid}.json.tmp"
+    tmp.write_text(json.dumps(row))
+    tmp.replace(d / f"{pid}.json")
+    return {"profile_id": pid, "saved": False, "stored": "local"}
+
+
+async def find_profile(patient: dict) -> dict | None:
+    """What this patient (name + DOB) told us at onboarding: {household_size, insured, income, medical_oop}
+    (None where not answered), or None."""
+    if tiger.enabled():
+        try:
+            row = await tiger.get_profile(patient)
+        except Exception as e:
+            print("profile lookup failed:", type(e).__name__)
+            row = None
+        if row:
+            return {"household_size": row.get("household_size"), "insured": row.get("insured"),
+                    "income": row.get("income_reported"), "medical_oop": row.get("medical_oop")}
+    f = _profiles_dir() / f"{tiger.profile_id(patient)}.json"
+    try:
+        row = json.loads(f.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+    return {k: row.get(k) for k in PROFILE_FIELDS}

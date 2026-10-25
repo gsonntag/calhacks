@@ -311,27 +311,48 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
         r.step("find", "Find assistance policy", "clear", "No verified income-based discount rules")
     src = lambda t: t.get("source_url") or source  # noqa: E731
 
-    r.step("income", "Estimate your income from payroll deposits", "running")
+    stated = case["patient"].get("stated_income_annual")
+    step_label = ("Check the income you told us against your bank" if stated
+                  else "Estimate your income from payroll deposits")
+    r.step("income", step_label, "running")
     txns = await txns_ready
     inc = finance.income(txns, today=finance._d(case["today"]))
     insured = billcheck.insured(case)  # explicit: an empty or missing insurance statement means self-pay
-    elig = eligibility(case, txns, inc, tiers, insured)
+    # the patient's own before-tax figure, double-checked against the deposits (finance.stated_check)
+    check = finance.stated_check(inc, stated) if stated else None
+    elig = eligibility(case, txns, inc, tiers, insured, annual=check["used"] if check else None)
     oop = round(elig["bill_out_of_pocket"] + elig["bank_medical"], 2)  # the same out-of-pocket eligibility used
     bills = finance.monthly_bills(txns, today=finance._d(case["today"]), bill=case["bill"])
     inc.update(bills_monthly=bills["monthly"], bills_source=bills["source"])
-    gross = finance.gross_check(inc, case["patient"]["household_size"], tiers, insured, oop, elig)
+    # a before-tax figure needs no take-home-vs-gross warning; the payment plan still uses take-home (inc)
+    gross = None if check else finance.gross_check(inc, case["patient"]["household_size"], tiers, insured, oop, elig)
     elig["gross_check"] = gross
-    r.step("income", "Estimate your income from payroll deposits", "flag" if gross else "ok",
-           f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr take-home, household of "
-           f"{elig['household_size']})" + (f". {gross['text']}" if gross else ""),
-           [(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}") for t in inc["deposits"][-3:]]
-           + [(f"{t.get('description') or 'Deposit'} ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}")
-              for t in inc["other_deposits"][-3:]])
+    if check:
+        said = case["patient"].get("stated_income_source") or "you"
+        inc.update(stated={"annual": check["stated"], "source": said}, check=check)
+        elig.update(income_annual=check["used"], income_basis=check["basis"])
+    deposits = ([(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}")
+                 for t in inc["deposits"][-3:]]
+                + [(f"{t.get('description') or 'Deposit'} ${t['amount']:,.2f} on {t['date'][:10]}",
+                    f"bank · txn {t['id']}") for t in inc["other_deposits"][-3:]])
+    if check:
+        r.step("income", step_label, "ok" if check["ok"] else "flag",
+               f"{check['text']} {elig['fpl_pct']:.0f}% of the poverty line (household of {elig['household_size']})",
+               [(check["line"], f"you told us ({said}) · Nessie agent · {inc['source']}"), *deposits])
+    else:
+        r.step("income", step_label, "flag" if gross else "ok",
+               f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr take-home, household of "
+               f"{elig['household_size']})" + (f". {gross['text']}" if gross else ""), deposits)
     if gross:
         bus.emit(cid, "warning", "policy", text=gross["text"])
+    if check:
+        if not check["ok"]:
+            bus.emit(cid, "warning", "policy", text=check["text"])
+        bus.emit(cid, "evidence", "policy", label="Income you told us vs your bank", value=check["line"],
+                 source=f"you told us ({said}) · {inc['source']}")
     bus.emit(cid, "evidence", "policy", label="Income vs poverty line",
              value=f"{elig['fpl_pct']}% of FPL (household {elig['household_size']}, {elig['fpl_year']} guidelines)",
-             source=inc["source"])
+             source=check["basis"] if check else inc["source"])
     await _save_household(cid, case, txns, inc, elig, insured)
 
     free = [t for t in tiers if t.get("discount_pct") == 100]
@@ -383,7 +404,9 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     if d:
         saved = owed - target + st["refund"]
         r.finding("discount", "Free care under their policy" if d == 100 else f"{d:.0f}% discount under their policy", saved,
-                  [f"Your income is {elig['fpl_pct']:.0f}% of the poverty line ({inc['source']}).",
+                  [f"Your income is {elig['fpl_pct']:.0f}% of the poverty line "
+                   f"({check['basis'] if check else inc['source']}).",
+                   *([check["line"]] if check else []),
                    *([f"“{elig['tier']['quote']}”"] if elig["tier"].get("quote") else []),
                    *([_bank_medical_line(elig)] if elig["tier"].get("min_oop_pct_income") is not None
                      and elig["bank_medical"] else []),
@@ -438,14 +461,16 @@ def _why_not_free(elig: dict, free: list[dict]) -> str:
     return f"Income is above the {free[0]['max_fpl_pct']:.0f}% limit"
 
 
-def eligibility(case: dict, txns: list[dict], inc: dict, tiers: list[dict], insured: bool) -> dict:
+def eligibility(case: dict, txns: list[dict], inc: dict, tiers: list[dict], insured: bool,
+                annual: float | None = None) -> dict:
     """finance.charity_discount with the out-of-pocket the high-medical-cost rules ask for: this bill's share
     (insured) plus the bank's last 12 months of other medical bills (finance.medical_spending, the same sum
-    the Nessie agent shows). needs_bank_medical: the bank spending is what makes the patient eligible."""
+    the Nessie agent shows). needs_bank_medical: the bank spending is what makes the patient eligible.
+    annual: the income to test (a checked stated income); default the bank's take-home."""
     eob = (case.get("eob") or {}) if insured else {}
     bill_oop = float(eob.get("patient_responsibility") or 0) if insured else 0.0
     med = finance.medical_spending(txns, case["bill"], eob, today=finance._d(case["today"]) if case.get("today") else None)
-    args = (inc["annual"], case["patient"]["household_size"], tiers)
+    args = (inc["annual"] if annual is None else annual, case["patient"]["household_size"], tiers)
     elig = finance.charity_discount(*args, insured=insured, out_of_pocket=round(bill_oop + med["total"], 2))
     bill_only = finance.charity_discount(*args, insured=insured, out_of_pocket=bill_oop)
     elig.update(bill_out_of_pocket=bill_oop, bank_medical=med["total"],

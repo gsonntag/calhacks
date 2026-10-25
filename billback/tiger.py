@@ -195,6 +195,7 @@ async def get_profile(patient: dict) -> dict | None:
     if not enabled():
         return None
     cur = await asyncio.wait_for((await _db()).execute(
-        "SELECT id, household_size, insured, income_reported::float AS income_reported, onboarded_at "
+        "SELECT id, household_size, insured, income_reported::float AS income_reported, "
+        "medical_oop::float AS medical_oop, onboarded_at "
         "FROM profiles WHERE id = %s", (profile_id(patient),)), TIMEOUT)
     return await cur.fetchone()
