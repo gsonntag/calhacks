@@ -1,0 +1,59 @@
+{
+ "hospital_id": "john-muir-wc",
+ "hospital": "John Muir Medical Center, Walnut Creek",
+ "built_at": "2026-10-25T05:26:25+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/AD-Patient-Financial-Assistance-Policy.pdf",
+   "artifact": "raw/john-muir-wc/pdf-a5d30f690700.txt"
+  },
+  {
+   "url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/English_JMH_PatientFinancialAssistance_CharityCare_Program_Flyer_09152....pdf",
+   "artifact": "raw/john-muir-wc/pdf-cc18ce80ad4d.txt"
+  },
+  {
+   "url": "https://www.johnmuirhealth.com/secure.html",
+   "artifact": "raw/john-muir-wc/page-bb4176e66f40.md"
+  },
+  {
+   "url": "https://www.johnmuirhealth.com/secure/contact-us/thank-you-community.html",
+   "artifact": "raw/john-muir-wc/page-c0f44fa53c35.md"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "advocate",
+   "label": "Health Consumer Center, Bay Area Legal Aid",
+   "phone": "(855) 693-7285",
+   "dial": "+18556937285",
+   "hours": null,
+   "source_url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/AD-Patient-Financial-Assistance-Policy.pdf",
+   "artifact": "raw/john-muir-wc/pdf-a5d30f690700.txt",
+   "quote": "Health Consumer Center, Bay Area Legal Aid, 1735 Telegraph Ave, Oakland, CA 94612; (855) 693-7285"
+  },
+  {
+   "department": "billing",
+   "label": "Billing office customer service line",
+   "phone": "(925) 947-3336",
+   "dial": "+19259473336",
+   "hours": "Monday - Friday, 8:00 a.m. – 4:30 p.m.",
+   "source_url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/English_JMH_PatientFinancialAssistance_CharityCare_Program_Flyer_09152....pdf",
+   "artifact": "raw/john-muir-wc/pdf-cc18ce80ad4d.txt",
+   "quote": "call the billing office customer service line Monday - Friday, 8:00 a.m. – 4:30 p.m. (925) 947-3336"
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Financial Counselor, Walnut Creek Medical Center",
+   "phone": "(925) 947-5352",
+   "dial": "+19259475352",
+   "hours": "Monday - Friday, 8:00 a.m. - 4:30 p.m.",
+   "source_url": "https://www.johnmuirhealth.com/content/dam/jmh/Documents/Patient-and-Visitors/English_JMH_PatientFinancialAssistance_CharityCare_Program_Flyer_09152....pdf",
+   "artifact": "raw/john-muir-wc/pdf-cc18ce80ad4d.txt",
+   "quote": "Walnut Creek Medical Center 1601 Ygnacio Valley Road Walnut Creek, CA 94598 (925) 947-5352"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}

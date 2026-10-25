@@ -1,0 +1,65 @@
+{
+ "hospital_id": "ucsf-health",
+ "hospital": "UCSF Medical Center",
+ "built_at": "2026-10-25T05:25:24+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md"
+  },
+  {
+   "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+   "artifact": "raw/ucsf-health/pdf-db570fe1a4ce.txt"
+  },
+  {
+   "url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/self_pay_discount_policy_30406.pdf",
+   "artifact": "raw/ucsf-health/pdf-d20ade66a92b.txt"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "billing",
+   "label": "Patient Financial Services",
+   "phone": "866-433-4035",
+   "dial": "+18664334035",
+   "hours": "M-F, 8 a.m. - 4 p.m.",
+   "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md",
+   "quote": "Patient Financial Services Phone: 866-433-4035Phone: 415-353-3333Fax: 415-353-3914"
+  },
+  {
+   "department": "billing",
+   "label": "Patient Financial Services",
+   "phone": "415-353-3333",
+   "dial": "+14153533333",
+   "hours": "M-F, 8 a.m. - 4 p.m.",
+   "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md",
+   "quote": "Patient Financial Services Phone: 866-433-4035Phone: 415-353-3333Fax: 415-353-3914"
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Financial Counseling",
+   "phone": "415-353-1966",
+   "dial": "+14153531966",
+   "hours": "M-F, 9 a.m. - 5 p.m.",
+   "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md",
+   "quote": "Financial Counseling Phone: 415-353-1966M-F, 9 a.m. - 5 p.m."
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Patient Financial Services (Financial Assistance application)",
+   "phone": "1-866-433-4035",
+   "dial": "+18664334035",
+   "hours": null,
+   "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+   "artifact": "raw/ucsf-health/pdf-db570fe1a4ce.txt",
+   "quote": "calling Patient Financial Services at 1-866-433-4035"
+  }
+ ],
+ "gaps": [],
+ "notes": [],
+ "rejected": []
+}

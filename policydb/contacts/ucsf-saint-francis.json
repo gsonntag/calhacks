@@ -1,0 +1,118 @@
+{
+ "hospital_id": "ucsf-saint-francis",
+ "hospital": "UCSF Health Saint Francis Hospital",
+ "built_at": "2026-10-25T05:26:54+00:00",
+ "method": "regex candidates + Claude department classification; phone and quote verified verbatim",
+ "sources": [
+  {
+   "url": "https://sfcommunityhospitals.ucsfhealth.org/-/media/project/ucsf/sfch/pdf/saint-marys-financial-assistance-application-spanish.pdf?rev=554ba29037ed47068cfc2a69bb91d451&hash=B620C08CC4616F7659690A900CD033D2",
+   "artifact": "raw/ucsf-saint-francis/pdf-b417d1c58b3b.txt"
+  },
+  {
+   "url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+   "artifact": "raw/ucsf-saint-francis/contact-page-520be87ff7eb.md"
+  }
+ ],
+ "contacts": [
+  {
+   "department": "billing",
+   "label": "Patient Financial Services (UCSF Health, for services on or after October 4, 2025)",
+   "phone": "866-433-4035",
+   "dial": "+18664334035",
+   "hours": "M-F, 8 a.m. - 4 p.m.",
+   "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md",
+   "quote": "Patient Financial Services Phone: 866-433-4035Phone: 415-353-3333Fax: 415-353-3914",
+   "via": {
+    "hospital_id": "ucsf-health",
+    "quote": "For services provided on or after October 4, 2025, please visit: Help Paying Your Bill.",
+    "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill"
+   }
+  },
+  {
+   "department": "billing",
+   "label": "Patient Financial Services (UCSF Health, for services on or after October 4, 2025)",
+   "phone": "415-353-3333",
+   "dial": "+14153533333",
+   "hours": "M-F, 8 a.m. - 4 p.m.",
+   "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md",
+   "quote": "Patient Financial Services Phone: 866-433-4035Phone: 415-353-3333Fax: 415-353-3914",
+   "via": {
+    "hospital_id": "ucsf-health",
+    "quote": "For services provided on or after October 4, 2025, please visit: Help Paying Your Bill.",
+    "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill"
+   }
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Financial Counseling (UCSF Health, for services on or after October 4, 2025)",
+   "phone": "415-353-1966",
+   "dial": "+14153531966",
+   "hours": "M-F, 9 a.m. - 5 p.m.",
+   "source_url": "https://www.ucsfhealth.org/patients-visitors/billing-insurance/help-paying-your-bill",
+   "artifact": "raw/ucsf-health/page-9cfaeac215d7.md",
+   "quote": "Financial Counseling Phone: 415-353-1966M-F, 9 a.m. - 5 p.m.",
+   "via": {
+    "hospital_id": "ucsf-health",
+    "quote": "For services provided on or after October 4, 2025, please visit: Help Paying Your Bill.",
+    "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill"
+   }
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Patient Financial Services (Financial Assistance application) (UCSF Health, for services on or after October 4, 2025)",
+   "phone": "1-866-433-4035",
+   "dial": "+18664334035",
+   "hours": null,
+   "source_url": "https://edge.sitecorecloud.io/ucsfhealth1487c-ucsfplatfor7e11-prod0cc0-65a9/media/project/valcore/live/ucsf/pdf/financial-pdfs/patient_financial_assistance_policy_30407.pdf",
+   "artifact": "raw/ucsf-health/pdf-db570fe1a4ce.txt",
+   "quote": "calling Patient Financial Services at 1-866-433-4035",
+   "via": {
+    "hospital_id": "ucsf-health",
+    "quote": "For services provided on or after October 4, 2025, please visit: Help Paying Your Bill.",
+    "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill"
+   }
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Financial counselor (for services before October 4, 2025)",
+   "phone": "(415) 353-6140",
+   "dial": "+14153536140",
+   "hours": null,
+   "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+   "artifact": "raw/ucsf-saint-francis/contact-page-520be87ff7eb.md",
+   "quote": "please call (415) 353-6140 to speak with a financial counselor"
+  },
+  {
+   "department": "billing",
+   "label": "Customer Service team (Dignity Health) (for services before October 4, 2025)",
+   "phone": "888.488.7667",
+   "dial": "+18884887667",
+   "hours": null,
+   "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+   "artifact": "raw/ucsf-saint-francis/contact-page-520be87ff7eb.md",
+   "quote": "call our Customer Service team at 888.488.7667"
+  },
+  {
+   "department": "financial_assistance",
+   "label": "Customer Service team (Dignity Health), assists with financial assistance application (for services before October 4, 2025)",
+   "phone": "888.488.7667",
+   "dial": "+18884887667",
+   "hours": null,
+   "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+   "artifact": "raw/ucsf-saint-francis/contact-page-520be87ff7eb.md",
+   "quote": "For answers to your questions and assistance with the process, call our Customer Service team at 888.488.7667"
+  }
+ ],
+ "gaps": [],
+ "notes": [
+  {
+   "department": "billing",
+   "note": "Saint Francis (now Hyde Hospital) moved to UCSF Health's billing system on October 4, 2025; the Dignity Health numbers on its page are for earlier services.",
+   "quote": "For services provided on or after October 4, 2025, please visit: Help Paying Your Bill.",
+   "source_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill"
+  }
+ ],
+ "rejected": []
+}

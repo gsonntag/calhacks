@@ -1,0 +1,164 @@
+{
+ "requests": [
+  {
+   "ts": "2026-10-25T05:08:19+00:00",
+   "hospital_id": "el-camino",
+   "product": "unlocker",
+   "url": "https://www.elcaminohealth.org/patients-visitors/guide/after-you-leave/billing/billing-FAQ",
+   "status": 200,
+   "bytes": 17505,
+   "latency_ms": 2982,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:09:00+00:00",
+   "hospital_id": "highland-ahs",
+   "product": "unlocker",
+   "url": "http://www.alamedahealthsystem.org/wp-content/uploads/2026/08/2026-Help-Paying-Your-Bill.pdf",
+   "status": 200,
+   "bytes": 126832,
+   "latency_ms": 33548,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:09:18+00:00",
+   "hospital_id": "kaiser-oakland",
+   "product": "serp",
+   "url": "google: Kaiser Permanente Northern California hospital bill questions patient financial services phone number",
+   "status": 200,
+   "bytes": 25779,
+   "latency_ms": 10326,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:09:31+00:00",
+   "hospital_id": "kaiser-oakland",
+   "product": "unlocker",
+   "url": "https://healthy.kaiserpermanente.org/support/pay-bills/medical-bills",
+   "status": 200,
+   "bytes": 54526,
+   "latency_ms": 5970,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:09:56+00:00",
+   "hospital_id": "kaiser-oakland",
+   "product": "serp",
+   "url": "google: Patient Financial Services at Oakland Medical Center Kaiser Permanente",
+   "status": 200,
+   "bytes": 22402,
+   "latency_ms": 10336,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:10:10+00:00",
+   "hospital_id": "kaiser-oakland",
+   "product": "unlocker",
+   "url": "https://healthy.kaiserpermanente.org/northern-california/facilities/oakland-medical-center-100344/departments",
+   "status": 200,
+   "bytes": 38050,
+   "latency_ms": 7320,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:11:49+00:00",
+   "hospital_id": "stanford-health",
+   "product": "serp",
+   "url": "google: Stanford Health Care hospital billing customer service phone number",
+   "status": 200,
+   "bytes": 26356,
+   "latency_ms": 27177,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:12:07+00:00",
+   "hospital_id": "stanford-health",
+   "product": "unlocker",
+   "url": "https://stanfordhealthcare.org/for-patients-visitors/billing.html",
+   "status": 200,
+   "bytes": 17935,
+   "latency_ms": 4873,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:12:47+00:00",
+   "hospital_id": "ucsf-saint-francis",
+   "product": "serp",
+   "url": "google: site:sfcommunityhospitals.ucsfhealth.org billing financial assistance Saint Francis",
+   "status": 200,
+   "bytes": 16775,
+   "latency_ms": 30507,
+   "ok": true,
+   "error": ""
+  },
+  {
+   "ts": "2026-10-25T05:12:56+00:00",
+   "hospital_id": "ucsf-saint-francis",
+   "product": "unlocker",
+   "url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+   "status": 200,
+   "bytes": 24294,
+   "latency_ms": 1348,
+   "ok": true,
+   "error": ""
+  }
+ ],
+ "documents": [
+  {
+   "hospital_id": "el-camino",
+   "url": "https://www.elcaminohealth.org/patients-visitors/guide/after-you-leave/billing/billing-FAQ",
+   "artifact": "raw/el-camino/contact-page-b3991f2c822f.md",
+   "sha256": "b3991f2c822f7c957856c4646ec80ff7b37976c9652be6cb1ac26b5671ea80d6",
+   "nbytes": 17505,
+   "fetched_at": "2026-10-25T05:08:19+00:00"
+  },
+  {
+   "hospital_id": "highland-ahs",
+   "url": "http://www.alamedahealthsystem.org/wp-content/uploads/2026/08/2026-Help-Paying-Your-Bill.pdf",
+   "artifact": "raw/highland-ahs/contact-pdf-85852e4a2bc4.txt",
+   "sha256": "85852e4a2bc4c0b6d7e9a190ccb5b16f090e05779b14d028b71c388acb497180",
+   "nbytes": 126832,
+   "fetched_at": "2026-10-25T05:09:01+00:00"
+  },
+  {
+   "hospital_id": "kaiser-oakland",
+   "url": "https://healthy.kaiserpermanente.org/support/pay-bills/medical-bills",
+   "artifact": "raw/kaiser-oakland/contact-page-0e2f692f9c6f.md",
+   "sha256": "0e2f692f9c6fa36d2e40e12c7c045f6694bcabbfda6ca618083d0e7b07ab5c0c",
+   "nbytes": 54526,
+   "fetched_at": "2026-10-25T05:09:31+00:00"
+  },
+  {
+   "hospital_id": "kaiser-oakland",
+   "url": "https://healthy.kaiserpermanente.org/northern-california/facilities/oakland-medical-center-100344/departments",
+   "artifact": "raw/kaiser-oakland/contact-page-cdaf2a69646d.md",
+   "sha256": "cdaf2a69646de15401ef9cd9d4cf666d4e1972339193cbb888f6b8c60cb3b92d",
+   "nbytes": 38050,
+   "fetched_at": "2026-10-25T05:10:10+00:00"
+  },
+  {
+   "hospital_id": "stanford-health",
+   "url": "https://stanfordhealthcare.org/for-patients-visitors/billing.html",
+   "artifact": "raw/stanford-health/contact-page-edab4579f2d3.md",
+   "sha256": "edab4579f2d3a55236c59ae1a1341138534671567b65290b298e764560b0d9aa",
+   "nbytes": 17935,
+   "fetched_at": "2026-10-25T05:12:07+00:00"
+  },
+  {
+   "hospital_id": "ucsf-saint-francis",
+   "url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/help-paying-your-bill",
+   "artifact": "raw/ucsf-saint-francis/contact-page-520be87ff7eb.md",
+   "sha256": "520be87ff7eb893f6e640671739f6ef9effd7e1660f266ff3731320216b23420",
+   "nbytes": 24294,
+   "fetched_at": "2026-10-25T05:12:56+00:00"
+  }
+ ]
+}
