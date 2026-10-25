@@ -9,12 +9,12 @@ ROOT = Path(__file__).resolve().parent.parent
 # No-wifi demo (REMY_OFFLINE=1): every integration runs in its offline mode even with a full .env, and the parts
 # that need a network or a second person are played by mocks (remy/offline.py). Blanked before .env is read:
 # load_dotenv never overrides a variable that is already set.
-OFFLINE = (os.getenv("REMY_OFFLINE") or os.getenv("BILLBACK_OFFLINE") or "").strip().lower() in ("1", "true", "yes", "on")
+OFFLINE = os.getenv("REMY_OFFLINE", "").strip().lower() in ("1", "true", "yes", "on")
 LIVE_SETTINGS = ("ANTHROPIC_API_KEY", "NESSIE_API_KEY", "BRIGHTDATA_API_KEY", "BRIGHTDATA_UNLOCKER_ZONE",
                  "BRIGHTDATA_SERP_ZONE", "CARTESIA_API_KEY", "CARTESIA_AGENT_ID", "CARTESIA_FROM_NUMBER_ID",
                  "CARTESIA_WEBHOOK_SECRET", "CARTESIA_TOOL_TOKEN", "TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN",
                  "TWILIO_FROM_NUMBER", "TWILIO_TWIML_APP_SID", "REP_PHONE_NUMBER", "PATIENT_PHONE_NUMBER",
-                 "TIGER_DATABASE_URL", "CENSUS_API_KEY", "REMY_REQUIRE_LIVE", "BILLBACK_REQUIRE_LIVE")
+                 "TIGER_DATABASE_URL", "CENSUS_API_KEY", "REMY_REQUIRE_LIVE")
 if OFFLINE:
     for _k in LIVE_SETTINGS:
         os.environ[_k] = ""
@@ -22,9 +22,8 @@ load_dotenv(ROOT / ".env")
 
 
 def env(name: str, default: str = "") -> str:
-    """REMY_<name>, or BILLBACK_<name> (the name before the rename to Remy) so existing deployments keep working."""
-    v = os.getenv(f"REMY_{name}")
-    return v if v is not None else os.getenv(f"BILLBACK_{name}", default)
+    """REMY_<name>."""
+    return os.getenv(f"REMY_{name}", default)
 
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
@@ -73,7 +72,7 @@ TIGER_DATABASE_URL = _secret("TIGER_DATABASE_URL")
 
 # Shared secret for routes that place a call, spend credits or wipe state (remy/auth.py). Unset: those
 # routes only answer requests made directly on this machine, never through a tunnel.
-ADMIN_TOKEN = _secret("REMY_ADMIN_TOKEN") or _secret("BILLBACK_ADMIN_TOKEN")
+ADMIN_TOKEN = _secret("REMY_ADMIN_TOKEN")
 # Judging mode: refuse to start without the live keys, and never use the sample policies.
 REQUIRE_LIVE = env("REQUIRE_LIVE").strip().lower() in ("1", "true", "yes", "on")
 # the offline demo keeps its own cases and profiles, so a demo reset never touches live data

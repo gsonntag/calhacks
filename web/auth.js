@@ -4,7 +4,7 @@
 // Pages that only read (replays, Cases, Hospitals) work without it. A refused action asks for the key once.
 (() => {
   const KEY = 'remy-admin-key';
-  const get = () => { try { return localStorage.getItem(KEY) || localStorage.getItem('billback-admin-key') || ''; } catch (e) { return ''; } };
+  const get = () => { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } };
   const set = (v) => { try { localStorage.setItem(KEY, v); } catch (e) {} };
   const url = new URL(location.href);
   if (url.searchParams.has('key')) {
