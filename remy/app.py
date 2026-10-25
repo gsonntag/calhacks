@@ -68,7 +68,7 @@ NUMERIC = {"bill": ("total_charges", "amount_due"), "eob": ("billed", "allowed",
 
 
 def _launch(case: dict, coro=None) -> dict:
-    t = asyncio.create_task(coro or orchestrator.run_case(case))
+    t = asyncio.create_task(coro or orchestrator.run_case(case), name=case["id"])  # named: Stop/Delete find it
     _tasks.add(t)
     t.add_done_callback(_tasks.discard)
     return case
@@ -751,6 +751,73 @@ async def speak(s: Speak):
         voice_id = next((c.get("result", {}).get("brief", {}).get("voice_id") for c in orchestrator.cases.values()
                          if c.get("call_id") == s.call_id), None)
     return Response(await cartesia.tts(s.text, voice_id), media_type="audio/wav")
+
+
+async def _stop_runs(case_id: str) -> None:
+    """Cancel the agents working on one case and drop the approvals they were waiting on."""
+    running = [t for t in _tasks if t.get_name() == case_id and not t.done()]
+    for t in running:
+        t.cancel()
+    if running:
+        await asyncio.wait(running, timeout=5)
+    gate.drop(case_id)
+
+
+def _not_on_a_call(case: dict) -> JSONResponse | None:
+    if case["status"] == "calling":  # the line is open: hang up from the case page first
+        return JSONResponse({"error": "Remy is on a call for this case: end the call first"}, 409)
+    return None
+
+
+@app.post("/api/cases/{case_id}/stop", dependencies=ADMIN)
+async def stop_case(case_id: str):
+    """Stop the agents. A run can't resume mid-step, so the case is left interrupted (as after a restart);
+    once its review finished it can still be called again."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    if busy := _not_on_a_call(case):
+        return busy
+    if case["status"] not in orchestrator.ACTIVE:
+        return JSONResponse({"error": f"nothing is running: the case is {case['status']}"}, 409)
+    await _stop_runs(case_id)
+    orchestrator.set_status(case, "interrupted")
+    bus.emit(case_id, "warning", text="Stopped by you. Nothing more runs on this case unless you call again.")
+    return {"ok": True, "status": case["status"]}
+
+
+class Archive(BaseModel):
+    archived: bool = True
+
+
+@app.post("/api/cases/{case_id}/archive", dependencies=ADMIN)
+async def archive_case(case_id: str, a: Archive | None = None):
+    """Move a case out of the rail's main list (or back). Nothing about the case itself changes."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    case["archived"] = a.archived if a else True
+    orchestrator.save(case)
+    return {"ok": True, "archived": case["archived"]}
+
+
+@app.delete("/api/cases/{case_id}", dependencies=ADMIN)
+async def delete_case(case_id: str):
+    """Stop the case's agents and delete it. Its audit log stays as the audit trail, as with reset."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    if busy := _not_on_a_call(case):
+        return busy
+    await _stop_runs(case_id)
+    orchestrator.cases.pop(case_id, None)
+    orchestrator.banks.pop(case_id, None)
+    caller.sessions.pop(case.get("call_id") or "", None)
+    for call_id in [k for k, v in orchestrator.calls_by_cartesia_id.items() if v == case_id]:
+        del orchestrator.calls_by_cartesia_id[call_id]
+    bus.forget(case_id)
+    events.delete_case(case_id)
+    return {"ok": True}
 
 
 @app.post("/api/reset", dependencies=ADMIN)
