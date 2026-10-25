@@ -484,8 +484,12 @@
   "income": {
     "annual": 40560.0,
     "monthly": 3380.0,
-    "source": "7 Nessie payroll deposits, paid every two weeks (avg $1,560 x 26)",
-    "deposits_counted": 7
+    "source": "7 Nessie payroll deposits, paid every two weeks (avg $1,560 x 26); take-home pay",
+    "deposits_counted": 7,
+    "basis": "take-home",
+    "gross_annual_est": 50700.0,
+    "bills_monthly": 2873.25,
+    "bills_source": "33 regular Nessie payments in the last 90 days (Ashby Ave Rentals, Berkeley Bowl, Chevron San Pablo Ave, East Bay Wireless…)"
   },
   "discount": {
     "fpl_pct": 148.5,
@@ -495,7 +499,14 @@
     "insured": true,
     "oop_pct_income": 10.3,
     "discount_pct": 100.0,
-    "tier_quote": "Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family Income."
+    "tier_quote": "Has out-of-pocket medical expenses in the prior twelve months (whether incurred at UCSF Medical Center or at other medical providers) that exceed 10% of Family Income.",
+    "at_estimated_gross": {
+      "gross_annual_est": 50700.0,
+      "fpl_pct": 185.6,
+      "oop_pct_income": 8.2,
+      "discount_pct": 0,
+      "text": "Based on take-home pay. If the hospital counts gross pay (about $50,700/yr, 186% of the poverty line, medical bills 8% of income), the discount would be 0%, not 100%. Have pay stubs ready."
+    }
   },
   "settle": {
     "discounted_share": 0.0,
@@ -507,11 +518,15 @@
     "refund": 0.0,
     "discount_pct": 100.0,
     "plan_months": 0,
-    "plan_monthly": 0.0
+    "plan_monthly": 0.0,
+    "plan_last": 0.0
   },
   "plan": {
     "months": 0,
     "monthly": 0.0,
+    "last": 0.0,
+    "total": 0.0,
+    "text": "nothing owed",
     "reason": "nothing owed"
   },
   "finance_reconcile": {

@@ -711,6 +711,12 @@ function correctedBalance(m) {
   if (m.done && m.done.now != null) return m.done.now;
   return m.balances.length > 1 ? m.balances[m.balances.length - 1] : null;
 }
+// done, but billing hasn't confirmed the lower balance yet (a hold or an open review is not a reduction)
+function awaitingConfirm(m) {
+  return !!(m.done && m.done.confirmed === false && m.done.expected != null && m.done.expected < m.done.now);
+}
+// the plan exactly as the server wrote it ("17 × $88/mo, then $78.98"); older events only have months × monthly
+const planLabel = (p) => p.text || `${p.months} × ${money(p.monthly)}/mo`;
 function planOf(m) {
   if (m.done && m.done.plan && m.done.plan.months > 0) return m.done.plan;
   return m.plan && m.plan.months > 0 ? m.plan : null;
@@ -787,9 +793,10 @@ function assistantLine(m, ds, tab) {
   // ds 4
   if (m.callDeclined) return { text: `Okay, I didn’t call ${prov}.` + (found ? ' ' + found : ''), chip: 'Voice agent ready' };
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
-  if (planPending) { const p = m.plan || {}; return { text: `The call is done. Want me to set up ${p.months} × ${money(p.monthly)}/mo with ${prov}?`, chip: 'Waiting for you', cls: 'warn' }; }
+  if (planPending) { const p = m.plan || {}; return { text: `The call is done. Want me to set up ${planLabel(p)} with ${prov}?`, chip: 'Waiting for you', cls: 'warn' }; }
   if (!m.done) return { text: `The call is done. ${outcomeText(m)}.`, chip: 'Wrapping up' };
-  const bits = [orig != null && now != null && now !== orig ? `Your ${prov} bill went from ${money(orig)} to ${money(now)}.` : `Your ${prov} balance is ${money(now)}.`];
+  const bits = [awaitingConfirm(m) ? `${prov} still shows ${money(now)}. I expect ${money(m.done.expected)} once they apply the corrections; it isn’t confirmed yet.`
+    : orig != null && now != null && now !== orig ? `Your ${prov} bill went from ${money(orig)} to ${money(now)}.` : `Your ${prov} balance is ${money(now)}.`];
   if (m.done.case_number) bits.push(`Case ${m.done.case_number} is open.`);
   if (m.done.refund) bits.push(`They owe you ${money(m.done.refund)} back.`);
   if (m.followup) bits.push(`I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.`);
@@ -839,8 +846,9 @@ function render() {
   let support = 'Checking…';
   if (m.bill && now != null && (m.review || ds > 1)) {
     const parts = [], saved = orig - now, p = planOf(m);
-    parts.push(saved > 0 ? `Saves ${money(saved)}` : 'Same as the bill');
-    if (p) parts.push(`${p.months} × ${money(p.monthly)}/mo, interest-free`);
+    if (awaitingConfirm(m)) parts.push(`Billing still shows this · expected ${money(m.done.expected)} once the correction lands`);
+    else parts.push(saved > 0 ? `Saves ${money(saved)}` : 'Same as the bill');
+    if (p) parts.push(`${planLabel(p)}, interest-free`);
     if (m.done && m.done.refund) parts.push(`+ ${money(m.done.refund)} back to you`);
     support = parts.join(' · ');
   } else if (m.error) support = '';
@@ -933,12 +941,14 @@ function render() {
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
   const nextV = latestPlan(m, m.round + 1), sc = m.scorecards.filter((x) => x.n === m.round).pop();
   $('finalTitle').textContent = nextV && nextV.next && nextV.next.kind !== 'done' ? 'What’s next' : m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
-  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
+  setText($('finalLine'), m.done ? `${money(m.done.now)}${awaitingConfirm(m) ? ` now, ${money(m.done.expected)} expected` : ''} · ${sc ? sc.summary : outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
-  const refund = m.done && m.done.refund;
-  $('finalNote').hidden = !refund;
+  const refund = m.done && m.done.refund, waiting = awaitingConfirm(m);
+  $('finalNote').hidden = !refund && !waiting;
   $('finalNote').innerHTML = refund
     ? `<b class="text-success">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
+    : waiting ? `Billing hasn’t confirmed a lower balance yet: their records still show ${money(m.done.now)}. Expected ${money(m.done.expected)}`
+        + (m.done.expected_refund ? ` and ${money(m.done.expected_refund)} back to you` : '') + ' once the review or correction lands. We’ll check back.'
     : 'We’ll check back once billing confirms your new balance.';
   const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
   $('followBox').hidden = !(m.done && fu);
@@ -956,7 +966,7 @@ function render() {
   $('planBox').classList.toggle('attn-card', planPending);
   if (showPlan) {
     const p = m.plan;
-    $('planText').innerHTML = `Pay the ${money(p.months * p.monthly)} as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free?`;
+    $('planText').innerHTML = `Pay the ${money(p.total != null ? p.total : p.months * p.monthly)} as <b>${esc(planLabel(p))}</b>, interest-free?`;
     $('planYes').hidden = $('planNo').hidden = $('planYes').parentNode.hidden = !(pa && pa.resolved === undefined);
   }
 
@@ -1246,7 +1256,9 @@ function renderNow(m, ds, tab, a) {
   if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   $('nowMoney').hidden = !live || orig == null;
-  setText($('nowWas'), orig != null ? money(orig) : '');
+  const waiting = awaitingConfirm(m);  // billing still shows the bill's amount: no "was → now" arrow
+  setText($('nowWas'), orig != null && !waiting ? money(orig) : '');
+  $('nowMoney').querySelector('.material-symbols-rounded').style.display = waiting ? 'none' : '';
   setText($('nowOwe'), now != null && (m.review || ds > 1) ? money(now) : 'checking…');
   $('nowOwe').classList.toggle('pending', !(now != null && (m.review || ds > 1)));
   setText($('nowSave'), $('statOweSupport').textContent === 'Checking…' ? '' : $('statOweSupport').textContent);

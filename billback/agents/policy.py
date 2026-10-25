@@ -193,9 +193,18 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     oop = float((case.get("eob") or {}).get("patient_responsibility") or 0) if insured else 0.0
     elig = finance.charity_discount(inc["annual"], case["patient"]["household_size"], tiers,
                                     insured=insured, out_of_pocket=oop)
-    r.step("income", "Estimate your income from payroll deposits", "ok",
-           f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr, household of {elig['household_size']})",
-           [(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}") for t in inc["deposits"][-3:]])
+    bills = finance.monthly_bills(txns, today=finance._d(case["today"]), bill=case["bill"])
+    inc.update(bills_monthly=bills["monthly"], bills_source=bills["source"])
+    gross = finance.gross_check(inc, case["patient"]["household_size"], tiers, insured, oop, elig)
+    elig["gross_check"] = gross
+    r.step("income", "Estimate your income from payroll deposits", "flag" if gross else "ok",
+           f"{elig['fpl_pct']:.0f}% of the poverty line (${inc['annual']:,.0f}/yr take-home, household of "
+           f"{elig['household_size']})" + (f". {gross['text']}" if gross else ""),
+           [(f"Payroll ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}") for t in inc["deposits"][-3:]]
+           + [(f"{t.get('description') or 'Deposit'} ${t['amount']:,.2f} on {t['date'][:10]}", f"bank · txn {t['id']}")
+              for t in inc["other_deposits"][-3:]])
+    if gross:
+        bus.emit(cid, "warning", "policy", text=gross["text"])
     bus.emit(cid, "evidence", "policy", label="Income vs poverty line",
              value=f"{elig['fpl_pct']}% of FPL (household {elig['household_size']}, {elig['fpl_year']} guidelines)",
              source=inc["source"])
@@ -253,7 +262,8 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
                   src(elig["tier"]))
 
     terms = found.get("payment_plan") or {}
-    plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"))
+    plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
+                                monthly_bills=inc["bills_monthly"])
     if plan["months"]:
         r.step("plan", "Payment plan terms", "running")
         rules = [x for x in ("interest-free" if terms.get("interest_free") else "",
@@ -263,13 +273,13 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
                                                    (terms.get("cap_quote"), terms.get("cap_source_url"))) if q]
         r.step("plan", "Payment plan terms", "win" if rules else "ok",
                (f"Their policy: {', '.join(rules)} → " if rules else "")
-               + f"${target:,.0f} as {plan['months']} × ${plan['monthly']:,.0f}/mo, no interest", quotes)
+               + f"${target:,.2f} as {plan['text']}, no interest", quotes)
         for q, qs in quotes:
             bus.emit(cid, "policy_quote", "policy", quote=q, source=qs, live=live, verified=True,
                      origin=got["origin"], matched=True, topic="payment_plan")
         r.finding("plan", "Interest-free payment plan", 0,
                   [f"“{q}”" for q, _ in quotes] or ["Their billing policy allows an interest-free plan."],
-                  quotes[0][1] if quotes else source, value=f"{plan['months']} × ${plan['monthly']:,.0f}/mo")
+                  quotes[0][1] if quotes else source, value=plan["text"])
 
     result = ((f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}") if d else "No discount")
     if st["refund"]:

@@ -175,7 +175,8 @@ function sumHTML(c) {
     <span class="ch-money">${c.current_balance !== c.original
         ? `<span class="from">${money(c.original)} billed</span>${icon('arrow_forward', 'arrow')}<span class="now ${down ? 'down' : ''}">${money(c.current_balance)}</span>`
         : `<span class="now">${money(c.current_balance)}</span><span class="from">billed</span>`}
-      ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}</span>
+      ${c.refund ? `<span class="back">+ ${money(c.refund)} back to you</span>` : ''}
+      ${c.target != null && c.target < c.current_balance && !c.confirmed ? `<span class="from">expected ${money(c.target)}${c.expected_refund ? ` + ${money(c.expected_refund)} back` : ''} once billing confirms</span>` : ''}</span>
     <span class="ch-next">${icon(n.overdue ? 'warning' : 'event')}<span class="nx"><span class="act">Next: ${esc(n.action || '')}</span>${when(n)}</span></span>`;
 }
 
@@ -194,7 +195,7 @@ function detailHTML(c) {
     `<dt>Case number</dt><dd>${c.case_number ? `<b>${esc(c.case_number)}</b>` : '<span class="muted">none yet</span>'}</dd>`,
     `<dt>Last call</dt><dd>${last ? `${day(last.date)} · ${esc(last.rep || 'billing')}` : '<span class="muted">not called yet</span>'}</dd>`,
   ];
-  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${c.plan.months} × ${money(c.plan.monthly)}/mo <span class="muted">interest-free</span></dd>`);
+  if (c.plan && c.plan.months) facts.push(`<dt>Plan</dt><dd>${esc(c.plan.text || `${c.plan.months} × ${money(c.plan.monthly)}/mo`)} <span class="muted">interest-free</span></dd>`);
 
   const calls = c.calls.length ? `<ul class="m3-list">${c.calls.map((x) => `<li class="m3-list-item">
       <span class="li-leading">${icon('call')}</span>

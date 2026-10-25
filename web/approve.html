@@ -47,7 +47,7 @@ let shown = null;
 function detailText(d) {
   if (d.asks) return d.asks.join(' · ') + (d.say ? ' — ' + d.say : '');
   if (d.say) return d.say;
-  if (d.monthly) return `${d.months} payments of $${d.monthly} to ${d.payee}. Interest-free. You can stop anytime.`;
+  if (d.monthly) return `${d.text || `${d.months} payments of $${d.monthly}`} to ${d.payee}: ${d.months} payments in all. Interest-free. You can stop anytime.`;
   return Object.entries(d).map(([k, v]) => `${k}: ${v}`).join(' · ');
 }
 async function poll() {

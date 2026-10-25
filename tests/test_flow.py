@@ -71,7 +71,9 @@ async def test_offline_end_to_end(client):
     await _approve(c, case_id, "planner")
     done = await _wait_for(case_id, lambda e: e["kind"] == "case_done")
     s = done["summary"]
-    assert s["started_at"] == 8700 and s["now"] == 600 and s["refund"] == 0
+    # a review and a hold are not a reduction: billing still shows $8,700 until it confirms the $600
+    assert s["started_at"] == 8700 and s["now"] == 8700 and s["refund"] == 0
+    assert s["expected"] == 600 and s["confirmed"] is False
     assert s["case_number"] == "58213"
     assert (s["plan"]["months"], s["plan"]["monthly"]) == (6, 100.0) and s["plan_created"] is True
 
@@ -92,7 +94,12 @@ async def test_offline_end_to_end(client):
     assert finds["A payment you made was missed"]["saved"] == 500
     assert finds["Interest-free payment plan"]["saved"] == 0 and finds["Interest-free payment plan"]["value"] == "6 × $100/mo"
     assert all(f["proof"] and f["source"] for f in finds.values())
-    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600]
+    assert [e["amount"] for e in hist if e["kind"] == "balance"] == [8700, 600, 8700]
+    assert [e for e in hist if e["kind"] == "balance"][-1]["label"] == "Billing still shows"
+    # the plan in the bank ends: 6 scheduled payments, Nov 2026 to Apr 2027, adding up to the $600
+    made = next(e for e in hist if e["kind"] == "tool_result" and e["tool"] == "create_payment_plan")["result"]
+    assert made["payments"] == 6 and made["first_date"] == "2026-11-15" and made["last_date"] == "2027-04-15"
+    assert made["total"] == 600 and len(made["bill_ids"]) == 6
     assert orchestrator.cases[case_id]["status"] == "done"
     # the "Okay." repeats from the rep all show in the transcript
     assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep") == len(rep_lines)

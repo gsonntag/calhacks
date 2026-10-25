@@ -106,10 +106,13 @@ def test_finance_reproduces_expected(name):
     st = finance.settle(rec["patient_responsibility"], rec["paid"], elig["discount_pct"])
     assert st == exp["settle"]
     cap = exp["real"]["policy"]["payment_plan"].get("max_pct_monthly_income")
-    plan = finance.payment_plan(st["balance"], inc["monthly"], policy_cap_pct=cap)
+    bills = finance.monthly_bills(txns, today=finance._d(exp["as_of"]), bill=case["bill"])
+    assert bills["monthly"] == exp["income"]["bills_monthly"]
+    plan = finance.payment_plan(st["balance"], inc["monthly"], policy_cap_pct=cap, monthly_bills=bills["monthly"])
     assert plan == exp["plan"]
+    assert plan["months"] == 0 or round(plan["monthly"] * (plan["months"] - 1) + plan["last"], 2) == st["balance"]
     assert exp["correct"] == {"balance": st["balance"], "refund": st["refund"], "discount_pct": elig["discount_pct"],
-                              "plan_months": plan["months"], "plan_monthly": plan["monthly"]}
+                              "plan_months": plan["months"], "plan_monthly": plan["monthly"], "plan_last": plan["last"]}
 
 
 @pytest.mark.parametrize("name", NAMES)
@@ -168,7 +171,8 @@ async def test_app_agents_reach_expected_balance(name):
     assert pol["refund"] == exp["correct"]["refund"]
     assert pol["eligibility"]["discount_pct"] == exp["correct"]["discount_pct"]
     assert pol["eligibility"]["insured"] is exp["discount"]["insured"] is billcheck.insured(case)
-    assert (pol["plan"]["months"], pol["plan"]["monthly"]) == (exp["plan"]["months"], exp["plan"]["monthly"])
+    assert pol["plan"] == exp["plan"]
+    assert (pol["eligibility"]["gross_check"] or None) == exp["discount"]["at_estimated_gross"]
 
     # what the Nessie agent reported: exactly the missed payments expected.json lists, never credited ones
     found = {e["key"].split(":", 1)[1]: e for e in bus.history(case["id"])

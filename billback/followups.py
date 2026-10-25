@@ -29,7 +29,8 @@ case. Answer in the first person ("I called..."), in at most 3 short sentences (
 HISTORY JSON. Copy dates exactly as written there (e.g. "Fri Oct 30"); never compute or change a weekday. Mention the
 rep's name and case number when known, what billing promised, the balance after corrections, and the next step with
 its date. "balance_after_corrections" is what the bill should come down to once billing applies everything; only call it
-confirmed if a call has balance_confirmed_by_rep. If the next step is overdue, say so and offer to call again.
+confirmed if a call has balance_confirmed_by_rep. "balance_billing_shows_now" is what billing's records say today (a
+hold or an open review doesn't lower it). If the next step is overdue, say so and offer to call again.
 Never invent facts, amounts or dates. Plain text, no markdown."""
 
 _NUM = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
@@ -221,8 +222,11 @@ def fallback_status(ctx: dict) -> str:
         parts.append(f"I {verb} {hosp} on {fmt(c['date'])}; {who}" + (", ".join(did) if did else "took the details") + ".")
     if ctx.get("target") is not None:
         bal = f"Your balance should go from {money(ctx['original'])} to {money(ctx['target'])}"
-        if ctx.get("refund"):
-            bal += f", and you're owed {money(ctx['refund'])} back"
+        refund = ctx.get("expected_refund", ctx.get("refund"))
+        if refund:
+            bal += f", and you're owed {money(refund)} back"
+        if ctx.get("current_balance") not in (None, ctx["target"]):
+            bal += f"; billing still shows {money(ctx['current_balance'])} until they confirm it"
         parts.append(bal + ".")
     if nxt.get("due"):
         if nxt.get("overdue"):
