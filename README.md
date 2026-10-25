@@ -377,3 +377,6 @@ demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, scen
 policydb/  policies.sqlite3, policies.json, raw/ (Bright Data crawl artifacts), prices/ (real price tables)
 scripts/   seed_nessie crawl_policies build_price_tables build_contacts make_scenario setup_cartesia sim_twilio_stream bench_desk make_demo_docs
 ```
+
+## License
+MIT, see [`LICENSE`](LICENSE). The vendored fonts in `web/fonts/` keep their own licenses (OFL 1.1, Apache 2.0).
