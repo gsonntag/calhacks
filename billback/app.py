@@ -3,6 +3,7 @@ case dashboard (persisted cases, follow-ups, "what's the status?", call again)."
 import asyncio
 import hmac
 import json
+import time
 from contextlib import asynccontextmanager
 
 import anthropic
@@ -13,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import auth, config, events, followups, llm, orchestrator
-from .agents import caller, decide, intake, policy
+from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
 from .integrations import cartesia
 from .events import bus
@@ -243,17 +244,32 @@ async def case_summary(case_id: str):
 
 class Question(BaseModel):
     question: str = "What's the status?"
-    finding: str | None = None  # "Ask" under one finding: answered only from that agent's evidence
+    finding: str | None = None  # one finding: answered only from that agent's evidence
+    agent: str | None = None  # the agent chat: billback | auditor | policy | decide
 
 
 @app.post("/api/cases/{case_id}/ask", dependencies=ADMIN)
 async def ask(case_id: str, q: Question):
     """"What's the status?" answered from the case's stored calls, promises, follow-ups and amounts; with
-    `finding`, the agent that found it answers from its own evidence (changes nothing)."""
+    `finding`, the agent that found it answers from its own evidence (changes nothing). With `agent` (the case
+    page's agent chat): BillBack answers about the whole case and hands plan changes to the planner; the Nessie
+    and Bright Data agents answer from everything they checked; the planner is the planner chat."""
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
     question = q.question.strip()[:500]
+    if q.agent == "billback":
+        out = await _decide_call(orchestrator.ask_billback(case, question or "What's the status?"))
+        orchestrator.save(case)  # a handoff may have made a new plan version
+        return out
+    if q.agent == "decide":
+        if not question:
+            return JSONResponse({"error": "empty message"}, 400)
+        out = await _decide_call(decide.chat(case, question))
+        orchestrator.save(case)
+        return out if isinstance(out, JSONResponse) else {**out, "answer": out["reply"], "agent": "decide", "agent_name": "Planner"}
+    if q.agent:
+        return await _decide_call(decide.answer_agent(case, q.agent, question or "What did you find?"))
     if q.finding:
         return await _decide_call(decide.answer_finding(case, q.finding, question or "Tell me more about this"))
     return await orchestrator.answer_status(case, question or "What's the status?")
@@ -398,6 +414,51 @@ async def call_again(case_id: str, p: CallAgain | None = None):
     case["status"] = "awaiting_call_approval"  # claim it now so a double click can't start two calls
     _launch(case, orchestrator.call_again(case, v))
     return {"ok": True, "case_id": case_id}
+
+
+_stt_off_until = 0.0  # after Cartesia refuses (e.g. 402, no credits), use the browser's transcript for a while
+
+
+@app.post("/api/cases/{case_id}/talk", dependencies=ADMIN)
+async def talk_turn(case_id: str, audio: UploadFile | None = File(None), heard: str = Form("")):
+    """The mic on the Cases page: one spoken turn. Cartesia Ink transcribes the recording; `heard` is the
+    browser's own transcript, used when Cartesia can't. Actions run only after a spoken yes (agents/talk.py),
+    through the same code as the buttons."""
+    global _stt_off_until
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    text, by = "", None
+    if audio is not None and config.CARTESIA_API_KEY and time.time() > _stt_off_until:
+        try:
+            text, by = await cartesia.transcribe(await audio.read(), audio.filename or "speech.webm",
+                                                 audio.content_type or "audio/webm"), "cartesia"
+        except Exception as e:
+            print("Cartesia STT failed, using the browser's transcript:", e)
+            _stt_off_until = time.time() + 600
+    if not text.strip() and heard.strip():
+        text, by = heard.strip(), "browser"
+    text = text.strip()[:500]
+    if not text:
+        return {"heard": "", "heard_by": None, "reply": "Sorry, I didn't catch that. Hold the button and try again.",
+                "did": None, "pending": None}
+
+    async def run(kind: str, opt: dict) -> str | None:
+        if kind == "start_call":
+            out = await plan_approve(case_id, PlanPick(v=opt["v"]))
+        elif kind == "not_now":
+            out = await plan_decline(case_id)
+        elif kind == "call_again":
+            out = await call_again(case_id, CallAgain(v=opt["v"]))
+        else:  # the payment plan after the call
+            out = {"ok": gate.resolve(opt["approval_id"], kind == "approve_payment_plan")}
+        if isinstance(out, JSONResponse):
+            return json.loads(out.body).get("error") or "something went wrong"
+        return None if out.get("ok", True) else "it was already decided"
+
+    out = await talk.turn(case, text, run)
+    orchestrator.save(case)
+    return {"heard": text, "heard_by": by, **out}
 
 
 class Clock(BaseModel):

@@ -682,15 +682,16 @@ def _offline_answer(case: dict, msg: str) -> str:
     return f"{d['path']}. The math: {' '.join(d['math'])}. {d['call']}."
 
 
-async def chat(case: dict, message: str) -> dict:
-    """One planner-chat turn. Questions get an answer; change requests become a new version via the rules."""
+async def chat(case: dict, message: str, via: str = "") -> dict:
+    """One planner-chat turn. Questions get an answer; change requests become a new version via the rules.
+    via="billback": BillBack handed the patient's message over from the agent chat."""
     if not latest(case):
         raise Refused("The plan isn't ready yet")
     msg = message.strip()[:1000]
     p = case["plan"]
     rnd = round_of(case)
-    p["chat"].append({"role": "user", "text": msg, "ts": time.time(), "round": rnd})
-    bus.emit(case["id"], "planner_message", "decide", role="user", text=msg, round=rnd)
+    p["chat"].append({"role": "user", "text": msg, "ts": time.time(), "round": rnd, **({"via": via} if via else {})})
+    bus.emit(case["id"], "planner_message", "decide", role="user", text=msg, round=rnd, **({"via": via} if via else {}))
     kind, reply, patch = "question", "", None
     if llm.available():
         history = [{"role": "assistant" if m["role"] == "planner" else "user",
@@ -750,14 +751,11 @@ can already see. 2-4 short plain sentences, and name the source you used. If the
 checked" and what would be needed. Never invent numbers. Asking never changes anything."""
 
 
-async def answer_finding(case: dict, key: str, question: str) -> dict:
-    f = case.get("facts")
-    if not f or key not in f["findings"]:
-        raise Refused("No such finding")
-    x = f["findings"][key]
-    agent = x["agent"]
-    evidence = {"finding": x, "my_checks": [s for s in f["steps"].values() if s["agent"] == agent]}
-    # the full records behind the checks, so it can explain the numbers (not just repeat the finding)
+def _records(case: dict, agent: str) -> dict:
+    """An app agent's own checks plus the full records behind them, so it can explain the numbers (not just
+    repeat a finding)."""
+    f = case["facts"]
+    evidence = {"my_checks": [s for s in f["steps"].values() if s["agent"] == agent]}
     if agent == "auditor":
         rec = f["rec"]
         evidence.update(bill={k: case["bill"].get(k) for k in ("provider", "account_number", "service_date",
@@ -771,18 +769,59 @@ async def answer_finding(case: dict, key: str, question: str) -> dict:
         evidence.update(policy_quotes=[t.get("quote") for t in pol["policy"].get("tiers") or [] if t.get("quote")],
                         eligibility=pol.get("eligibility"), plan_terms=pol.get("plan_terms"),
                         income={k: (pol.get("income") or {}).get(k) for k in ("annual", "monthly", "source")})
-    answer, src = "", "evidence"
+    return evidence
+
+
+async def _answer(system: str, evidence: dict, question: str, what: str) -> tuple[str, str]:
     if llm.available():
         try:
-            resp = await llm.create(system=ASK_SYSTEM, max_tokens=1500, **_fast(),
+            resp = await llm.create(system=system, max_tokens=1500, **_fast(),
                                     messages=[{"role": "user", "content": f"EVIDENCE (JSON):\n{json.dumps(evidence, default=str)}"
                                                                           f"\n\nPatient asks: {question}"}])
             answer = "".join(b.text for b in resp.content if b.type == "text").strip()
-            src = "claude"
+            if answer:
+                return answer, "claude"
         except Exception as e:
-            print("finding ask LLM error, using evidence:", type(e).__name__)
+            print(f"{what} LLM error, using evidence:", type(e).__name__)
+    return "", "evidence"
+
+
+async def answer_finding(case: dict, key: str, question: str) -> dict:
+    f = case.get("facts")
+    if not f or key not in f["findings"]:
+        raise Refused("No such finding")
+    x = f["findings"][key]
+    agent = x["agent"]
+    answer, src = await _answer(ASK_SYSTEM, {"finding": x, **_records(case, agent)}, question, "finding ask")
     if not answer:
         answer = f"What I found: {' '.join(x['proof'])} Source: {x['source']}."
     sources = [x["source"]] if x.get("source") else []
     bus.emit(case["id"], "finding_qa", agent, finding=key, question=question, answer=answer, sources=sources)
     return {"answer": answer, "agent": agent, "agent_name": AGENTS.get(agent, agent), "sources": sources, "source": src}
+
+
+# ---------------------------------------------------------------- the agent chat: one Review agent, all it checked
+
+AGENT_ASK_SYSTEM = """You are one of BillBack's app agents, answering the patient's question about what you
+checked on their hospital bill. Answer ONLY from the EVIDENCE JSON (all your findings, your own checks with their
+proof, and the records behind them). Answer the actual question and explain the numbers. 2-4 short plain
+sentences, and name the source you used. If the evidence doesn't answer it, say "I don't know from what I
+checked" and which other agent might (BillBack knows the whole case; the planner owns the call plan). Never
+invent numbers. Asking never changes anything."""
+
+
+async def answer_agent(case: dict, agent: str, question: str) -> dict:
+    """The Nessie or Bright Data agent answers from everything it checked (not one finding)."""
+    if agent not in ("auditor", "policy"):
+        raise Refused("No such agent")
+    f = case.get("facts")
+    if not f:
+        raise Refused(f"The {AGENTS[agent]} is still checking. Ask again once the plan is ready.")
+    mine = [x for x in f["findings"].values() if x["agent"] == agent]
+    answer, src = await _answer(AGENT_ASK_SYSTEM, {"my_findings": mine, **_records(case, agent)}, question, "agent ask")
+    if not answer:
+        answer = ("What I found: " + " ".join(f"{x['title']} ({x['value']}): {' '.join(x['proof'])}" for x in mine)
+                  if mine else "I found nothing to correct in what I checked.")
+    sources = list(dict.fromkeys(x["source"] for x in mine if x.get("source")))
+    bus.emit(case["id"], "agent_qa", agent, question=question, answer=answer, sources=sources)
+    return {"answer": answer, "agent": agent, "agent_name": AGENTS[agent], "sources": sources, "source": src}

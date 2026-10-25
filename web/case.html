@@ -273,13 +273,8 @@
   .how ul { margin: 0; padding-left: 18px; }
   .how .agent-lbl { display: inline-block; font: 500 11px/16px var(--md-font); padding: 0 8px; border-radius: 8px; background: var(--md-surface-container-high, var(--md-outline-variant)); color: var(--md-on-surface-variant); margin-left: 6px; vertical-align: 1px; }
   .plan-actions { display: flex; flex-direction: column; gap: 8px; }
-  .planner { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px; border-radius: var(--md-shape-l); background: var(--md-surface-container-low); }
-  .planner-log { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; }
-  .planner-log:empty::before { content: "Ask why the plan is what it is, or tell me what to change. I can’t change facts: for that, use “This is wrong” on a finding in Review."; color: var(--md-on-surface-variant); font: 400 14px/20px var(--md-font); }
-  .planner-form { display: flex; gap: 8px; }
-  .planner-form .m3-input { flex: 1; min-width: 0; }
   .made-v { border: 0; background: none; padding: 0 8px; color: var(--md-primary); font: 500 12px/16px var(--md-font); cursor: pointer; align-self: flex-start; }
-  /* findings: Ask / This is wrong, in place */
+  /* findings: "This is wrong", in place */
   .find-acts { display: flex; flex-wrap: wrap; gap: 4px 8px; }
   .find-acts .m3-btn { min-height: 32px; padding: 0 12px; }
   .find-box { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); }
@@ -288,7 +283,35 @@
   .wrong-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--st-warn); font: 500 12px/16px var(--md-font); }
   .finds li.is-wrong .fl { text-decoration: line-through; text-decoration-color: var(--md-on-surface-variant); }
   .finds li.flash { border-radius: var(--md-shape-m); }
-  .replay .find-acts, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
+  .replay .find-acts, .replay #chatForm, .replay .plan-banner .actions { display: none !important; }
+
+  /* the agent chat: one bubble in the corner; pick who answers (BillBack, the two Review agents, the planner) */
+  .chat-fab { position: fixed; right: 24px; bottom: 24px; z-index: 40; width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer;
+              display: grid; place-items: center; background: var(--md-primary-container); color: var(--md-on-primary-container); box-shadow: var(--md-elev-3); }
+  .chat-fab .material-symbols-rounded { font-size: 28px; }
+  .chat-fab:focus-visible { outline: 3px solid var(--md-primary); outline-offset: 2px; }
+  .chat-panel { position: fixed; right: 24px; bottom: 96px; z-index: 41; width: min(420px, calc(100vw - 32px)); height: min(620px, calc(100dvh - 140px));
+                display: flex; flex-direction: column; border-radius: var(--md-shape-xl); background: var(--md-surface-container-low);
+                border: 1px solid var(--md-outline-variant); box-shadow: var(--md-elev-3); overflow: hidden; }
+  .chat-panel[hidden] { display: none; }
+  .chat-head { display: flex; align-items: center; gap: 8px; padding: 12px 8px 4px 20px; }
+  .chat-head h2 { margin: 0; flex: 1; font: 500 18px/24px var(--md-font); }
+  .chat-who { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 16px 12px; border-bottom: 1px solid var(--md-outline-variant); }
+  .chat-who .m3-chip { min-height: 32px; height: auto; }
+  .chat-who .m3-chip[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
+  .chat-log { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+  .chat-intro { display: flex; flex-direction: column; gap: 6px; margin: 0 0 4px; padding: 0; list-style: none; color: var(--md-on-surface-variant); font: 400 13px/18px var(--md-font); }
+  .chat-intro b { font-weight: 500; }
+  .chat-intro li.on { color: var(--md-on-surface); }
+  .chat-intro .note { margin-top: 2px; }
+  .chat-note { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; }
+  .chat-src { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); padding: 0 8px; overflow-wrap: anywhere; }
+  .chat-form { display: flex; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid var(--md-outline-variant); }
+  .chat-form .m3-input { flex: 1; min-width: 0; }
+  @media (max-width: 640px) {
+    .chat-fab { right: 16px; bottom: 16px; }
+    .chat-panel { right: 16px; left: 16px; bottom: 84px; width: auto; height: calc(100dvh - 160px); }
+  }
   @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
 </head>
@@ -371,18 +394,8 @@
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail2" hidden>
-          <!-- the Decide agent: big while it works, then a slim bar that opens the planner chat -->
+          <!-- the Decide agent: big while it works, then a slim bar (talk to it in the agent chat) -->
           <div id="decideBox"></div>
-          <div id="plannerSlotPlan">
-          <section class="planner" id="plannerBox" hidden aria-label="Talk to the planner">
-            <div class="planner-log" id="plannerLog" aria-live="polite"></div>
-            <form class="planner-form" id="plannerForm">
-              <input class="m3-input" id="plannerInput" autocomplete="off" maxlength="1000"
-                     placeholder="Ask why, or tell me what to change (“refund first”, “I can do $150/mo”)" aria-label="Message the planner">
-              <button type="submit" class="m3-btn filled" id="plannerSend">Send</button>
-            </form>
-          </section>
-          </div>
           <div id="planArea"></div>
           <div class="plan-actions" id="planActions" hidden>
             <div class="actions">
@@ -454,7 +467,6 @@
           <div class="next-area" id="nextWrap" hidden>
             <div id="scoreBox"></div>
             <div id="nextDecideBox"></div>
-            <div id="plannerSlotNext"></div>
             <div id="nextArea"></div>
             <div class="plan-actions" id="nextActions" hidden>
               <div class="actions">
@@ -484,6 +496,23 @@
     <span class="m3-status" id="asstChip">Voice agent ready</span>
   </section>
 </main>
+
+<!-- the agent chat: the only place to ask any agent anything (it replaced Ask on findings and the planner chat) -->
+<button type="button" class="chat-fab" id="chatFab" aria-label="Ask BillBack" aria-expanded="false" aria-controls="chatPanel" hidden>
+  <span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span>
+</button>
+<section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
+  <div class="chat-head">
+    <h2 id="chatTitle">Ask BillBack</h2>
+    <button type="button" class="m3-icon-btn" id="chatClose" aria-label="Close"><span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+  </div>
+  <div class="chat-who" id="chatWho" role="radiogroup" aria-label="Who answers"></div>
+  <div class="chat-log" id="chatLog" aria-live="polite"></div>
+  <form class="chat-form" id="chatForm">
+    <input class="m3-input" id="chatInput" autocomplete="off" maxlength="500" aria-label="Your message">
+    <button type="submit" class="m3-btn filled" id="chatSend">Send</button>
+  </form>
+</section>
 
 <script src="/auth.js"></script>
 <script>
@@ -516,7 +545,7 @@ function blankModel() {
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
            warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1,
-           plans: [], chat: [], corrections: {}, qa: {}, approvedV: null, flash: null, scorecards: [] };
+           plans: [], chat: [], corrections: {}, qa: [], approvedV: null, flash: null, scorecards: [] };
 }
 const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
@@ -593,7 +622,7 @@ function apply(m, e) {
     case 'planner_message': m.chat.push(e); break;
     case 'correction': m.corrections[e.correction.finding] = { ...e.correction, v: e.v }; break;
     case 'correction_undone': delete m.corrections[e.finding]; break;
-    case 'finding_qa': (m.qa[e.finding] ||= []).push(e); break;
+    case 'finding_qa': case 'agent_qa': m.qa.push(e); break;  // the agent chat (finding_qa: older per-finding Ask)
   }
 }
 
@@ -897,7 +926,7 @@ function render() {
 
   // 2 · Review: a column per app agent: its live panel, then what it found
   const panels = reviewAgents(m), finds = findingsOf(m), fk = state.active + '-finds';
-  const acts = { live: state.active !== 'replay', ask: !!m.plans.length, correct: canCorrect(m) };
+  const acts = { plan: !!m.plans.length, correct: canCorrect(m) };
   setHTMLKeep($('agents'), panels.map((k) => {
     const mine = finds.filter((f) => f.agent === k).map((f) => {
       const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
@@ -994,12 +1023,13 @@ function render() {
   $('asstChip').className = 'm3-status' + (a.cls ? ' ' + a.cls : '') + (a.live ? ' live' : '');
   $('asstWave').classList.toggle('live', !!a.live);
   renderNow(m, ds, tab, a);
+  renderAgentChat(m);
 }
 
 // ---------- step 3: the plan (agents/decide.py; format: docs/plan-format.md) ----------
 function uiOf(key) {
   return (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1, finds: new Set(), box: {}, drafts: {}, busy: {}, err: {},
-                              planV: null, nextV: null, planChatOpen: false, nextChatOpen: false, planTermOpen: false, nextTermOpen: false,
+                              planV: null, nextV: null, planTermOpen: false, nextTermOpen: false,
                               showAll: false, howOpen: false,
                               agentOpen: {}, lineOpen: new Set() });
 }
@@ -1034,7 +1064,7 @@ function findingHTML(f, m, ui, isNew, acts) {
   const open = ui.finds.has(f.key) || !!box;
   const flash = ui.flashFind === f.key && Date.now() < ui.flashUntil ? ' flash' : '';
   const err = ui.err[f.key] ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.err[f.key])}</p>` : '';
-  const buttons = !acts.ask ? '' : `<div class="find-acts">
+  const buttons = !acts.plan ? '' : `<div class="find-acts">
       ${c ? (acts.correct ? `<button type="button" class="m3-btn text" data-act="undo" data-id="${esc(c.id)}">${sym('undo')}Undo “This is wrong”</button>` : '')
           : acts.correct ? `<button type="button" class="m3-btn text" data-act="wrong" data-key="${k}">${sym('flag')}This is wrong</button>` : ''}</div>`;
   const wrongBox = box === 'wrong' && !c ? `<div class="find-box"><p class="body-m" style="margin:0">What’s wrong? (optional) I’ll leave this finding out and redo the plan.</p>
@@ -1116,44 +1146,22 @@ function legacyPlanHTML(m) {
       `<li><span class="n">${i + 1}</span><span class="tx"><span>${esc(q)}</span></span></li>`).join('')}</ol></div></div>`;
 }
 
-// The Decide agent's panel for a round: big while it works; then a slim bar ("Talk to the planner ▸")
+// The Decide agent's panel for a round: big while it works; then a slim bar (you talk to it in the agent chat)
 function decideHTML(m, ui, sec) {
-  const r = secRound(m, sec), key = decKey(r), cur = latestPlan(m, r), busy = deciding(m, r), replay = state.active === 'replay';
+  const r = secRound(m, sec), key = decKey(r), cur = latestPlan(m, r), busy = deciding(m, r);
   if (!m.agent[key]) return '';
-  const termOpen = ui[sec + 'TermOpen'], chatOpen = ui[sec + 'ChatOpen'];
+  const termOpen = ui[sec + 'TermOpen'];
   const term = `<div class="terms">${renderAgent(key, m, busy || termOpen)}</div>`;
   if (busy || !cur) return term;  // the plan below says "filling in…" until it's done
-  const n = plansOf(m, r).length, chatOk = !replay || m.chat.some((c) => (c.round || 1) === r);
+  const n = plansOf(m, r).length;
   return `<div class="slim-bar"><span class="who"><b>Decide agent</b><small>Done · plan v${cur.v}${n > 1 ? ` (${n} versions)` : ''}</small></span>
-      <button type="button" class="m3-btn text" data-act="term" data-sec="${sec}">${termOpen ? 'Hide' : 'Show'} its checklist</button>
-      ${chatOk ? `<button type="button" class="m3-btn tonal" data-act="chat" data-sec="${sec}" aria-expanded="${!!chatOpen}">Talk to the planner ${chatOpen ? '▾' : '▸'}</button>` : ''}</div>`
+      <button type="button" class="m3-btn text" data-act="term" data-sec="${sec}">${termOpen ? 'Hide' : 'Show'} its checklist</button></div>`
     + (termOpen ? term : '');
-}
-
-// The planner chat sits under the slim bar of the plan it changes: step 3's, or step 5's once that exists
-function renderChat(m, ui) {
-  const sec = chatSec(m), r = secRound(m, sec), cur = latestPlan(m, r);
-  const slot = $(sec === 'next' ? 'plannerSlotNext' : 'plannerSlotPlan');
-  if ($('plannerBox').parentNode !== slot) slot.appendChild($('plannerBox'));
-  if (state.active === 'replay' && m.chat.length) ui.planChatOpen = true;  // the replay plays the recorded chat back
-  $('plannerBox').hidden = !(cur && ui[sec + 'ChatOpen']);
-  const log = m.chat.filter((c) => (c.round || 1) === r).map((c) => {
-    const me = c.role === 'user';
-    return `<div class="bubble-wrap ${me ? 'me' : 'them'}"><span class="bubble-who">${me ? 'You' : 'Decide agent'}</span><span class="m3-bubble ${me ? 'me' : 'them'}">${esc(c.text)}</span>
-      ${c.v ? `<button type="button" class="made-v" data-act="ver" data-sec="${sec}" data-v="${c.v}">→ plan v${c.v}</button>` : ''}</div>`;
-  }).join('') + (ui.chatBusy ? '<div class="bubble-wrap them"><span class="bubble-who">Decide agent</span><span class="m3-bubble them">…</span></div>' : '')
-    + (ui.chatErr ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.chatErr)}</p>` : '');
-  const n = log.length;
-  const grew = $('plannerLog')._n !== n;
-  setHTML($('plannerLog'), log);
-  if (grew) { $('plannerLog')._n = n; $('plannerLog').scrollTop = 1e6; }
-  $('plannerInput').disabled = $('plannerSend').disabled = !!ui.chatBusy;
 }
 
 function renderPlan(m, ds, ui) {
   const cur = latestPlan(m), busy = deciding(m);
   setHTML($('decideBox'), decideHTML(m, ui, 'plan'));
-  renderChat(m, ui);
 
   // the plan
   if (cur && !busy) setHTML($('planArea'), planHTML(m, ui, 'plan'));
@@ -1439,11 +1447,10 @@ document.querySelector('main').addEventListener('click', async (e) => {
     if (ui.lineOpen.has(key)) ui.lineOpen.delete(key); else ui.lineOpen.add(key);
     render();
   }
-  else if (act === 'chat') { const k = (b.dataset.sec || 'plan') + 'ChatOpen'; ui[k] = !ui[k]; render(); if (ui[k]) $('plannerInput').focus(); }
   else if (act === 'ver') {
     const sec = b.dataset.sec || 'plan', m = model(state.active), cur = latestPlan(m, secRound(m, sec)), v = +b.dataset.v;
     ui[sec + 'V'] = cur && v === cur.v ? null : v;
-    if (b.closest('#plannerLog')) showPlan(sec); else render();
+    render();
   } else if (act === 'more') { ui.showAll = !ui.showAll; render(); }
   else if (act === 'restore') {
     if (state.active === 'replay') return;
@@ -1478,17 +1485,98 @@ document.querySelector('main').addEventListener('submit', async (e) => {
   } catch (err) { ui.err[key] = err.message; }
   finally { delete ui.busy[dk]; render(); }
 });
-$('plannerForm').addEventListener('submit', async (e) => {
+
+// ---------- the agent chat (bubble in the corner): one log per case, you pick who answers ----------
+const CHAT_AGENTS = [
+  { k: 'billback', name: 'BillBack', what: 'knows the whole case: what was found, the plan, the calls and what’s next. Start here.',
+    hint: 'Ask anything about your case' },
+  { k: 'auditor', name: 'Nessie agent', what: 'checked your own records: your bank (Capital One Nessie), the bill and your insurance statement.',
+    hint: 'Ask about your payments, bill or insurance' },
+  { k: 'policy', name: 'Bright Data agent', what: 'checked public rules: the hospital’s own financial-assistance policy and payment-plan terms.',
+    hint: 'Ask about the hospital’s policy' },
+  { k: 'decide', name: 'Planner', what: 'built your call plan. Ask why, or tell it what to change (“I can do $150/mo”) and it makes a new version.',
+    hint: 'Ask why, or tell it what to change' },
+];
+const CHAT_NAME = Object.fromEntries(CHAT_AGENTS.map((a) => [a.k, a.name]));
+const chat = { open: false, agent: 'billback', busy: false, err: '', pending: null };
+// The Review agents and the planner answer from the saved plan facts, so they wait for the plan
+const chatReady = (m, k) => k === 'billback' || !!m.plans.length;
+
+function chatEntries(m) {
+  const out = [];
+  for (const e of m.qa) {
+    const f = e.finding && m.findings.find((x) => x.key === e.finding);
+    out.push({ ts: e.ts, me: true, text: (f ? `About “${f.title}”: ` : '') + e.question, spoken: e.voice });
+    // a whole-agent answer names its own source in the text; listing every source it has would be noise
+    out.push({ ts: e.ts, who: e.agent, text: e.answer, sources: e.finding ? e.sources : [] });
+  }
+  for (const c of m.chat) {
+    out.push(c.role === 'user' ? { ts: c.ts, me: true, text: c.text, via: c.via, spoken: c.via === 'voice' }
+      : { ts: c.ts, who: 'decide', text: c.text, v: c.v, round: c.round || 1 });
+  }
+  return out.sort((a, b) => a.ts - b.ts);
+}
+
+function renderAgentChat(m) {
+  const replay = state.active === 'replay', hasCase = !!state.active && (!!m.bill || replay);
+  $('chatFab').hidden = !hasCase;
+  $('chatFab').setAttribute('aria-expanded', String(chat.open && hasCase));
+  $('chatFab').firstElementChild.textContent = chat.open && hasCase ? 'close' : 'ecg_heart';
+  $('chatPanel').hidden = !(chat.open && hasCase);
+  if ($('chatPanel').hidden) return;
+  if (!chatReady(m, chat.agent)) chat.agent = 'billback';
+  setHTML($('chatWho'), CHAT_AGENTS.map((a) => {
+    const ok = chatReady(m, a.k), on = a.k === chat.agent;
+    return `<button type="button" class="m3-chip${on ? ' selected' : ''}" role="radio" aria-checked="${on}" data-agent="${a.k}"${ok ? ''
+      : ' aria-disabled="true" title="Available once the plan is ready"'}>${a.name}</button>`;
+  }).join(''));
+  const intro = `<ul class="chat-intro">${CHAT_AGENTS.map((a) => `<li class="${a.k === chat.agent ? 'on' : ''}"><b>${a.name}</b> ${esc(a.what)}</li>`).join('')}
+    <li class="note">Nothing here changes facts. If a finding is wrong, use “This is wrong” on it in Review.</li></ul>`;
+  const items = chatEntries(m);
+  // what you just sent shows at once; the agent's own record of it replaces it when it arrives
+  const p = chat.pending, echoed = p && (m.chat.some((c) => c.role === 'user' && c.text === p.text && c.ts >= p.ts - 1)
+    || m.qa.some((e) => e.question === p.text && e.ts >= p.ts - 1));
+  if (p && !echoed) items.push({ me: true, text: p.text });
+  const log = items.map((x) => x.me
+    ? `<div class="bubble-wrap me"><span class="bubble-who">You${x.spoken ? ' · by voice' : ''}</span><span class="m3-bubble me">${esc(x.text)}</span>${x.via ? '<span class="chat-note">BillBack passed this to the planner</span>' : ''}</div>`
+    : `<div class="bubble-wrap them"><span class="bubble-who">${esc(CHAT_NAME[x.who] || agentName(m, x.who))}</span><span class="m3-bubble them">${esc(x.text)}</span>
+        ${(x.sources || []).length ? `<span class="chat-src">Source: ${x.sources.map(srcHTML).join(' · ')}</span>` : ''}
+        ${x.v ? `<button type="button" class="made-v" data-v="${x.v}" data-sec="${x.round > m.round ? 'next' : 'plan'}">→ plan v${x.v}</button>` : ''}</div>`).join('')
+    + (chat.busy ? `<div class="bubble-wrap them"><span class="bubble-who">${esc(CHAT_NAME[chat.agent])}</span><span class="m3-bubble them">…</span></div>` : '')
+    + (chat.err ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(chat.err)}</p>` : '');
+  const grew = $('chatLog')._n !== items.length + (chat.busy ? 1 : 0);
+  setHTML($('chatLog'), intro + log);
+  if (grew) { $('chatLog')._n = items.length + (chat.busy ? 1 : 0); $('chatLog').scrollTop = 1e6; }
+  $('chatInput').placeholder = CHAT_AGENTS.find((a) => a.k === chat.agent).hint;
+  $('chatInput').disabled = $('chatSend').disabled = chat.busy;
+}
+
+function setChatOpen(open) {
+  chat.open = open; render();
+  if (open) { $('chatLog').scrollTop = 1e6; $('chatInput').focus(); } else $('chatFab').focus();
+}
+$('chatFab').addEventListener('click', () => setChatOpen(!chat.open));
+$('chatClose').addEventListener('click', () => setChatOpen(false));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && chat.open) setChatOpen(false); });
+$('chatWho').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-agent]'); if (!b || b.getAttribute('aria-disabled') === 'true') return;
+  chat.agent = b.dataset.agent; chat.err = ''; render(); $('chatInput').focus();
+});
+$('chatLog').addEventListener('click', (e) => {
+  const b = e.target.closest('.made-v'); if (!b) return;
+  if (matchMedia('(max-width: 640px)').matches) chat.open = false;  // on a phone the panel covers the plan
+  showPlan(b.dataset.sec);
+});
+$('chatForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const msg = $('plannerInput').value.trim(), id = state.active;
-  if (!msg || !id || id === 'replay') return;
-  const ui = uiOf(id);
-  ui.chatBusy = true; ui.chatErr = ''; $('plannerInput').value = ''; render();
+  const msg = $('chatInput').value.trim(), id = state.active;
+  if (!msg || !id || id === 'replay' || chat.busy) return;
+  chat.busy = true; chat.err = ''; chat.pending = { text: msg, ts: Date.now() / 1000 }; $('chatInput').value = ''; render();
   try {
-    const r = await post(`/api/cases/${id}/planner`, { message: msg });
-    if (r.v) { ui.chatBusy = false; showPlan(chatSec(model(id))); }  // a new version: scroll to the plan, its changed lines flash
-  } catch (err) { ui.chatErr = err.message; $('plannerInput').value = msg; }
-  finally { ui.chatBusy = false; render(); $('plannerInput').focus(); }
+    const r = await post(`/api/cases/${id}/ask`, { question: msg, agent: chat.agent });
+    if (r.v) showPlan(chatSec(model(id)));  // a new version: scroll to the plan, its changed lines flash
+  } catch (err) { chat.err = err.message; $('chatInput').value = msg; }
+  finally { chat.busy = false; chat.pending = null; render(); $('chatInput').focus(); }
 });
 $('planYes').addEventListener('click', () => decide('planner', true));
 $('planNo').addEventListener('click', () => decide('planner', false));
