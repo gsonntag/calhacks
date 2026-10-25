@@ -979,6 +979,13 @@
       "description": "ATM WITHDRAWAL BERKELEY CA"
     },
     {
+      "type": "purchase",
+      "date": "2026-03-11",
+      "amount": 75.0,
+      "merchant": "Kids First Pediatrics",
+      "description": "Urgent visit copay"
+    },
+    {
       "type": "deposit",
       "date": "2026-03-13",
       "amount": 1558.31,
@@ -1567,6 +1574,13 @@
     },
     {
       "type": "purchase",
+      "date": "2026-07-24",
+      "amount": 214.5,
+      "merchant": "Bay Area Orthopedic Clinic",
+      "description": "Splint and brace"
+    },
+    {
+      "type": "purchase",
       "date": "2026-07-25",
       "amount": 96.92,
       "merchant": "POS DEBIT BERKELEY BOWL",
@@ -1585,6 +1599,13 @@
       "amount": 101.45,
       "merchant": "Grocery Outlet Berkeley",
       "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-30",
+      "amount": 150.0,
+      "merchant": "Bay Area Orthopedic Clinic",
+      "description": "Follow-up visit copay"
     },
     {
       "type": "deposit",
@@ -1625,6 +1646,13 @@
       "amount": 27.33,
       "merchant": "POS DEBIT GOLDEN BEAR PHARMACY",
       "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-05",
+      "amount": 185.0,
+      "merchant": "East Bay Imaging Center",
+      "description": "X-ray copay"
     },
     {
       "type": "purchase",
@@ -1680,6 +1708,13 @@
       "amount": 85.0,
       "merchant": "East Bay Wireless",
       "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-19",
+      "amount": 38.6,
+      "merchant": "WALGREENS #2291",
+      "description": "Prescription refill"
     },
     {
       "type": "purchase",
@@ -1755,6 +1790,13 @@
       "amount": 2100.0,
       "merchant": "Ashby Ave Rentals",
       "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-02",
+      "amount": 150.0,
+      "merchant": "Bay Area Orthopedic Clinic",
+      "description": "Follow-up visit copay"
     },
     {
       "type": "purchase",
@@ -1854,6 +1896,13 @@
     },
     {
       "type": "purchase",
+      "date": "2026-09-23",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
+    },
+    {
+      "type": "purchase",
       "date": "2026-09-24",
       "amount": 101.19,
       "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
@@ -1913,6 +1962,13 @@
       "amount": 14.68,
       "merchant": "GOLDEN BEAR PHARMACY #245",
       "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-07",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
     },
     {
       "type": "deposit",

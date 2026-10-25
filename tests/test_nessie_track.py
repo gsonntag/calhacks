@@ -270,3 +270,16 @@ def test_demo_cases_are_messy_too():
         assert not any(c["bill"]["account_number"] in t.get("description", "") for t in c["transactions"])
     hospital = [t for t in rosa["transactions"] if billcheck.is_payment_to(t, rosa["bill"]["provider"])]
     assert [(t["merchant"], t["amount"]) for t in hospital] == [("SUTTER HEALTH PYMT", 500.0)]
+
+
+@pytest.mark.parametrize("case", [orchestrator.demo_case("freecare"), scenario("marcus-real")],
+                         ids=["case_freecare", "marcus-real"])
+def test_marcus_clears_the_high_cost_bar_even_on_estimated_gross_pay(case):
+    """Marcus leads the demo: his share + 12 months of bank medical bills must stay over UCSF's 10% bar even if
+    the hospital counts gross pay (master's finance.gross_check estimates it as take-home / 0.80), with room."""
+    txns = LocalMirror(case).txns
+    today = finance._d("2026-10-25")
+    inc = finance.income(txns, today=today)
+    med = finance.medical_spending(txns, case["bill"], case["eob"], today=today)
+    oop = float(case["eob"]["patient_responsibility"]) + med["total"]
+    assert oop / (inc["annual"] / 0.80) >= 0.11

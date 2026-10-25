@@ -17,7 +17,7 @@ and the PDFs when reportlab is available. Runs offline with fixed seeds; re-runn
 | Scenario | Hospital | Patient | Planted errors | Correct result |
 |---|---|---|---|---|
 | `rosa-real` | CPMC Van Ness | insured, 1 person, 229% FPL | insurance not applied, $500 payment not credited, IV push billed twice | $15,414.33 billed → $1,574.98, no discount, 18 × $88/mo |
-| `marcus-real` | UCSF | HDHP, 3 people, 149% FPL | none (the policy is the win) | $4,174.43 → $0 free care (out-of-pocket 12.2% of income: this bill + $779 of pharmacy, pediatrician and PT bills in his bank) |
+| `marcus-real` | UCSF | HDHP, 3 people, 149% FPL | none (the policy is the win) | $4,174.43 → $0 free care (out-of-pocket 12.2% of income: this bill + $1,682 of pediatrician, pharmacy, orthopedic, imaging and PT bills in his bank; 11.5% even on estimated gross pay) |
 | `dana-altabates-refund` | Alta Bates Summit | insured, 2 people, 181% FPL | refund owed ($750 credited payments), gym double charge | $3,646.20 → $0 free care + $750 refund |
 | `amara-kaiser-uninsured` | Kaiser Oakland | uninsured, 2 people, 290% FPL | ankle X-ray above posted price, foot X-ray twice, $300 not credited, streaming double charge | $6,678.57 → $5,098.57 → 50% off → $2,399.28, 12 × $200/mo |
 | `lena-johnmuir` | John Muir Walnut Creek | insured, 1 person, 508% FPL | insurance not applied, CT angiogram above posted price, dry-cleaner double charge | $27,619.57 → $967.52, no discount, 6 × $162/mo |
