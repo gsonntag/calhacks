@@ -372,8 +372,8 @@
             <div class="m3-card plan" id="planBox" hidden>
               <p class="body-l" id="planText"></p>
               <div class="actions">
-                <button type="button" class="m3-btn filled" id="planYes">Set up the plan</button>
-                <button type="button" class="m3-btn outlined" id="planNo">No thanks</button>
+                <button type="button" class="m3-btn filled" id="planYes">Yes</button>
+                <button type="button" class="m3-btn text" id="planNo">No</button>
               </div>
             </div>
           </div>
@@ -677,6 +677,8 @@ function render() {
   // ---- TOP: headline, stats, what needs you ----
   const [h, sub] = headline(m, ds, draft, tab);
   setText($('caseTitle'), h); setText($('caseSub'), sub);
+  const asking = !!tab && !draft && !m.error && (ds === 2 || planPending);
+  $('caseTitle').hidden = asking;
   $('uploadPanel').hidden = !draft;
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   setText($('statOrig'), orig != null ? money(orig) : '—');
@@ -756,7 +758,7 @@ function render() {
 
   // 3 · Approval
   setText($('approveMeta'), ds > 2 || m.callDeclined ? (m.callDeclined ? 'You chose not to call yet' : `Accepted · ${m.approvedAt}`)
-    : ds === 2 ? 'Waiting on you · see above' : 'You decide before BillBack calls');
+    : ds === 2 ? '' : 'You decide before BillBack calls');
   $('approveProvider').textContent = prov;
   setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
   setHTML($('askDone'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
@@ -803,7 +805,7 @@ function render() {
   $('finalWas').textContent = m.bill ? money(m.bill.amount_due) : '';
   $('finalOutcome').textContent = m.error ? 'Something went wrong: ' + m.error : outcomeText(m);
   $('finalTitle').textContent = m.followup || m.round > 1 ? 'Resolved · follow-up' : 'Resolved';
-  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${outcomeText(m)}` : planPending ? 'Payment plan waiting on you · see above'
+  setText($('finalLine'), m.done ? `${money(m.done.now)} · ${outcomeText(m)}` : planPending ? ''
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund;
   $('finalNote').hidden = !refund;
@@ -818,19 +820,14 @@ function render() {
     $('followPromised').textContent = lastCall && lastCall.promised.length
       ? `${lastCall.rep || 'Billing'} promised: ${lastCall.promised.join('; ')}${lastCall.timeframe_text ? ' (' + lastCall.timeframe_text + ')' : ''}.` : '';
   }
-  const showPlan = m.plan && m.plan.months > 0;
+  const showPlan = m.plan && m.plan.months > 0 && planPending;
   $('planBox').hidden = !showPlan;
   const slot = planPending ? $('planSlotTop') : $('planSlotFinal');
   if ($('planBox').parentNode !== slot) slot.appendChild($('planBox'));
   $('planBox').classList.toggle('attn-card', planPending);
   if (showPlan) {
     const p = m.plan;
-    $('planText').innerHTML = m.planDecided === true
-      ? (!m.planResult ? 'Saving the plan to your bank…'
-        : m.planResult.error ? `Couldn't save the plan to your bank. You can set up <b>${p.months} × ${money(p.monthly)}/mo</b> yourself.`
-        : `✓ Plan saved: <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free. ${esc(p.reason || '')}`)
-      : m.planDecided === false ? 'No plan set up. You can pay the balance whenever you’re ready.'
-      : `Pay what's left as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free? ${esc(p.reason || '')}`;
+    $('planText').innerHTML = `Pay the ${money(p.months * p.monthly)} as <b>${p.months} × ${money(p.monthly)}/mo</b>, interest-free?`;
     $('planYes').hidden = $('planNo').hidden = $('planYes').parentNode.hidden = !(pa && pa.resolved === undefined);
   }
 
@@ -871,6 +868,7 @@ function renderNow(m, ds, draft, tab, a) {
   $('nowText').hidden = !live;
   setText($('nowStep'), !live ? '' : m.done && !m.error ? 'Done' : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
   $('nowDot').className = 'now-dot ' + (!live ? 'off' : m.error ? 'error' : m.done ? 'success' : a.cls === 'success' || a.live ? 'success live' : 'warn live');
+  $('nowText').hidden = !live || $('caseTitle').hidden || !!(m.done && !m.error);  // done: the Next box says it
   if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   $('nowMoney').hidden = !live || orig == null;
