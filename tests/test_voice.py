@@ -196,6 +196,17 @@ async def test_twiml_app_voice_url(api):
     assert 'url="wss://pub.example/voice/twilio/stream"' in r.text and f'value="{leg.token}"' in r.text
 
 
+async def test_unsigned_twiml_fetch_needs_token_and_call_sid(api):
+    leg = calls.register(media.Leg("c1", voices.default()))
+    leg.call_sid = "CA42"  # what Twilio returned when we placed the call
+    path = f"/voice/twilio/agent?token={leg.token}"
+    assert (await api.post(path, data={"CallSid": "CA99"})).status_code == 403                    # another call
+    assert (await api.post("/voice/twilio/agent?token=guess", data={"CallSid": "CA42"})).status_code == 403
+    assert (await api.post(path, data={"CallSid": "CA42"}, headers={"X-Twilio-Signature": "forged"})).status_code == 403
+    r = await api.post(path, data={"CallSid": "CA42"})                                             # unsigned, both match
+    assert r.status_code == 200 and f'value="{leg.token}"' in r.text
+
+
 async def test_voices_routes(api):
     r = (await api.get("/api/voices")).json()
     assert any(v["accent"] == "Indian English" for v in r["voices"]) and r["default"] == config.CARTESIA_VOICE_ID
