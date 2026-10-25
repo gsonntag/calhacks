@@ -33,6 +33,11 @@ def money(x: float) -> str:
     return f"${x:,.0f}"
 
 
+def exact(x: float) -> str:
+    """Cents when there are any ($9,952.70), whole dollars otherwise ($400): for math that has to add up."""
+    return f"${x:,.2f}" if round(x, 2) != round(x) else f"${x:,.0f}"
+
+
 # ---------------------------------------------------------------- saved facts
 
 def save_facts(case: dict, audit: dict, pol: dict) -> dict:
@@ -191,7 +196,8 @@ def compute(case: dict) -> dict:
                            "source": f"bank · txn {p['id']}", "finding": f"auditor:paid-{p['id']}"})
     math_lines.append({"label": "You owe", "amount": owed, "total": True})
     if d:
-        math_lines.append({"label": "Free care under their policy" if d == 100 else f"{d:.0f}% discount under their policy",
+        math_lines.append({"label": f"Free care: your {money(share)} share written off" if d == 100
+                           else f"{d:.0f}% discount under their policy",
                            "amount": -round(owed - target + refund, 2), "source": pol.get("source") or "",
                            "finding": "policy:discount"})
         math_lines.append({"label": "They owe you back" if refund else "After the discount",
@@ -220,10 +226,11 @@ def compute(case: dict) -> dict:
             paid, findings=[f"auditor:paid-{p['id']}" for p in payments])
     if d:
         what = "free care" if d == 100 else f"the {d:.0f}% charity-care discount"
-        ask("discount", f"Ask for {what} under their own policy, bringing the bill to {money(target)}",
+        effect = (f"brings the {money(owed)} you owe to {money(target)}" + (f", and {money(refund)} back" if refund else ""))
+        ask("discount", f"Ask for {what} under their own policy: it {effect}",
             f"Request a financial-assistance review under the hospital's own policy: the patient qualifies for "
             f"{'free care' if d == 100 else f'a {d:.0f}% discount'}, which brings the balance to {money(target)}. Quote the policy.",
-            owed - target, findings=["policy:discount"])
+            owed - target, value=f"{money(owed)} owed → {money(target)}", findings=["policy:discount"])
         if refund:
             ask("refund", f"Get the {money(refund)} you overpaid refunded",
                 f"Ask for the {money(refund)} the patient already paid to be refunded once the assistance is applied.",
@@ -257,7 +264,7 @@ def compute(case: dict) -> dict:
     out = {"round": round_of(case), "money": {"billed": billed, "owed": owed, "target": target, "refund": refund,
                                               "saved": round(billed - target + refund, 2)},
            "math": math_lines, "call": who_to_call(case, d), "asks": asks, "skipped": skipped,
-           "decided": decided(case, share, paid, d, owed, target, refund, plan, bad),
+           "decided": decided(case, share, paid, d, owed, target, refund, plan, bad, line_errors),
            "prefs": json.loads(json.dumps(prefs)), "corrections": [c["id"] for c in case["corrections"] if c.get("active")]}
     if nxt:  # after a call: what's done, what that call got, and what happens next
         last = case["calls"][-1]
@@ -289,7 +296,7 @@ def who_to_call(case: dict, discount: float) -> dict:
 
 
 def decided(case: dict, share: float, paid: float, d: float, owed: float, target: float, refund: float,
-            plan: dict | None, bad: set[str]) -> dict:
+            plan: dict | None, bad: set[str], line_errors: list[dict] | None = None) -> dict:
     f = case["facts"]
     rec, pol, finds = f["rec"], f["pol"], f["findings"]
     elig, inc = pol["eligibility"], pol["income"]
@@ -310,12 +317,17 @@ def decided(case: dict, share: float, paid: float, d: float, owed: float, target
                          f"(household of {hh})")
     if not elig["discount_pct"]:
         bright.append("No discount tier in their policy fits your income and bills")
-    math = [f"{money(rec['billed_due'])} billed" + (f" − {money(rec['billed_due'] - share)} insurance" if rec["billed_due"] > share else "")
-            + (f" − {money(paid)} paid" if paid else "") + f" = {money(owed)} owed"]
+    # the same split as the findings and the plan's math lines: insurance, each bill error, each payment
+    billed, errs = float(rec["billed_due"]), line_errors or []
+    ins = round(billed - share - sum(c["amount"] for c in errs), 2)
+    math = [f"{exact(billed)} billed" + (f" − {exact(ins)} insurance" if ins > 0 else "")
+            + "".join(f" − {exact(c['amount'])} bill error" for c in errs)
+            + (f" − {exact(paid)} paid" if paid else "") + f" = {exact(owed)} owed"]
     if d:
-        math.append(f"{money(share)} share × {100 - d:.0f}% = {money(share * (1 - d / 100))}"
+        math.append((f"{money(share)} share, 100% written off under their policy = $0" if d == 100
+                     else f"{money(share)} share − {d:.0f}% under their policy = {money(share * (1 - d / 100))}")
                     + (f" − {money(paid)} paid" if paid else "")
-                    + (f" → they owe you {money(refund)}" if refund else f" = {money(target)}"))
+                    + (f" → they owe you {money(refund)}" if refund else f" = {money(target)}" if paid or d != 100 else ""))
     if plan:
         math.append(f"{money(target)} as {plan['text']}: {plan['reason']}")
     if d:
