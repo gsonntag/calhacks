@@ -18,6 +18,9 @@
 <style>
   .case-shell > main.m3-page { margin: 0; max-width: none; width: 100%; padding-left: 0; padding-right: 0; }
   @media (max-width: 960px) { .case-shell > main.m3-page { padding-left: 16px; padding-right: 16px; } }
+  /* a case whose live stream hasn't delivered yet: just the title, not an empty "step 1" */
+  body.case-loading #nowTrack, body.case-loading #nowText, body.case-loading #nowMoney, body.case-loading #planSlotTop,
+  body.case-loading #viewTabs, body.case-loading .view, body.case-loading #caseWarnings { display: none !important; }
 
   /* in-case views: the live steps, and the case's history (calls, promises, follow-ups) */
   .view-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--md-outline-variant); margin-bottom: -8px; overflow-x: auto; scrollbar-width: none; }
@@ -641,7 +644,7 @@ function blankModel() {
            warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1,
            plans: [], chat: [], corrections: {}, qa: [], approvedV: null, flash: null, scorecards: [] };
 }
-const state = { tabs: [], active: null, view: 'progress', models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
+const state = { tabs: [], active: null, view: 'progress', models: {}, socks: {}, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
 
 function apply(m, e) {
@@ -807,16 +810,17 @@ function recheckHTML(m, ui) {
     <span class="body-s muted">${esc(ui.recheckErr || (live ? 'Live: watch each Bright Data request above' : why))}</span></div>`;
 }
 
-// the case rail (rail.js): the open case shows its live stage, the others their last poll
+// the case rail (rail.js): every case this page follows (the open one and the running ones) shows its live
+// stage; the others their last poll
 Rail.live = (c) => {
-  const m = c.id === state.active && state.models[c.id];
+  const m = state.models[c.id];
   if (!m || !m.bill) return null;
   if (m.error) return ['Error', ''];
   const stage = stageOf(m);
   if (stage === 4) return openNext(m) ? ['What’s next', 'amber'] : null;  // the poll knows whether billing confirmed it
   return [STATUS[stage], stage === 2 ? 'amber' : 'live'];
 };
-Rail.pick = (id) => { openCase(id); if (matchMedia('(max-width: 960px)').matches) scrollTo({ top: 0 }); };
+Rail.pick = (id) => { openCase(id, true); if (matchMedia('(max-width: 960px)').matches) scrollTo({ top: 0 }); };
 function renderTabs() { Rail.active = state.active; Rail.render(); renderHistory(); }
 
 // ---------- views: Progress (the live steps) and Calls & follow-ups (the case's saved history) ----------
@@ -1064,6 +1068,9 @@ function render() {
   renderTabs();
   const tab = state.tabs.find((t) => t.id === state.active);
   const m = model(state.active || '_');
+  const loading = !!state.active && state.active !== 'replay' && !m.loaded;
+  document.body.classList.toggle('case-loading', loading);
+  if (loading) { $('caseTitle').textContent = 'Loading your case…'; $('nowStep').textContent = ''; return; }
   const ds = rowStage(m);
   const prov = m.bill ? m.bill.provider : '';
   const pa = m.approvals.planner;
@@ -1568,17 +1575,21 @@ function scheduler(live) {
 // A live case can finish its whole Review in ~3s. When you open it as it starts (straight from the chat),
 // its events play at watch pacing until the approval card is up; from then on they apply as they arrive
 // (the call is real time anyway). Older history, and a reconnect, apply at once.
-function liveFeed(id) {
-  const m = state.models[id], pending = [], at = scheduler(true), t0 = performance.now() / 1000;
+function liveFeed(id, m) {
+  const pending = [], at = scheduler(true), t0 = performance.now() / 1000;
   let timer = null, startTs = null, pacing = !state.watched[id];
   const now = () => performance.now() / 1000 - t0;
   function flush() {
     timer = null;
     let changed = false;
     while (pending.length && pending[0].t <= now()) { apply(m, pending.shift().e); changed = true; }
-    if (changed && state.models[id] === m) render();
+    if (changed && !m.loaded) { m.loaded = true; state.models[id] = m; }  // a reconnect swaps in at its first event
+    if (changed && state.models[id] === m && state.active === id) render();
+    else if (changed) renderTabs();  // a background case: only its rail item changes
     if (pending.length) timer = setTimeout(flush, (pending[0].t - now()) * 1000);
   }
+  // leaving the case: whatever is still queued for watch pacing applies now, so its rail item is current
+  m.hurry = () => { pacing = false; for (const p of pending) p.t = 0; clearTimeout(timer); flush(); };
   return (e) => {
     if (startTs == null) startTs = e.ts;
     if (pacing && startTs < Date.now() / 1000 - 120) pacing = false;
@@ -1594,19 +1605,42 @@ async function loadTabs() {
   await Rail.load();
   state.tabs = Rail.cases.map((c) => ({ id: c.id, name: c.provider, status: c.status }));
 }
-function openCase(id) {
+// picked: chosen from the rail, so show where the case is now (no slow play of its steps). Only a case
+// opened as the page loads, e.g. straight from the chat, plays at watch pacing (liveFeed).
+function openCase(id, picked) {
+  const prev = state.models[state.active];
+  if (state.active !== id && prev && prev.hurry) prev.hurry();
   state.active = id;
   history.replaceState(null, '', `${location.pathname}?id=${encodeURIComponent(id)}${location.hash}`);
   if (voice.id !== id) $('talkBox').hidden = true;  // the voice answer belongs to the case it was asked on
-  if (state.ws) { state.ws.onclose = null; state.ws.close(); }
-  if (state.models[id]) state.watched[id] = true;  // seen it on this page already: no second slow play
-  state.models[id] = blankModel();
-  const feed = liveFeed(id);
+  if (picked) state.watched[id] = true;
+  follow(id);
+  render();
+}
+// Cases run on the server in parallel. The page keeps one live stream per case it follows (the open one and
+// every case still running), so each model stays current and switching to it is instant.
+const RUNNING = new Set(['created', 'reviewing', 'deciding', 'awaiting_call_approval', 'calling', 'planning']);
+function follow(id) {
+  if (state.socks[id]) return;
+  const m = blankModel();
+  if (!state.models[id]) state.models[id] = m;  // a reconnect keeps showing the old model until the new one has events
+  const feed = liveFeed(id, m);
   const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}`);
   ws.onmessage = (msg) => feed(JSON.parse(msg.data));
-  ws.onclose = () => { state.watched[id] = true; setTimeout(() => state.active === id && openCase(id), 1500); };
-  state.ws = ws;
-  render();
+  ws.onclose = () => {
+    if (state.socks[id] !== ws) return;
+    delete state.socks[id];
+    state.watched[id] = true;  // history replays at once on reconnect
+    setTimeout(() => (state.active === id || RUNNING.has((Rail.byId(id) || {}).status)) && follow(id), 1500);
+  };
+  state.socks[id] = ws;
+}
+function followRunning() {
+  for (const c of Rail.cases) {
+    if (!RUNNING.has(c.status) || state.socks[c.id]) continue;
+    state.watched[c.id] = true;  // followed in the background: its history applies at once
+    follow(c.id);
+  }
 }
 async function decide(agent, ok) {
   const a = model(state.active).approvals[agent]; if (!a) return;
@@ -1956,7 +1990,7 @@ setInterval(() => {
   if (m && m.call && !m.callEnded) render();
   else if (m && m.prog && !m.done && !m.error) paintTrack(m, m.prog.ds);  // keep the current step's bar creeping
 }, 500);
-setInterval(async () => { if (state.active === 'replay') return; try { await loadTabs(); } catch (e) { return; } renderTabs(); }, 4000);
+setInterval(async () => { if (state.active === 'replay') return; try { await loadTabs(); } catch (e) { return; } followRunning(); renderTabs(); }, 4000);
 
 // ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5][&jump=call] ----------
 // Plays a recorded run entirely in the browser, paced so each step can be watched (&speed=0 for recorded timing). Approvals are shown and then
@@ -2034,7 +2068,8 @@ async function startReplay(params) {
   const want = new URLSearchParams(location.search).get('id');
   if (want && state.tabs.some((t) => t.id === want)) openCase(want);
   else if (state.tabs.length) openCase(state.tabs[0].id);
-  else location.replace('new.html');  // no cases yet: start one in the chat
+  else return location.replace('new.html');  // no cases yet: start one in the chat
+  followRunning();
 })();
 </script>
 </body>
