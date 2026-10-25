@@ -215,9 +215,9 @@ def test_staleness_rule(tmp_path):
 
 
 def test_committed_no_tiers_hospitals_are_refreshable():
-    """Saint Francis, Stanford and ZSFG are stored as "no tiers": the rule re-crawls them (6 hours after the
-    last try) instead of keeping a wrong answer forever."""
-    for hid in ("ucsf-saint-francis", "stanford-health", "zsfg"):
+    """Saint Francis is stored as "no tiers": the rule re-crawls it (6 hours after the last try) instead of
+    keeping a wrong answer forever. (Stanford and ZSFG were too, until their HCAI-filed policies were added.)"""
+    for hid in ("ucsf-saint-francis",):
         row = COMMITTED.current(hid)
         assert row["status"] == "no_tiers"
         assert policy.staleness(COMMITTED, row, policy._when(row["fetched_at"]) + timedelta(days=1))

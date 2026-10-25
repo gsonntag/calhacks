@@ -1,6 +1,6 @@
 """discover -> fetch -> extract/verify -> store, for one hospital. Used by the CLI, the HTTP router and the
 Policy agent (live crawl of a hospital that isn't in the database yet)."""
-from . import discover, extract, fetch
+from . import discover, extract, fetch, hcai
 from .crawl import HARD_CAP, Crawl, OnEvent
 from .registry import Hospital
 from .store import PolicyStore, sha256
@@ -45,10 +45,11 @@ async def crawl_hospital(store: PolicyStore, hospital: Hospital, *, run_id: str 
     run_id = run_id or store.start_run("crawl", [hospital.id])
     crawl = Crawl(store, run_id, hospital.id, on_event, max_requests)
     found = await discover.run(crawl, hospital, known)
-    if not found["pages"] and not found["regulator_doc"]:
+    if hospital.hcai:
+        found["hcai_slug"] = hospital.hcai
+    if not found["pages"] and not found["regulator_doc"] and not hospital.hcai:
         raise RuntimeError(f"no official policy page found for {hospital.name}")
-    docs = await fetch.run(crawl, found)
-    crawl.stage("fetch", "ok", f"Fetched {len(docs)} documents ({sum(d.nbytes for d in docs) // 1024} KB)")
+    docs = await gather(crawl, found)
     policy, verification = await extract_verified(crawl, docs, f"{hospital.name} ({hospital.system})", json_out)
     row = store.add_version(hospital.id, content_sha256=content_hash(docs), documents=[doc_meta(d) for d in docs],
                             discovery=found, extracted=policy, verification=verification,
@@ -56,6 +57,49 @@ async def crawl_hospital(store: PolicyStore, hospital: Hospital, *, run_id: str 
     store.add_check(hospital.id, row["content_sha256"], True, row["id"], f"initial crawl: version {row['version']}", run_id)
     crawl.stage("store", "ok", f"Saved version {row['version']} ({crawl.requests} of at most {crawl.max_requests} "
                                 f"Bright Data requests)")
+    return row
+
+
+async def gather(crawl: Crawl, found: dict) -> list[fetch.Document]:
+    """fetch.run, plus the policy as filed with HCAI when the hospital's own site gave no policy document.
+    Used by crawls and rechecks alike, so a recheck refetches the same kinds of sources."""
+    try:
+        docs = await fetch.run(crawl, found)
+    except RuntimeError:  # nothing fetchable from the hospital's own site (BudgetExceeded included)
+        if not found.get("hcai_slug"):
+            raise
+        docs = []
+    if found.get("hcai_slug") and not any(d.kind == "pdf" and d.role == "policy_doc" for d in docs):
+        if docs:
+            crawl.fallback("The hospital's own pages link no policy document → the copy filed with California HCAI")
+        docs += await hcai.run(crawl, found["hcai_slug"])
+    if not docs:
+        raise RuntimeError("no policy page or document could be fetched")
+    crawl.stage("fetch", "ok", f"Fetched {len(docs)} documents ({sum(d.nbytes for d in docs) // 1024} KB)")
+    return docs
+
+
+async def add_state_filed(store: PolicyStore, hospital: Hospital, *, run_id: str | None = None,
+                          on_event: OnEvent | None = None, json_out=None) -> dict:
+    """New version = the stored version's documents (rebuilt from committed artifacts, no Bright Data request)
+    + the policy as filed with HCAI, re-extracted and re-verified. For a hospital stored without a policy
+    document before HCAI support existed."""
+    cur = store.current(hospital.id)
+    if cur is None or not hospital.hcai:
+        raise LookupError(f"{hospital.id}: needs a stored version and an HCAI slug")
+    store.upsert_hospital(hospital)
+    run_id = run_id or store.start_run("hcai", [hospital.id])
+    crawl = Crawl(store, run_id, hospital.id, on_event, 0)
+    filed = await hcai.run(crawl, hospital.hcai)
+    if not filed:
+        raise RuntimeError(f"no HCAI-filed policy could be fetched for {hospital.name}")
+    docs = load_documents(store, cur) + filed
+    policy, verification = await extract_verified(crawl, docs, f"{hospital.name} ({hospital.system})", json_out)
+    row = store.add_version(hospital.id, content_sha256=content_hash(docs), documents=[doc_meta(d) for d in docs],
+                            discovery={**cur["discovery"], "hcai_slug": hospital.hcai}, extracted=policy,
+                            verification=verification, status="ok" if policy["tiers"] else "no_tiers", run_id=run_id)
+    store.add_check(hospital.id, row["content_sha256"], True, row["id"],
+                    f"added the policy as filed with HCAI: version {row['version']}", run_id)
     return row
 
 
