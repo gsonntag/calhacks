@@ -60,12 +60,23 @@ async def twilio_status(request: Request, token: str = ""):
     return Response(status_code=204)
 
 
+def _our_call(token: str, form: dict) -> bool:
+    """An unsigned TwiML fetch is still ours if it names both the leg's secret token and the CallSid Twilio
+    returned when we placed that call. Twilio's free trial sends this one request with no X-Twilio-Signature
+    (seen 2026-10-25: status callbacks for the same call are signed). Approved by the project owner."""
+    leg = calls.legs.get(token)
+    return bool(leg and leg.call_sid and form.get("CallSid") == leg.call_sid)
+
+
 @router.post("/voice/twilio/agent")
 async def twilio_agent(request: Request):
     form = await _signed_form(request)
+    token = request.query_params.get("token") or (form or {}).get("token", "")
     if form is None:
-        return JSONResponse({"error": "bad signature"}, 403)
-    leg = calls.legs.get(request.query_params.get("token") or form.get("token", ""))
+        if request.headers.get("x-twilio-signature") or not _our_call(token, {k: str(v) for k, v in (await request.form()).items()}):
+            return JSONResponse({"error": "bad signature"}, 403)  # a wrong signature is never accepted
+        print("twilio agent: unsigned TwiML fetch accepted: token and CallSid match a call we placed", flush=True)
+    leg = calls.legs.get(token)
     xml = calls.stream_twiml(leg) if leg else twilio.say_twiml("Sorry, this call has already ended. Goodbye.")
     return Response(xml, media_type="application/xml")
 
