@@ -459,25 +459,26 @@ def test_report_prefix_keeps_runs_apart():
 
 # ---- a hospital that isn't in the policy database at all: crawled live once, then served from the DB ----
 
-DUKE = {"name": "Duke University Hospital", "city": "Durham, NC"}
-DUKE_POLICY_URL = "https://www.dukehealth.org/sites/default/files/financial-assistance-policy.pdf"
+# Not in the policy DB (Duke was the example until it was added there for real, in 290fb95)
+NEW = {"name": "Vanderbilt University Medical Center", "city": "Nashville, TN"}
+NEW_POLICY_URL = "https://www.vanderbilthealth.com/sites/default/files/financial-assistance-policy.pdf"
 
 
 def _fake_new_hospital(monkeypatch) -> list[str]:
-    """Bright Data for a first-ever crawl of Duke: Google returns its policy PDF; the PDF's bytes are UCSF Health's
-    real policy PDF from the committed crawl (as in _fake_saint_francis: this tests the path, not Duke's policy)."""
+    """Bright Data for a first-ever crawl of Vanderbilt: Google returns its policy PDF; the PDF's bytes are UCSF Health's
+    real policy PDF from the committed crawl (as in _fake_saint_francis: this tests the path, not Vanderbilt's policy)."""
     calls = []
 
     async def serp(query, attempts=2):
         calls.append(f"google: {query}")
-        body = _serp_body([{"link": DUKE_POLICY_URL, "title": "Financial Assistance Policy | Duke Health",
-                            "description": "Duke University Health System financial assistance policy (PDF)",
+        body = _serp_body([{"link": NEW_POLICY_URL, "title": "Financial Assistance Policy | Vanderbilt Health",
+                            "description": "Vanderbilt University Medical Center financial assistance policy (PDF)",
                             "rank": 1}])
         return brightdata.parse_serp(body.decode()), _resp("serp", calls[-1], body)
 
     async def document(url, attempts=2):
         calls.append(url)
-        assert url == DUKE_POLICY_URL
+        assert url == NEW_POLICY_URL
         return _resp("unlocker", url, (COMMITTED.root / UCSF_POLICY_PDF).read_bytes())
 
     async def page(url, attempts=2):
@@ -490,32 +491,32 @@ def _fake_new_hospital(monkeypatch) -> list[str]:
 
 
 async def test_new_hospital_is_crawled_live_saved_and_then_served_from_the_db(db, live_keys, monkeypatch):
-    assert registry.match(DUKE["name"], list(registry.SEED)) is None
-    assert registry.match(DUKE["name"], db.hospitals()) is None
+    assert registry.match(NEW["name"], list(registry.SEED)) is None
+    assert registry.match(NEW["name"], db.hospitals()) is None
     calls = _fake_new_hospital(monkeypatch)
     monkeypatch.setattr(llm, "json_out", _fake_claude)
-    got = await policy.find_policy("new-duke", policy.report("new-duke"), DUKE)
+    got = await policy.find_policy("new-vumc", policy.report("new-vumc"), NEW)
 
-    assert got["origin"] == "live_crawl" and got["version"] == 1 and got["source"] == DUKE_POLICY_URL
+    assert got["origin"] == "live_crawl" and got["version"] == 1 and got["source"] == NEW_POLICY_URL
     assert [t["max_fpl_pct"] for t in got["found"]["tiers"]] == [400]
     assert 1 <= len(calls) <= policy.LIVE_MAX_REQUESTS
-    hid = registry.slug(DUKE["name"])
+    hid = registry.slug(NEW["name"])
     saved = db.hospital(hid)
-    assert saved and saved.name == DUKE["name"] and saved.city == DUKE["city"]
+    assert saved and saved.name == NEW["name"] and saved.city == NEW["city"]
     assert db.current(hid)["status"] == "ok" and db.current(hid)["tiers_verified"] == 1
-    steps = _steps("new-duke")
+    steps = _steps("new-vumc")
     assert any("isn't in the policy database yet: crawling live with Bright Data" in e["result"]
-               for e in _events("new-duke", "step") if e["key"] == "policy:find")
+               for e in _events("new-vumc", "step") if e["key"] == "policy:find")
     assert steps["find"]["status"] == "ok" and "Crawled live via Bright Data and saved" in steps["find"]["result"]
-    assert steps["bd-1"]["label"].startswith("Bright Data SERP API · google: Duke University Hospital Durham, NC")
+    assert steps["bd-1"]["label"].startswith("Bright Data SERP API · google: Vanderbilt University Medical Center Nashville, TN")
     assert all(steps[f"bd-{n}"]["result"].endswith("of at most 10") for n in range(1, len(calls) + 1))
-    assert any(UCSF_TIER[:40] in p["text"] and p["source"] == DUKE_POLICY_URL for p in steps["verify"]["proof"])
-    assert [e["origin"] for e in _events("new-duke", "policy_source")] == ["live_crawl"]
+    assert any(UCSF_TIER[:40] in p["text"] and p["source"] == NEW_POLICY_URL for p in steps["verify"]["proof"])
+    assert [e["origin"] for e in _events("new-vumc", "policy_source")] == ["live_crawl"]
 
     # the next case at the same hospital (or a close variant of its name) is answered from the DB, no requests
     n = len(calls)
-    for cid, name in (("new-duke-2", DUKE["name"]), ("new-duke-3", "Duke University Hospital Durham")):
-        again = await policy.find_policy(cid, policy.report(cid), {**DUKE, "name": name})
+    for cid, name in (("new-vumc-2", NEW["name"]), ("new-vumc-3", "Vanderbilt University Medical Center Nashville")):
+        again = await policy.find_policy(cid, policy.report(cid), {**NEW, "name": name})
         assert again["origin"] == "policy_db" and again["version"] == 1 and again["found"] == got["found"]
         assert [e["hospital_id"] for e in _events(cid, "policy_source")] == [hid]
         assert _steps(cid)["find"]["result"].startswith("From policy DB")
@@ -529,13 +530,13 @@ async def test_new_hospital_live_crawl_failure_applies_no_discount(db, live_keys
     monkeypatch.setattr(brightdata, "serp", down)
     monkeypatch.setattr(brightdata, "page", down)
     monkeypatch.setattr(brightdata, "document", down)
-    got = await policy.find_policy("new-fail", policy.report("new-fail"), DUKE)
+    got = await policy.find_policy("new-fail", policy.report("new-fail"), NEW)
     assert got["origin"] == "failed" and got["found"]["tiers"] == [] and got["live"] is False
-    hid = registry.slug(DUKE["name"])
+    hid = registry.slug(NEW["name"])
     assert db.current(hid) is None
     assert db.checks(hid)[0]["note"].startswith("live crawl failed: BrightDataError")
     warn = _events("new-fail", "warning")
-    assert len(warn) == 1 and "Live policy crawl for Duke University Hospital failed" in warn[0]["text"]
+    assert len(warn) == 1 and "Live policy crawl for Vanderbilt University Medical Center failed" in warn[0]["text"]
     assert "no discount is applied" in warn[0]["text"]
     assert _steps("new-fail")["find"]["status"] == "flag"
     assert len([l for l in db.crawl_log(hid) if l["product"]]) <= policy.LIVE_MAX_REQUESTS
@@ -548,11 +549,11 @@ async def test_new_hospital_offline_uses_the_fixture_or_nothing_in_judging_mode(
     monkeypatch.setattr(brightdata, "page", no_network)
     monkeypatch.setattr(brightdata, "document", no_network)
     monkeypatch.setattr(config, "REQUIRE_LIVE", False)
-    got = await policy.find_policy("new-offline", policy.report("new-offline"), DUKE)
+    got = await policy.find_policy("new-offline", policy.report("new-offline"), NEW)
     assert got["origin"] == "offline_fixture" and got["source"] == policy.FIXTURE_LABEL and got["found"]["tiers"]
     assert "OFFLINE TEST FIXTURE" in _steps("new-offline")["find"]["result"]
     monkeypatch.setattr(config, "REQUIRE_LIVE", True)
-    got = await policy.find_policy("new-judging", policy.report("new-judging"), DUKE)
+    got = await policy.find_policy("new-judging", policy.report("new-judging"), NEW)
     assert got["origin"] == "failed" and got["found"]["tiers"] == []
     assert "Judging mode" in _events("new-judging", "warning")[0]["text"]
-    assert registry.match(DUKE["name"], db.hospitals()) is None  # nothing was saved
+    assert registry.match(NEW["name"], db.hospitals()) is None  # nothing was saved
