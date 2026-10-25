@@ -297,3 +297,25 @@ async def test_raj_hero_case_end_to_end(client, monkeypatch):
     s = (await _wait_for(case_id, lambda e: e["kind"] == "case_done"))["summary"]
     # not confirmed by billing yet: $0 and the $400 refund are what Remy expects once the corrections land
     assert s["expected"] == 0 and s["expected_refund"] == 400 and s["case_number"] == "58213"
+
+
+class _Later(date):
+    @classmethod
+    def today(cls):
+        return date(2026, 12, 15)  # weeks after the answer key's as_of
+
+
+async def test_raj_numbers_are_date_stable(client, monkeypatch):
+    """Started on a later day, Raj's case reads his bank as of the scenario's as_of: same eligibility, $0, $400."""
+    monkeypatch.setattr(orchestrator, "date", _Later)
+    exp = json.loads((config.DEMO_DIR / "scenarios" / "raj-cpmc" / "expected.json").read_text())
+    case_id = (await client.post("/api/cases?scenario=raj&household_size=4")).json()["case_id"]
+    plan = (await _wait_for(case_id, lambda e: e["kind"] == "plan_version"))["plan"]
+    case = orchestrator.cases[case_id]
+    assert case["today"] == exp["as_of"] and orchestrator.case_now(case) == date(2026, 12, 15)
+    elig = case["facts"]["pol"]["eligibility"]
+    assert elig["fpl_pct"] == exp["discount"]["fpl_pct"] and elig["oop_pct_income"] == exp["discount"]["oop_pct_income"]
+    assert elig["discount_pct"] == 100 and not elig.get("gross_check")
+    assert plan["money"]["target"] == 0 and plan["money"]["refund"] == 400
+    # hand-made demo cases still run on today's date
+    assert orchestrator.scenario_as_of("freecare") is None and orchestrator.scenario_as_of("default") is None

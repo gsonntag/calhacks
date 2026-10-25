@@ -63,8 +63,10 @@ and the PDFs when reportlab is available. Runs offline with fixed seeds; re-runn
 - `app_notes`: where today's app falls short on this case. The uninsured case has `"eob": {}`, and the Nessie
   agent can't run it yet. In the refund case the app would call credited payments "missed".
 
-Income is annualised from the 90 days before `as_of` (2026-10-25). The app uses the real date, so live runs
-long after that will count fewer paychecks (the same applies to `demo/case.json`).
+Income is annualised from the 90 days before `as_of` (2026-10-25). A case started from a scenario
+(`?scenario=raj`) reads its bank as of that date (`orchestrator.scenario_as_of`), so it gives these numbers on any
+later day; follow-up clocks keep the real date. The hand-made `demo/case.json` and `case_freecare.json` use the
+real date, so live runs long after that count fewer paychecks.
 
 ## Add a scenario
 1. Add an entry to `SPECS` in `remy/scenarios.py`: `hospital_id` (one with a price table), `procedures`

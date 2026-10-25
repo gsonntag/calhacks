@@ -33,6 +33,17 @@ def demo_case(scenario: str = "default") -> dict:
     return json.loads((config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")).read_text())
 
 
+def scenario_as_of(scenario: str) -> str | None:
+    """A generated scenario's date (its expected.json "as_of"): the bank windows (90 days of income, 12 months of
+    medical bills) are counted back from it, so the case gives the answer key's numbers on any later day. None
+    for the hand-made demo cases, which run on today's date."""
+    path = config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")
+    try:
+        return json.loads((path.parent / "expected.json").read_text())["as_of"] if path.parent.name != "demo" else None
+    except (OSError, ValueError, KeyError):
+        return None
+
+
 def _blank(v):
     """Same shape as the sample case, no values: a live case is filled only from the patient's documents."""
     if isinstance(v, dict):
@@ -53,7 +64,9 @@ def new_case(overrides: dict | None = None, scenario: str = "default", from_docu
     scenario = scenario if scenario in SCENARIOS else "default"
     base = blank_case() if from_documents else demo_case(scenario)
     base.update({k: v for k, v in (overrides or {}).items() if v})
-    case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": date.today().isoformat(),
+    # "today" is the date the bank history is read as of; follow-up clocks (case_now) keep the real date
+    today = scenario_as_of(scenario) or date.today().isoformat()
+    case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": today,
             "created_at": time.time(), "result": {}, "call_outcome": {}, "calls": [], "followups": [], "clock_days": 0}
     _reset_call_state(case)
     cases[case["id"]] = case
