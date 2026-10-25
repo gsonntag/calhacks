@@ -1,9 +1,8 @@
 """Stage 5 - monitor: refetch a hospital's policy documents, compare content hashes with the stored version,
 and re-extract only when something changed. Policies are mostly static, so a recheck is usually cheap:
 no SERP query, no Claude call, just Web Unlocker fetches of the URLs already on record."""
-from . import fetch
 from .crawl import Crawl, OnEvent
-from .pipeline import content_hash, doc_meta, extract_verified
+from .pipeline import content_hash, doc_meta, extract_verified, gather
 from .store import PolicyStore
 
 
@@ -27,8 +26,7 @@ async def recheck(store: PolicyStore, hospital_id: str, *, run_id: str | None = 
     run_id = run_id or store.start_run("recheck", [hospital_id])
     crawl = Crawl(store, run_id, hospital_id, on_event, max_requests)
     crawl.stage("recheck", "running", f"Refetching {len(cur['documents'])} documents from version {cur['version']}")
-    docs = await fetch.run(crawl, cur["discovery"])
-    crawl.stage("fetch", "ok", f"Fetched {len(docs)} documents ({sum(d.nbytes for d in docs) // 1024} KB)")
+    docs = await gather(crawl, cur["discovery"])
     digest = content_hash(docs)
     if digest == cur["content_sha256"]:
         store.add_check(hospital_id, digest, False, cur["id"], "unchanged", run_id)

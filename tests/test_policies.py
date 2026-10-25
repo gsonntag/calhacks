@@ -43,8 +43,11 @@ def test_committed_db_has_real_crawls():
         for d in row["documents"]:
             for a in d["artifacts"]:
                 assert (DB.root / a).is_file(), a
-        logged = {l["url"] for l in DB.crawl_log(hid) if l["product"] == "unlocker" and l["ok"]}
-        assert {d["url"] for d in row["documents"]} <= logged  # every stored document was fetched via Web Unlocker
+        log = DB.crawl_log(hid)
+        logged = {l["url"] for l in log if l["product"] == "unlocker" and l["ok"]}
+        plain = {l["url"] for l in log if l["product"] is None and l["ok"] and l["note"] == "plain HTTPS (not Bright Data)"}
+        for d in row["documents"]:  # every stored document was fetched via Web Unlocker, or HCAI's over plain HTTPS
+            assert d["url"] in (plain if d["role"] == "state_filed" else logged), d["url"]
     assert json.loads((DB.root / "policies.json").read_text())["hospitals"]
 
 
@@ -244,6 +247,60 @@ async def test_crawl_pipeline_end_to_end_offline(monkeypatch, tmp_path):
     assert [e["n"] for e in done] == [1, 2, 3, 4] and {e["outcome"] for e in done} == {"found"}
     assert all(e["cap"] == 10 for e in done)
     assert {e["stage"] for k, e in seen if k == "crawl_stage"} >= {"discover", "fetch", "extract", "verify", "store"}
+
+
+# ---- the policy as filed with HCAI ----
+
+def hcai_item(date: str, url: str, label: str) -> str:
+    return (f'<li><span class="date-label"><strong>Effective Date:</strong></span>\n<span class="date">\n {date} </span>'
+            f'<span class="separator">&bull;</span><span class="link"><a href="{url}">\n {label} </a></span></li>')
+
+
+ATT = "https://api.hdc.hcai.ca.gov/Public/Extract/Attachment?id="
+HCAI_PAGE = (
+    '<h2 class="policy-section__title">\n Charity Care Policy </h2><div class="policy-section__policies"><ul>'
+    + hcai_item("01/31/2025", ATT + "0ld", "Charity Care Policy") + hcai_item("03/12/2025", ATT + "aaa1", "Charity Care Policy")
+    + '</ul><div class="policy-section__application"><ul>' + hcai_item("06/01/2026", ATT + "app", "Application")
+    + '</ul></div></div><h2 class="policy-section__title">Discount Payment Policy</h2><ul>'
+    + hcai_item("03/12/2025", ATT + "aaa1", "Discount Payment Policy") + hcai_item("12/01/2024", ATT + "bbb2", "x")
+    + '</ul><h2 class="policy-section__title">Debt Collection Policy</h2><ul>' + hcai_item("09/09/2026", ATT + "debt", "x")
+    + "</ul>")
+
+
+def test_hcai_page_gives_newest_policy_per_section_not_forms():
+    from billback.policies import hcai
+    got = hcai.filed_policies(HCAI_PAGE)
+    # the newest charity care filing (not the older one, not the application form); the discount section's newest
+    # is the same PDF, listed once; debt collection is not a discount policy
+    assert got == [{"section": "Charity Care Policy", "effective": "2025-03-12", "url": ATT + "aaa1"}]
+
+
+async def test_crawl_falls_back_to_hcai_when_site_links_no_policy_pdf(monkeypatch, tmp_path):
+    """ZSFG: Google + Web Unlocker give only web pages (committed responses); the policy then comes from HCAI
+    over plain HTTPS, logged without a Bright Data product, and goes to extraction as a state_filed PDF."""
+    from billback.policies import hcai
+    calls = replay_brightdata(monkeypatch, "zsfg")
+    pdf = (DB.root / "raw/chinese-hospital/pdf-6bde4c69e798.pdf").read_bytes()
+    plain = []
+
+    async def fake_get(crawl, url, timeout=60):
+        plain.append(url)
+        crawl.store.log(run_id=crawl.run_id, hospital_id=crawl.hospital_id, stage="fetch", product=None, url=url,
+                        status=200, nbytes=1, latency_ms=1, ok=True, note="plain HTTPS (not Bright Data)")
+        return HCAI_PAGE.encode() if "hcai.ca.gov/affordability" in url else pdf
+    monkeypatch.setattr(hcai, "_get", fake_get)
+    seen = []
+
+    async def fake_claude(system, prompt, **k):
+        seen.append(prompt)
+        return {"tiers": []}
+    db = PolicyStore(tmp_path)
+    row = await pipeline.crawl_hospital(db, SEED["zsfg"], json_out=fake_claude)
+    assert plain == [hcai.page_url(SEED["zsfg"].hcai), ATT + "aaa1"]
+    assert [d["role"] for d in row["documents"]][-1] == "state_filed" and row["documents"][-1]["via"] == "https"
+    assert row["discovery"]["hcai_slug"] == SEED["zsfg"].hcai and "policy as filed with California HCAI" in seen[0]
+    assert all(c.startswith(("google:", "https://www.zuckerberg")) for c in calls)  # Bright Data never sent to .gov
+    assert any(l["note"] == "plain HTTPS (not Bright Data)" and l["product"] is None for l in db.crawl_log("zsfg"))
 
 
 # ---- monitor ----

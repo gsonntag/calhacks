@@ -3,6 +3,7 @@
     uv run python scripts/crawl_policies.py crawl                # seed SF hospitals not yet in the DB
     uv run python scripts/crawl_policies.py crawl zsfg --force   # re-run the full pipeline for one hospital
     uv run python scripts/crawl_policies.py recheck              # refetch, compare hashes, re-extract on change
+    uv run python scripts/crawl_policies.py hcai zsfg            # add the HCAI-filed policy to the stored version
     uv run python scripts/crawl_policies.py show [hospital_id]   # print what's stored
     uv run python scripts/crawl_policies.py compare [default|freecare]
 
@@ -73,6 +74,24 @@ async def recheck(store: PolicyStore, ids: list[str]) -> None:
     print(json.dumps(results, indent=1))
 
 
+async def add_hcai(store: PolicyStore, ids: list[str]) -> None:
+    """No Bright Data request: the stored documents come from committed artifacts, HCAI is plain HTTPS."""
+    if not llm.available():
+        sys.exit("ANTHROPIC_API_KEY must be set in .env")
+    targets = [h for h in registry.SEED if h.hcai and (not ids or h.id in ids)]
+    run_id = store.start_run("hcai", [h.id for h in targets])
+    results = {}
+    for h in targets:
+        print(f"\n== {h.name} ({h.id}) + HCAI {h.hcai}")
+        try:
+            results[h.id] = pipeline.summary(await pipeline.add_state_filed(store, h, run_id=run_id, on_event=printer))
+        except Exception as e:
+            results[h.id] = {"error": f"{type(e).__name__}: {e}"}
+            print(f"  FAILED: {type(e).__name__}: {e}")
+    store.finish_run(run_id, results)
+    print(json.dumps(results, indent=1))
+
+
 def no_tier_reason(cur: dict) -> str:
     """Plain summary of why a stored version has no fixed-percent tier (from what was fetched and extracted)."""
     docs = cur["documents"]
@@ -115,7 +134,7 @@ def show(store: PolicyStore, ids: list[str]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=["crawl", "recheck", "show", "compare", "export"])
+    ap.add_argument("command", choices=["crawl", "recheck", "hcai", "show", "compare", "export"])
     ap.add_argument("ids", nargs="*")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
@@ -124,11 +143,13 @@ def main() -> None:
         asyncio.run(crawl(store, args.ids, args.force))
     elif args.command == "recheck":
         asyncio.run(recheck(store, args.ids))
+    elif args.command == "hcai":
+        asyncio.run(add_hcai(store, args.ids))
     elif args.command == "show":
         show(store, args.ids)
     elif args.command == "compare":
         print(json.dumps(compare.compare(store, args.ids[0] if args.ids else "default"), indent=1))
-    if args.command in ("crawl", "recheck", "export"):
+    if args.command in ("crawl", "recheck", "hcai", "export"):
         print("wrote", store.write_export())
 
 
