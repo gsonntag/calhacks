@@ -11,7 +11,7 @@ import time
 import uuid
 from datetime import date, timedelta
 
-from . import config, events, finance, followups, llm, offline, voice
+from . import config, events, examples, finance, followups, llm, offline, voice
 from .agents import auditor, caller, decide, planner, policy, scorecard
 from .events import bus
 from .harness import gate
@@ -28,7 +28,8 @@ SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
 
 
 def demo_case(scenario: str = "default") -> dict:
-    return json.loads((config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")).read_text())
+    """The scenario's demo case (examples.load: SCENARIOS or demo/scenarios/<name>/); Rosa's for an unknown one."""
+    return examples.load(scenario if examples.exists(scenario) else "default")
 
 
 def _blank(v):
@@ -47,8 +48,9 @@ def blank_case() -> dict:
 def new_case(overrides: dict | None = None, scenario: str = "default", from_documents: bool = False) -> dict:
     """from_documents: live mode. The case starts empty and is filled from the uploaded bill/EOB (intake);
     bank history comes from Nessie and the policy from the policy DB. Otherwise (offline/mock) it starts
-    from the sample case."""
-    scenario = scenario if scenario in SCENARIOS else "default"
+    from the sample case. Raises examples.UnknownScenario for a scenario this server doesn't have."""
+    if not examples.exists(scenario):
+        raise examples.UnknownScenario(f"Unknown demo scenario: {scenario!r}")
     base = blank_case() if from_documents else demo_case(scenario)
     base.update({k: v for k, v in (overrides or {}).items() if v})
     case = {**base, "id": uuid.uuid4().hex[:8], "scenario": scenario, "status": "created", "today": date.today().isoformat(),

@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import askremy, auth, config, events, finance, followups, llm, offline, onboarding, orchestrator, tiger
+from . import askremy, auth, config, events, examples, finance, followups, llm, offline, onboarding, orchestrator, tiger
 from .agents import caller, decide, intake, policy, talk
 from .auth import ADMIN
 from .integrations import cartesia, nessie
@@ -260,8 +260,19 @@ async def start_case(files: list[UploadFile] = File(default=[]), scenario: str =
     ?scenario=freecare picks the second demo patient (bank history + sample policy).
     ?income_annual: what the household earns a year before taxes, if the patient said."""
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
+    # any demo scenario, including a generated one by folder name (GET /api/examples lists the demo patients)
+    if not examples.exists(scenario):
+        raise HTTPException(404, f"Unknown demo scenario: {scenario}")
+    if not uploads and scenario not in SAMPLE_DOCS:  # a generated scenario: its own bill.pdf / eob.pdf
+        uploads = [(n, p.read_bytes()) for n, p in examples.sample_docs(scenario)]
     case = await _new_case(uploads, scenario, household_size, income_annual)
     return {"case_id": case["id"]}
+
+
+@app.get("/api/examples")
+async def list_examples():
+    """The demo patients every "Try an example" entry point offers, in demo order (remy/examples.py)."""
+    return examples.listing()
 
 
 @app.get("/api/cases")
