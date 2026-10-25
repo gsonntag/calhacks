@@ -344,18 +344,57 @@ def _plain(case: dict) -> dict:
 
 
 async def ground_text(c) -> str:
-    """Everything an answer may quote a dollar amount from: every case (bill, findings, plans, calls), the
-    dashboard, the hospital list and the same-bill comparison for both demo bills."""
+    """Everything an answer may quote a dollar amount from: every case (bill, findings, plans, calls), the posted
+    prices of each bill's lines (policydb/prices), the dashboard, the hospital list, the same-bill comparison for
+    both demo bills and the Get-started assessment."""
     from remy import orchestrator
-    parts = [json.dumps([_plain(x) for x in orchestrator.cases.values()], default=str)]
+    cases = list(orchestrator.cases.values())
+    parts = [json.dumps([_plain(x) for x in cases], default=str), json.dumps(price_rows(cases), default=str)]
     for path in ("/api/dashboard", "/api/hospitals", "/api/compare?scenario=default", "/api/compare?scenario=freecare"):
         try:
             r = await c.get(path)
             parts.append(r.text if r.status_code == 200 else "")
         except Exception:
             pass
+    try:
+        r = await c.post("/api/onboarding/assess", json={"answers": PROFILE, "skipped": []})
+        parts.append(r.text if r.status_code == 200 else "")
+    except Exception:
+        pass
     parts.append(json.dumps(PROFILE))
     return "\n".join(parts)
+
+
+def price_rows(cases: list[dict]) -> list[dict]:
+    """The hospital price-table entries (posted gross, cash, payer rates) for every code on each case's bill."""
+    from remy import billcheck, prices
+    out = []
+    for case in cases:
+        bill = case.get("bill") or {}
+        h = billcheck.hospital((case.get("hospital") or {}).get("name") or "") or billcheck.hospital(bill.get("provider", ""))
+        if not h:
+            continue
+        posted = prices.table(h.id).get("prices", {})
+        for li in bill.get("line_items") or []:
+            code = str(li.get("code") or "").strip().upper()
+            if code in posted:
+                out.append({"hospital": h.id, "code": code, "entry": posted[code]})
+    return out
+
+
+def knowledge_text(questions: list[str]) -> str:
+    """The doc sections remy.knowledge.relevant() returns for these questions ("" until the module exists)."""
+    try:
+        k = importlib.import_module("remy.knowledge")
+    except ImportError:
+        return ""
+    out = []
+    for q in questions:
+        try:
+            out.append(json.dumps(k.relevant(q), default=lambda o: getattr(o, "__dict__", None) or str(o)))
+        except Exception:
+            pass
+    return "\n".join(out)
 
 
 def numbers_in(text: str) -> set[float]:
@@ -549,7 +588,8 @@ async def run_item(c, it: dict, feat: dict, ids: dict, ground: str, rec: Recorde
         if re.search(pat, answer, re.I):
             bad.append(f"answer matches /{pat}/")
     if it.get("numbers_grounded"):
-        seen = ground + "\n" + "\n".join(it["turns"]) + "\n" + "\n".join(call_text(k) for k in (rec.calls[n_before:] if rec else []))
+        seen = "\n".join([ground, *it["turns"], knowledge_text(it["turns"]),
+                           *(call_text(k) for k in (rec.calls[n_before:] if rec else []))])
         if extra := ungrounded(answer, numbers_in(seen)):
             bad.append(f"amounts not in the data: {extra}")
     cites = sources_of(body) + "\n" + answer

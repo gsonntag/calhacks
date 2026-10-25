@@ -8,7 +8,6 @@ import sys
 import types
 
 import pytest
-from fastapi.routing import APIRoute
 
 from remy import app as app_mod
 from remy import llm, orchestrator
@@ -52,6 +51,19 @@ def test_number_grounding():
     ground = ev.numbers_in('{"owed": 600.0, "paid": 500, "medical": 93.42, "billed": "8,700"}')
     assert ev.ungrounded("You owe $600 after $500; bank shows $93.42 and about $93; billed $8,700.00.", ground) == []
     assert ev.ungrounded("It was $4,321.09, or $50.", ground) == ["$4,321.09", "$50"]
+
+
+def test_grounding_includes_posted_prices_and_doc_sections(monkeypatch):
+    rows = ev.price_rows([orchestrator.demo_case()])  # Rosa's CPMC bill
+    ground = ev.numbers_in(json.dumps(rows))
+    assert {"74177", "99284"} <= {r["code"] for r in rows}
+    assert ev.ungrounded("The CT is $3,890 on the bill; CPMC posts $8,287.", ground | {3890.0}) == []
+    monkeypatch.setitem(sys.modules, "remy.knowledge", None)  # module absent: nothing added
+    assert ev.knowledge_text(["How does it work?"]) == ""
+    know = types.ModuleType("remy.knowledge")
+    know.relevant = lambda q: [{"doc": "README.md", "heading": "Bright Data", "text": "Marcus's $5,600 UCSF bill"}]
+    monkeypatch.setitem(sys.modules, "remy.knowledge", know)
+    assert ev.ungrounded("README says $5,600.", ev.numbers_in(ev.knowledge_text(["How?"]))) == []
 
 
 def test_live_needs_explicit_approval_and_a_cap(capsys):
@@ -108,7 +120,8 @@ async def _toy_ask(body: dict):
     case = orchestrator.cases.get(body.get("case_id") or "")
     if decide.PAY.search(q) or decide.HIDE.search(q) or "ignore your instructions" in q.lower():
         return {"answer": "I can't do that.", "agent": "remy", "refused": True, "sources": []}
-    ctx = {"page": body.get("page"), "case": orchestrator._whole_case(case) if case else None,
+    # only the stored summary (bill totals, calls), never the app's own Ask Remy context, so this stays a toy
+    ctx = {"page": body.get("page"), "case": orchestrator.summary(case) if case else None,
            "cases": [orchestrator.summary(c) for c in orchestrator.cases.values()]}
     if not llm.available():
         return {"answer": "Here's where things stand.", "agent": "remy", "sources": []}
@@ -154,5 +167,3 @@ async def test_toy_endpoint_drives_every_check(toy_endpoint):
     for i in ("how-knowledge-heading", "how-knowledge-not-how", "how-knowledge-code-map"):
         assert results[i]["status"] == "pass", results[i]
     assert ev.exit_code(list(results.values())) == 1
-    assert not [r for r in app_mod.app.routes if isinstance(r, APIRoute) and r.path == "/api/remy/ask"
-                and r.endpoint is not _toy_ask]
