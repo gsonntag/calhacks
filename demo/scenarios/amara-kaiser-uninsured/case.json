@@ -32,6 +32,9 @@
     "insurance_adjustments": 0.0,
     "patient_payments": 0.0,
     "amount_due": 6678.57,
+    "billing_phone": "",
+    "collection_agency": "",
+    "collection_phone": "",
     "line_items": [
       {
         "code": "99283",

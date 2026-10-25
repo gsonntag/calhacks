@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import config, events, followups, llm, orchestrator
-from .agents import caller, intake
+from .agents import caller, decide, intake
 from .integrations import cartesia
 from .events import bus
 from .harness import gate
@@ -239,15 +239,114 @@ async def case_summary(case_id: str):
 
 class Question(BaseModel):
     question: str = "What's the status?"
+    finding: str | None = None  # "Ask" under one finding: answered only from that agent's evidence
 
 
 @app.post("/api/cases/{case_id}/ask")
 async def ask(case_id: str, q: Question):
-    """"What's the status?" answered from the case's stored calls, promises, follow-ups and amounts."""
+    """"What's the status?" answered from the case's stored calls, promises, follow-ups and amounts; with
+    `finding`, the agent that found it answers from its own evidence (changes nothing)."""
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
-    return await orchestrator.answer_status(case, q.question.strip()[:500] or "What's the status?")
+    question = q.question.strip()[:500]
+    if q.finding:
+        return await _decide_call(decide.answer_finding(case, q.finding, question or "Tell me more about this"))
+    return await orchestrator.answer_status(case, question or "What's the status?")
+
+
+async def _decide_call(coro):
+    """Step 3 actions: a rule refusal is a 409 with the reason the patient sees."""
+    try:
+        out = await coro
+    except decide.Refused as e:
+        return JSONResponse({"error": str(e)}, 409)
+    return out if out is not None else {"ok": True}
+
+
+class PlannerMsg(BaseModel):
+    message: str
+
+
+@app.post("/api/cases/{case_id}/planner")
+async def planner_chat(case_id: str, m: PlannerMsg):
+    """Talk to the planner: questions are answered here; change requests make a new plan version."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    if not m.message.strip():
+        return JSONResponse({"error": "empty message"}, 400)
+    out = await _decide_call(decide.chat(case, m.message))
+    orchestrator.save(case)
+    return out
+
+
+class PlanPick(BaseModel):
+    v: int
+
+
+@app.post("/api/cases/{case_id}/plan/approve")
+async def plan_approve(case_id: str, p: PlanPick):
+    """"Call now": approves the version on screen (must be the latest) and lets the call start."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    pending = next((a for a in gate.pending_for(case_id) if a["agent"] == "caller"), None)
+    if not pending:
+        return JSONResponse({"error": "no call is waiting for approval"}, 409)
+    try:
+        decide.approve(case, p.v)
+    except decide.Refused as e:
+        return JSONResponse({"error": str(e)}, 409)
+    orchestrator.save(case)
+    return {"ok": gate.resolve(pending["approval_id"], True), "v": p.v}
+
+
+@app.post("/api/cases/{case_id}/plan/decline")
+async def plan_decline(case_id: str):
+    """"Not now": no call; the case can still call again later."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    pending = next((a for a in gate.pending_for(case_id) if a["agent"] == "caller"), None)
+    return {"ok": bool(pending) and gate.resolve(pending["approval_id"], False)}
+
+
+@app.post("/api/cases/{case_id}/plan/restore")
+async def plan_restore(case_id: str, p: PlanPick):
+    """Go back to an older version: a new version with its choices (facts stay current)."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    out = await _decide_call(decide.restore(case, p.v))
+    orchestrator.save(case)
+    return out
+
+
+class Correction(BaseModel):
+    finding: str
+    note: str = ""
+
+
+@app.post("/api/cases/{case_id}/corrections")
+async def add_correction(case_id: str, c: Correction):
+    """"This is wrong" on a finding: saved as a correction, and the plan is recalculated. Until the call starts."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    out = await _decide_call(decide.correct(case, c.finding, c.note))
+    orchestrator.save(case)
+    return out
+
+
+@app.delete("/api/cases/{case_id}/corrections/{correction_id}")
+async def undo_correction(case_id: str, correction_id: str):
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    out = await _decide_call(decide.undo_correction(case, correction_id))
+    orchestrator.save(case)
+    return out
 
 
 @app.post("/api/cases/{case_id}/call-again")
@@ -311,7 +410,7 @@ class Decision(BaseModel):
 
 
 @app.post("/api/approvals/{approval_id}")
-async def decide(approval_id: str, d: Decision):
+async def resolve_approval(approval_id: str, d: Decision):
     return {"ok": gate.resolve(approval_id, d.approved)}
 
 

@@ -26,21 +26,29 @@ bank history and insurer stay synthetic.
 
 ## Rough version (build now, in order)
 
-1. **Fold New case into Cases.** Cases is home, with a "+ New case" button that opens the chat intake. With
+Status (2026-10-25, 05:20): 1–3 built · 4 done on branch `nessie-fixes`, not merged yet · 5 not built ·
+6 built (step 3).
+
+1. **Fold New case into Cases.** *(Built.)* Cases is home, with a "+ New case" button that opens the chat intake. With
    no cases yet, go straight to the chat. Top bar: Cases · Hospitals · Under the hood.
-2. **Shared format for the two app agents.** One shape for what each agent reports: steps (label, status,
+2. **Shared format for the two app agents.** *(Built: `billback/agents/report.py`.)* One shape for what each agent reports: steps (label, status,
    result) and findings (what was found, money saved, proof, source). Both agents and the UI use it.
-3. **Generic Review screen.** The case page shows a live panel for each app agent that reports in, not
+3. **Generic Review screen.** *(Built, commit 6563e09.)* The case page shows a live panel for each app agent that reports in, not
    hard-coded Auditor/Policy columns. Findings feed the "ranked by money saved" list.
-4. **Nessie agent:** fix the loose payment match first (any word like "Medical"/"Pacific" in a merchant name
+4. **Nessie agent:** *(Done on branch `nessie-fixes`, commit 7fa5967: strict payment match, uninsured
+   cases, credited payments. Not merged into `after-david-takeover` yet.)* Fix the loose payment match first (any word like "Medical"/"Pacific" in a merchant name
    counts as a payment to the hospital, and there's no date check: `finance._matches_payee`).
-5. **Bright Data agent: real prices.** Rebuild Rosa's bill from CPMC's real price file and add a price
+5. **Bright Data agent: real prices.** *(Not built. The price tables (`policydb/prices/`) and the rosa-real
+   scenario exist, but the agent has no price check or duplicate-line check, and Rosa's bill is still the
+   old $8,700 everywhere.)* Rebuild Rosa's bill from CPMC's real price file and add a price
    check against it, plus a duplicate-line check on the bill. Update her numbers everywhere they appear
    (insurance statement, demo PDFs, replays, pitch).
 
 Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
 
-6. **Step 3: the plan (Decide agent) and in-place Ask / "This is wrong"** (see below).
+6. **Step 3: the plan (Decide agent) and in-place Ask / "This is wrong"** (see below). *(Built 2026-10-25:
+   `billback/agents/decide.py`, data format in `docs/plan-format.md`; gaps listed under "Step 3: what's
+   built".)*
 
 ## The flow (settled 2026-10-25)
 
@@ -53,7 +61,8 @@ Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
 - **Every past stage stays reopenable** with its full record (each check, evidence and source, the plan and
   its versions, the call transcript). Nothing an agent did disappears.
 - **Design rule:** anything that needs the user shows up inside the flow, in its step, never in a separate
-  box at the top of the page. (Today the call approval is still a card above the steps; step 3 replaces it.)
+  box at the top of the page. (The call approval card is gone: "Call now" is inside step 3. The payment-plan
+  approval after the call is still a card above the steps, until step 5 is rebuilt.)
 
 ### Asking and correcting in step 2 (in place, no general chat)
 Users don't know what "Nessie" or "Bright Data" are, so they never have to pick an agent:
@@ -97,12 +106,28 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   points at the exact data.
 - **Questions** are answered in the chat only. **Change requests** ("refund first", "don't mention a plan",
   "I can do $150/mo", "ask for a supervisor if they say no") produce a new version of the plan.
-- The decision is **rules-based code** (today's logic: `finance.settle`, `orchestrator.call_asks`); Claude
-  writes the explanation and turns chat requests into plan changes, which the rules check.
+- The decision is **rules-based code** (`billback/agents/decide.py`, using `finance.settle` and
+  `finance.payment_plan`; it replaced `orchestrator.call_asks`); Claude writes the explanation and turns chat
+  requests into plan changes, which the rules check.
 - Guardrails: the chat changes strategy, never facts; numbers always come from the code; every ask must be
   backed by a finding (otherwise it explains why not); never agree to pay, always say it's automated.
 
-### Step 4: the call (fully autonomous)
+### Step 3: what's built (2026-10-25)
+- Built: the Decide agent panel (big while it works, then the slim bar), the plan (money line, who to call,
+  every ask with "why ▸", top 4 then "Show N more", "How I decided"), Call now / Not now / Call settings,
+  versions with changes marked and compare / go back, the planner chat, "Ask" and "This is wrong" with undo.
+  The call brief is built from the approved version.
+- Not built: **"Start over"** (re-fetching data). A new case does the same for now.
+- Works differently from the text above:
+  - "A change after approval resets the approval": built, but "Call now" starts the call at once, so there's
+    almost never a gap to correct in.
+  - The fallback in "How I decided" is text only. On the call, BillBack uses its built-in rule (restate the
+    evidence once, then ask for a supervisor or a written review). A "supervisor" ask goes on the plan only
+    when you ask for it in the chat.
+  - The committed replays were recorded before step 3, so they show only the old ask list. Re-record after
+    the next live run.
+
+### Step 4: the call (fully autonomous) *(design only, not built)*
 - No mid-call steering (no nudge box). When billing refuses an ask, BillBack follows the approved plan's
   fallback by itself; it doesn't pause to ask.
 - On screen: the live transcript, the plan's asks as a checklist that ticks off live as the rep agrees
@@ -111,7 +136,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   calling on the patient's behalf).
 - Later: let the patient join the live call (Twilio conference) when billing insists on the patient.
 
-### Step 5: What's next (the Decide agent again)
+### Step 5: What's next (the Decide agent again) *(design only, not built)*
 - Top: a scorecard of every ask: ✓ got it / ✗ refused / ⏳ promised later.
 - Below: the **same Decide agent**, run again with the call outcome as new input (plus everything Nessie and
   Bright Data found and the original plan). Same screen pattern as step 3: what happened, what it concludes,
@@ -134,15 +159,22 @@ LLM latency.
   rosa-real ($15,414 → $1,575), marcus-real ($4,174 → $0), dana-altabates-refund, amara-kaiser-uninsured,
   lena-johnmuir. Making rosa-real the main demo case means updating demo/case.json, PDFs, Nessie seed, tests,
   docs and re-recording the replay.
-- Nessie agent bugs being fixed: loose payment matching, crash on uninsured patients, credited payments
-  reported as missed.
+- Nessie agent bugs: fixed on branch `nessie-fixes` (loose payment matching, crash on uninsured patients,
+  credited payments reported as missed), not merged yet.
+
+### Defaults chosen when building step 3 (2026-10-25; data format in `docs/plan-format.md`)
+- **Planner chat refuses:** changing facts (points to "This is wrong"), asks no finding backs, agreeing to pay
+  or giving card details, hiding that it's automated, dropping the case-number ask or a money ask, anything
+  off-topic. It can change: ask order, leaving off the plan / hold / supervisor asks, what you can pay per
+  month, "ask for a supervisor if they say no", reset.
+- **"This is wrong":** on any finding, with an optional note. The finding is left out of the math and of the
+  asks it backs. Household size and income can't be corrected directly yet.
+- **Who it calls:** collections if the bill names an agency, financial assistance if a discount applies,
+  else billing. The phone number comes from the bill (intake reads it); without one: "the number on your bill".
+- **Demo:** the replay plays recorded step 3 events (versions, chat) as they happened; recordings from before
+  step 3 show the asks from the old approval.
 
 ### Still to design
-- What the planner chat refuses, in detail.
-- "This is wrong": which things can be corrected (a transaction, income, household size, insurance) and
-  how that looks.
-- Who it calls: where department names and phone numbers come from.
-- The demo version: how step 3 and the chat play in the replay without live typing.
 - Cases page: drop the totals cards and the "Needs you" box; cases needing you go to the top of the list.
 - A list of UI polish changes for steps 2–3 (to collect, then one polish pass).
 

@@ -32,6 +32,9 @@
     "insurance_adjustments": 11077.64,
     "patient_payments": 750.0,
     "amount_due": 3646.2,
+    "billing_phone": "",
+    "collection_agency": "",
+    "collection_phone": "",
     "line_items": [
       {
         "code": "99284",

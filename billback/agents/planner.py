@@ -8,9 +8,9 @@ from ..harness import Tool, ToolRegistry
 
 
 async def run(case: dict, bank, account_id: str, balance: float, monthly_income: float,
-              policy_cap_pct: float | None = None) -> dict:
+              policy_cap_pct: float | None = None, max_monthly: float | None = None) -> dict:
     cid = case["id"]
-    plan = finance.payment_plan(balance, monthly_income, policy_cap_pct=policy_cap_pct)
+    plan = finance.payment_plan(balance, monthly_income, policy_cap_pct=policy_cap_pct, max_monthly=max_monthly)
     bus.emit(cid, "plan_proposed", "planner", balance=balance, **plan)
     if plan["months"] == 0:
         return {"plan": plan, "created": None}

@@ -108,6 +108,14 @@
   .t-done { padding: 10px 16px; border-top: 1px solid var(--t-line); font: 500 13px/19px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--t-ok); overflow-wrap: anywhere; }
   .t-done span { color: var(--t-dim); font-weight: 400; }
   .t-line.re { animation: reline .6s var(--md-ease); }
+  .t-line.has-proof { cursor: pointer; border-radius: 6px; margin: -2px -6px; padding: 2px 6px; }
+  .t-line.has-proof:hover { background: rgba(255, 255, 255, .05); }
+  .t-line.has-proof:focus-visible { outline: 2px solid var(--t-dim); }
+  .t-more { color: var(--t-dim); font-size: 12px; line-height: 16px; }
+  .t-toggle { width: 100%; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; padding: 12px 16px 2px; }
+  .t-toggle:hover { background: rgba(255, 255, 255, .04); }
+  .term.folded .t-toggle { padding-bottom: 4px; }
+  .t-chev { color: var(--t-dim); font: 400 12px/16px var(--md-font); white-space: nowrap; }
   @keyframes reline { from { background: rgba(255, 255, 255, .08); } to { background: transparent; } }
   @media (prefers-reduced-motion: reduce) { .caret, .t-state.working i, .t-line.re { animation: none; } }
   .quote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--md-primary); display: flex; flex-direction: column; gap: 8px; }
@@ -207,6 +215,68 @@
   .more > div + div { margin-top: 16px; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (max-width: 640px) { .now-track li span { display: none; } .now-track li.active span { display: inline; } .now-money b { font-size: 30px; line-height: 36px; } }
+
+  /* Step 3: the plan. Vertical: the Decide agent on top (big while it works, then a slim bar), the plan below */
+  .slim-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 16px; border-radius: var(--md-shape-l);
+    background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); }
+  .slim-bar .who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .slim-bar .who small { color: var(--md-on-surface-variant); font: 400 12px/16px var(--md-font); }
+  .slim-bar .m3-btn { min-height: 36px; }
+  .filling { display: flex; flex-direction: column; gap: 10px; padding: 8px 0; color: var(--md-on-surface-variant); }
+  .filling i { display: block; height: 14px; border-radius: 7px; background: var(--md-surface-container-high, var(--md-outline-variant)); animation: nowdot 1.4s ease-in-out infinite; }
+  .plan-card { display: flex; flex-direction: column; gap: 16px; }
+  .plan-vers { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .plan-vers .m3-chip { min-height: 32px; height: auto; }
+  .plan-vers .lbl { color: var(--md-on-surface-variant); font: 500 12px/16px var(--md-font); margin-right: 4px; }
+  .plan-banner { margin: 0; padding: 10px 14px; border-radius: var(--md-shape-m); background: var(--st-info-container); color: var(--st-on-info-container); display: flex; flex-direction: column; gap: 6px; }
+  .plan-banner ul { margin: 0; padding-left: 18px; }
+  .plan-banner .actions .m3-btn { min-height: 32px; }
+  .plan-money { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
+  .plan-money s { color: var(--md-on-surface-variant); font-size: 20px; }
+  .plan-money b { font: 600 32px/40px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; }
+  .plan-money span { color: var(--md-on-surface-variant); }
+  .plan-who { margin: 0; display: flex; gap: 10px; align-items: flex-start; }
+  .plan-who .material-symbols-rounded { color: var(--md-primary); }
+  .plan-asks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .plan-asks li { display: flex; align-items: flex-start; gap: 12px; padding: 10px 8px; margin: 0 -8px; border-radius: var(--md-shape-m); }
+  .plan-asks li + li { border-top: 1px solid var(--md-outline-variant); }
+  .plan-asks .n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--md-secondary-container, var(--md-surface-container-high)); color: var(--md-on-secondary-container, inherit);
+    font: 600 13px/24px var(--md-font); text-align: center; }
+  .plan-asks .tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+  .plan-asks .why { align-self: flex-start; border: 0; background: none; padding: 0; color: var(--md-primary); font: 500 13px/18px var(--md-font); cursor: pointer; }
+  .plan-asks .basis { color: var(--md-on-surface-variant); font: 400 13px/18px var(--md-font); }
+  .plan-asks b { flex: none; font: 600 16px/24px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .plan-asks b.plain { color: var(--md-on-surface); font-weight: 500; }
+  .plan-asks li.differs { background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .flash { animation: flash 4s var(--md-ease); }
+  @keyframes flash { 0%, 60% { background: var(--st-warn-container); } 100% { background: transparent; } }
+  .plan-skipped { margin: 0; color: var(--md-on-surface-variant); }
+  .plan-skipped li { margin-top: 2px; }
+  .how { display: flex; flex-direction: column; gap: 12px; }
+  .how h4 { margin: 0 0 4px; font: 500 14px/20px var(--md-font); }
+  .how ul { margin: 0; padding-left: 18px; }
+  .how .agent-lbl { display: inline-block; font: 500 11px/16px var(--md-font); padding: 0 8px; border-radius: 8px; background: var(--md-surface-container-high, var(--md-outline-variant)); color: var(--md-on-surface-variant); margin-left: 6px; vertical-align: 1px; }
+  .plan-actions { display: flex; flex-direction: column; gap: 8px; }
+  .planner { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px; border-radius: var(--md-shape-l); background: var(--md-surface-container-low); }
+  .planner-log { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; }
+  .planner-log:empty::before { content: "Ask why the plan is what it is, or tell me what to change. I can’t change facts: for that, use “This is wrong” on a finding in Review."; color: var(--md-on-surface-variant); font: 400 14px/20px var(--md-font); }
+  .planner-form { display: flex; gap: 8px; }
+  .planner-form .m3-input { flex: 1; min-width: 0; }
+  .made-v { border: 0; background: none; padding: 0 8px; color: var(--md-primary); font: 500 12px/16px var(--md-font); cursor: pointer; align-self: flex-start; }
+  /* findings: Ask / This is wrong, in place */
+  .find-acts { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+  .find-acts .m3-btn { min-height: 32px; padding: 0 12px; }
+  .find-box { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: var(--md-shape-m); background: var(--md-surface-container-low); }
+  .find-box form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .find-box .m3-input { flex: 1; min-width: 180px; }
+  .qa { display: flex; flex-direction: column; gap: 2px; }
+  .qa .q { font-weight: 500; }
+  .qa .lbl { font: 500 11px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .wrong-tag { display: inline-flex; align-items: center; gap: 4px; color: var(--st-warn); font: 500 12px/16px var(--md-font); }
+  .finds li.is-wrong .fl { text-decoration: line-through; text-decoration-color: var(--md-on-surface-variant); }
+  .finds li.flash { border-radius: var(--md-shape-m); }
+  .replay .find-acts, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
+  @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
 </head>
 <body>
@@ -246,33 +316,12 @@
     <p class="body-l now-text" id="nowText"></p>
     <div class="now-money" id="nowMoney" hidden><s id="nowWas"></s><span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span><b id="nowOwe"></b><span class="body-m muted" id="nowSave"></span></div>
     <ol class="now-track" id="nowTrack" aria-label="Progress">
-      <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Your OK</span></li><li><span>Call</span></li><li><span>Resolved</span></li>
+      <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Plan</span></li><li><span>Call</span></li><li><span>Resolved</span></li>
     </ol>
     <!-- kept for the render code; the line above replaces them -->
     <div hidden><p id="caseSub"></p><span id="statOrig"></span><span id="statOwe"></span><span id="statOweSupport"></span></div>
   </section>
 
-  <!-- needs you: call approval -->
-  <section class="m3-card attn-card" id="approvalCard" hidden aria-labelledby="approvalHead">
-    <h2 class="title-l" id="approvalHead">Call <span id="approveProvider"></span> billing<span id="approveAgain"></span>?</h2>
-    <ul class="ask" id="askShort"></ul>
-    <div class="actions">
-      <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Yes, call</button>
-      <button type="button" class="m3-btn text" id="notYetBtn">No</button>
-    </div>
-    <details class="more" id="approveMore"><summary class="body-m">More details</summary>
-      <div class="m3-stack">
-        <p class="body-m">On the call we’ll:</p>
-        <ul class="ask" id="askList"></ul>
-        <p class="body-m muted">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
-        <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
-          <select id="voiceSel" class="m3-select compact"></select>
-          <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
-        </label>
-        <p class="body-m muted">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
-      </div>
-    </details>
-  </section>
   <div id="planSlotTop"></div>
 
   <!-- Steps -->
@@ -308,13 +357,39 @@
 
       <li class="step" data-step="2">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail2">
-          <span class="row-text"><span class="row-title">Your approval</span><span class="row-sum" id="approveMeta"></span></span>
+          <span class="row-text"><span class="row-title">The plan</span><span class="row-sum" id="approveMeta"></span></span>
           <span class="row-status" id="status2"></span>
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail2" hidden>
-          <p class="body-m" id="approveSummary"></p>
-          <ul class="ask body-m" id="askDone"></ul>
+          <!-- the Decide agent: big while it works, then a slim bar that opens the planner chat -->
+          <div id="decideBox"></div>
+          <section class="planner" id="plannerBox" hidden aria-label="Talk to the planner">
+            <div class="planner-log" id="plannerLog" aria-live="polite"></div>
+            <form class="planner-form" id="plannerForm">
+              <input class="m3-input" id="plannerInput" autocomplete="off" maxlength="1000"
+                     placeholder="Ask why, or tell me what to change (“refund first”, “I can do $150/mo”)" aria-label="Message the planner">
+              <button type="submit" class="m3-btn filled" id="plannerSend">Send</button>
+            </form>
+          </section>
+          <div id="planArea"></div>
+          <div class="plan-actions" id="planActions" hidden>
+            <div class="actions">
+              <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call now</button>
+              <button type="button" class="m3-btn text" id="notYetBtn">Not now</button>
+            </div>
+            <details class="more" id="callSettings"><summary class="body-s">Call settings</summary>
+              <div class="m3-stack">
+                <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
+                  <select id="voiceSel" class="m3-select compact"></select>
+                  <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
+                </label>
+                <p class="body-m muted">Always: it says it’s an automated assistant calling for you, and it never agrees to pay anything or gives card details. Any payment comes back to you first.</p>
+                <p class="body-m muted">Approve from your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
+              </div>
+            </details>
+          </div>
+          <p class="body-m muted" id="approveSummary"></p>
         </div>
       </li>
 
@@ -387,8 +462,8 @@
 </main>
 
 <script>
-const STATUS = ['Upload', 'Reviewing', 'Needs approval', 'On call', 'Resolved'];
-const AGENT_STATUS = {created: 1, reviewing: 1, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
+const STATUS = ['Upload', 'Reviewing', 'Your plan', 'On call', 'Resolved'];
+const AGENT_STATUS = {created: 1, reviewing: 1, deciding: 2, awaiting_call_approval: 2, calling: 3, planning: 4, done: 4, error: 4, interrupted: 4};
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const money = (n) => '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -415,7 +490,8 @@ function blankModel() {
   return { bill: null, docs: [], steps: {}, agent: {}, order: [], findings: [], review: null, approvals: {},
            asks: [], approvedAt: '', callDeclined: false, call: null, lines: [], outcome: {}, callEnded: null,
            balances: [], plan: null, planDecided: null, planResult: null, done: null, error: null, listening: true, mode: null,
-           warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1 };
+           warnings: [], quotes: [], evidence: [], calls: [], followup: null, round: 1,
+           plans: [], chat: [], corrections: {}, qa: {}, approvedV: null, flash: null };
 }
 const state = { tabs: [], active: null, models: {}, ws: null, now: Date.now() / 1000, ui: {}, watched: {} };
 const model = (id) => (state.models[id] ||= blankModel());
@@ -472,6 +548,18 @@ function apply(m, e) {
                          callEnded: null, done: null, followup: null, round: e.n || 2 });
       break;
     case 'error': m.error = e.text; break;
+    // step 3 (agents/decide.py, docs/plan-format.md)
+    case 'plan_version':
+      m.plans.push(e.plan);
+      // changed lines flash when a new version arrives, not when you open the page later
+      if (e.plan.v > 1 && e.ts > Date.now() / 1000 - 10) m.flash = { v: e.plan.v, ids: e.plan.changed || [], until: Date.now() + 4000 };
+      break;
+    case 'plan_approved': m.approvedV = e.v; break;
+    case 'plan_approval_reset': m.approvedV = null; break;
+    case 'planner_message': m.chat.push(e); break;
+    case 'correction': m.corrections[e.correction.finding] = { ...e.correction, v: e.v }; break;
+    case 'correction_undone': delete m.corrections[e.finding]; break;
+    case 'finding_qa': (m.qa[e.finding] ||= []).push(e); break;
   }
 }
 
@@ -482,6 +570,7 @@ function stageOf(m) {
   if (m.call) return 3;
   if (m.approvals.caller && m.approvals.caller.resolved === true) return 3;  // approved, dialing
   if (m.approvals.caller && m.approvals.caller.resolved === undefined) return 2;
+  if (m.agent.decide && m.agent.decide.started) return 2;  // the Decide agent is building the plan
   return 1;
 }
 
@@ -498,7 +587,8 @@ function rowStage(m) {
 const LEGACY_AGENTS = { auditor: ['Nessie agent', 'Your own records: bank, the bill, your insurance statement'],
                         policy: ['Bright Data agent', 'Public rules: the hospital’s own financial-assistance policy'] };
 function reviewAgents(m) {
-  if (m.order.length) return m.order;
+  const order = m.order.filter((k) => k !== 'decide');  // the Decide agent lives in step 3
+  if (order.length) return order;
   const legacy = Object.keys(LEGACY_AGENTS).filter((k) => (m.steps[k] || []).length);
   return legacy.length ? legacy : Object.keys(LEGACY_AGENTS);  // not started yet: show where they'll run
 }
@@ -508,12 +598,16 @@ function srcHTML(src) {
   let short = src; try { const u = new URL(src); short = u.hostname.replace(/^www\./, '') + (u.pathname.length > 1 ? u.pathname : ''); } catch (e) {}
   return `<a href="${esc(src)}" target="_blank" rel="noopener">${esc(short.length > 60 ? short.slice(0, 57) + '…' : short)}</a>`;
 }
-function renderAgent(key, m) {
-  const steps = m.steps[key] || [], a = m.agent[key] || {};
+// An agent panel stays quiet: one line per check (what it checked, what it found). Click a check to see its
+// proof (the exact data it looked at and where it came from). A finished agent folds to one summary line;
+// click it to open the whole checklist again. forceOpen: show the checklist even when finished.
+function renderAgent(key, m, forceOpen = false) {
+  const steps = m.steps[key] || [], a = m.agent[key] || {}, ui = uiOf(state.active || '_');
   const covers = a.covers || (LEGACY_AGENTS[key] || [])[1] || '';
   const stopped = m.error && !a.done;
   const [status, cls] = a.done ? ['Done', 'done'] : stopped ? ['Stopped', 'stopped'] : steps.some((s) => s.status === 'wait') ? ['Waiting', 'working']
     : a.started ? ['Working', 'working'] : ['Queued', ''];
+  const open = forceOpen || (ui.agentOpen[key] ?? !a.done);
   const sk = state.active + '-' + key;
   const lines = steps.map((s) => {
     // a line is "re-written" when its check resolves: flash it once so the eye catches the change
@@ -521,14 +615,21 @@ function renderAgent(key, m) {
     seen[sk + s.key] = s.status;
     const running = s.status === 'running' && !stopped;
     const ic = stopped && s.status === 'running' ? ICON.clear : ICON[s.status] || ICON.ok;
-    const proof = running || !s.proof.length ? '' : `<ul class="t-proof">${s.proof.map((p) =>
-      `<li>${esc(p.text)}${p.source ? `<span class="t-src">${srcHTML(p.source)}</span>` : ''}</li>`).join('')}</ul>`;
-    return `<li class="t-line ${s.status}${cls}"><span class="t-ic">${ic}</span><div class="t-tx">
-      <span class="t-lb">${esc(s.label)}${running ? '<i class="caret"></i>' : ''}</span>${!running && s.result ? `<span class="t-rs">${esc(s.result)}</span>` : ''}${proof}</div></li>`;
+    const hasProof = !running && s.proof.length, showProof = hasProof && ui.lineOpen.has(s.key);
+    const proof = showProof ? `<ul class="t-proof">${s.proof.map((p) =>
+      `<li>${esc(p.text)}${p.source ? `<span class="t-src">${srcHTML(p.source)}</span>` : ''}</li>`).join('')}</ul>` : '';
+    const more = hasProof ? `<span class="t-more">${showProof ? 'hide proof ▴' : `proof (${s.proof.length}) ▾`}</span>` : '';
+    const attrs = hasProof ? ` data-act="line" data-key="${esc(s.key)}" role="button" tabindex="0" aria-expanded="${showProof}"` : '';
+    return `<li class="t-line ${s.status}${cls}${hasProof ? ' has-proof' : ''}"${attrs}><span class="t-ic">${ic}</span><div class="t-tx">
+      <span class="t-lb">${esc(s.label)}${running ? '<i class="caret"></i>' : ''}</span>${!running && s.result ? `<span class="t-rs">${esc(s.result)}</span>` : ''}${more}${proof}</div></li>`;
   }).join('');
   const done = a.done ? `<div class="t-done">✓ ${esc(a.summary || 'Done')}${a.note ? ` <span>· ${esc(a.note)}</span>` : ''}</div>` : '';
-  return `<section class="term" aria-label="${esc(agentName(m, key))}">
-      <div class="t-head"><b>${esc(agentName(m, key))}</b><span class="t-state ${cls}"><i></i>${status}</span></div>
+  const head = a.done && !forceOpen
+    ? `<button type="button" class="t-head t-toggle" data-act="agent" data-key="${esc(key)}" aria-expanded="${open}"><b>${esc(agentName(m, key))}</b>
+        <span class="t-state ${cls}"><i></i>${status}</span><span class="t-chev">${open ? 'hide checklist ▴' : `${steps.length} checks ▾`}</span></button>`
+    : `<div class="t-head"><b>${esc(agentName(m, key))}</b><span class="t-state ${cls}"><i></i>${status}</span></div>`;
+  if (!open) return `<section class="term folded" aria-label="${esc(agentName(m, key))}">${head}${done}</section>`;
+  return `<section class="term" aria-label="${esc(agentName(m, key))}">${head}
       <div class="t-covers">${esc(covers)}</div>
       <ol class="t-body">${lines || `<li class="t-idle">${m.error ? 'Did not start' : 'Waiting to start…'}</li>`}</ol>${done}</section>`;
 }
@@ -617,7 +718,7 @@ function rowStatusHTML(i, ds, m) {
     if (m.error) return chip('error', 'Stopped');
     if (i === 0) return chip('warn', 'Working…', spin);
     if (i === 1) return chip('warn live', 'Investigating');
-    if (i === 2) return chip('warn live', 'Waiting for you');
+    if (i === 2) return deciding(m) ? chip('warn', 'Building…', spin) : chip('warn live', 'Waiting for you');
     if (i === 3) return chip('warn live', m.call ? 'On the call' : 'Dialing…');
     if (m.done) return DONE_ICON;
     if (planPending) return chip('warn live', 'Waiting for you');
@@ -666,7 +767,8 @@ function headline(m, ds, tab) {
   if (m.error) return ['Something went wrong', prov];
   if (ds === 0) return ['Reading your bill', prov];
   if (ds === 1) return [`Reviewing your ${prov} bill`, 'Two agents are checking what you actually owe.'];
-  if (ds === 2) return ['Waiting for your OK', `BillBack is ready to call ${prov} billing${m.round > 1 ? ' again' : ''}.`];
+  if (ds === 2 && deciding(m)) return ['Building your plan', 'The Decide agent is turning what we found into a call plan.'];
+  if (ds === 2) return ['Your plan is ready', `Check it, then I’ll call ${prov} billing${m.round > 1 ? ' again' : ''}.`];
   if (ds === 3) return [`Calling ${prov}`, m.call ? phaseText(m) : 'Dialing…'];
   const planPending = m.approvals.planner && m.approvals.planner.resolved === undefined;
   if (m.done) return ['Resolved', prov + (m.done.case_number ? ` · case ${m.done.case_number}` : '')];
@@ -693,7 +795,7 @@ function render() {
   // ---- TOP: headline, stats, what needs you ----
   const [h, sub] = headline(m, ds, tab);
   setText($('caseTitle'), h); setText($('caseSub'), sub);
-  const asking = !!tab && !m.error && (ds === 2 || planPending);
+  const asking = !!tab && !m.error && planPending;
   $('caseTitle').hidden = asking;
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   setText($('statOrig'), orig != null ? money(orig) : '—');
@@ -708,16 +810,14 @@ function render() {
     support = parts.join(' · ');
   } else if (m.error) support = '';
   setText($('statOweSupport'), support);
-  $('approvalCard').hidden = !(tab && ds === 2 && !m.error);
 
   // ---- Steps card: classes, statuses, expand state ----
   const key = state.active || '_';
-  const ui = (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1 });
+  const ui = uiOf(key);
   if (ds !== ui.last) {
-    // open the current row; while you decide on the call, Review stays open so its findings sit under the approval card
+    // open the current row (rows you opened or closed yourself stay as you left them)
     ui.open = new Set([...ui.open].filter((i) => ui.touched.has(i)));
-    if (ds === 2) ui.open.add(1);
-    else if (!(ds === 0 && !m.bill)) ui.open.add(ds);
+    if (!(ds === 0 && !m.bill)) ui.open.add(ds);
     ui.last = ds;
   }
   document.querySelectorAll('.step').forEach((el) => {
@@ -747,27 +847,17 @@ function render() {
     : ds >= 1 && m.bill ? `${sums.map(([n]) => n).join(' and ')} are checking your bill` : 'Two agents check your records and the hospital’s own rules');
   const finds = findingsOf(m), fk = state.active + '-finds';
   $('findBox').hidden = !finds.length;
-  setHTML($('findings'), finds.map((f) => {
+  const acts = { ask: !!m.plans.length && state.active !== 'replay', correct: canCorrect(m) };
+  setHTMLKeep($('findings'), finds.map((f) => {
     const isNew = !(seen[fk] ||= new Set()).has(f.key); seen[fk].add(f.key);
-    return `<li${isNew ? ' class="in"' : ''}><details><summary><span class="fl">${esc(f.title)}<small>${esc(agentName(m, f.agent))}</small></span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
-    <div class="fd body-m">${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}</div></details></li>`;
+    return findingHTML(f, m, ui, isNew, acts);
   }).join(''));
   const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
   $('quoteBox').hidden = !quotes.some((q) => q.quote);
   setHTML($('quoteList'), quotes.map(quoteHTML).join(''));
 
-  // 3 · Approval
-  setText($('approveMeta'), ds > 2 || m.callDeclined ? (m.callDeclined ? 'You chose not to call yet' : `Accepted · ${m.approvedAt}`)
-    : ds === 2 ? '' : 'You decide before BillBack calls');
-  $('approveProvider').textContent = prov;
-  setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
-  setHTML($('askDone'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
-  $('approveAgain').textContent = m.round > 1 ? ' again' : '';
-  // the short version: what it gets you, in two lines; the full ask list sits under "More details"
-  const owe = correctedBalance(m), billed = m.bill ? m.bill.amount_due : null;
-  const short = [owe != null && billed != null && owe < billed ? `Get the bill from ${money(billed)} down to ${money(owe)}` : m.asks[0],
-    m.asks.some((q) => /payment plan/i.test(q)) ? 'Set up an interest-free plan and pause collections' : 'Pause collections and get a case number'].filter(Boolean);
-  setHTML($('askShort'), short.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
+  // 3 · The plan
+  renderPlan(m, ds, ui);
   $('callTitle').textContent = m.round > 1 ? 'Follow-up call' : 'Call billing';
   setHTML($('approveSummary'), m.callDeclined ? 'You chose not to call yet'
     : ds > 2 ? `<span class="text-success" style="font-weight:500">Accepted</span> · you approved the call to ${esc(prov)}${m.asks.length ? '. On the call we asked to:' : ''}`
@@ -840,8 +930,191 @@ function render() {
   renderNow(m, ds, tab, a);
 }
 
+// ---------- step 3: the plan (agents/decide.py; format: docs/plan-format.md) ----------
+function uiOf(key) {
+  return (state.ui[key] ||= { open: new Set(), touched: new Set(), last: -1, finds: new Set(), box: {}, drafts: {}, busy: {}, err: {},
+                              planV: null, chatOpen: false, termOpen: false, showAll: false, howOpen: false,
+                              agentOpen: {}, lineOpen: new Set() });
+}
+const deciding = (m) => !!(m.agent.decide && m.agent.decide.started && !m.agent.decide.done && !m.error);
+const latestPlan = (m) => m.plans[m.plans.length - 1] || null;
+const callStarted = (m) => !!(m.approvals.caller && m.approvals.caller.resolved !== undefined);
+// "This is wrong" is allowed until the call starts
+const canCorrect = (m) => !!m.plans.length && state.active !== 'replay' && !!m.approvals.caller && !callStarted(m);
+
+// Rebuilding a list must not throw away what you're typing: put the focus and cursor back afterwards.
+function setHTMLKeep(el, html) {
+  const a = document.activeElement, key = a && el.contains(a) && a.dataset.draft, pos = key ? a.selectionStart : 0;
+  setHTML(el, html);
+  if (!key) return;
+  const n = el.querySelector(`[data-draft="${CSS.escape(key)}"]`);
+  if (n && n !== a) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+}
+
+function findingHTML(f, m, ui, isNew, acts) {
+  const k = esc(f.key), c = m.corrections[f.key], qa = m.qa[f.key] || [], box = ui.box[f.key];
+  const open = ui.finds.has(f.key) || !!box;
+  const flash = ui.flashFind === f.key && Date.now() < ui.flashUntil ? ' flash' : '';
+  const err = ui.err[f.key] ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.err[f.key])}</p>` : '';
+  const buttons = !acts.ask ? '' : `<div class="find-acts">
+      <button type="button" class="m3-btn text" data-act="ask" data-key="${k}">${sym('chat_bubble')}Ask</button>
+      ${c ? (acts.correct ? `<button type="button" class="m3-btn text" data-act="undo" data-id="${esc(c.id)}">${sym('undo')}Undo “This is wrong”</button>` : '')
+          : acts.correct ? `<button type="button" class="m3-btn text" data-act="wrong" data-key="${k}">${sym('flag')}This is wrong</button>` : ''}</div>`;
+  const answers = qa.map((x) => `<div class="qa"><span class="q">${esc(x.question)}</span><span>${esc(x.answer)}</span>
+      <span class="lbl">${esc(agentName(m, x.agent))}${(x.sources || []).length ? ' · ' + srcHTML(x.sources[0]) : ''}</span></div>`).join('');
+  const busy = ui.busy['ask:' + f.key];
+  const askForm = box === 'ask' ? `<form data-form="ask" data-key="${k}"><input class="m3-input" data-draft="ask:${k}" maxlength="500"
+      value="${esc(ui.drafts['ask:' + f.key] || '')}" placeholder="Ask the agent that found this" aria-label="Your question"${busy ? ' disabled' : ''}>
+      <button type="submit" class="m3-btn filled"${busy ? ' disabled' : ''}>${busy ? 'Asking…' : 'Ask'}</button></form>` : '';
+  const askBox = answers || askForm ? `<div class="find-box">${answers}${askForm}${box === 'ask' ? err : ''}</div>` : '';
+  const wrongBox = box === 'wrong' && !c ? `<div class="find-box"><p class="body-m" style="margin:0">What’s wrong? (optional) I’ll leave this finding out and redo the plan.</p>
+      <form data-form="wrong" data-key="${k}"><input class="m3-input" data-draft="wrong:${k}" maxlength="500" value="${esc(ui.drafts['wrong:' + f.key] || '')}"
+      placeholder="e.g. that payment was to my dentist" aria-label="What’s wrong">
+      <button type="submit" class="m3-btn filled"${ui.busy['wrong:' + f.key] ? ' disabled' : ''}>Save</button>
+      <button type="button" class="m3-btn text" data-act="cancel" data-key="${k}">Cancel</button></form>${err}</div>` : '';
+  const tag = c ? `<p class="wrong-tag">${sym('flag')}You said this is wrong${c.note ? ': “' + esc(c.note) + '”' : ''}${c.v ? ` · <button type="button" class="made-v" data-act="goplan">plan v${c.v}</button>` : ''}</p>` : '';
+  return `<li data-find="${k}" class="${isNew ? 'in' : ''}${c ? ' is-wrong' : ''}${flash}"><details data-key="${k}"${open ? ' open' : ''}><summary><span class="fl">${esc(f.title)}<small>${esc(agentName(m, f.agent))}${c ? ' · marked wrong' : ''}</small></span><b class="${f.saved ? '' : 'plain'}">${esc(f.value)}</b></summary>
+    <div class="fd body-m">${tag}${(f.proof || []).map((t) => `<p>${esc(t)}</p>`).join('')}${f.source ? `<p class="src">Source: ${srcHTML(f.source)}</p>` : ''}${buttons}${wrongBox}${askBox}</div></details></li>`;
+}
+
+// what an older version has that the latest doesn't (for "tap an older version to compare")
+function compareWith(old, cur) {
+  const out = [], oa = Object.fromEntries(old.asks.map((a) => [a.id, a])), ca = Object.fromEntries(cur.asks.map((a) => [a.id, a]));
+  if (old.money.target !== cur.money.target) out.push(`You owe ${money(old.money.target)} here, ${money(cur.money.target)} in the latest`);
+  for (const a of old.asks) if (!ca[a.id]) out.push(`Only here: ${a.text}`);
+  for (const a of cur.asks) if (!oa[a.id]) out.push(`Only in the latest: ${a.text}`);
+  for (const a of old.asks) if (ca[a.id] && ca[a.id].text !== a.text) out.push(`Here: ${a.text}`);
+  return out;
+}
+const sameAsk = (a, cur) => cur.asks.some((b) => b.id === a.id && b.text === a.text);
+
+function planHTML(m, ui) {
+  const cur = latestPlan(m), v = m.plans.find((x) => x.v === ui.planV) || cur, old = v !== cur;
+  const editable = canCorrect(m);
+  const vers = m.plans.length > 1 ? `<div class="plan-vers"><span class="lbl">Versions</span>${m.plans.map((x) =>
+    `<button type="button" class="m3-chip${x === v ? ' selected' : ''}" data-act="ver" data-v="${x.v}" aria-pressed="${x === v}">v${x.v}${x === cur ? ' · latest' : ''}${m.approvedV === x.v ? ' · approved' : ''}</button>`).join('')}</div>` : '';
+  let banner = '';
+  if (old) {
+    const diffs = compareWith(v, cur);
+    banner = `<div class="plan-banner"><b>You’re looking at v${v.v}: ${esc(v.reason.text)}</b>${diffs.length ? `<ul>${diffs.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : '<span>Same as the latest.</span>'}
+      <div class="actions">${editable ? `<button type="button" class="m3-btn filled" data-act="restore" data-v="${v.v}">Go back to this version</button>` : ''}
+      <button type="button" class="m3-btn text" data-act="ver" data-v="${cur.v}">See the latest (v${cur.v})</button></div></div>`;
+  } else if (v.changes && v.changes.length) {
+    banner = `<div class="plan-banner"><b>What changed in v${v.v}</b><span>${esc(v.reason.text)}</span><ul>${v.changes.map((d) => `<li>${esc(d)}</li>`).join('')}</ul></div>`;
+  }
+  const mo = v.money, extra = mo.refund ? `+ ${money(mo.refund)} back to you` : mo.saved > 0 ? `saves ${money(mo.saved)}` : 'same as the bill';
+  const flashOn = m.flash && m.flash.v === v.v && Date.now() < m.flash.until;
+  const shown = ui.showAll || v.asks.length <= 4 ? v.asks : v.asks.slice(0, 4);  // the top 4, then "Show N more"
+  const asks = shown.map((a, i) => {
+    const cls = (flashOn && m.flash.ids.includes(a.id) ? ' flash' : '') + (old && !sameAsk(a, cur) ? ' differs' : '');
+    const why = a.findings.length ? `<button type="button" class="why" data-act="why" data-key="${esc(a.findings[0])}">why ▸</button>`
+      : `<span class="basis">${a.basis === 'standard' ? 'Standard on every call' : 'You asked for this'}</span>`;
+    return `<li class="${cls.trim()}"><span class="n">${i + 1}</span><span class="tx"><span>${esc(a.text)}</span>${why}</span>${a.value ? `<b class="${a.money ? '' : 'plain'}">${esc(a.value)}</b>` : ''}</li>`;
+  }).join('');
+  const more = v.asks.length > shown.length ? `<button type="button" class="m3-btn text" data-act="more">Show ${v.asks.length - shown.length} more ▾</button>`
+    : ui.showAll && v.asks.length > 4 ? `<button type="button" class="m3-btn text" data-act="more">Show fewer ▴</button>` : '';
+  const skipped = v.skipped.length ? `<ul class="plan-skipped body-s">${v.skipped.map((x) => `<li>Left off: ${esc(x.text)} (${esc(x.why)})</li>`).join('')}</ul>` : '';
+  const d = v.decided, list = (xs) => `<ul>${xs.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  const how = `<details class="more" data-ui="how"${ui.howOpen ? ' open' : ''}><summary class="body-m">How I decided</summary><div class="how body-m">
+      <p style="margin:0">${esc(d.explanation)}</p>
+      <div><h4>From your records<span class="agent-lbl">Nessie agent</span></h4>${list(d.nessie)}</div>
+      <div><h4>From public rules<span class="agent-lbl">Bright Data agent</span></h4>${list(d.brightdata)}</div>
+      <div><h4>The math</h4>${list(d.math)}</div>
+      <div><h4>The path</h4><p style="margin:0">${esc(d.path)}</p></div>
+      <div><h4>Who to call</h4><p style="margin:0">${esc(d.call)}</p></div>
+      <div><h4>If billing says no</h4><p style="margin:0">${esc(d.fallback)}</p></div></div></details>`;
+  return `<div class="plan-card" id="planCard">${vers}${banner}
+    <div class="plan-money"><s>${money(mo.billed)}</s>${sym('arrow_forward')}<b>${money(mo.target)}</b><span class="body-m">${esc(extra)}</span></div>
+    <p class="plan-who body-m">${sym('call')}<span><b>Who we’ll call:</b> ${esc(v.call.department)} · ${v.call.phone ? esc(v.call.phone) : 'the number on your bill'}<br><span class="muted body-s">${esc(v.call.why)}</span></span></p>
+    <div><h3 class="title-s sub-h" style="margin-bottom:4px">What I’ll ask for · biggest money first</h3><ol class="plan-asks">${asks}</ol>${more}${skipped}</div>
+    ${how}</div>`;
+}
+
+// Recordings made before step 3 existed (demo/replay_*.json): the asks from the approval, no versions or chat.
+function legacyPlanHTML(m) {
+  const billed = m.bill ? m.bill.amount_due : null, owe = correctedBalance(m);
+  return `<div class="plan-card">${billed != null && owe != null ? `<div class="plan-money"><s>${money(billed)}</s>${sym('arrow_forward')}<b>${money(owe)}</b></div>` : ''}
+    <div><h3 class="title-s sub-h" style="margin-bottom:4px">What I’ll ask for</h3><ol class="plan-asks">${m.asks.map((q, i) =>
+      `<li><span class="n">${i + 1}</span><span class="tx"><span>${esc(q)}</span></span></li>`).join('')}</ol></div></div>`;
+}
+
+function renderPlan(m, ds, ui) {
+  const cur = latestPlan(m), busy = deciding(m), replay = state.active === 'replay';
+  // the Decide agent: its terminal big while it works; then a slim bar ("Talk to the planner ▸")
+  let dec = '';
+  if (m.agent.decide) {
+    const term = `<div class="terms">${renderAgent('decide', m, busy || ui.termOpen)}</div>`;
+    if (busy || !cur) dec = term;  // big while it works; the plan below says "filling in…" until it's done
+    else {
+      const chatOk = !replay || m.chat.length;
+      dec = `<div class="slim-bar"><span class="who"><b>Decide agent</b><small>Done · plan v${cur.v}${m.plans.length > 1 ? ` of ${m.plans.length}` : ''}</small></span>
+        <button type="button" class="m3-btn text" data-act="term">${ui.termOpen ? 'Hide' : 'Show'} its checklist</button>
+        ${chatOk ? `<button type="button" class="m3-btn tonal" data-act="chat" aria-expanded="${ui.chatOpen}">Talk to the planner ${ui.chatOpen ? '▾' : '▸'}</button>` : ''}</div>`
+        + (ui.termOpen ? term : '');
+    }
+  }
+  setHTML($('decideBox'), dec);
+  if (replay && m.chat.length) ui.chatOpen = true;  // the replay plays the recorded chat back
+  $('plannerBox').hidden = !(cur && ui.chatOpen);
+  const log = m.chat.map((c) => {
+    const me = c.role === 'user';
+    return `<div class="bubble-wrap ${me ? 'me' : 'them'}"><span class="bubble-who">${me ? 'You' : 'Decide agent'}</span><span class="m3-bubble ${me ? 'me' : 'them'}">${esc(c.text)}</span>
+      ${c.v ? `<button type="button" class="made-v" data-act="ver" data-v="${c.v}">→ plan v${c.v}</button>` : ''}</div>`;
+  }).join('') + (ui.chatBusy ? '<div class="bubble-wrap them"><span class="bubble-who">Decide agent</span><span class="m3-bubble them">…</span></div>' : '')
+    + (ui.chatErr ? `<p class="body-s" style="color:var(--md-error);margin:0">${esc(ui.chatErr)}</p>` : '');
+  const grew = $('plannerLog')._n !== m.chat.length + (ui.chatBusy ? 1 : 0);
+  setHTML($('plannerLog'), log);
+  if (grew) { $('plannerLog')._n = m.chat.length + (ui.chatBusy ? 1 : 0); $('plannerLog').scrollTop = 1e6; }
+  $('plannerInput').disabled = $('plannerSend').disabled = !!ui.chatBusy;
+
+  // the plan
+  if (cur && !busy) setHTML($('planArea'), planHTML(m, ui));
+  else if (m.asks.length && !busy) setHTML($('planArea'), legacyPlanHTML(m));
+  else if (busy) setHTML($('planArea'), '<div class="filling body-m">Filling in…<i style="width:55%"></i><i style="width:85%"></i><i style="width:70%"></i><i style="width:40%"></i></div>');
+  else setHTML($('planArea'), ds < 2 ? '<p class="body-m muted" style="margin:0">After the Review, the Decide agent turns the findings into a call plan for you to check.</p>' : '');
+  if (m.flash && Date.now() < m.flash.until && !m.flash.timer) m.flash.timer = setTimeout(render, m.flash.until - Date.now() + 50);
+
+  const viewing = cur && ui.planV && ui.planV !== cur.v;
+  const pending = m.approvals.caller && m.approvals.caller.resolved === undefined;
+  $('planActions').hidden = !(pending && !viewing && !m.error && (cur || m.asks.length));
+  $('approveBtn').innerHTML = `${sym('call')}Call now${cur && m.plans.length > 1 ? ` (v${cur.v})` : ''}`;
+  const approvedV = m.approvedV || (cur && cur.v);
+  setText($('approveSummary'), ui.planErr ? ui.planErr : m.callDeclined ? 'You chose not to call yet.'
+    : callStarted(m) ? `Approved${cur ? ` v${approvedV}` : ''} · ${m.approvedAt}. Every version stays here.` : '');
+  setText($('approveMeta'), m.callDeclined ? 'You chose not to call yet'
+    : callStarted(m) ? `Approved${cur ? ` v${approvedV}` : ''} · ${m.approvedAt}`
+    : busy ? 'Building your plan…'
+    : cur ? `v${cur.v} · ${money(cur.money.billed)} → ${money(cur.money.target)} · ${cur.asks.length} asks`
+    : pending ? 'Waiting for your OK' : 'The Decide agent turns the findings into a call plan');
+}
+
+function scrollToEl(el) {
+  if (!el) return;
+  const bar = document.querySelector('.m3-top-app-bar');
+  scrollTo({ top: el.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 16, behavior: 'smooth' });
+}
+// "why ▸": open the Review step at the finding behind an ask, and flash it
+function openFinding(key) {
+  const ui = uiOf(state.active);
+  ui.open.add(1); ui.touched.add(1); ui.finds.add(key);
+  ui.flashFind = key; ui.flashUntil = Date.now() + 4000;
+  render(); setTimeout(render, 4100);
+  scrollToEl(document.querySelector(`[data-find="${CSS.escape(key)}"]`));
+}
+function showPlan() {
+  const ui = uiOf(state.active);
+  ui.planV = null; ui.open.add(2); render();
+  setTimeout(() => scrollToEl($('planArea')), 50);
+}
+async function post(url, body, method = 'POST') {
+  const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || `Something went wrong (${r.status})`);
+  return j;
+}
+
 // "Now" panel: the current step (1-5), what is happening inside it, and its state
-const STEP_NAMES = ['Read your bill', 'Review', 'Your approval', 'Call billing', 'Resolved'];
+const STEP_NAMES = ['Read your bill', 'Review', 'The plan', 'Call billing', 'Resolved'];
 function nowText(m, ds, a) {
   const prov = m.bill ? m.bill.provider : 'the hospital';
   if (m.error) return a.text;
@@ -855,7 +1128,11 @@ function nowText(m, ds, a) {
     });
     return doing.join(' · ');
   }
-  if (ds === 2) return `Waiting for your OK to call ${prov} billing.`;
+  if (ds === 2 && deciding(m)) {
+    const st = m.steps.decide || [], run = st.filter((x) => x.status === 'running').pop() || st[st.length - 1];
+    return run ? `Decide agent: ${run.label}…` : 'Decide agent: starting…';
+  }
+  if (ds === 2) return `Check the plan, then tap Call now and I’ll call ${prov} billing.`;
   if (ds === 3) {
     const l = m.lines[m.lines.length - 1];
     return l ? `${l.who === 'rep' ? 'Billing' : 'BillBack'}: “${l.text.length > 160 ? l.text.slice(0, 157).trimEnd() + '…' : l.text}”` : `Dialing ${prov} billing…`;
@@ -892,7 +1169,7 @@ function minGap(e, prev, live) {
     case 'case_started': return 0.6;
     case 'balance': return 1.2;
     case 'agent_started': return 0.6;
-    case 'step': return e.status === 'running' ? 0.35 : 1.5;
+    case 'step': return e.status === 'running' ? 0.35 : e.agent === 'decide' ? 0.9 : 1.5;
     case 'review_started': return 0.6;
     case 'finding': return 1.0;
     case 'evidence': case 'policy_quote': return live ? 0.2 : 0.7;   // live: they don't show in the panels
@@ -905,6 +1182,10 @@ function minGap(e, prev, live) {
     case 'plan_proposed': return 1.5;
     case 'tool_result': return 1.5;
     case 'case_done': return 1.2;
+    case 'plan_version': return 1.0;
+    case 'correction': case 'correction_undone': return live ? 0 : 1.5;
+    case 'planner_message': return live ? 0 : e.role === 'user' ? 1.5 : Math.min(Math.max(2, words(e.text) / 3.2), 7);
+    case 'finding_qa': return live ? 0 : Math.min(Math.max(2, words(e.answer) / 3.2), 7);
     default: return 0.3;
   }
 }
@@ -984,7 +1265,7 @@ $('tabList').addEventListener('click', (e) => {
 document.querySelector('.steps').addEventListener('click', (e) => {
   const b = e.target.closest('.row-btn'); if (!b) return;
   const i = +b.closest('.step').dataset.step;
-  const ui = (state.ui[state.active || '_'] ||= { open: new Set(), touched: new Set(), last: -1 });
+  const ui = uiOf(state.active || '_');
   ui.touched.add(i);
   if (ui.open.has(i)) ui.open.delete(i); else ui.open.add(i);
   render();
@@ -1005,8 +1286,88 @@ $('voicePlay').addEventListener('click', async (e) => {
     body: JSON.stringify({ text: 'Hi, this is an automated assistant calling about claim C-2026-0815-44917 and an ondansetron charge of $440.', voice_id: $('voiceSel').value }) });
   if (r.ok) new Audio(URL.createObjectURL(await r.blob())).play();
 });
-$('approveBtn').addEventListener('click', () => decide('caller', true));
-$('notYetBtn').addEventListener('click', () => decide('caller', false));
+// step 3: "Call now" approves the version on screen (the latest); recordings from before step 3 use the old approval
+async function planDecision(ok) {
+  const m = model(state.active), cur = latestPlan(m), ui = uiOf(state.active);
+  if (state.active === 'replay' || !cur) return decide('caller', ok);
+  ui.planErr = '';
+  try { await post(`/api/cases/${state.active}/plan/${ok ? 'approve' : 'decline'}`, ok ? { v: cur.v } : null); }
+  catch (e) { ui.planErr = e.message; render(); }
+}
+$('approveBtn').addEventListener('click', () => planDecision(true));
+$('notYetBtn').addEventListener('click', () => planDecision(false));
+document.querySelector('main').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b || !state.active) return;
+  const ui = uiOf(state.active), key = b.dataset.key, act = b.dataset.act;
+  if (act === 'ask' || act === 'wrong') {
+    ui.box[key] = ui.box[key] === act ? undefined : act; ui.finds.add(key); delete ui.err[key]; render();
+    const n = document.querySelector(`[data-draft="${CSS.escape(act + ':' + key)}"]`); if (n) n.focus();
+  } else if (act === 'cancel') { delete ui.box[key]; render(); }
+  else if (act === 'undo') {
+    if (state.active === 'replay') return;
+    try { await post(`/api/cases/${state.active}/corrections/${encodeURIComponent(b.dataset.id)}`, null, 'DELETE'); } catch (err) { alert(err.message); }
+  } else if (act === 'why') openFinding(key);
+  else if (act === 'goplan') showPlan();
+  else if (act === 'term') { ui.termOpen = !ui.termOpen; render(); }
+  else if (act === 'agent') { const a = model(state.active).agent[key] || {}; ui.agentOpen[key] = !(ui.agentOpen[key] ?? !a.done); render(); }
+  else if (act === 'line') {
+    if (e.target.closest('a')) return;  // a source link inside the proof opens the source
+    if (ui.lineOpen.has(key)) ui.lineOpen.delete(key); else ui.lineOpen.add(key);
+    render();
+  }
+  else if (act === 'chat') { ui.chatOpen = !ui.chatOpen; render(); if (ui.chatOpen) $('plannerInput').focus(); }
+  else if (act === 'ver') {
+    const cur = latestPlan(model(state.active)), v = +b.dataset.v;
+    ui.planV = cur && v === cur.v ? null : v;
+    if (b.closest('#plannerLog')) showPlan(); else render();
+  } else if (act === 'more') { ui.showAll = !ui.showAll; render(); }
+  else if (act === 'restore') {
+    if (state.active === 'replay') return;
+    b.disabled = true;
+    try { await post(`/api/cases/${state.active}/plan/restore`, { v: +b.dataset.v }); showPlan(); }
+    catch (err) { ui.planErr = err.message; render(); }
+  }
+});
+document.querySelector('main').addEventListener('keydown', (e) => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-act="line"]')) { e.preventDefault(); e.target.click(); }
+});
+document.querySelector('main').addEventListener('input', (e) => {
+  const k = e.target.dataset && e.target.dataset.draft; if (k && state.active) uiOf(state.active).drafts[k] = e.target.value;
+});
+// remember which findings / "How I decided" you opened, so a re-render doesn't close them
+document.querySelector('main').addEventListener('toggle', (e) => {
+  const d = e.target; if (!state.active || !(d instanceof HTMLDetailsElement)) return;
+  const ui = uiOf(state.active);
+  if (d.dataset.ui === 'how') ui.howOpen = d.open;
+  else if (d.dataset.key) { if (d.open) ui.finds.add(d.dataset.key); else ui.finds.delete(d.dataset.key); }
+}, true);
+document.querySelector('main').addEventListener('submit', async (e) => {
+  const f = e.target.closest('form[data-form]'); if (!f || !state.active) return;
+  e.preventDefault();
+  if (state.active === 'replay') return;
+  const ui = uiOf(state.active), key = f.dataset.key, kind = f.dataset.form, dk = kind + ':' + key;
+  const text = (ui.drafts[dk] || '').trim();
+  if (kind === 'ask' && !text) return;
+  ui.busy[dk] = true; delete ui.err[key]; render();
+  try {
+    if (kind === 'ask') await post(`/api/cases/${state.active}/ask`, { question: text, finding: key });
+    else { await post(`/api/cases/${state.active}/corrections`, { finding: key, note: text }); delete ui.box[key]; }
+    ui.drafts[dk] = '';
+  } catch (err) { ui.err[key] = err.message; }
+  finally { delete ui.busy[dk]; render(); }
+});
+$('plannerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('plannerInput').value.trim(), id = state.active;
+  if (!msg || !id || id === 'replay') return;
+  const ui = uiOf(id);
+  ui.chatBusy = true; ui.chatErr = ''; $('plannerInput').value = ''; render();
+  try {
+    const r = await post(`/api/cases/${id}/planner`, { message: msg });
+    if (r.v) { ui.chatBusy = false; showPlan(); }  // a new version: scroll to the plan, its changed lines flash
+  } catch (err) { ui.chatErr = err.message; $('plannerInput').value = msg; }
+  finally { ui.chatBusy = false; render(); $('plannerInput').focus(); }
+});
 $('planYes').addEventListener('click', () => decide('planner', true));
 $('planNo').addEventListener('click', () => decide('planner', false));
 $('endCallBtn').addEventListener('click', () => { if (state.active) fetch(`/api/cases/${state.active}/end-call`, { method: 'POST' }); });

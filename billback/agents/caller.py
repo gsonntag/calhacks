@@ -82,9 +82,11 @@ def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
     return goals
 
 
-def build_brief(case: dict, audit: dict, policy: dict) -> dict:
+def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None) -> dict:
+    """plan: the approved plan version (agents/decide.py). Its asks are the goals, in its order, and its money
+    replaces the Review's (corrections and strategy changes are already applied)."""
     rec, elig = audit["reconciliation"], policy["eligibility"]
-    return {
+    brief = {
         "goals": call_goals(rec, elig, policy),
         "patient": f"{case['patient']['first_name']} {case['patient']['last_name']}",
         "hospital": case["hospital"]["name"],
@@ -112,6 +114,14 @@ def build_brief(case: dict, audit: dict, policy: dict) -> dict:
         "deadline_on_notice": case["bill"]["due_date"],
         **({"voice_id": case["voice_id"]} if case.get("voice_id") else {}),
     }
+    if plan:
+        m, plan_ask = plan["money"], next((a for a in plan["asks"] if a["kind"] == "plan"), None)
+        kept = {k.removeprefix("auditor:paid-") for a in plan["asks"] for k in a["findings"] if k.startswith("auditor:paid-")}
+        brief.update({"goals": [a["goal"] for a in plan["asks"]], "plan_version": plan["v"], "correct_balance": m["owed"],
+                      "balance_after_assistance": m["target"], "refund_due_after_assistance": m["refund"],
+                      "proposed_payment_plan": plan_ask["plan"] if plan_ask else None,
+                      "payments_made": [p for p, raw in zip(brief["payments_made"], rec["payments"]) if str(raw["id"]) in kept]})
+    return brief
 
 
 def _case_number(said: str) -> str:

@@ -12,7 +12,7 @@ import uuid
 from datetime import date, timedelta
 
 from . import config, events, followups, llm, voice
-from .agents import auditor, caller, planner, policy
+from .agents import auditor, caller, decide, planner, policy
 from .events import bus
 from .harness import gate
 from .integrations import cartesia
@@ -20,7 +20,7 @@ from .integrations.nessie import get_bank
 
 cases: dict[str, dict] = {}
 RUNTIME = ("call_done", "turns_seen", "wh_counts", "wh_turn_ids")
-ACTIVE = ("created", "reviewing", "awaiting_call_approval", "calling", "planning")
+ACTIVE = ("created", "reviewing", "deciding", "awaiting_call_approval", "calling", "planning")
 
 
 SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
@@ -126,25 +126,6 @@ def policy_summary(pol: dict) -> dict:
     return {"result": result,
             "note": "charity-care discount" if d else "no discount tier fits; interest-free plan under their policy"
             if plan.get("months") else "income is above the policy's limits"}
-
-
-def call_asks(audit: dict, pol: dict) -> list[str]:
-    rec, d = audit["reconciliation"], pol["eligibility"]["discount_pct"]
-    asks = []
-    if rec["billed_due"] > rec["patient_responsibility"]:
-        asks.append(f"Apply your insurance: the EOB says you owe ${rec['patient_responsibility']:,.0f}, not ${rec['billed_due']:,.0f}")
-    if rec["paid"]:
-        asks.append(f"Show the ${rec['paid']:,.0f} you already paid, bringing it to ${rec['owed']:,.0f}")
-    if d:
-        refund = f" and refunding ${pol['refund']:,.0f} you overpaid" if pol.get("refund") else ""
-        asks.append(f"Ask for the {'free care' if d == 100 else f'{d:.0f}% charity-care discount'} under their own policy, "
-                    f"bringing the bill to ${pol['target']:,.0f}{refund}")
-    plan = pol.get("plan") or {}
-    if plan.get("months") and pol["target"] > 0:
-        asks.append(f"Set up an interest-free payment plan for the ${pol['target']:,.0f}: "
-                    f"{plan['months']} × ${plan['monthly']:,.0f}/month, as their own billing policy allows")
-    asks.append("Ask them to pause collections while it's corrected, and get a case number")
-    return asks
 
 
 def save_replay(case: dict) -> None:
@@ -315,8 +296,9 @@ def next_action(case: dict) -> dict:
     st, today = case["status"], case_now(case)
     if st == "awaiting_call_approval":
         return {"action": f"Approve the call to {case['hospital']['name']} billing", "due": today.isoformat(), "overdue": False}
-    if st in ("created", "reviewing", "calling", "planning"):
-        return {"action": {"calling": "On the phone with billing now", "planning": "Working out a plan for what's left"}
+    if st in ("created", "reviewing", "deciding", "calling", "planning"):
+        return {"action": {"calling": "On the phone with billing now", "planning": "Working out a plan for what's left",
+                           "deciding": "Building your call plan"}
                 .get(st, "Reviewing the bill"), "due": None, "overdue": False}
     fu = open_followup(case)
     if fu:
@@ -419,19 +401,29 @@ async def run_case(case: dict) -> None:
             auditor.run(case, bank, account_id, bank_label, txns_ready, owed_ready),
             policy.run(case, txns_ready, owed_ready))
 
-        owed, target = audit["reconciliation"]["owed"], pol["target"]
-        if target != owed:
-            bus.emit(cid, "balance", amount=target, label="With the hospital's own discount")
-        brief = caller.build_brief(case, audit, pol)
-        brief["previous_calls"] = followups.previous_calls(case)
-        case["result"].update({"owed": owed, "target": target, "brief": brief, "income_monthly": pol["income"]["monthly"],
-                               "refund": pol.get("refund", 0)})
+        if pol["target"] != audit["reconciliation"]["owed"]:
+            bus.emit(cid, "balance", amount=pol["target"], label="With the hospital's own discount")
+        case["result"].update({"owed": audit["reconciliation"]["owed"], "target": pol["target"],
+                               "income_monthly": pol["income"]["monthly"], "refund": pol.get("refund", 0)})
         bus.emit(cid, "review_done", auditor=audit_summary(audit), policy=policy_summary(pol))
 
+        # step 3: the plan. Corrections and planner-chat changes make new versions while the approval waits
+        set_status(case, "deciding")
+        decide.save_facts(case, audit, pol)
+        v1 = await decide.run(case)
         set_status(case, "awaiting_call_approval")
         ok = await gate.request(cid, "caller", f"Call {case['hospital']['name']} billing for you?", {
-            "asks": call_asks(audit, pol),
+            "asks": [a["text"] for a in v1["asks"]], "v": v1["v"],
             "say": "I won't agree to pay anything on the call. Any payment comes back to you first."})
+        plan_v = decide.approved(case)
+        owed, target = plan_v["money"]["owed"], plan_v["money"]["target"]
+        brief = caller.build_brief(case, audit, pol, plan_v)
+        brief["previous_calls"] = followups.previous_calls(case)
+        case["result"].update({"owed": owed, "target": target, "brief": brief, "refund": plan_v["money"]["refund"],
+                               "plan_version": plan_v["v"]})
+        last = [e["amount"] for e in bus.history(cid) if e["kind"] == "balance"][-1]
+        if target != last:
+            bus.emit(cid, "balance", amount=target, label=f"Your plan (v{plan_v['v']})")
         outcome: dict = {}
         if ok:
             set_status(case, "calling")
@@ -443,7 +435,8 @@ async def run_case(case: dict) -> None:
         if balance != target:
             bus.emit(cid, "balance", amount=balance, label="Still owed")
         plan = await planner.run(case, bank, account_id, balance, pol["income"]["monthly"],
-                                 policy_cap_pct=(pol.get("plan_terms") or {}).get("max_pct_monthly_income"))
+                                 policy_cap_pct=(pol.get("plan_terms") or {}).get("max_pct_monthly_income"),
+                                 max_monthly=case["plan"]["prefs"].get("max_monthly"))
 
         c = plan.get("created") or {}
         plan_created = bool(c) and not c.get("blocked") and not c.get("error")
@@ -454,7 +447,7 @@ async def run_case(case: dict) -> None:
         bus.emit(cid, "case_done", summary={
             "started_at": case["bill"]["amount_due"], "now": balance, "case_number": outcome.get("case_number"),
             "plan": plan["plan"], "plan_created": plan_created,
-            "refund": pol.get("refund", 0) if balance == target else 0})
+            "refund": plan_v["money"]["refund"] if balance == target else 0})
         save_replay(case)
     except Exception as e:
         set_status(case, "error")

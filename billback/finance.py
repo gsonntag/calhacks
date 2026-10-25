@@ -172,17 +172,21 @@ def apply_discount(owed: float, discount_pct: float) -> float:
 
 
 def payment_plan(balance: float, monthly_income: float, max_share: float = 0.04,
-                 policy_cap_pct: float | None = None) -> dict:
+                 policy_cap_pct: float | None = None, max_monthly: float | None = None) -> dict:
     """Shortest interest-free plan whose payment stays under max_share of monthly income (and under the
-    hospital policy's own cap, when its policy states one)."""
+    hospital policy's own cap, when its policy states one). max_monthly: what the patient says they can pay;
+    it replaces both caps (the policy's cap limits what the hospital can ask, not what the patient offers)."""
     if balance <= 0:
         return {"months": 0, "monthly": 0.0, "reason": "nothing owed"}
     share = min(max_share, policy_cap_pct / 100) if policy_cap_pct else max_share
     cap = max(10.0, monthly_income * share)
+    if max_monthly:
+        cap = max_monthly
     policy = f"; the hospital's policy caps it at {policy_cap_pct:g}%" if policy_cap_pct else ""
     for months in (1, 3, 6, 12, 18, 24, 36):
         pay = math.ceil(balance / months)
         if pay <= cap:
-            return {"months": months, "monthly": float(pay),
-                    "reason": f"${pay}/mo stays under {share * 100:g}% of monthly income (${monthly_income:,.0f}){policy}"}
+            why = (f"${pay}/mo is within the ${max_monthly:,.0f}/mo you said you can pay" if max_monthly
+                   else f"${pay}/mo stays under {share * 100:g}% of monthly income (${monthly_income:,.0f})")
+            return {"months": months, "monthly": float(pay), "reason": why + ("" if max_monthly else policy)}
     return {"months": 36, "monthly": float(math.ceil(balance / 36)), "reason": "longest standard plan"}
