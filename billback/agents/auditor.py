@@ -19,7 +19,6 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     bus.emit(cid, "agent_started", "auditor", text="Finding what you actually owe")
 
     step(cid, "auditor", "read", "Read bill & EOB", "running")
-    await asyncio.sleep(0.6)
     step(cid, "auditor", "read", "Read bill & EOB", "ok",
          f"${bill['amount_due']:,.0f} billed; your insurance says you owe ${eob['patient_responsibility']:,.0f}")
 
@@ -38,7 +37,6 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
         step(cid, "auditor", "payments", "Find past payments", "clear", "Nothing found, no payments yet")
 
     step(cid, "auditor", "dupes", "Check for duplicates", "running")
-    await asyncio.sleep(0.5)
     if rec["duplicates"]:
         d = rec["duplicates"][0]
         step(cid, "auditor", "dupes", "Check for duplicates", "flag",
@@ -49,7 +47,6 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
         step(cid, "auditor", "dupes", "Check for duplicates", "clear", "Nothing found")
 
     step(cid, "auditor", "balance", "Calculate balance", "running")
-    await asyncio.sleep(0.4)
     paid = f" − ${rec['paid']:,.0f}" if rec["paid"] else ""
     adj = rec["billed_due"] - rec["patient_responsibility"]
     step(cid, "auditor", "balance", "Calculate balance", "ok",

@@ -5,15 +5,13 @@
     act            runs, but is announced on the dashboard (placing a call)
     consequential  blocks until the patient approves on their phone (payment plans, agreeing to pay)
 - Every tool call, result, and approval is emitted as an event (and so lands in the audit log).
-- Agent wraps a Claude tool-use loop over a ToolRegistry.
+- The pipeline order is fixed (orchestrator.py); the call agent (agents/caller.py) is the Claude tool-use loop.
 """
 import asyncio
-import json
 import uuid
 from dataclasses import dataclass, field
 from typing import Any, Awaitable, Callable, Literal
 
-from . import llm
 from .events import bus
 
 Tier = Literal["read", "act", "consequential"]
@@ -97,34 +95,3 @@ class ToolRegistry:
         bus.emit(self.case_id, "tool_result", self.agent, tool=name, result=result)
         return result
 
-
-class Agent:
-    """A Claude tool-use loop. Stops when the model stops calling tools or after max_steps."""
-
-    def __init__(self, case_id: str, name: str, system: str, registry: ToolRegistry,
-                 model: str | None = None, max_steps: int = 8) -> None:
-        self.case_id, self.name, self.system = case_id, name, system
-        self.registry, self.model, self.max_steps = registry, model, max_steps
-
-    async def run(self, task: str | list) -> str:
-        messages: list[dict] = [{"role": "user", "content": task}]
-        bus.emit(self.case_id, "agent_started", self.name)
-        final_text = ""
-        for _ in range(self.max_steps):
-            resp = await llm.create(system=self.system, messages=messages, tools=self.registry.specs(), model=self.model)
-            messages.append({"role": "assistant", "content": resp.content})
-            texts = [b.text for b in resp.content if b.type == "text" and b.text.strip()]
-            if texts:
-                final_text = "\n".join(texts)
-                bus.emit(self.case_id, "agent_thought", self.name, text=final_text)
-            calls = [b for b in resp.content if b.type == "tool_use"]
-            if not calls:
-                break
-            results = []
-            for c in calls:
-                out = await self.registry.call(c.name, c.input)
-                results.append({"type": "tool_result", "tool_use_id": c.id,
-                                "content": json.dumps(out, default=str)[:20000]})
-            messages.append({"role": "user", "content": results})
-        bus.emit(self.case_id, "agent_finished", self.name, summary=final_text)
-        return final_text

@@ -129,8 +129,3 @@ async def document(url: str) -> BDResponse:
     """A file (policy PDF) through Web Unlocker, raw bytes."""
     return await request(UNLOCKER, url, timeout=90)
 
-
-async def search(query: str) -> list[dict]:
-    """Back-compat helper: [{title, link}] for a Google query."""
-    results, _ = await serp(query)
-    return results[:8]

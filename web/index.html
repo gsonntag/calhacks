@@ -102,7 +102,7 @@
       <div class="starts" role="group" aria-label="Quick start">
         <button class="m3-chip" id="sampleChip" type="button"><span class="material-symbols-rounded" aria-hidden="true">description</span>Use a sample bill</button>
         <button class="m3-chip" id="uploadChip" type="button"><span class="material-symbols-rounded" aria-hidden="true">upload_file</span>Upload bill + insurance</button>
-        <button class="m3-chip" id="gmailBtn" type="button"><span class="material-symbols-rounded" aria-hidden="true">mail</span><span>Connect Gmail</span></button>
+        <button class="m3-chip" id="gmailBtn" type="button"><span class="material-symbols-rounded" aria-hidden="true">mail</span><span>Demo inbox</span></button>
       </div>
     </section>
 
@@ -196,7 +196,7 @@ pill.addEventListener('drop', (e) => { e.preventDefault(); pill.classList.remove
 $('sampleChip').addEventListener('click', () => { input.value = 'Use the sample bill'; sendText(); });
 $('uploadChip').addEventListener('click', () => $('fileInput').click());
 
-const GMAIL_OFF = '<span class="material-symbols-rounded" aria-hidden="true">mail</span><span>Connect Gmail</span>';
+const GMAIL_OFF = '<span class="material-symbols-rounded" aria-hidden="true">mail</span><span>Demo inbox</span>';
 gmailBtn.addEventListener('click', async () => {
   if (state.gmail === 'scanning') return;
   if (state.gmail === 'on') {
@@ -205,20 +205,20 @@ gmailBtn.addEventListener('click', async () => {
     return;
   }
   state.gmail = 'scanning'; gmailBtn.className = 'm3-chip scanning';
-  gmailBtn.innerHTML = '<span class="m3-spinner" aria-hidden="true"></span><span>Scanning your inbox…</span>';
+  gmailBtn.innerHTML = '<span class="m3-spinner" aria-hidden="true"></span><span>Loading demo inbox…</span>';
   let r;
   try { r = await (await fetch('/api/gmail/scan', { method: 'POST' })).json(); }
   catch (e) { state.gmail = 'off'; gmailBtn.className = 'm3-chip'; gmailBtn.innerHTML = GMAIL_OFF; return; }
-  setTimeout(() => {
+  {
     state.gmail = 'on'; gmailBtn.className = 'm3-chip connected';
-    gmailBtn.setAttribute('aria-label', 'Gmail connected. Disconnect');
-    gmailBtn.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">check</span><span>Gmail connected</span>';
+    gmailBtn.setAttribute('aria-label', 'Demo inbox loaded. Remove');
+    gmailBtn.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">check</span><span>Demo inbox</span>';
     const bill = r.found.find((f) => f.type === 'bill'), eob = r.found.find((f) => f.type === 'eob');
     const msg = `I found a final notice from ${bill.from} for $${bill.amount.toLocaleString()} and an EOB from ${eob.from}. Want me to start on that bill?`;
     state.history.push({ role: 'user', content: `[Connected Gmail. Found: ${JSON.stringify(r.found)}]` }, { role: 'assistant', content: msg });
     app.classList.remove('empty'); addBot(msg);
     if (r.simulated) inner.insertAdjacentHTML('beforeend', '<div class="sim body-s muted">Demo inbox (simulated Gmail)</div>');
-  }, 1200);
+  }
 });
 refresh();
 </script>

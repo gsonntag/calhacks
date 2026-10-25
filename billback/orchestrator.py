@@ -11,7 +11,7 @@ import time
 import uuid
 from datetime import date, timedelta
 
-from . import config, events, finance, followups, llm, voice
+from . import config, events, followups, llm, voice
 from .agents import auditor, caller, planner, policy
 from .events import bus
 from .harness import gate
@@ -474,11 +474,10 @@ async def call_again(case: dict) -> None:
         ok = await gate.request(cid, "caller", f"Call {case['hospital']['name']} billing again?", {
             "asks": followups.followup_asks(case),
             "say": "Following up on the last call. I won't agree to pay anything on the call."})
-        outcome: dict = {}
-        if ok:
+        if ok:  # the call's outcome lands in case["calls"] via _fill_outcome
             set_status(case, "calling")
             _reset_call_state(case)
-            outcome = await (_phone_call(case, brief) if (voice.twilio_ready() or cartesia.phone_ready()) else _desk_call(case, brief))
+            await (_phone_call(case, brief) if (voice.twilio_ready() or cartesia.phone_ready()) else _desk_call(case, brief))
         res = case["result"]
         confirmed = case["calls"][-1].get("confirmed_balance") if ok and case["calls"] else None
         if isinstance(confirmed, (int, float)) and confirmed != current_balance(case):
