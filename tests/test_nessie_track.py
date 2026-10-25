@@ -188,7 +188,13 @@ async def test_agents_show_medical_spending_as_step_finding_and_proof(monkeypatc
     discount = next(e for e in hist if e["kind"] == "finding" and e["key"] == "policy:discount")
     assert any("without them you wouldn't qualify" in p for p in discount["proof"])
     free = [e for e in hist if e["kind"] == "step" and e["key"] == "policy:free"][-1]
-    assert "$3,800 this bill + $315 other medical bills in your bank" in free["result"]
+    # the bank tips him over: that contrast is the step's headline, with this bill's share and the bank's sum
+    e = pol["eligibility"]
+    assert e["bill_oop_pct_income"] < 10 < e["oop_pct_income"]
+    assert free["result"] == (f"Your bank history qualifies you: this bill alone is {e['bill_oop_pct_income']:.1f}% of income; "
+                              f"with $315 of other medical bills it's {e['oop_pct_income']:.1f}% — over their 10% limit")
+    assert discount["title"] == "Free care: your bank history qualifies you"
+    assert discount["proof"][0] == free["result"] + "." and discount["value"] == "$3,800 share written off"
 
 
 def test_scenarios_record_medical_spending():

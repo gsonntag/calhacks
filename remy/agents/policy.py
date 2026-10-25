@@ -366,11 +366,13 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     await _save_household(cid, case, txns, inc, elig, insured)
 
     free = [t for t in tiers if t.get("discount_pct") == 100]
+    whose = f"{hosp['system']}'s" if hosp.get("system") else "their"
     r.step("free", "Check free care", "running")
     if elig["discount_pct"] == 100:
         high_cost = elig["tier"].get("min_oop_pct_income") is not None
-        why = f" (your out-of-pocket is {elig['oop_pct_income']:.0f}% of income{_oop_parts(elig)})" if high_cost else ""
-        r.step("free", "Check free care", "win", f"You qualify for free care{why}",
+        why = f" (your out-of-pocket is {elig['oop_pct_income']:.1f}% of income{_oop_parts(elig)})" if high_cost else ""
+        r.step("free", "Check free care", "win",
+               bank_qualifies(elig, whose) if elig.get("needs_bank_medical") else f"You qualify for free care{why}",
                [(elig["tier"].get("quote", ""), src(elig["tier"])),
                 *([(_bank_medical_line(elig), "Nessie agent · bank, last 12 months")]
                   if high_cost and elig["bank_medical"] else [])])
@@ -404,8 +406,9 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     r.step("apply", label, "running")
     paid = f" − ${paid_info['paid']:,.0f} paid" if paid_info["paid"] else ""
     end = f"you're owed ${st['refund']:,.0f} back" if st["refund"] else f"${target:,.0f}"
-    if d == 100 and not paid_info["paid"]:
-        text = f"${paid_info['responsibility']:,.0f} written off = $0"
+    if d == 100:
+        text = (f"Your ${paid_info['responsibility']:,.0f} share is written off"
+                + (f"; you already paid ${paid_info['paid']:,.0f}, so {end}" if paid_info["paid"] else ": $0"))
     elif d:
         text = f"${paid_info['responsibility']:,.0f} share − {d:.0f}% = ${st['discounted_share']:,.0f}{paid} = {end}"
     else:
@@ -413,32 +416,49 @@ async def run(case: dict, txns_ready: asyncio.Future, owed_ready: asyncio.Future
     r.step("apply", label, "ok" if d else "clear", text)
     if d:
         saved = owed - target + st["refund"]
-        r.finding("discount", "Free care under their policy" if d == 100 else f"{d:.0f}% discount under their policy", saved,
-                  [f"Your income is {elig['fpl_pct']:.0f}% of the poverty line "
+        bank = elig.get("needs_bank_medical")
+        title = ("Free care: your bank history qualifies you" if bank and d == 100
+                 else "Free care under their policy" if d == 100 else f"{d:.0f}% discount under their policy")
+        # what the policy writes off (the share), not the change in what's owed: the plan shows that
+        what = (f"${paid_info['responsibility']:,.0f} share written off" if d == 100
+                else f"−${paid_info['responsibility'] - st['discounted_share']:,.0f} off your share")
+        r.finding("discount", title, saved,
+                  [*([bank_qualifies(elig, whose) + "."] if bank else []),
+                   f"Your income is {elig['fpl_pct']:.0f}% of the poverty line "
                    f"({check['basis'] if check else inc['source']}).",
                    *([check["line"]] if check else []),
                    *([f"“{elig['tier']['quote']}”"] if elig["tier"].get("quote") else []),
                    *([_bank_medical_line(elig)] if elig["tier"].get("min_oop_pct_income") is not None
                      and elig["bank_medical"] else []),
                    *([f"You already paid ${paid_info['paid']:,.0f}, so they owe you ${st['refund']:,.0f} back."] if st["refund"] else [])],
-                  src(elig["tier"]))
+                  src(elig["tier"]), value=what)
 
     terms = found.get("payment_plan") or {}
     plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
                                 monthly_bills=inc["bills_monthly"])
     # payment plans are left off entirely: no step, no finding, no quote (the plan keeps the final amount)
 
-    result = ((f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}") if d else "No discount")
-    if st["refund"]:
-        result += f" + ${st['refund']:,.0f} refund"
-    if not d:
-        result = f"${target:,.0f}, no discount"
-    note = "charity-care discount" if d else _why_not_free(elig, free) if free else "no discount tier matched"
+    result = headline(elig, d, target, st["refund"])
+    note = ("your bank history qualifies you" if d and elig.get("needs_bank_medical")
+            else "charity-care discount" if d else _why_not_free(elig, free) if free else "no discount tier matched")
     r.finish(result, note)
     return {"policy": found, "eligibility": elig, "income": inc, "source": source, "live": live,
             "origin": got["origin"], "fetched_at": got["fetched_at"], "sources": got["sources"],
             "target": target, "refund": st["refund"], "discounted_share": st["discounted_share"],
             "plan": plan, "plan_terms": terms}
+
+
+def headline(elig: dict, d: float, target: float, refund: float) -> str:
+    """The agent's one-line result (agent_finished and the collapsed Review line). When the bank's other medical
+    bills are what qualify the patient, that leads: 'Your bank history qualifies you: free care → $0 + $400 back'."""
+    if not d:
+        return f"${target:,.0f}, no discount"  # payment plans are left off: just the final amount
+    result = f"Free care → ${target:,.0f}" if d == 100 else f"{d:.0f}% off → ${target:,.0f}"
+    if refund:
+        result += f" + ${refund:,.0f} back"
+    if elig.get("needs_bank_medical"):
+        result = "Your bank history qualifies you: " + result[0].lower() + result[1:]
+    return result
 
 
 def _why_not_free(elig: dict, free: list[dict]) -> str:
@@ -469,6 +489,7 @@ def eligibility(case: dict, txns: list[dict], inc: dict, tiers: list[dict], insu
     elig = finance.charity_discount(*args, insured=insured, out_of_pocket=round(bill_oop + med["total"], 2))
     bill_only = finance.charity_discount(*args, insured=insured, out_of_pocket=bill_oop)
     elig.update(bill_out_of_pocket=bill_oop, bank_medical=med["total"],
+                bill_oop_pct_income=round(100 * bill_oop / args[0], 1) if args[0] else 0.0,
                 bank_medical_txns=[t["id"] for t in med["txns"]],
                 needs_bank_medical=elig["discount_pct"] > bill_only["discount_pct"])
     return elig
@@ -480,6 +501,16 @@ def _oop_parts(elig: dict) -> str:
         return ""
     bill = f"${elig['bill_out_of_pocket']:,.0f} this bill + " if elig.get("bill_out_of_pocket") else ""
     return f": {bill}${elig['bank_medical']:,.0f} other medical bills in your bank"
+
+
+def bank_qualifies(elig: dict, whose: str = "their") -> str:
+    """The hero line when the bank's other medical bills are what tip the patient over the policy's threshold:
+    'Your bank history qualifies you: this bill alone is 9.5% of income; with $2,053 of other medical bills
+    it's 14.1% — over Sutter Health's 10% limit'. Percentages to one decimal, as eligibility computed them."""
+    need = elig["tier"].get("min_oop_pct_income")
+    over = f" — over {whose} {need:g}% limit" if need is not None else ""
+    return (f"Your bank history qualifies you: this bill alone is {elig.get('bill_oop_pct_income', 0):.1f}% of "
+            f"income; with ${elig['bank_medical']:,.0f} of other medical bills it's {elig['oop_pct_income']:.1f}%{over}")
 
 
 def _bank_medical_line(elig: dict) -> str:

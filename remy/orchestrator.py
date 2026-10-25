@@ -127,20 +127,15 @@ def advance_clock(case: dict, days: int | None) -> None:
 
 
 def audit_summary(audit: dict) -> dict:
-    rec = audit["reconciliation"]
-    note = (auditor._dup_note(rec["duplicates"][0]) if rec["duplicates"]
-            else "no errors on the bill")
-    return {"result": f"${rec['owed']:,.0f} owed", "note": note}
+    return auditor.summary(audit["reconciliation"])
 
 
 def policy_summary(pol: dict) -> dict:
     d = pol["eligibility"]["discount_pct"]
-    result = (f"Free care → ${pol['target']:,.0f}" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}") if d else "No discount"
-    if pol.get("refund"):
-        result += f" + ${pol['refund']:,.0f} back"
-    if not d:
-        result = f"${pol['target']:,.0f}, no discount"  # payment plans are left off: just the final amount
-    return {"result": result, "note": "charity-care discount" if d else "income is above the policy's limits"}
+    result = policy.headline(pol["eligibility"], d, pol["target"], pol.get("refund") or 0)
+    note = ("your bank history qualifies you" if d and pol["eligibility"].get("needs_bank_medical")
+            else "charity-care discount" if d else "income is above the policy's limits")
+    return {"result": result, "note": note}
 
 
 def save_replay(case: dict) -> None:

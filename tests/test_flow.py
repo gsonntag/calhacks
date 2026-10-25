@@ -311,6 +311,7 @@ async def test_raj_hero_case_end_to_end(client, monkeypatch):
 
     elig = orchestrator.cases[case_id]["facts"]["pol"]["eligibility"]
     assert elig["discount_pct"] == 100 and not elig.get("gross_check")
+    _assert_raj_review_reads_right(case_id, plan, exp)
 
     await _approve(c, case_id, "caller")
     ready = await _wait_for(case_id, lambda e: e["kind"] == "call_ready")
@@ -354,6 +355,59 @@ async def _billing_plays(c, call_id: str) -> list[str]:
         if r["ended"]:
             break
     return out
+
+
+def _assert_raj_review_reads_right(case_id: str, plan: dict, exp: dict) -> None:
+    """What the Review and the plan say about Raj: the mistakes found, that his bank history is what qualifies him,
+    and money that reads the same in the findings, the asks and the math."""
+    hist = bus.history(case_id)
+    done = {e["agent"]: e for e in hist if e["kind"] == "agent_finished"}
+    review = next(e for e in hist if e["kind"] == "review_done")
+    # 1. the Nessie headline counts what it found (2 line errors, insurance, the missed $400), never "no errors"
+    for note in (done["auditor"]["note"], review["auditor"]["note"]):
+        assert note == "4 mistakes found" and "no errors" not in note
+    # 2. the bank's other medical bills tip him over the 10% line: the headline of the step, finding and Review line
+    bank = ("Your bank history qualifies you: this bill alone is 9.5% of income; with $2,053 of other medical bills "
+            "it's 14.1% — over Sutter Health's 10% limit")
+    free = [e for e in hist if e["kind"] == "step" and e["key"] == "policy:free"][-1]
+    assert free["status"] == "win" and free["result"] == bank
+    disc = next(e for e in hist if e["kind"] == "finding" and e["key"] == "policy:discount")
+    assert disc["title"] == "Free care: your bank history qualifies you" and disc["proof"][0] == bank + "."
+    assert any(exp["discount"]["tier_quote"] in p for p in disc["proof"])  # the policy quote stays in the proof
+    assert review["policy"]["result"] == "Your bank history qualifies you: free care → $0 + $400 back"
+    assert done["policy"]["summary"] == review["policy"]["result"]
+    # 3. the finding says what's written off; the ask says what that does to what he owes
+    assert disc["value"] == "$4,200 share written off"
+    ask = next(a for a in plan["asks"] if a["id"] == "discount")
+    assert ask["text"] == "Ask for free care under their own policy: it brings the $3,800 you owe to $0, and $400 back"
+    assert ask["value"] == "$3,800 owed → $0"
+    # the math: the same split as the findings (insurance −$9,952.70, each bill error apart), and it adds up
+    lines = plan["math"]
+    owe = next(i for i, ln in enumerate(lines) if ln["label"] == "You owe")
+    assert round(sum(ln["amount"] for ln in lines[:owe]), 2) == lines[owe]["amount"] == 3800
+    assert next(ln for ln in lines if ln["label"] == "Insurance not applied")["amount"] == -9952.70
+    assert lines[owe + 1]["label"] == "Free care: your $4,200 share written off"
+    assert round(lines[owe]["amount"] + lines[owe + 1]["amount"], 2) == -lines[-1]["amount"] == -400
+    m = plan["decided"]["math"]
+    assert m[0] == "$16,088.70 billed − $9,952.70 insurance − $776 bill error − $1,160 bill error − $400 paid = $3,800 owed"
+    assert m[1] == "$4,200 share, 100% written off under their policy = $0 − $400 paid → they owe you $400"
+    assert "11,889" not in " ".join(m) and "×" not in " ".join(m)
+
+
+async def test_marcus_review_stays_plain(client):
+    """Marcus (?scenario=freecare) qualifies on this bill alone: no "bank history qualifies you", no mistakes."""
+    case_id = (await client.post("/api/cases?scenario=freecare&household_size=4")).json()["case_id"]
+    plan = (await _wait_for(case_id, lambda e: e["kind"] == "plan_version"))["plan"]
+    hist = bus.history(case_id)
+    assert orchestrator.cases[case_id]["facts"]["pol"]["eligibility"]["needs_bank_medical"] is False
+    text = json.dumps([e for e in hist if e["agent"] == "policy"] + [plan], ensure_ascii=False)
+    assert "bank history qualifies" not in text
+    free = [e for e in hist if e["kind"] == "step" and e["key"] == "policy:free"][-1]
+    assert free["result"].startswith("You qualify for free care (your out-of-pocket is ")
+    disc = next(e for e in hist if e["kind"] == "finding" and e["key"] == "policy:discount")
+    assert disc["title"] == "Free care under their policy"
+    assert next(e for e in hist if e["kind"] == "agent_finished" and e["agent"] == "auditor")["note"] == "no errors on the bill"
+    assert plan["decided"]["math"] == ["$5,600 billed = $5,600 owed", "$5,600 share, 100% written off under their policy = $0"]
 
 
 class _Later(date):
