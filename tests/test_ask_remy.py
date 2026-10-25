@@ -2,6 +2,7 @@
 memory, sources and the number guard, the context it sees (bill lines, policy, contacts, calls, disputed findings,
 every bill, the other tabs) and the case-less chat. Offline: Claude is a fake that records what it was sent."""
 import json
+import re
 from types import SimpleNamespace
 
 import httpx
@@ -625,3 +626,89 @@ async def test_b6_follow_ups_reach_back_past_an_answer_that_listed_nothing(clien
     more = (await client.post("/api/remy/ask", json={"question": "tell me more about that", **o})).json()
     assert first["answer"].startswith("From ") and more["answer"].startswith(first["answer"].split(":")[0])
     assert len(more["answer"]) >= len(first["answer"]) and "**" not in more["answer"]
+
+
+# ---------------------------------------------------------------- Raj, the hero case: offline case answers
+
+async def _raj(c) -> str:
+    case_id = (await c.post("/api/cases?scenario=raj&household_size=4")).json()["case_id"]
+    await _wait_for(case_id, lambda e: e["kind"] == "approval_requested" and e["agent"] == "caller")
+    return case_id
+
+
+def _grounded(case_id, q, answer):
+    return decide.grounded(answer, askremy.guard_scope(askremy.remy_context(case_id, "case", q), q))
+
+
+async def test_raj_offline_case_questions_get_their_own_answers(client):
+    raj = await _raj(client)
+    status = followups.fallback_status(orchestrator.summary(orchestrator.cases[raj]))
+    answers = {}
+    for q in ("Why do I get it free?", "What's wrong with my bill?", "How much will I get back?", "Do I still owe $3,800?"):
+        r = await _ask(client, raj, q)
+        assert r["answer"] != status and _grounded(raj, q, r["answer"]), q
+        assert not any(s.startswith("docs/") or ".md" in s for s in r["sources"]), (q, r["sources"])
+        answers[q] = r
+    why = answers["Why do I get it free?"]
+    assert why["route"] == "policy"
+    assert why["answer"].startswith("Your bank history qualifies you: this bill alone is 9.5% of income; with $2,053 of "
+                                    "other medical bills it's 14.1% — over Sutter Health's 10% limit.")
+    for s in ("exceeding 10% of family income", "134% of the poverty line", "$4,200", "$2,053.35", "22 payments",
+              "not confirmed"):
+        assert s in why["answer"], s
+    assert any("sutterhealth.org/billing-insurance/financial-assistance" in s and "fetched" in s for s in why["sources"])
+    assert any("Nessie" in s for s in why["sources"])
+    wrong = answers["What's wrong with my bill?"]["answer"]
+    assert wrong.startswith("I found 4 mistakes") and all(s in wrong for s in ("$1,160", "twice", "$7,150", "$6,374", "$776",
+                                                                               "$9,953", "$4,200", "$400", "$3,800"))
+    back = answers["How much will I get back?"]["answer"]
+    assert "$400 back" in back and "2026-09-05" in back and "Free care" in back and "not confirmed" in back
+    assert "billing confirmed" not in back.lower()
+    owe = answers["Do I still owe $3,800?"]["answer"]
+    assert owe == ("No — after the corrections you'd owe $3,800, and free care brings that to $0, with $400 back; "
+                   "billing still shows $16,088.70 until they confirm.")
+
+
+async def test_raj_context_keeps_the_eligibility_block_and_no_docs_for_case_questions(client):
+    raj = await _raj(client)
+    await _called(client)  # more cases on the Cases tab: a bigger context
+    ctx = askremy.remy_context(raj, "case", "Why do I get it free?")
+    el = ctx["case"]["eligibility"]
+    assert el["this_bill_alone_pct_income"] == 9.5 and el["with_bank_pct_income"] == 14.1 and el["bar_pct_income"] == 10
+    assert el["bank_medical_12_months"] == 2053.35 and el["bank_medical_txn_count"] == 22 and el["needs_bank_medical"]
+    assert "exceeding 10% of family income" in el["tier_quote"] and el["refund_expected"] == 400
+    assert "how_it_works" not in ctx and askremy._size(ctx) <= askremy.LIMIT
+    # squeezed hard, the block outlives findings, plan and history
+    askremy.LIMIT, old = 3000, askremy.LIMIT
+    try:
+        small = askremy.remy_context(raj, "case", "Why do I get it free?")
+    finally:
+        askremy.LIMIT = old
+    assert small["case"]["eligibility"] == el and "findings" not in small["case"]
+    # a genuine how-it-works question on a case page still gets the docs
+    assert "how_it_works" in askremy.remy_context(raj, "case", "How does the Bright Data agent work?")
+
+
+async def test_rosa_and_marcus_equivalents_answer_sensibly(client):
+    rosa = await _plan_ready(client)
+    marcus = (await client.post("/api/cases?scenario=freecare")).json()["case_id"]
+    await _wait_for(marcus, lambda e: e["kind"] == "approval_requested" and e["agent"] == "caller")
+    r = await _ask(client, marcus, "Why do I get it free?")
+    assert r["route"] == "policy" and "170% of the poverty line" in r["answer"] and "$1,096.70" in r["answer"]
+    assert "12.1% of your income: over UCSF Health's 10% limit on its own" in r["answer"]
+    assert "bank history" not in r["answer"]
+    assert not any(s.startswith("docs/") for s in r["sources"]) and _grounded(marcus, "Why do I get it free?", r["answer"])
+    r = await _ask(client, marcus, "Do I still owe $5,600?")
+    assert r["answer"].startswith("No — after the corrections you'd owe $5,600, and free care brings that to $0")
+    r = await _ask(client, rosa, "Why do I get it free?")
+    assert "doesn't give you a discount" in r["answer"] and "$600" in r["answer"]
+    r = await _ask(client, rosa, "What's wrong with my bill?")
+    assert r["answer"].startswith("I found 2 mistakes") and "$7,600" in r["answer"] and "$500" in r["answer"]
+    r = await _ask(client, rosa, "How much will I get back?")
+    assert "don't expect a refund" in r["answer"] and "$600" in r["answer"]
+    r = await _ask(client, rosa, "Do I still owe $8,700?")
+    assert r["answer"].startswith("No — after the corrections you'd owe $600") and not r["answer"].lower().startswith("yes")
+    r = await _ask(client, rosa, "Do I still owe $600?")
+    assert "should come to" in r["answer"] and "until they confirm" in r["answer"]
+    r = await _ask(client, rosa, "Would another hospital also write this off?")
+    assert r["route"] == "policy" and re.match(r"\d+ of \d+ hospitals would bring Rosa's bill to \$0", r["answer"])
