@@ -4,6 +4,18 @@ Working branch: `after-david-takeover`. Backup of everything before: `pre-david-
 left exactly as submitted (6 PM deadline, history cleaned for judging) until Gavin says otherwise. Push new
 work to `after-david-takeover`, never to `master`.
 
+## Open handoff items (2026-10-25 late night)
+
+- **Merge call speed:** branch `worktree-agent-aff90078fb2699c8e` (backed up as `call-speed-rebased` on GitHub)
+  is done and tested (242 passing on its own). It overlaps only `billback/agents/caller.py`; merge it into
+  `after-david-takeover` once the session editing caller.py has committed, run the tests, push. Then rehearse
+  the new streaming player in `web/rep.html` in Chrome once Cartesia has credits again.
+- **Cartesia is out of credits** (HTTP 402). Phone path down; desk mode uses the browser voice until topped up.
+- **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/`. Uploading
+  needs a server with API keys. Only Rosa and Marcus have Nessie bank accounts; Dana, Amara, Lena don't yet.
+- **Contacts:** `billback/contacts.py` + `policydb/contacts/` (merged). Step 3's "Who we'll call" can use
+  `contacts.for_case(case)`.
+
 ## Rule: paid API credits
 
 Cartesia ran out of credits on 2026-10-25 (HTTP 402 "Model credits limit reached") after an agent used it for
