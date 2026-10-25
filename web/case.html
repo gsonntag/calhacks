@@ -16,7 +16,7 @@
   the case's saved history from its /api/dashboard row: calls, promises, follow-ups, Call again and the demo clock.
 -->
 <style>
-  .case-shell > main.m3-page { margin: 0; max-width: 1040px; width: 100%; padding-left: 0; padding-right: 0; }
+  .case-shell > main.m3-page { margin: 0; max-width: none; width: 100%; padding-left: 0; padding-right: 0; }
   @media (max-width: 960px) { .case-shell > main.m3-page { padding-left: 16px; padding-right: 16px; } }
 
   /* in-case views: the live steps, and the case's history (calls, promises, follow-ups) */
@@ -235,7 +235,7 @@
   .now-ctl .m3-btn { min-height: 32px; padding: 0 12px; white-space: nowrap; }
   .now-ctl .m3-select { width: auto; max-width: 120px; min-width: 0; min-height: 32px; padding-top: 0; padding-bottom: 0; }
   .replay .case-rail, .replay .view-tabs { display: none; }
-  .replay .case-shell { grid-template-columns: minmax(0, 1fr); max-width: 1072px; }
+  .replay .case-shell { grid-template-columns: minmax(0, 1fr); max-width: 1120px; margin: 0 auto; }
   .finds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
   .finds li + li { border-top: 1px solid var(--md-outline-variant); }
   .finds summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; }
@@ -382,7 +382,6 @@
     <a class="m3-tab" href="/" aria-current="page">Cases</a>
     <a class="m3-tab" href="onboarding.html">Get started</a>
     <a class="m3-tab" href="hospitals.html">Hospitals</a>
-    <a class="m3-tab" href="households.html">Households</a>
     <a class="m3-tab" id="hoodLink" href="ops.html">Under the hood</a>
   </nav>
 </header>
