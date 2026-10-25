@@ -48,18 +48,28 @@
     "status": "Processed 2026-08-21"
   },
   "transactions": [
-    {"type": "deposit", "date": "2026-07-31", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-08-14", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-08-28", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-09-11", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-09-25", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-10-09", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
-    {"type": "deposit", "date": "2026-10-23", "amount": 1400.00, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-07-31", "amount": 1386.42, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-08-14", "amount": 1412.88, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-08-28", "amount": 1371.05, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-09-11", "amount": 1428.30, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-09-25", "amount": 1395.17, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-10-09", "amount": 1419.64, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "deposit", "date": "2026-10-23", "amount": 1386.54, "description": "PAYROLL DIRECT DEP - EAST BAY SCHOOL DIST"},
+    {"type": "purchase", "date": "2026-07-28", "amount": 22.50, "merchant": "Venmo", "description": "VENMO PAYMENT 4471"},
+    {"type": "purchase", "date": "2026-08-01", "amount": 1050.00, "merchant": "Sacramento St Apts", "description": "Rent (shared apt)"},
     {"type": "purchase", "date": "2026-08-02", "amount": 75.00, "merchant": "Berkeley Urgent Care", "description": "Follow-up visit copay"},
     {"type": "purchase", "date": "2026-08-03", "amount": 75.00, "merchant": "Berkeley Urgent Care", "description": "Follow-up visit copay"},
-    {"type": "purchase", "date": "2026-08-20", "amount": 64.00, "merchant": "Berkeley Bowl", "description": "Groceries"},
+    {"type": "purchase", "date": "2026-08-03", "amount": 18.42, "merchant": "WALGREENS #4410", "description": "Prescription"},
+    {"type": "withdrawal", "date": "2026-08-07", "amount": 60.00, "description": "ATM WITHDRAWAL BERKELEY CA"},
+    {"type": "purchase", "date": "2026-08-20", "amount": 64.00, "merchant": "BERKELEY BOWL #2", "description": "Groceries"},
+    {"type": "purchase", "date": "2026-08-26", "amount": 27.83, "merchant": "Amazon Marketplace", "description": "AMZN Mktp US*2K41Q7"},
     {"type": "purchase", "date": "2026-09-01", "amount": 1050.00, "merchant": "Sacramento St Apts", "description": "Rent (shared apt)"},
-    {"type": "purchase", "date": "2026-09-14", "amount": 500.00, "merchant": "California Pacific Medical Center", "description": "Payment acct CPMC-48213977"},
-    {"type": "purchase", "date": "2026-10-01", "amount": 1050.00, "merchant": "Sacramento St Apts", "description": "Rent (shared apt)"}
+    {"type": "purchase", "date": "2026-09-06", "amount": 71.36, "merchant": "POS DEBIT BERKELEY BOWL", "description": "Groceries"},
+    {"type": "purchase", "date": "2026-09-14", "amount": 500.00, "merchant": "SUTTER HEALTH PYMT", "description": "ONLINE PMT"},
+    {"type": "purchase", "date": "2026-09-20", "amount": 45.00, "merchant": "East Bay Wireless", "description": "Phone bill"},
+    {"type": "purchase", "date": "2026-09-27", "amount": 6.75, "merchant": "Cafe Leila", "description": "Coffee"},
+    {"type": "purchase", "date": "2026-10-02", "amount": 1050.00, "merchant": "Sacramento St Apts", "description": "Rent (shared apt)"},
+    {"type": "withdrawal", "date": "2026-10-12", "amount": 100.00, "description": "ATM WITHDRAWAL BERKELEY CA"},
+    {"type": "purchase", "date": "2026-10-18", "amount": 58.19, "merchant": "Berkeley Bowl", "description": "Groceries"}
   ]
 }

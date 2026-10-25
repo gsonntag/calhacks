@@ -210,147 +210,1354 @@
   "transactions": [
     {
       "type": "purchase",
-      "date": "2026-07-18",
-      "amount": 15.18,
+      "date": "2025-10-27",
+      "amount": 17.13,
       "merchant": "Bakesale Betty",
       "description": "Lunch"
     },
     {
-      "type": "purchase",
-      "date": "2026-07-20",
-      "amount": 60.0,
-      "merchant": "Bay Wireless Co",
-      "description": "Phone bill"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-21",
-      "amount": 29.36,
-      "merchant": "Rockridge Market Hall",
-      "description": "Groceries"
-    },
-    {
       "type": "deposit",
-      "date": "2026-07-24",
-      "amount": 1500.0,
+      "date": "2025-10-31",
+      "amount": 1528.53,
       "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
     },
     {
       "type": "purchase",
-      "date": "2026-07-24",
-      "amount": 78.87,
-      "merchant": "Rockridge Market Hall",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-29",
-      "amount": 57.19,
-      "merchant": "Arco 51st St",
-      "description": "Gas"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-01",
-      "amount": 1650.0,
-      "merchant": "Telegraph Flats LLC",
-      "description": "Rent"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-02",
-      "amount": 74.06,
-      "merchant": "Temescal Produce",
-      "description": "Groceries"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-08-07",
-      "amount": 1500.0,
-      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-07",
-      "amount": 42.63,
-      "merchant": "Rockridge Market Hall",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-12",
-      "amount": 61.1,
-      "merchant": "Rockridge Market Hall",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-12",
-      "amount": 250.0,
-      "merchant": "Alta Bates Summit Medical Center",
-      "description": "Payment acct ABSMC-77120458"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-16",
-      "amount": 13.22,
-      "merchant": "Bakesale Betty",
-      "description": "Lunch"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-20",
-      "amount": 60.0,
-      "merchant": "Bay Wireless Co",
-      "description": "Phone bill"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-08-21",
-      "amount": 1500.0,
-      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-21",
-      "amount": 42.52,
-      "merchant": "Temescal Produce",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-25",
+      "date": "2025-10-31",
       "amount": 14.19,
       "merchant": "Bakesale Betty",
       "description": "Lunch"
     },
     {
       "type": "purchase",
-      "date": "2026-08-27",
-      "amount": 72.98,
+      "date": "2025-11-01",
+      "amount": 20.8,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*2B62F803"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-02",
+      "amount": 53.61,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8047"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-02",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-03",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-03",
+      "amount": 72.44,
+      "merchant": "POS DEBIT TEMESCAL PRODUCE",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-06",
+      "amount": 56.59,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-10",
+      "amount": 38.52,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-13",
+      "amount": 9.25,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-11-14",
+      "amount": 1469.49,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-18",
+      "amount": 46.34,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-18",
+      "amount": 24.74,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*1E4CDE01"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-20",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-23",
+      "amount": 43.28,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-23",
+      "amount": 33.19,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5777"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-26",
+      "amount": 56.68,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-26",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-11-28",
+      "amount": 1486.12,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-29",
+      "amount": 64.75,
       "merchant": "Rockridge Market Hall",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-29",
-      "amount": 79.45,
+      "date": "2025-12-02",
+      "amount": 11.79,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*7694CAAF"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-03",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-03",
+      "amount": 87.1,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-06",
+      "amount": 55.48,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-08",
+      "amount": 42.1,
       "merchant": "Rockridge Market Hall",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-31",
-      "amount": 17.19,
+      "date": "2025-12-08",
+      "amount": 50.44,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8775"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-11",
+      "amount": 75.23,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-12",
+      "amount": 1510.36,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-14",
+      "amount": 65.59,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-19",
+      "amount": 14.99,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-22",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-23",
+      "amount": 36.63,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-12-24",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-25",
+      "amount": 18.56,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*2BCD0F04"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-26",
+      "amount": 1464.61,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-26",
+      "amount": 15.48,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-30",
+      "amount": 26.51,
+      "merchant": "Venmo",
+      "description": "VENMO *9046"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-31",
+      "amount": 47.43,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-03",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-04",
+      "amount": 49.61,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-06",
+      "amount": 79.71,
+      "merchant": "POS DEBIT TEMESCAL PRODUCE",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-07",
+      "amount": 26.78,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*7BF2B8E4"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-09",
+      "amount": 1534.44,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-10",
+      "amount": 30.65,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-15",
+      "amount": 35.27,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-17",
+      "amount": 20.13,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7684"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-18",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-18",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-20",
+      "amount": 11.77,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-22",
+      "amount": 40.98,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*1A084B90"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-23",
+      "amount": 1460.93,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-25",
+      "amount": 35.6,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-27",
+      "amount": 45.68,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-31",
+      "amount": 55.67,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-31",
+      "amount": 66.91,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*7857AE60"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-01",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-03",
+      "amount": 75.0,
+      "merchant": "Oakland Urgent Care",
+      "description": "Visit copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-04",
+      "amount": 15.66,
+      "merchant": "Bakesale Betty",
+      "description": "Lunch"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-06",
+      "amount": 1541.63,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-07",
+      "amount": 56.18,
+      "merchant": "Venmo",
+      "description": "VENMO *7450"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 14.58,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-12",
+      "amount": 16.68,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-15",
+      "amount": 36.72,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-17",
+      "amount": 19.57,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8415"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-18",
+      "amount": 55.06,
+      "merchant": "POS DEBIT TEMESCAL PRODUCE",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-20",
+      "amount": 1524.24,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-21",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-21",
+      "amount": 48.97,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-21",
+      "amount": 73.87,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*48E62BE2"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-02-22",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-23",
+      "amount": 61.76,
+      "merchant": "Rockridge Market Hall",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-25",
+      "amount": 32.19,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-28",
+      "amount": 58.05,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7461"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-01",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-02",
+      "amount": 38.83,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-06",
+      "amount": 1519.89,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-06",
+      "amount": 18.78,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*179EBDF0"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-07",
+      "amount": 61.25,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-08",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-09",
+      "amount": 57.72,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-12",
+      "amount": 89.07,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-17",
+      "amount": 73.67,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-18",
+      "amount": 145.0,
+      "merchant": "Rockridge Family Dental",
+      "description": "Filling copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-19",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-20",
+      "amount": 1476.45,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 32.87,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 32.08,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*375BE9C5"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 18.87,
+      "merchant": "Venmo",
+      "description": "VENMO *4967"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-22",
+      "amount": 70.2,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-25",
+      "amount": 12.99,
       "merchant": "Bakesale Betty",
       "description": "Lunch"
     },
     {
       "type": "purchase",
-      "date": "2026-09-01",
+      "date": "2026-03-27",
+      "amount": 36.74,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-30",
+      "amount": 15.2,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-30",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-01",
       "amount": 1650.0,
       "merchant": "Telegraph Flats LLC",
       "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-02",
+      "amount": 17.47,
+      "merchant": "Bakesale Betty",
+      "description": "Lunch"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-03",
+      "amount": 1507.73,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-06",
+      "amount": 15.52,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 22.47,
+      "merchant": "Venmo",
+      "description": "VENMO *1235"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-11",
+      "amount": 34.0,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-12",
+      "amount": 82.38,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4EDBAFE6"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-13",
+      "amount": 66.0,
+      "merchant": "POS DEBIT TEMESCAL PRODUCE",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-04-13",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-16",
+      "amount": 39.44,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-17",
+      "amount": 1504.52,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-20",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-20",
+      "amount": 14.91,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-23",
+      "amount": 30.34,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-23",
+      "amount": 38.87,
+      "merchant": "Venmo",
+      "description": "VENMO *8959"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-26",
+      "amount": 30.27,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*68A23B01"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-28",
+      "amount": 30.16,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-01",
+      "amount": 1534.28,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 44.36,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-04",
+      "amount": 53.56,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-05",
+      "amount": 71.48,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*69DD28C5"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-08",
+      "amount": 15.97,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-11",
+      "amount": 10.62,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-11",
+      "amount": 36.66,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7137"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-15",
+      "amount": 1461.46,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-05-15",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-16",
+      "amount": 61.62,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-20",
+      "amount": 31.9,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-20",
+      "amount": 15.2,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*428B7241"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-21",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-21",
+      "amount": 42.25,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 1765"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-22",
+      "amount": 13.72,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-25",
+      "amount": 58.8,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-29",
+      "amount": 1472.28,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-29",
+      "amount": 56.3,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-30",
+      "amount": 58.88,
+      "merchant": "Venmo",
+      "description": "VENMO *1388"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-01",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-01",
+      "amount": 40.82,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-06-02",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-05",
+      "amount": 45.42,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 62.24,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 22.68,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*6F4DB843"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-12",
+      "amount": 1469.78,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-13",
+      "amount": 11.01,
+      "merchant": "Bakesale Betty",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-17",
+      "amount": 39.82,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 4015"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-18",
+      "amount": 36.83,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-20",
+      "amount": 35.57,
+      "merchant": "Arco 51st St",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-21",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-22",
+      "amount": 46.9,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*69FC4C4F"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-24",
+      "amount": 41.84,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-26",
+      "amount": 1525.24,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-27",
+      "amount": 61.61,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 38.62,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 56.69,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 1449"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-07-02",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-03",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-07",
+      "amount": 66.51,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-07",
+      "amount": 21.95,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*16EF3E4D"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 92.3,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-10",
+      "amount": 1492.7,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-11",
+      "amount": 34.5,
+      "merchant": "CVS/PHARMACY #9921",
+      "description": "Prescription"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-12",
+      "amount": 49.7,
+      "merchant": "Venmo",
+      "description": "VENMO *9974"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-14",
+      "amount": 10.57,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-19",
+      "amount": 38.82,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-19",
+      "amount": 24.99,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*52A72C83"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-22",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-22",
+      "amount": 34.56,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 6023"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-23",
+      "amount": 10.88,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-24",
+      "amount": 1455.68,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-28",
+      "amount": 39.99,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-07-29",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-01",
+      "amount": 12.95,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-01",
+      "amount": 60.46,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*15A65697"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-03",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-03",
+      "amount": 75.65,
+      "merchant": "Rockridge Market Hall",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-05",
+      "amount": 46.44,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-05",
+      "amount": 47.85,
+      "merchant": "Venmo",
+      "description": "VENMO *6513"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-07",
+      "amount": 1525.45,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-07",
+      "amount": 32.41,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-11",
+      "amount": 38.34,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-12",
+      "amount": 250.0,
+      "merchant": "SUTTER HEALTH PYMT",
+      "description": "BILL PAY"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-14",
+      "amount": 63.65,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*791586C5"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-15",
+      "amount": 11.07,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-19",
+      "amount": 60.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-19",
+      "amount": 13.53,
+      "merchant": "BAKESALE BETTY #97",
+      "description": "Lunch"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-21",
+      "amount": 1490.26,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-22",
+      "amount": 55.27,
+      "merchant": "Venmo",
+      "description": "VENMO *6551"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-23",
+      "amount": 43.69,
+      "merchant": "Rockridge Market Hall",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-08-26",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-28",
+      "amount": 30.76,
+      "merchant": "ARCO 51ST ST #482",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-31",
+      "amount": 75.38,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*299C4A7D"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-02",
+      "amount": 1650.0,
+      "merchant": "Telegraph Flats LLC",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-02",
+      "amount": 37.38,
+      "merchant": "POS DEBIT ARCO 51ST ST",
+      "description": "Gas"
     },
     {
       "type": "purchase",
@@ -362,14 +1569,14 @@
     {
       "type": "deposit",
       "date": "2026-09-04",
-      "amount": 1500.0,
+      "amount": 1540.67,
       "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
     },
     {
       "type": "purchase",
       "date": "2026-09-04",
-      "amount": 38.52,
-      "merchant": "Rockridge Market Hall",
+      "amount": 30.59,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
       "description": "Groceries"
     },
     {
@@ -381,72 +1588,99 @@
     },
     {
       "type": "purchase",
-      "date": "2026-09-08",
-      "amount": 68.89,
-      "merchant": "Rockridge Market Hall",
+      "date": "2026-09-09",
+      "amount": 84.48,
+      "merchant": "Temescal Produce",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-09-10",
-      "amount": 71.28,
-      "merchant": "Rockridge Market Hall",
-      "description": "Groceries"
+      "date": "2026-09-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-11",
+      "amount": 70.41,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*23081064"
     },
     {
       "type": "purchase",
       "date": "2026-09-12",
       "amount": 250.0,
-      "merchant": "Alta Bates Summit Medical Center",
-      "description": "Payment acct ABSMC-77120458"
+      "merchant": "SUTTER HEALTH PYMT",
+      "description": "POS DEBIT"
     },
     {
       "type": "purchase",
-      "date": "2026-09-15",
-      "amount": 46.34,
-      "merchant": "Temescal Produce",
+      "date": "2026-09-14",
+      "amount": 13.05,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-14",
+      "amount": 43.51,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5935"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-16",
+      "amount": 73.45,
+      "merchant": "Rockridge Market Hall",
       "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-09-18",
-      "amount": 1500.0,
+      "amount": 1470.28,
       "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
     },
     {
       "type": "purchase",
-      "date": "2026-09-19",
-      "amount": 11.59,
-      "merchant": "Bakesale Betty",
-      "description": "Lunch"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-09-20",
+      "date": "2026-09-18",
       "amount": 60.0,
       "merchant": "Bay Wireless Co",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-09-22",
-      "amount": 69.35,
-      "merchant": "Rockridge Market Hall",
+      "date": "2026-09-20",
+      "amount": 49.7,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-09-21",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-23",
+      "amount": 57.19,
+      "merchant": "POS DEBIT ROCKRIDGE MARKET HALL",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-09-25",
-      "amount": 64.75,
-      "merchant": "Rockridge Market Hall",
+      "date": "2026-09-26",
+      "amount": 76.27,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-09-27",
-      "amount": 31.86,
-      "merchant": "Arco 51st St",
-      "description": "Gas"
+      "date": "2026-09-28",
+      "amount": 72.27,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*6DE8FEAB"
     },
     {
       "type": "purchase",
@@ -456,65 +1690,92 @@
       "description": "Rent"
     },
     {
-      "type": "deposit",
-      "date": "2026-10-02",
-      "amount": 1500.0,
-      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
+      "type": "purchase",
+      "date": "2026-10-01",
+      "amount": 90.35,
+      "merchant": "Temescal Produce",
+      "description": "Groceries"
     },
     {
-      "type": "purchase",
+      "type": "deposit",
       "date": "2026-10-02",
-      "amount": 11.0,
-      "merchant": "Bakesale Betty",
-      "description": "Lunch"
+      "amount": 1534.71,
+      "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
     },
     {
       "type": "purchase",
       "date": "2026-10-02",
       "amount": 250.0,
-      "merchant": "Alta Bates Summit Medical Center",
-      "description": "Payment acct ABSMC-77120458"
+      "merchant": "SUTTER HEALTH PYMT",
+      "description": "ONLINE PMT"
     },
     {
       "type": "purchase",
-      "date": "2026-10-04",
-      "amount": 65.67,
+      "date": "2026-10-05",
+      "amount": 30.53,
+      "merchant": "ROCKRIDGE MARKET HALL #443",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-05",
+      "amount": 33.7,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 9611"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-08",
+      "amount": 43.95,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*76E19FBB"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-09",
+      "amount": 83.45,
       "merchant": "Temescal Produce",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-10-07",
-      "amount": 56.15,
-      "merchant": "Arco 51st St",
-      "description": "Gas"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-10",
-      "amount": 75.57,
-      "merchant": "Rockridge Market Hall",
-      "description": "Groceries"
+      "date": "2026-10-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
     },
     {
       "type": "purchase",
       "date": "2026-10-13",
-      "amount": 65.59,
+      "amount": 31.86,
       "merchant": "Rockridge Market Hall",
       "description": "Groceries"
     },
     {
+      "type": "withdrawal",
+      "date": "2026-10-15",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
       "type": "deposit",
       "date": "2026-10-16",
-      "amount": 1500.0,
+      "amount": 1492.91,
       "description": "PAYROLL DIRECT DEP - PIEDMONT UNIFIED"
     },
     {
       "type": "purchase",
-      "date": "2026-10-18",
-      "amount": 14.67,
-      "merchant": "Bakesale Betty",
+      "date": "2026-10-16",
+      "amount": 10.19,
+      "merchant": "POS DEBIT BAKESALE BETTY",
       "description": "Lunch"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-19",
+      "amount": 87.94,
+      "merchant": "TEMESCAL PRODUCE #683",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -525,10 +1786,24 @@
     },
     {
       "type": "purchase",
-      "date": "2026-10-23",
-      "amount": 54.93,
-      "merchant": "Arco 51st St",
-      "description": "Gas"
+      "date": "2026-10-20",
+      "amount": 25.84,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*76D5F1BA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-20",
+      "amount": 54.79,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 6889"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-22",
+      "amount": 15.28,
+      "merchant": "POS DEBIT BAKESALE BETTY",
+      "description": "Lunch"
     }
   ]
 }

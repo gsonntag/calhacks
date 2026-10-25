@@ -78,10 +78,1116 @@
   "transactions": [
     {
       "type": "purchase",
-      "date": "2026-07-18",
-      "amount": 58.45,
+      "date": "2025-10-25",
+      "amount": 6.9,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-10-27",
+      "amount": 48.62,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-10-29",
+      "amount": 43.4,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7513"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-10-31",
+      "amount": 2673.52,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-10-31",
+      "amount": 44.77,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-01",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-02",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-02",
+      "amount": 30.97,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*38445805"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-03",
+      "amount": 94.62,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-05",
+      "amount": 28.73,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-10",
+      "amount": 37.0,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-14",
+      "amount": 104.41,
+      "merchant": "POS DEBIT FARMER JOE'S MARKETPLACE",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-11-15",
+      "amount": 2596.84,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-15",
+      "amount": 18.33,
+      "merchant": "Venmo",
+      "description": "VENMO *6598"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-16",
+      "amount": 82.24,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*7CF04CBE"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-19",
+      "amount": 10.71,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-22",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-23",
+      "amount": 36.06,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-25",
+      "amount": 33.63,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*3091C3F1"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-27",
+      "amount": 80.06,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-29",
+      "amount": 6.19,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-11-30",
+      "amount": 2647.34,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-02",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-02",
+      "amount": 73.44,
+      "merchant": "FARMER JOE'S MARKETPLACE #457",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-12-05",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-06",
+      "amount": 28.69,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*90BA66B"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-07",
+      "amount": 43.69,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-09",
+      "amount": 47.23,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8183"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-12",
+      "amount": 25.34,
+      "merchant": "MI PUEBLO FOODS #392",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-15",
+      "amount": 2653.22,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-15",
+      "amount": 31.75,
+      "merchant": "MI PUEBLO FOODS #392",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-19",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-20",
+      "amount": 54.89,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-25",
+      "amount": 32.17,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-26",
+      "amount": 18.27,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*51C3903"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-27",
+      "amount": 17.53,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 1049"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-29",
+      "amount": 6.78,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-31",
+      "amount": 2561.36,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-02",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-03",
+      "amount": 42.23,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-06",
+      "amount": 63.51,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-08",
+      "amount": 66.44,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-08",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-10",
+      "amount": 7.07,
+      "merchant": "PEET'S COFFEE #485",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-15",
+      "amount": 2627.43,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-15",
+      "amount": 34.85,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-17",
+      "amount": 41.05,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*4CC7C0BB"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-17",
+      "amount": 51.14,
+      "merchant": "Venmo",
+      "description": "VENMO *4423"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-18",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-18",
+      "amount": 55.2,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-23",
+      "amount": 47.6,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-28",
+      "amount": 54.14,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-28",
+      "amount": 39.49,
+      "merchant": "Venmo",
+      "description": "VENMO *9278"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-31",
+      "amount": 2633.37,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-31",
+      "amount": 11.15,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-01",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-02",
+      "amount": 9.71,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-05",
+      "amount": 5.07,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-07",
+      "amount": 54.45,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-10",
+      "amount": 44.06,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4F078B87"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-02-11",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-12",
+      "amount": 6.12,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-15",
+      "amount": 2680.09,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-15",
+      "amount": 61.81,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-19",
+      "amount": 41.83,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-20",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-21",
+      "amount": 40.17,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2111"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-23",
+      "amount": 86.41,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-25",
+      "amount": 49.92,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-28",
+      "amount": 2686.73,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-01",
+      "amount": 38.33,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-01",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-02",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-02",
+      "amount": 24.19,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*6EB8A79A"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-03",
+      "amount": 29.33,
+      "merchant": "Venmo",
+      "description": "VENMO *1919"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-05",
+      "amount": 57.26,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-08",
+      "amount": 21.95,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-11",
+      "amount": 32.05,
       "merchant": "Valero MacArthur Blvd",
       "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-14",
+      "amount": 6.39,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-15",
+      "amount": 2578.57,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-16",
+      "amount": 85.67,
+      "merchant": "FARMER JOE'S MARKETPLACE #457",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 55.35,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*1EBAF1AD"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-21",
+      "amount": 69.9,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-24",
+      "amount": 34.82,
+      "merchant": "Venmo",
+      "description": "VENMO *8932"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-24",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-26",
+      "amount": 103.58,
+      "merchant": "FARMER JOE'S MARKETPLACE #457",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-31",
+      "amount": 2641.32,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-31",
+      "amount": 42.74,
+      "merchant": "Valero MacArthur Blvd",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-02",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-02",
+      "amount": 7.5,
+      "merchant": "PEET'S COFFEE #485",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-06",
+      "amount": 11.7,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-07",
+      "amount": 10.4,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4E768128"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-08",
+      "amount": 11.44,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-13",
+      "amount": 11.22,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-15",
+      "amount": 2709.6,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-15",
+      "amount": 43.97,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-15",
+      "amount": 48.25,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2050"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-17",
+      "amount": 43.04,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*331396FB"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-18",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-20",
+      "amount": 109.63,
+      "merchant": "FARMER JOE'S MARKETPLACE #457",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-25",
+      "amount": 67.59,
+      "merchant": "MI PUEBLO FOODS #392",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-04-26",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-29",
+      "amount": 8.16,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-30",
+      "amount": 2584.53,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-03",
+      "amount": 42.95,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-03",
+      "amount": 45.28,
+      "merchant": "Venmo",
+      "description": "VENMO *4041"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-05",
+      "amount": 11.93,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-08",
+      "amount": 38.07,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 38.11,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*359439FF"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-11",
+      "amount": 51.15,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-12",
+      "amount": 95.0,
+      "merchant": "Fruitvale Walk-In Clinic",
+      "description": "Visit"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-15",
+      "amount": 2668.28,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-16",
+      "amount": 35.49,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-20",
+      "amount": 67.06,
+      "merchant": "POS DEBIT FARMER JOE'S MARKETPLACE",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-22",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-24",
+      "amount": 7.14,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-05-25",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-26",
+      "amount": 81.17,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*20245423"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-26",
+      "amount": 49.1,
+      "merchant": "Venmo",
+      "description": "VENMO *1957"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-28",
+      "amount": 53.92,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-31",
+      "amount": 2651.19,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-31",
+      "amount": 44.73,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-02",
+      "amount": 11.83,
+      "merchant": "PEET'S COFFEE #485",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-03",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-05",
+      "amount": 56.79,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-05",
+      "amount": 14.14,
+      "merchant": "Venmo",
+      "description": "VENMO *5146"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 6.68,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 61.64,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*378391C8"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-13",
+      "amount": 7.24,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-15",
+      "amount": 2664.37,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-15",
+      "amount": 8.07,
+      "merchant": "PEET'S COFFEE #485",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-18",
+      "amount": 70.0,
+      "merchant": "Bay Wireless Co",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-18",
+      "amount": 46.38,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 1096"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-19",
+      "amount": 68.16,
+      "merchant": "Mi Pueblo Foods",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-06-21",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-22",
+      "amount": 36.53,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-25",
+      "amount": 92.72,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-27",
+      "amount": 10.7,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-29",
+      "amount": 28.68,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7059"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-30",
+      "amount": 2599.48,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 1900.0,
+      "merchant": "Fruitvale Court Apts",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 69.98,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 14.12,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*452E7F17"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-05",
+      "amount": 39.77,
+      "merchant": "MI PUEBLO FOODS #392",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-08",
+      "amount": 68.76,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 46.36,
+      "merchant": "Venmo",
+      "description": "VENMO *3977"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-12",
+      "amount": 32.38,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-07-13",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-15",
+      "amount": 2647.18,
+      "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-15",
+      "amount": 58.08,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*3D0EFE76"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-16",
+      "amount": 54.16,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-18",
+      "amount": 93.02,
+      "merchant": "POS DEBIT FARMER JOE'S MARKETPLACE",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -93,40 +1199,47 @@
     {
       "type": "purchase",
       "date": "2026-07-20",
-      "amount": 55.13,
-      "merchant": "Valero MacArthur Blvd",
-      "description": "Gas"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-24",
-      "amount": 67.71,
-      "merchant": "Farmer Joe's Marketplace",
+      "amount": 36.93,
+      "merchant": "MI PUEBLO FOODS #392",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-07-28",
-      "amount": 6.3,
-      "merchant": "Peet's Coffee",
+      "date": "2026-07-22",
+      "amount": 36.09,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-25",
+      "amount": 45.28,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 4447"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-26",
+      "amount": 11.45,
+      "merchant": "POS DEBIT PEET'S COFFEE",
       "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-29",
+      "amount": 42.23,
+      "merchant": "MI PUEBLO FOODS #392",
+      "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-07-31",
-      "amount": 2640.0,
+      "amount": 2594.98,
       "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
     },
     {
       "type": "purchase",
-      "date": "2026-07-31",
-      "amount": 62.72,
-      "merchant": "Farmer Joe's Marketplace",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-01",
+      "date": "2026-08-02",
       "amount": 1900.0,
       "merchant": "Fruitvale Court Apts",
       "description": "Rent"
@@ -134,139 +1247,221 @@
     {
       "type": "purchase",
       "date": "2026-08-02",
-      "amount": 112.31,
-      "merchant": "Farmer Joe's Marketplace",
+      "amount": 31.56,
+      "merchant": "Mi Pueblo Foods",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-04",
-      "amount": 40.27,
-      "merchant": "Valero MacArthur Blvd",
+      "date": "2026-08-07",
+      "amount": 51.91,
+      "merchant": "VALERO MACARTHUR BLVD #738",
       "description": "Gas"
     },
     {
       "type": "purchase",
+      "date": "2026-08-07",
+      "amount": 50.17,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*7B1739BC"
+    },
+    {
+      "type": "purchase",
       "date": "2026-08-09",
-      "amount": 5.65,
-      "merchant": "Peet's Coffee",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-10",
+      "amount": 9.09,
+      "merchant": "POS DEBIT PEET'S COFFEE",
       "description": "Coffee"
     },
     {
       "type": "purchase",
       "date": "2026-08-13",
-      "amount": 22.42,
-      "merchant": "Mi Pueblo Foods",
-      "description": "Groceries"
+      "amount": 10.3,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-14",
+      "amount": 25.51,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 6076"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-08-14",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
     },
     {
       "type": "deposit",
       "date": "2026-08-15",
-      "amount": 2640.0,
+      "amount": 2629.93,
       "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
     },
     {
       "type": "purchase",
       "date": "2026-08-17",
-      "amount": 44.77,
-      "merchant": "Farmer Joe's Marketplace",
+      "amount": 117.2,
+      "merchant": "POS DEBIT FARMER JOE'S MARKETPLACE",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-20",
+      "date": "2026-08-18",
       "amount": 70.0,
       "merchant": "Bay Wireless Co",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-08-20",
-      "amount": 20.8,
-      "merchant": "Mi Pueblo Foods",
-      "description": "Groceries"
+      "date": "2026-08-21",
+      "amount": 37.51,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
     },
     {
       "type": "purchase",
       "date": "2026-08-22",
       "amount": 300.0,
-      "merchant": "Kaiser Permanente Oakland Medical Center",
-      "description": "Payment acct KPOAK-60331972"
+      "merchant": "KAISER PERMANENTE PYMT",
+      "description": "ONLINE PMT"
     },
     {
       "type": "purchase",
-      "date": "2026-08-24",
-      "amount": 47.15,
+      "date": "2026-08-23",
+      "amount": 14.99,
+      "merchant": "CVS/PHARMACY #3381",
+      "description": "Prescription"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-26",
+      "amount": 24.73,
       "merchant": "Mi Pueblo Foods",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-27",
-      "amount": 26.19,
-      "merchant": "Mi Pueblo Foods",
+      "date": "2026-08-26",
+      "amount": 19.85,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*2A227559"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-28",
+      "amount": 86.82,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-30",
+      "amount": 64.88,
+      "merchant": "Farmer Joe's Marketplace",
       "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-08-31",
-      "amount": 2640.0,
+      "amount": 2564.74,
       "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
     },
     {
       "type": "purchase",
-      "date": "2026-09-01",
+      "date": "2026-09-03",
       "amount": 1900.0,
       "merchant": "Fruitvale Court Apts",
       "description": "Rent"
     },
     {
       "type": "purchase",
-      "date": "2026-09-01",
-      "amount": 37.0,
-      "merchant": "Mi Pueblo Foods",
+      "date": "2026-09-04",
+      "amount": 62.08,
+      "merchant": "POS DEBIT FARMER JOE'S MARKETPLACE",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-05",
-      "amount": 104.41,
-      "merchant": "Farmer Joe's Marketplace",
+      "amount": 40.12,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 4376"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-06",
+      "amount": 36.59,
+      "merchant": "FARMER JOE'S MARKETPLACE #457",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-09-06",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-10",
+      "amount": 27.0,
+      "merchant": "MI PUEBLO FOODS #392",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-10",
-      "amount": 10.71,
-      "merchant": "Peet's Coffee",
-      "description": "Coffee"
+      "amount": 53.48,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*7C28BB26"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-12",
+      "amount": 63.48,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-14",
-      "amount": 36.06,
-      "merchant": "Farmer Joe's Marketplace",
-      "description": "Groceries"
+      "amount": 55.76,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
     },
     {
       "type": "deposit",
       "date": "2026-09-15",
-      "amount": 2640.0,
+      "amount": 2687.94,
       "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
     },
     {
       "type": "purchase",
-      "date": "2026-09-17",
-      "amount": 51.67,
-      "merchant": "Valero MacArthur Blvd",
-      "description": "Gas"
+      "date": "2026-09-16",
+      "amount": 112.04,
+      "merchant": "Farmer Joe's Marketplace",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-19",
-      "amount": 54.32,
-      "merchant": "Mi Pueblo Foods",
-      "description": "Groceries"
+      "amount": 8.06,
+      "merchant": "PEET'S COFFEE #485",
+      "description": "Coffee"
     },
     {
       "type": "purchase",
@@ -292,21 +1487,35 @@
     {
       "type": "purchase",
       "date": "2026-09-24",
-      "amount": 26.31,
-      "merchant": "Mi Pueblo Foods",
-      "description": "Groceries"
+      "amount": 5.0,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
     },
     {
       "type": "purchase",
-      "date": "2026-09-27",
-      "amount": 73.44,
-      "merchant": "Farmer Joe's Marketplace",
-      "description": "Groceries"
+      "date": "2026-09-26",
+      "amount": 61.33,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*46BF8141"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-26",
+      "amount": 50.9,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7460"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-29",
+      "amount": 59.55,
+      "merchant": "POS DEBIT VALERO MACARTHUR BLVD",
+      "description": "Gas"
     },
     {
       "type": "deposit",
       "date": "2026-09-30",
-      "amount": 2640.0,
+      "amount": 2569.76,
       "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
     },
     {
@@ -317,45 +1526,65 @@
       "description": "Rent"
     },
     {
-      "type": "purchase",
+      "type": "withdrawal",
       "date": "2026-10-01",
-      "amount": 10.47,
-      "merchant": "Peet's Coffee",
-      "description": "Coffee"
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL OAKLAND CA"
     },
     {
       "type": "purchase",
       "date": "2026-10-03",
-      "amount": 29.88,
-      "merchant": "Mi Pueblo Foods",
+      "amount": 56.12,
+      "merchant": "VALERO MACARTHUR BLVD #738",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-06",
+      "amount": 66.87,
+      "merchant": "POS DEBIT MI PUEBLO FOODS",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-10-08",
-      "amount": 25.34,
-      "merchant": "Mi Pueblo Foods",
-      "description": "Groceries"
+      "date": "2026-10-06",
+      "amount": 56.08,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*27B48CFD"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-11",
+      "amount": 11.43,
+      "merchant": "PEET'S COFFEE #485",
+      "description": "Coffee"
     },
     {
       "type": "purchase",
       "date": "2026-10-13",
-      "amount": 28.6,
-      "merchant": "Mi Pueblo Foods",
-      "description": "Groceries"
+      "amount": 7.8,
+      "merchant": "POS DEBIT PEET'S COFFEE",
+      "description": "Coffee"
     },
     {
       "type": "deposit",
       "date": "2026-10-15",
-      "amount": 2640.0,
+      "amount": 2650.17,
       "description": "PAYROLL DIRECT DEP - BAYSIDE LOGISTICS INC"
     },
     {
       "type": "purchase",
-      "date": "2026-10-17",
-      "amount": 9.5,
-      "merchant": "Peet's Coffee",
-      "description": "Coffee"
+      "date": "2026-10-18",
+      "amount": 94.33,
+      "merchant": "POS DEBIT FARMER JOE'S MARKETPLACE",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -366,10 +1595,17 @@
     },
     {
       "type": "purchase",
-      "date": "2026-10-22",
-      "amount": 32.17,
-      "merchant": "Valero MacArthur Blvd",
-      "description": "Gas"
+      "date": "2026-10-20",
+      "amount": 59.63,
+      "merchant": "Venmo",
+      "description": "VENMO *5218"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-23",
+      "amount": 5.93,
+      "merchant": "Peet's Coffee",
+      "description": "Coffee"
     }
   ]
 }

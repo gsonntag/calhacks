@@ -90,8 +90,14 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     txns = await bank.transactions(account_id)
     txns_ready.set_result(txns)
     dates = sorted(t["date"][:10] for t in txns if t.get("date"))
+    notice = getattr(bank, "notice", "")
+    if notice:  # no Capital One account for this patient, or Nessie didn't answer: sample data, said plainly
+        bank_label = getattr(bank, "label", bank_label)
+        bank_name = bank_label.split(" (")[0]
+        bus.emit(cid, "warning", "auditor", text=notice)
     r.step("bank", f"Pull your bank history ({bank_name})", "ok",
-           f"{len(txns)} transactions" + (f", {dates[0]} to {dates[-1]}" if dates else ""))
+           (f"{notice} · " if notice else "")
+           + f"{len(txns)} transactions" + (f", {dates[0]} to {dates[-1]}" if dates else ""))
 
     rec = finance.reconcile(bill, eob, txns, corrections=corrections)
     missed = rec["uncredited_payments"]
@@ -131,6 +137,8 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     else:
         r.step("dupes", "Check your bank for duplicate charges", "clear", "No double charges")
 
+    med = medical_step(r, case, txns, eob, bank_name)
+
     r.step("balance", "Work out what you actually owe", "running")
     r.step("balance", "Work out what you actually owe", "ok", _balance_text(rec))
     bus.emit(cid, "reconciliation", "auditor", **{k: rec[k] for k in ("lines", "owed", "billed_due", "overbilled_by")})
@@ -141,7 +149,31 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     note = (_dup_note(rec["duplicates"][0]) if rec["duplicates"]
             else "no errors on the bill")
     r.finish(f"${rec['owed']:,.0f} owed", note)
-    return {"reconciliation": rec, "transactions": txns}
+    return {"reconciliation": rec, "transactions": txns, "medical": med}
+
+
+MEDICAL_LABEL = "Add up your medical spending (last 12 months)"
+
+
+def medical_step(r: Report, case: dict, txns: list[dict], eob: dict, bank_name: str) -> dict:
+    """The bank's last 12 months of medical purchases (pharmacies, clinics, doctors), apart from payments toward
+    this bill. Hospitals' high-medical-cost rules count them (the Bright Data agent applies the rule)."""
+    med = finance.medical_spending(txns, case["bill"], eob, today=finance._d(case["today"]) if case.get("today") else None)
+    r.step("medical", MEDICAL_LABEL, "running")
+    if not med["txns"]:
+        r.step("medical", MEDICAL_LABEL, "clear", "No other medical spending in your bank history")
+        return med
+    n = len(med["txns"])
+    proof = [(f"${t['amount']:,.2f} on {t['date'][:10]}: {t.get('merchant') or t.get('description') or 'purchase'}",
+              f"{bank_name} · txn {t['id']}") for t in med["txns"]]
+    r.step("medical", MEDICAL_LABEL, "ok",
+           f"${med['total']:,.2f} in other medical bills since {med['since']} ({n} payment{'s' if n != 1 else ''})", proof)
+    r.finding("medical", "Other medical bills in the last 12 months", 0,
+              [f"Your bank shows ${med['total']:,.2f} paid to pharmacies, clinics and doctors since {med['since']}, "
+               "apart from this bill. Hospitals' high-medical-cost rules count these toward your out-of-pocket costs.",
+               *[f"{t} ({s})" for t, s in proof]],
+              f"{bank_name} · {n} txn{'s' if n != 1 else ''}", value=f"${med['total']:,.0f} · 12 months")
+    return med
 
 
 def _balance_text(rec: dict) -> str:

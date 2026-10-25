@@ -379,302 +379,1675 @@
   },
   "transactions": [
     {
-      "type": "deposit",
-      "date": "2026-07-17",
-      "amount": 1560.0,
-      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
-    },
-    {
       "type": "purchase",
-      "date": "2026-07-19",
-      "amount": 43.96,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-20",
-      "amount": 85.0,
-      "merchant": "East Bay Wireless",
-      "description": "Phone bill"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-24",
-      "amount": 14.89,
+      "date": "2025-10-25",
+      "amount": 20.85,
       "merchant": "Golden Bear Pharmacy",
       "description": "Pharmacy"
     },
     {
       "type": "purchase",
-      "date": "2026-07-28",
-      "amount": 60.13,
-      "merchant": "Grocery Outlet Berkeley",
-      "description": "Groceries"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-07-31",
-      "amount": 1560.0,
-      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-01",
-      "amount": 2100.0,
-      "merchant": "Ashby Ave Rentals",
-      "description": "Rent"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-02",
-      "amount": 65.1,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-04",
-      "amount": 60.58,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-08",
-      "amount": 48.48,
-      "merchant": "Grocery Outlet Berkeley",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-10",
-      "amount": 188.12,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-08-14",
-      "amount": 1560.0,
-      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-14",
-      "amount": 56.45,
-      "merchant": "Grocery Outlet Berkeley",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-19",
-      "amount": 27.64,
-      "merchant": "Golden Bear Pharmacy",
-      "description": "Pharmacy"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-20",
-      "amount": 85.0,
-      "merchant": "East Bay Wireless",
-      "description": "Phone bill"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-23",
+      "date": "2025-10-29",
       "amount": 83.15,
       "merchant": "Grocery Outlet Berkeley",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-25",
-      "amount": 198.55,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-08-28",
-      "amount": 1560.0,
-      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+      "date": "2025-10-29",
+      "amount": 53.19,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*606D1BB7"
     },
     {
       "type": "purchase",
-      "date": "2026-08-28",
-      "amount": 150.86,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
+      "date": "2025-10-29",
+      "amount": 55.01,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 9434"
     },
     {
       "type": "purchase",
-      "date": "2026-08-30",
-      "amount": 174.99,
-      "merchant": "Berkeley Bowl",
+      "date": "2025-10-31",
+      "amount": 49.31,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
       "description": "Groceries"
     },
     {
+      "type": "withdrawal",
+      "date": "2025-11-01",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
       "type": "purchase",
-      "date": "2026-09-01",
+      "date": "2025-11-02",
       "amount": 2100.0,
       "merchant": "Ashby Ave Rentals",
       "description": "Rent"
     },
     {
       "type": "purchase",
-      "date": "2026-09-03",
-      "amount": 61.46,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
+      "date": "2025-11-02",
+      "amount": 174.99,
+      "merchant": "BERKELEY BOWL #303",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-09-06",
-      "amount": 65.19,
+      "date": "2025-11-06",
+      "amount": 51.62,
       "merchant": "Grocery Outlet Berkeley",
       "description": "Groceries"
     },
     {
       "type": "deposit",
-      "date": "2026-09-11",
-      "amount": 1560.0,
+      "date": "2025-11-07",
+      "amount": 1590.71,
       "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
     },
     {
       "type": "purchase",
-      "date": "2026-09-11",
+      "date": "2025-11-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-11",
       "amount": 63.17,
-      "merchant": "Chevron San Pablo Ave",
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
       "description": "Gas"
     },
     {
       "type": "purchase",
-      "date": "2026-09-13",
+      "date": "2025-11-13",
       "amount": 42.01,
-      "merchant": "Chevron San Pablo Ave",
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
       "description": "Gas"
     },
     {
       "type": "purchase",
-      "date": "2026-09-16",
+      "date": "2025-11-15",
+      "amount": 43.95,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*36A1429"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-15",
+      "amount": 58.88,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8731"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-16",
       "amount": 65.17,
       "merchant": "Chevron San Pablo Ave",
       "description": "Gas"
     },
     {
-      "type": "purchase",
-      "date": "2026-09-19",
-      "amount": 40.09,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
+      "type": "withdrawal",
+      "date": "2025-11-17",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
     },
     {
       "type": "purchase",
-      "date": "2026-09-20",
+      "date": "2025-11-18",
       "amount": 85.0,
       "merchant": "East Bay Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-09-22",
-      "amount": 50.99,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
+      "date": "2025-11-20",
+      "amount": 120.61,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
     },
     {
       "type": "deposit",
-      "date": "2026-09-25",
-      "amount": 1560.0,
+      "date": "2025-11-21",
+      "amount": 1532.7,
       "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
     },
     {
       "type": "purchase",
-      "date": "2026-09-26",
-      "amount": 138.65,
-      "merchant": "Berkeley Bowl",
-      "description": "Groceries"
+      "date": "2025-11-24",
+      "amount": 60.25,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
     },
     {
       "type": "purchase",
-      "date": "2026-09-30",
-      "amount": 18.76,
-      "merchant": "Golden Bear Pharmacy",
+      "date": "2025-11-26",
+      "amount": 18.14,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
       "description": "Pharmacy"
     },
     {
       "type": "purchase",
-      "date": "2026-10-01",
+      "date": "2025-12-01",
       "amount": 2100.0,
       "merchant": "Ashby Ave Rentals",
       "description": "Rent"
     },
     {
       "type": "purchase",
-      "date": "2026-10-02",
-      "amount": 40.38,
-      "merchant": "Chevron San Pablo Ave",
+      "date": "2025-12-01",
+      "amount": 42.36,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
       "description": "Gas"
     },
     {
       "type": "purchase",
-      "date": "2026-10-07",
-      "amount": 46.84,
-      "merchant": "Chevron San Pablo Ave",
-      "description": "Gas"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-10-09",
-      "amount": 1560.0,
-      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-12",
-      "amount": 72.33,
-      "merchant": "Grocery Outlet Berkeley",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-15",
-      "amount": 21.05,
+      "date": "2025-12-03",
+      "amount": 19.81,
       "merchant": "Golden Bear Pharmacy",
       "description": "Pharmacy"
     },
     {
+      "type": "deposit",
+      "date": "2025-12-05",
+      "amount": 1586.64,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
       "type": "purchase",
-      "date": "2026-10-20",
+      "date": "2025-12-07",
+      "amount": 67.71,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*44BBD5A4"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-07",
+      "amount": 38.32,
+      "merchant": "Venmo",
+      "description": "VENMO *6963"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-08",
+      "amount": 15.51,
+      "merchant": "POS DEBIT GOLDEN BEAR PHARMACY",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-11",
+      "amount": 21.05,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-16",
+      "amount": 23.84,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-12-16",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-19",
+      "amount": 1516.43,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-19",
+      "amount": 115.24,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-20",
       "amount": 85.0,
       "merchant": "East Bay Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-10-20",
-      "amount": 20.7,
+      "date": "2025-12-23",
+      "amount": 26.45,
       "merchant": "Golden Bear Pharmacy",
       "description": "Pharmacy"
     },
     {
       "type": "purchase",
-      "date": "2026-10-22",
-      "amount": 88.68,
+      "date": "2025-12-24",
+      "amount": 33.86,
+      "merchant": "Venmo",
+      "description": "VENMO *5986"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-25",
+      "amount": 60.68,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-26",
+      "amount": 72.12,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*23BDEFBD"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-27",
+      "amount": 77.02,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-29",
+      "amount": 42.07,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-02",
+      "amount": 1530.03,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-02",
+      "amount": 179.59,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-03",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-04",
+      "amount": 67.5,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-07",
+      "amount": 43.79,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-11",
+      "amount": 55.38,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-11",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-14",
+      "amount": 34.83,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*34081F1D"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-16",
+      "amount": 1568.58,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-16",
+      "amount": 135.29,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-16",
+      "amount": 24.1,
+      "merchant": "Venmo",
+      "description": "VENMO *2972"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-18",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-20",
+      "amount": 18.07,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-22",
+      "amount": 30.0,
+      "merchant": "Kids First Pediatrics",
+      "description": "Office visit copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-23",
+      "amount": 58.8,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-25",
+      "amount": 48.48,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-25",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-01-30",
+      "amount": 1578.78,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-30",
+      "amount": 116.61,
+      "merchant": "BERKELEY BOWL #303",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-30",
+      "amount": 31.3,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*39805349"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-03",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-03",
+      "amount": 19.14,
+      "merchant": "POS DEBIT GOLDEN BEAR PHARMACY",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-04",
+      "amount": 29.43,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2434"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-05",
+      "amount": 26.18,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-07",
+      "amount": 16.37,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 163.11,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-13",
+      "amount": 1591.09,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-13",
+      "amount": 55.58,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-02-13",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-16",
+      "amount": 46.2,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-16",
+      "amount": 44.8,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*451493C5"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-19",
+      "amount": 160.97,
+      "merchant": "BERKELEY BOWL #303",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-20",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-22",
+      "amount": 106.72,
+      "merchant": "BERKELEY BOWL #303",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-26",
+      "amount": 54.04,
+      "merchant": "Venmo",
+      "description": "VENMO *5627"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-02-27",
+      "amount": 1553.25,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-27",
+      "amount": 114.95,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-01",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-03",
+      "amount": 52.36,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-08",
+      "amount": 86.96,
+      "merchant": "GROCERY OUTLET BERKELEY #786",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-08",
+      "amount": 45.97,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*7DF1D3CE"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-10",
+      "amount": 42.9,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-10",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-11",
+      "amount": 75.0,
+      "merchant": "Kids First Pediatrics",
+      "description": "Urgent visit copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-03-13",
+      "amount": 1558.31,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-15",
+      "amount": 89.19,
+      "merchant": "GROCERY OUTLET BERKELEY #786",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-16",
+      "amount": 18.07,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 9188"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-18",
+      "amount": 16.59,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*48A4B7FB"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-20",
+      "amount": 207.97,
+      "merchant": "BERKELEY BOWL #303",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-22",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-23",
+      "amount": 59.36,
       "merchant": "Grocery Outlet Berkeley",
       "description": "Groceries"
     },
     {
       "type": "deposit",
-      "date": "2026-10-23",
-      "amount": 1560.0,
+      "date": "2026-03-27",
+      "amount": 1520.28,
       "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
     },
     {
       "type": "purchase",
-      "date": "2026-10-25",
-      "amount": 115.24,
+      "date": "2026-03-27",
+      "amount": 46.16,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-29",
+      "amount": 75.24,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-29",
+      "amount": 14.18,
+      "merchant": "Venmo",
+      "description": "VENMO *7145"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-31",
+      "amount": 26.37,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-01",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-04-02",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-03",
+      "amount": 19.53,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-06",
+      "amount": 162.33,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-06",
+      "amount": 84.87,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*1E8792E6"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-08",
+      "amount": 73.15,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-10",
+      "amount": 1588.24,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-10",
+      "amount": 93.05,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-13",
+      "amount": 113.3,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-17",
+      "amount": 47.46,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-17",
+      "amount": 17.94,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*739840C4"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-17",
+      "amount": 24.33,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2245"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-04-17",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-19",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-19",
+      "amount": 187.8,
+      "merchant": "BERKELEY BOWL #303",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-24",
+      "amount": 1551.05,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-24",
+      "amount": 28.52,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-28",
+      "amount": 57.96,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7104"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-29",
+      "amount": 42.32,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-02",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-02",
+      "amount": 114.26,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-05",
+      "amount": 84.87,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*322528DF"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-06",
+      "amount": 118.21,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-07",
+      "amount": 30.0,
+      "merchant": "Kids First Pediatrics",
+      "description": "Office visit copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-08",
+      "amount": 1518.8,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-11",
+      "amount": 57.27,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-13",
+      "amount": 116.83,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-13",
+      "amount": 33.23,
+      "merchant": "Venmo",
+      "description": "VENMO *6794"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-17",
+      "amount": 24.47,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-18",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-05-19",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-21",
+      "amount": 69.65,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-22",
+      "amount": 1524.3,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-23",
+      "amount": 69.7,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-25",
+      "amount": 55.3,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-28",
+      "amount": 54.66,
+      "merchant": "Venmo",
+      "description": "VENMO *3240"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-29",
+      "amount": 66.56,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*764BF4BF"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-30",
+      "amount": 125.69,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-01",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-01",
+      "amount": 189.46,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-05",
+      "amount": 1552.47,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-05",
+      "amount": 28.9,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-10",
+      "amount": 15.77,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-13",
+      "amount": 136.58,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-14",
+      "amount": 80.71,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*58AFB3B5"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-15",
+      "amount": 25.96,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-15",
+      "amount": 41.67,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 3956"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-17",
+      "amount": 19.07,
+      "merchant": "POS DEBIT GOLDEN BEAR PHARMACY",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-18",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-19",
+      "amount": 1582.31,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-06-19",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-20",
+      "amount": 19.22,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-25",
+      "amount": 70.53,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-28",
+      "amount": 103.88,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-30",
+      "amount": 72.53,
+      "merchant": "GROCERY OUTLET BERKELEY #786",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-02",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-03",
+      "amount": 1580.22,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-03",
+      "amount": 116.49,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-07-03",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-04",
+      "amount": 24.69,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2077"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-07",
+      "amount": 62.33,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-08",
+      "amount": 16.96,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*2B7A83CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-10",
+      "amount": 14.86,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-14",
+      "amount": 91.83,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-17",
+      "amount": 1516.9,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-18",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-19",
+      "amount": 92.81,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-21",
+      "amount": 59.6,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-21",
+      "amount": 38.6,
+      "merchant": "WALGREENS #2291",
+      "description": "Prescription"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-22",
+      "amount": 55.75,
+      "merchant": "Venmo",
+      "description": "VENMO *1158"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-24",
+      "amount": 214.5,
+      "merchant": "Bay Area Orthopedic Clinic",
+      "description": "Splint and brace"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-25",
+      "amount": 96.92,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-29",
+      "amount": 18.2,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*46FFCE57"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-30",
+      "amount": 101.45,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-30",
+      "amount": 150.0,
+      "merchant": "Bay Area Orthopedic Clinic",
+      "description": "Follow-up visit copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-07-31",
+      "amount": 1553.74,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-01",
+      "amount": 41.4,
+      "merchant": "CHEVRON SAN PABLO AVE #655",
+      "description": "Gas"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-08-01",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-03",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-03",
+      "amount": 72.98,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-05",
+      "amount": 27.33,
+      "merchant": "POS DEBIT GOLDEN BEAR PHARMACY",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-05",
+      "amount": 185.0,
+      "merchant": "East Bay Imaging Center",
+      "description": "X-ray copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-09",
+      "amount": 73.52,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-10",
+      "amount": 26.5,
+      "merchant": "Venmo",
+      "description": "VENMO *2949"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-12",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-13",
+      "amount": 29.2,
+      "merchant": "Golden Bear Pharmacy",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-14",
+      "amount": 1567.44,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-16",
+      "amount": 47.08,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-18",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-19",
+      "amount": 38.6,
+      "merchant": "WALGREENS #2291",
+      "description": "Prescription refill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-20",
+      "amount": 56.2,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-20",
+      "amount": 47.83,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*60B8C655"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-20",
+      "amount": 40.93,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 8524"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-08-21",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-24",
+      "amount": 21.94,
+      "merchant": "POS DEBIT GOLDEN BEAR PHARMACY",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-26",
+      "amount": 168.47,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-26",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-28",
+      "amount": 1580.85,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-28",
+      "amount": 43.62,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-31",
+      "amount": 48.15,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-02",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-02",
+      "amount": 150.0,
+      "merchant": "Bay Area Orthopedic Clinic",
+      "description": "Follow-up visit copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-03",
+      "amount": 12.91,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2369"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-04",
+      "amount": 79.53,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*40D25F5A"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-05",
+      "amount": 118.2,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-09",
+      "amount": 107.17,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-09",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-09-11",
+      "amount": 1567.31,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-11",
+      "amount": 63.06,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-14",
+      "amount": 62.66,
+      "merchant": "Grocery Outlet Berkeley",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-14",
+      "amount": 20.01,
+      "merchant": "Venmo",
+      "description": "VENMO *5443"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-16",
+      "amount": 48.65,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-21",
+      "amount": 166.93,
+      "merchant": "Berkeley Bowl",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-09-21",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-22",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-23",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-24",
+      "amount": 101.19,
+      "merchant": "POS DEBIT GROCERY OUTLET BERKELEY",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-09-25",
+      "amount": 1535.85,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-25",
+      "amount": 65.29,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*17B21345"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-27",
+      "amount": 51.3,
+      "merchant": "GROCERY OUTLET BERKELEY #786",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-29",
+      "amount": 59.77,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-02",
+      "amount": 154.3,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-03",
+      "amount": 2100.0,
+      "merchant": "Ashby Ave Rentals",
+      "description": "Rent"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-04",
+      "amount": 35.44,
+      "merchant": "Venmo",
+      "description": "VENMO *6332"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-06",
+      "amount": 14.68,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-07",
+      "amount": 45.0,
+      "merchant": "Bay Physical Therapy",
+      "description": "PT session copay"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-10-09",
+      "amount": 1552.96,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-10",
+      "amount": 25.13,
+      "merchant": "GOLDEN BEAR PHARMACY #245",
+      "description": "Pharmacy"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-10-12",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL BERKELEY CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-15",
+      "amount": 59.85,
+      "merchant": "POS DEBIT CHEVRON SAN PABLO AVE",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-17",
+      "amount": 26.98,
+      "merchant": "Venmo",
+      "description": "VENMO *6151"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-18",
+      "amount": 75.12,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*9BEE985"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-19",
+      "amount": 43.13,
+      "merchant": "Chevron San Pablo Ave",
+      "description": "Gas"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-22",
+      "amount": 85.0,
+      "merchant": "East Bay Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-22",
+      "amount": 188.83,
+      "merchant": "POS DEBIT BERKELEY BOWL",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-10-23",
+      "amount": 1575.9,
+      "description": "PAYROLL DIRECT DEP - ALAMEDA COUNTY TRANSIT"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-24",
+      "amount": 144.8,
       "merchant": "Berkeley Bowl",
       "description": "Groceries"
     }

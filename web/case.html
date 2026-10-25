@@ -450,6 +450,7 @@
             </div>
           </div>
           <span class="body-m muted" id="finalNote">We’ll check back once billing confirms your new balance.</span>
+          <span class="body-m muted" id="bankBillNote" hidden></span>
           <div class="next-area" id="nextWrap" hidden>
             <div id="scoreBox"></div>
             <div id="nextDecideBox"></div>
@@ -564,6 +565,7 @@ function apply(m, e) {
     case 'warning': m.warnings.push(e.text); break;
     case 'policy_quote': m.quotes.push(e); break;
     case 'evidence': m.evidence.push(e); break;
+    case 'bank_bill_updated': m.bankBill = e; break;
     case 'transcript': m.lines.push({ who: e.speaker, text: e.text }); break;
     case 'call_outcome': m.outcome = e.outcome || m.outcome; break;
     case 'call_ended': m.outcome = e.outcome || m.outcome; m.callEnded = e.ts; break;
@@ -960,6 +962,11 @@ function render() {
     : waiting ? `Billing hasn’t confirmed a lower balance yet: their records still show ${money(m.done.now)}. Expected ${money(m.done.expected)}`
         + (m.done.expected_refund ? ` and ${money(m.done.expected_refund)} back to you` : '') + ' once the review or correction lands. We’ll check back.'
     : 'We’ll check back once billing confirms your new balance.';
+  const bb = m.bankBill;  // billing confirmed a balance on the call: the bill is marked updated in the bank
+  $('bankBillNote').hidden = !bb;
+  if (bb) setText($('bankBillNote'), `Updated in your bank (${bb.bank}): the hospital bill now shows ${money(bb.payment_amount)}`
+    + (bb.was != null ? ` instead of ${money(bb.was)}` : '') + (bb.status === 'cancelled' ? ', nothing left to pay' : '')
+    + ', as billing confirmed on the call.');
   const fu = m.followup, lastCall = m.calls[m.calls.length - 1];
   $('followBox').hidden = !(m.done && fu);
   $('callAgainBtn').parentNode.hidden = !!nextV;  // step 5's plan has its own "Call now"

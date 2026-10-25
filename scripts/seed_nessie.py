@@ -2,10 +2,15 @@
 
     uv run python scripts/seed_nessie.py            # main demo patient
     uv run python scripts/seed_nessie.py freecare   # second demo patient
+    uv run python scripts/seed_nessie.py dana-altabates-refund   # a generated scenario (demo/scenarios/<name>/)
 
-Creates customer, checking account, merchants, deposits, purchases and the hospital bill,
+Creates customer, checking account, merchants, deposits, purchases, withdrawals and the hospital bill,
 then writes the ids to data/nessie_ids.json for reference. The app finds the account by the patient's name
-on the uploaded bill. Re-seeding deletes the patient's earlier account first.
+on the uploaded bill. Re-seeding deletes the patient's earlier account first, so rosa-real / marcus-real
+(same names as the default / freecare patients) replace those accounts.
+
+PAID API: every transaction is one or two Nessie requests (a generated scenario has about 250). Check
+docs/PLAN.md ("Rule: paid API credits") before running it.
 """
 import asyncio
 import json
@@ -15,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from billback import config  # noqa: E402
-from billback.integrations.nessie import NessieClient, ids_file  # noqa: E402
+from billback.integrations.nessie import NessieClient, hospital_bill_nickname, ids_file  # noqa: E402
 from billback.orchestrator import SCENARIOS  # noqa: E402
 
 
@@ -23,7 +28,11 @@ async def main() -> None:
     if not config.NESSIE_API_KEY:
         sys.exit("Set NESSIE_API_KEY in .env first")
     scenario = sys.argv[1] if len(sys.argv) > 1 else "default"
-    case = json.loads((config.DEMO_DIR / SCENARIOS[scenario]).read_text())
+    path = (config.DEMO_DIR / SCENARIOS[scenario] if scenario in SCENARIOS
+            else config.DEMO_DIR / "scenarios" / scenario / "case.json")
+    if not path.exists():
+        sys.exit(f"unknown scenario {scenario}: use one of {', '.join(SCENARIOS)} or a demo/scenarios/ folder name")
+    case = json.loads(path.read_text())
     n = NessieClient(config.NESSIE_API_KEY, config.NESSIE_BASE_URL)
     p = case["patient"]
 
@@ -43,13 +52,15 @@ async def main() -> None:
     for t in case["transactions"]:
         if t["type"] == "deposit":
             r = await n.create_deposit(acct["_id"], t["date"], t["amount"], t["description"])
+        elif t["type"] == "withdrawal":  # cash: no merchant
+            r = await n.create_withdrawal(acct["_id"], t["date"], t["amount"], t["description"])
         else:
             r = await n.create_purchase(acct["_id"], merchants[t["merchant"]], t["date"], t["amount"], t["description"])
         print(f"  {t['type']:<8} {t['date']} {t['amount']:>9.2f}  {r.get('_id')}")
 
     b = case["bill"]
-    bill = await n.create_bill(acct["_id"], b["provider"], f"ER visit {b['service_date']} ({b['account_number']})",
-                               b["amount_due"], b["due_date"])
+    # the app finds this bill again by its account number to mark it corrected (nessie.mark_bill_corrected)
+    bill = await n.create_bill(acct["_id"], b["provider"], hospital_bill_nickname(b), b["amount_due"], b["due_date"])
     print("bill", bill.get("_id"))
 
     out = ids_file(scenario)
