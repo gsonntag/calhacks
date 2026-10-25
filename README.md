@@ -360,7 +360,7 @@ credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
 - [`docs/plan-format.md`](docs/plan-format.md): the plan's data format.
 - [`docs/legal-check.md`](docs/legal-check.md): legal claims checked against sources.
 - [`docs/devpost-submission.md`](docs/devpost-submission.md): the Devpost pack (requirements, prizes, text,
-  video plan, competitors). [`docs/devpost-final.md`](docs/devpost-final.md): paste-ready Devpost fields.
+  video plan, competitors).
   [`docs/research/`](docs/research/): Cal Hacks rules, winning Devposts, competitors and market research.
 - [`docs/feasibility.md`](docs/feasibility.md), [`docs/competitors.md`](docs/competitors.md),
   [`docs/judge-qa.md`](docs/judge-qa.md), [`docs/PLAN.md`](docs/PLAN.md).
