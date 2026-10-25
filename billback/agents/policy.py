@@ -5,7 +5,8 @@ Where the policy comes from, in order:
   1. the policy database (policydb/, built by real Bright Data crawls: billback/policies/) - instant;
   2. a live crawl through the same pipeline (SERP API -> Web Unlocker -> Claude -> quote verification),
      stored for next time - slow, every stage shown on the dashboard;
-  3. OFFLINE TEST FIXTURE (demo/policy_sample*.md) - only when Bright Data is not configured at all.
+  3. OFFLINE TEST FIXTURE (demo/policy_sample*.md) - only when Bright Data is not configured at all,
+     and never in judging mode (BILLBACK_REQUIRE_LIVE=1).
 If the live crawl fails we say so and apply no discount; the fixture is never a silent stand-in.
 Runs in parallel with the Auditor and waits for its transactions (income) and balance. Money math is
 finance.py, not the model."""
@@ -108,7 +109,9 @@ async def _live_crawl(cid: str, r: Report, db: PolicyStore, hosp: dict) -> dict 
 
 
 async def _fixture(cid: str, hosp: dict) -> dict:
-    """OFFLINE TEST FIXTURE. Only reached when Bright Data is not configured."""
+    """OFFLINE TEST FIXTURE. Only reached when Bright Data is not configured, never in judging mode."""
+    if config.REQUIRE_LIVE:
+        raise RuntimeError("sample policies are off in judging mode (BILLBACK_REQUIRE_LIVE)")
     name = hosp.get("sample_policy") or "policy_sample.md"
     sample = SAMPLES.get(name, SAMPLE_TIERS)
     found = {**sample, "tiers": finance.clean_tiers(sample["tiers"])}
@@ -152,6 +155,12 @@ async def find_policy(cid: str, r: Report, hosp: dict) -> dict:
             return got
         r.step("find", "Find assistance policy", "flag", "Live crawl failed: no verified policy")
         return {"found": {"tiers": []}, "source": "live crawl failed", "live": False, "origin": "failed",
+                "fetched_at": None, "version": None, "sources": []}
+    if config.REQUIRE_LIVE:  # judging mode: a sample policy must never stand in for a real one
+        bus.emit(cid, "warning", "policy", text=f"Judging mode: Bright Data can't crawl {hosp['name']} right now, "
+                                                "and sample policies are off. No discount is applied.")
+        r.step("find", "Find assistance policy", "flag", "Judging mode: no live policy, sample policies are off")
+        return {"found": {"tiers": []}, "source": "no live policy (judging mode)", "live": False, "origin": "failed",
                 "fetched_at": None, "version": None, "sources": []}
     got = await _fixture(cid, hosp)
     bus.emit(cid, "policy_source", "policy", origin="offline_fixture", hospital=hosp["name"], sources=[])

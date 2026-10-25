@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 
 from .. import llm
+from ..auth import ADMIN
 from ..integrations import brightdata
 from . import compare as compare_mod
 from . import monitor
@@ -69,7 +70,7 @@ async def compare(scenario: str = "default"):
     return compare_mod.compare(PolicyStore(), scenario)
 
 
-@router.post("/hospitals/{hospital_id}/recheck")
+@router.post("/hospitals/{hospital_id}/recheck", dependencies=ADMIN)
 async def recheck(hospital_id: str):
     """Refetch through Bright Data Web Unlocker, compare content hashes, re-extract only if changed."""
     if not (brightdata.live() and llm.available()):
