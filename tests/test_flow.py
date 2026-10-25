@@ -118,13 +118,13 @@ async def _offline_call(c, scenario: str) -> tuple[dict, list[str], dict]:
 
 async def test_offline_caller_says_only_the_plans_asks(client):
     """Every line on the call is backed by an ask in the approved plan (docs/PLAN.md guardrails)."""
-    # Rosa: 228% of the poverty line, not eligible at her hospital; the plan asks insurance, payment, payment plan
+    # Rosa: 228% of the poverty line, not eligible at her hospital; the plan asks insurance and payment (never a plan)
     brief, said, outcome = await _offline_call(client, "default")
-    assert "discount" not in brief["ask_kinds"] and "plan" in brief["ask_kinds"]
+    assert "discount" not in brief["ask_kinds"] and "plan" not in brief["ask_kinds"]
     assert brief["income_pct_fpl"] is None and brief["policy_quotes"] == [] and brief["policy_tier"] is None
     text = " ".join(said).lower()
     assert "qualif" not in text and "financial assistance" not in text and "poverty" not in text
-    assert "insurance adjustment" in text and "$500 payment" in text and "6 monthly payments of $100" in text
+    assert "insurance adjustment" in text and "$500 payment" in text and "payment plan" not in text
     assert outcome["case_number"] == "58213" and outcome["account_on_hold"] is True
     assert not outcome.get("assistance_review_opened")
     await client.post("/api/reset")

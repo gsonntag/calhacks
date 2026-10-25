@@ -229,24 +229,10 @@ def compute(case: dict) -> dict:
                 f"Ask for the {money(refund)} the patient already paid to be refunded once the assistance is applied.",
                 refund, findings=["policy:discount", *[f"auditor:paid-{p['id']}" for p in payments]])
 
-    plan = None
-    if not d and target > 0:
-        terms = pol.get("plan_terms") or {}
-        if "policy:plan" not in finds:
-            skipped.append({"kind": "plan", "text": "Payment plan",
-                            "why": "The Bright Data agent didn't find payment-plan terms to back it up"})
-        elif "policy:plan" in bad:
-            skipped.append({"kind": "plan", "text": "Payment plan", "why": "You said the payment-plan finding is wrong"})
-        else:
-            plan = finance.payment_plan(target, inc["monthly"], policy_cap_pct=terms.get("max_pct_monthly_income"),
-                                        max_monthly=prefs.get("max_monthly"), monthly_bills=inc.get("bills_monthly"))
-            why = " Their own billing policy says payment plans are interest-free." if terms.get("interest_free") else ""
-            ask("plan", f"Set up an interest-free payment plan for the {money(target)}: "
-                        f"{plan['text']}, as their own billing policy allows",
-                f"Once the balance is corrected to {money(target)}, set up an interest-free payment plan: "
-                f"{finance.plan_said(plan)}.{why} Don't give card details; "
-                f"the patient sets up the payments.",
-                value=plan["text"], findings=["policy:plan"], plan=plan)
+    plan = None  # payment plans are never put to billing: the plan keeps the final amount, the patient decides how to pay
+    if not d and target > 0 and "policy:plan" in finds:
+        skipped.append({"kind": "plan", "text": "Payment plan",
+                        "why": "Left off the call: you decide how to pay once the balance is corrected"})
     results = call_results(case)
     refused_before = any(r["status"] == "refused" for r in results.values())
     if prefs.get("if_refused") == "supervisor" or refused_before:

@@ -121,12 +121,9 @@ def policy_summary(pol: dict) -> dict:
     result = (f"Free care → ${pol['target']:,.0f}" if d == 100 else f"{d:.0f}% off → ${pol['target']:,.0f}") if d else "No discount"
     if pol.get("refund"):
         result += f" + ${pol['refund']:,.0f} back"
-    plan = pol.get("plan") or {}
-    if not d and plan.get("months"):
-        result = f"${pol['target']:,.0f} · {finance.plan_text(plan)}, 0% interest"
-    return {"result": result,
-            "note": "charity-care discount" if d else "no discount tier fits; interest-free plan under their policy"
-            if plan.get("months") else "income is above the policy's limits"}
+    if not d:
+        result = f"${pol['target']:,.0f}, no discount"  # payment plans are left off: just the final amount
+    return {"result": result, "note": "charity-care discount" if d else "income is above the policy's limits"}
 
 
 def save_replay(case: dict) -> None:
