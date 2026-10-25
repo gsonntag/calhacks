@@ -290,6 +290,48 @@ SPECS: dict[str, dict] = {
                    "insurance_not_applied": True,
                    "uncredited_payment": {"amount": 400.00, "date": "2026-09-05"}},
     },
+    "jordan-ucla-wrist": {
+        "seed": 1107,
+        "story": "Jordan, 20, a UCLA junior, came off his bike on Bruin Walk and broke his wrist: a non-displaced "
+                 "distal radius fracture. Ronald Reagan UCLA's emergency department X-rayed it, splinted it and "
+                 "gave a pain shot (real UCLA prices). He has a student health plan and works about 20 hours a week "
+                 "at a coffee shop, so his paychecks drop while he can't work: a week of sick pay, then light duty. "
+                 "About 120% of the poverty line. He got overcharged: the bill ignores his insurance, charges the "
+                 "wrist X-ray twice and prices the splint above UCLA's own posted charge. Once fixed, his share "
+                 "plus his cash follow-up care is over 10% of his income (take-home or gross), so UCLA's policy writes it off: $0.",
+        "hospital_id": "ucla-reagan",
+        "patient": {"first_name": "Jordan", "last_name": "Reyes", "household_size": 1, "dob": "2006-02-03",
+                    "phone_label": "Jordan's phone",
+                    "address": {"street_number": "515", "street_name": "Landfair Ave", "city": "Los Angeles",
+                                "state": "CA", "zip": "90024"}},
+        # part-time hours vary. The fracture (Sun 2026-08-09) cuts the next checks: half a period worked, then
+        # a week of paid sick leave (California's 40-hour minimum), then light duty at the register
+        "pay": {"employer": "WESTWOOD COFFEE CO", "frequency": "biweekly", "amount": 740.00,
+                "first_payday": "2026-07-10", "vary_pct": 8,
+                "factors": {"2026-08-21": 0.55, "2026-09-04": 0.5, "2026-09-18": 0.65}},
+        "rent": {"merchant": "Landfair Apartments", "amount": 950.00, "description": "Rent (shared room)"},
+        "merchants": [("Ralphs Westwood", "Groceries", 18, 65), ("Trader Joe's Westwood", "Groceries", 12, 50),
+                      ("Metro TAP Reload", "Transit", 5, 20), ("Westwood Bike Shop", "Bike parts", 8, 35),
+                      ("Diddy Riese", "Food", 3, 9), ("SoCal Wireless", "Phone bill", 35, 35)],
+        "medical": [("CVS/PHARMACY #9180", "Prescription", 16.49, "2026-03-04"),
+                    ("CVS/PHARMACY #9180", "Prescription", 12.99, "2026-08-10"),
+                    ("Westside Ortho Clinic", "Fracture follow-up visit", 225.00, "2026-08-14"),
+                    ("Westside Ortho Clinic", "Short arm cast", 185.00, "2026-08-14"),
+                    ("Westside Ortho Clinic", "Follow-up X-ray", 95.00, "2026-09-11"),
+                    ("CVS/PHARMACY #9180", "Wrist brace", 34.99, "2026-09-12")],
+        "insurance": {"insurer": "Sunline Student Health Plan", "member_id": "SSH-20618834",
+                      "claim_number": "C-2026-0812-57304", "deductible_remaining": 1500.00, "coinsurance_pct": 20,
+                      "oop_max_remaining": 3500.00, "processed": "2026-08-27"},
+        "visit": {"service_date": "2026-08-09", "statement_date": "2026-10-09", "due_date": "2026-11-08",
+                  "account_number": "UCLA-41907263",
+                  "notice": "Statement - payment due by 2026-11-08. Call to set up a payment plan."},
+        # a stable non-displaced fracture: a 3-view wrist series, a splint, an IM pain shot (ketorolac), no
+        # reduction. No drug line: UCLA's file prices drugs by NDC only, so they have no posted gross charge
+        "procedures": [("99284", 1), ("73110", 1), ("29125", 1), ("96372", 1)],
+        "errors": {"insurance_not_applied": True,
+                   "duplicate_line": {"code": "73110"},
+                   "price_above_posted": {"code": "29125", "billed": 1460.00}},
+    },
 }
 
 ERROR_TYPES = ("insurance_not_applied", "uncredited_payment", "duplicate_line", "price_above_posted",
@@ -487,9 +529,10 @@ def bank(spec: dict, provider: str, start: date, end: date,
     pay = spec["pay"]
     vary = pay.get("vary_pct", 3) / 100
     txns: list[dict] = []
-    for d in _paydays(pay, start, end):
+    for d in _paydays(pay, start, end):  # pay `factors`: {payday: share of a normal check}, e.g. missed shifts
         txns.append({"type": "deposit", "date": _iso(d),
-                     "amount": round(pay["amount"] * (1 + pay_rng.uniform(-vary, vary)), 2),
+                     "amount": round(pay["amount"] * pay.get("factors", {}).get(_iso(d), 1)
+                                     * (1 + pay_rng.uniform(-vary, vary)), 2),
                      "description": f"PAYROLL DIRECT DEP - {pay['employer']}"})
     # gig payouts (spec `gig`): weekly platform deposits that vary a lot from week to week, with weeks off
     # (`off`: date ranges with no driving). finance.income counts them as income (OTHER_INCOME). Own random

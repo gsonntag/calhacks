@@ -51,6 +51,7 @@ SOURCES: dict[str, Source] = {
     "kaiser-oakland": Source("https://healthy.kaiserpermanente.org/cms-hpt.txt", r"^Oakland Medical Center"),
     "marinhealth": Source("https://www.mymarinhealth.org/cms-hpt.txt", r"MarinHealth Medical Center"),
     "el-camino": Source("https://www.elcaminohealth.org/cms-hpt.txt", r"Mountain View"),
+    "ucla-reagan": Source("https://www.uclahealth.org/cms-hpt.txt", r"^Ronald Reagan UCLA Medical Center$"),
 }
 
 
