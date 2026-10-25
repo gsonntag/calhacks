@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BillBack Flows</title>
+<title>Remy Flows</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
@@ -42,9 +42,9 @@
 <body>
 <header class="bar">
   <div class="m3-top-app-bar">
-    <a class="m3-brand" href="/" aria-label="BillBack home">
+    <a class="m3-brand" href="/" aria-label="Remy home">
       <span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span>
-      <span class="m3-brand-name">BillBack</span>
+      <span class="m3-brand-name">Remy</span>
     </a>
     <span class="tag m3-status primary">Flows</span>
     <div class="desc body-m muted" id="desc" aria-live="polite"></div>
@@ -69,15 +69,15 @@ const FLOWS = [
   { id: 'inbox',      name: 'Connect inbox',   desc: 'One click: we scan your inbox and find the bill and the EOB ourselves.' },
   { id: 'snap',       name: 'Snap it',         desc: 'Mobile: photograph the bill, photograph the EOB, watch $8,700 fall to $600.' },
   { id: 'talk',       name: 'Just talk',       desc: 'Hold the mic and tell us what happened. We turn it into a case.' },
-  { id: 'forward',    name: 'Forward it',      desc: 'Forward the bill email to bills@billback.ai. The case starts itself.' },
+  { id: 'forward',    name: 'Forward it',      desc: 'Forward the bill email to bills@remy.ai. The case starts itself.' },
   { id: 'one-screen', name: 'One screen',      desc: 'Everything happens in place: the number counts down while agents work.' },
   { id: 'receipt',    name: 'Receipt',         desc: 'The outcome as a shareable receipt: you owe $600, on a 6 × $100 interest-free plan.' },
-  { id: 'sms',        name: 'Text it',         desc: 'No app: text a photo to BillBack, get updates and approve by SMS.' },
+  { id: 'sms',        name: 'Text it',         desc: 'No app: text a photo to Remy, get updates and approve by SMS.' },
   { id: 'caregiver',  name: 'For a parent',    desc: 'Built for caregivers handling a parent’s bill, with consent in one tap.' },
   { id: 'split',      name: 'Before / After',  desc: 'Drag the divider across the bill to see what you were charged vs. what you owe.' },
   { id: 'calm',       name: 'Calm mode',       desc: 'Large type, one thing per screen, read-aloud. Accessibility first.' },
 ];
-const KEY = 'billback.flows.last';
+const KEY = 'remy.flows.last';
 const $ = (id) => document.getElementById(id);
 const frame = $('frame'), pills = $('pills');
 let current = null;
@@ -98,7 +98,7 @@ function show(id, { push = true } = {}) {
   frame.src = f.id + '.html';
   $('open').href = f.id + '.html';
   $('desc').innerHTML = `<b>${f.name}</b> · ${f.desc}`;
-  document.title = f.name + ' · BillBack Flows';
+  document.title = f.name + ' · Remy Flows';
   $('note').hidden = !f.note;
   $('note').innerHTML = f.note ? f.note.replace(/(POST \S+)/, '<code>$1</code>') : '';
   pills.querySelectorAll('.pill').forEach((p) => {

@@ -1,6 +1,6 @@
 # Step 3: the plan's data format
 
-The Decide agent (`billback/agents/decide.py`) turns the saved Review results, the user's corrections and
+The Decide agent (`remy/agents/decide.py`) turns the saved Review results, the user's corrections and
 their strategy preferences into a plan version. It is plain code: every number comes from `finance.py`.
 Claude only writes the "How I decided" explanation and turns planner-chat requests into preference changes.
 

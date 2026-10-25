@@ -1,8 +1,8 @@
-# Bright Data in BillBack: the hospital policy database
+# Bright Data in Remy: the hospital policy database
 
-BillBack lowers a patient's hospital bill using the hospital's **own** financial-assistance (charity care)
+Remy lowers a patient's hospital bill using the hospital's **own** financial-assistance (charity care)
 policy. Those policies are public, but they sit on hospital websites as HTML pages and 10 to 50 page PDFs,
-behind CDNs and bot protection, and Google often returns aggregators rather than the hospital. BillBack uses
+behind CDNs and bot protection, and Google often returns aggregators rather than the hospital. Remy uses
 Bright Data to find and fetch them, Claude to read them, and plain code to check every quote against the fetched
 text before any number reaches the money math. The results go into a policy database that is committed to
 this repo (`policydb/`) as evidence of the crawls. The database covers 12 Bay Area hospitals (4 in San
@@ -15,8 +15,8 @@ codes taken from the hospital's own CMS price-transparency file (see [Real price
 
 ```
                         scripts/crawl_policies.py crawl | recheck | show | compare
-                        billback/agents/policy.py (live crawl when a case's hospital isn't in the DB)
-                        billback/policies/routes.py (POST /api/hospitals/{id}/recheck)
+                        remy/agents/policy.py (live crawl when a case's hospital isn't in the DB)
+                        remy/policies/routes.py (POST /api/hospitals/{id}/recheck)
                                          │
                                          ▼
  registry.py ──► discover.py ──────────► fetch.py ───────────────────► extract.py ──────────► store.py
@@ -34,8 +34,8 @@ codes taken from the hospital's own CMS price-transparency file (see [Real price
             web/hospitals.html: DB, verified quotes, sources, versions, recheck, "same bill, N hospitals"
 ```
 
-All Bright Data traffic goes through one function, `billback/integrations/brightdata.py:request()`, and every
-request made during a crawl goes through `billback/policies/crawl.py:Crawl`, which writes a `crawl_log` row
+All Bright Data traffic goes through one function, `remy/integrations/brightdata.py:request()`, and every
+request made during a crawl goes through `remy/policies/crawl.py:Crawl`, which writes a `crawl_log` row
 (product, URL, status, bytes, latency), saves the raw response under `policydb/raw/`, enforces a per-crawl
 request budget (`HARD_CAP` = 10, retries included, whatever the caller asks for), and streams an event to the
 case page.
@@ -79,18 +79,18 @@ in the real shapes; nothing goes to the network).
 
 | File | What it does |
 |---|---|
-| `billback/integrations/brightdata.py` | Bright Data client: `request()` (retries, `x-brd-*` error headers), `serp()`, `page()`, `document()` |
-| `billback/policies/registry.py` | Tracked hospitals (`SEED`), aliases, official domains, `match()` a bill's provider name to a hospital |
-| `billback/policies/discover.py` | Stage 1. SERP query, `rank()` with per-candidate reasons, `pick()`, retry query if no official page |
-| `billback/policies/fetch.py` | Stage 2. Web Unlocker page fetch, `policy_doc_links()` (English policy PDFs), PDF fetch + `pdf_text()` |
-| `billback/policies/extract.py` | Stage 3. Claude prompt, `verify()`: quote location, FPL-number check, dedupe, `finance.clean_tiers` |
-| `billback/policies/store.py` | Stage 4. SQLite schema, versions, checks, crawl runs, request log, JSON export |
-| `billback/policies/monitor.py` | Stage 5. `recheck()`: hash compare, re-extract on change, rule diff |
-| `billback/policies/pipeline.py` | Wires the stages: `crawl_hospital()`; `load_documents()` rebuilds documents from committed artifacts |
-| `billback/policies/crawl.py` | Crawl session: logging, artifacts, budget, events |
-| `billback/policies/compare.py` | Same bill through every stored policy |
-| `billback/policies/routes.py` | FastAPI router: `/api/hospitals`, `/api/hospitals/{id}`, `/api/compare`, `/api/hospitals/{id}/recheck`, raw artifacts |
-| `billback/agents/policy.py` | Case flow: DB lookup (refreshed live first when stale), else live crawl, else (Bright Data not configured) the labelled offline test fixture; "Recheck now" |
+| `remy/integrations/brightdata.py` | Bright Data client: `request()` (retries, `x-brd-*` error headers), `serp()`, `page()`, `document()` |
+| `remy/policies/registry.py` | Tracked hospitals (`SEED`), aliases, official domains, `match()` a bill's provider name to a hospital |
+| `remy/policies/discover.py` | Stage 1. SERP query, `rank()` with per-candidate reasons, `pick()`, retry query if no official page |
+| `remy/policies/fetch.py` | Stage 2. Web Unlocker page fetch, `policy_doc_links()` (English policy PDFs), PDF fetch + `pdf_text()` |
+| `remy/policies/extract.py` | Stage 3. Claude prompt, `verify()`: quote location, FPL-number check, dedupe, `finance.clean_tiers` |
+| `remy/policies/store.py` | Stage 4. SQLite schema, versions, checks, crawl runs, request log, JSON export |
+| `remy/policies/monitor.py` | Stage 5. `recheck()`: hash compare, re-extract on change, rule diff |
+| `remy/policies/pipeline.py` | Wires the stages: `crawl_hospital()`; `load_documents()` rebuilds documents from committed artifacts |
+| `remy/policies/crawl.py` | Crawl session: logging, artifacts, budget, events |
+| `remy/policies/compare.py` | Same bill through every stored policy |
+| `remy/policies/routes.py` | FastAPI router: `/api/hospitals`, `/api/hospitals/{id}`, `/api/compare`, `/api/hospitals/{id}/recheck`, raw artifacts |
+| `remy/agents/policy.py` | Case flow: DB lookup (refreshed live first when stale), else live crawl, else (Bright Data not configured) the labelled offline test fixture; "Recheck now" |
 | `scripts/crawl_policies.py` | CLI used to seed and recheck the DB |
 | `web/hospitals.html` | The policy DB page and the comparison |
 | `tests/test_policies.py` | Offline tests using the committed crawl artifacts as fixtures |
@@ -247,8 +247,8 @@ registry id ──► price_sources.SOURCES (cms-hpt.txt URL + campus regex)
 
 | File | What it does |
 |---|---|
-| `billback/price_sources.py` | `SOURCES` (per hospital: cms-hpt.txt URL, campus regex), `parse_hpt`, `choose`, `get` (Unlocker then HTTPS), `truncated` check, zip handling, `fetch` |
-| `billback/prices.py` | `CODES` (curated list), parsers for the three CMS layouts (CSV tall, CSV wide, JSON v2/v3), compaction, and the read API: `load(id)`, `lookup(id, code)`, `hospitals()` |
+| `remy/price_sources.py` | `SOURCES` (per hospital: cms-hpt.txt URL, campus regex), `parse_hpt`, `choose`, `get` (Unlocker then HTTPS), `truncated` check, zip handling, `fetch` |
+| `remy/prices.py` | `CODES` (curated list), parsers for the three CMS layouts (CSV tall, CSV wide, JSON v2/v3), compaction, and the read API: `load(id)`, `lookup(id, code)`, `hospitals()` |
 | `scripts/build_price_tables.py` | `[ids] [--fetch] [--list]`: rebuilds tables from `data/price_files/` (reproducible), fetching only what's missing or with `--fetch` |
 | `tests/test_prices.py` | Offline: fixtures for each layout in `tests/fixtures/prices/`, cms-hpt parsing (UTF-16, campuses), truncation check, lookup API, committed tables |
 
@@ -371,10 +371,10 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
   text differently (ZSFG's 138% sentence was a tier in one development run and "other relief" in the final one).
 - **Health-system documents cover many facilities.** The prompt restricts rules to the named hospital; Sutter's
   policy also has a rule only for one rural hospital, which an early development run wrongly kept as a tier.
-- **Physician bills are separate.** All four policies exclude separately billed physicians; BillBack applies the
+- **Physician bills are separate.** All four policies exclude separately billed physicians; Remy applies the
   policy to the hospital bill only.
 - **Non-percentage relief isn't in the math.** Caps like "no more than Medicare would pay" need the Medicare
-  allowed amount, which BillBack doesn't have; they are stored, verified and shown, not computed.
+  allowed amount, which Remy doesn't have; they are stored, verified and shown, not computed.
 - **Google variability.** SERP results differ run to run, sometimes as opaque redirect links; the ranking drops
   those and retries with a `site:` query, which needs the hospital's domain to be known.
 - **Request counting.** `crawl_log` has one row per logical request; the client retries a 429/5xx once, so the
@@ -403,7 +403,7 @@ query text in them still shows the Dignity search), and its SERP artifacts stay 
 
 ### Where the tables are used: the bill's line check
 
-`billback/billcheck.py:line_review` checks every bill line, insured or self-pay, against the hospital's table:
+`remy/billcheck.py:line_review` checks every bill line, insured or self-pay, against the hospital's table:
 a line above the posted gross charge × units is a `price_above_posted` finding with the price file as its
 source. Drug lines go through `posted_unit_price`: compared only when the file's unit (`drug_unit`,
 `drug_unit_type`: ME mg, GR g, ML mL) converts to the HCPCS unit without knowing the concentration. Self-pay,

@@ -1,4 +1,4 @@
-# BillBack — Devpost draft
+# Remy — Devpost draft
 
 ## Inspiration
 An $8,700 "final notice" for an ER visit insurance was supposed to cover. Most people in that spot either
@@ -7,14 +7,14 @@ payments the hospital "can't see", charity-care discounts nonprofit hospitals ar
 getting them takes hours on hold and knowing exactly what to ask for.
 
 ## What it does
-Drop in your hospital bill and insurance statement. BillBack:
+Drop in your hospital bill and insurance statement. Remy:
 1. **Proves what you actually owe**: an Auditor agent reconciles the bill against your insurance EOB and
    your bank records (Capital One Nessie): it finds payments the hospital missed and double charges.
 2. **Finds the discount the hospital owes you**: a Policy agent looks the hospital up in our policy
    database, built by crawling each hospital's own published financial-assistance policy with Bright Data
    (pages and policy PDFs, every quoted rule verified against the source, re-checked for changes), works
    out your income from payroll deposits, and checks you against its tiers and its payment-plan terms.
-3. **Calls billing for you**: after you approve, BillBack phones the billing office through our own voice
+3. **Calls billing for you**: after you approve, Remy phones the billing office through our own voice
    pipeline (Twilio audio, Cartesia speech-to-text and Sonic text-to-speech, Claude as the brain), with the
    patient's verbal authorization at the start, in the voice and accent you pick, pronouncing claim
    numbers and medical terms correctly. It cites the evidence, asks for the corrections, the discount and a
@@ -25,7 +25,7 @@ Drop in your hospital bill and insurance statement. BillBack:
 
 Demo: **$8,700 → $1,100 (insurance the hospital never applied) → $600 (the $500 she already paid), on a
 6 × $100 interest-free plan** under Sutter's own billing policy, collections paused, case number,
-follow-up scheduled. She isn't eligible for Sutter's write-off, and BillBack says so. Same bill at four San
+follow-up scheduled. She isn't eligible for Sutter's write-off, and Remy says so. Same bill at four San
 Francisco hospitals → different answers (our second case, Marcus: $0 at CPMC and UCSF, $5,600 at the
 other two).
 
@@ -61,7 +61,7 @@ Hospitals' own policies are the strongest argument; the hard part is getting the
 the right person on the phone.
 
 ## Why it's feasible
-Banks: BillBack only needs transactions and payroll deposits, which consumer-consent aggregators (Plaid, MX,
+Banks: Remy only needs transactions and payroll deposits, which consumer-consent aggregators (Plaid, MX,
 Finicity) provide today; Nessie is the sandbox stand-in. Hospitals: nonprofit hospitals must publish these
 policies (IRS 501(r)) and California's Hospital Fair Pricing Act sets the tiers. Calls: HIPAA lets billing
 discuss payment with someone the patient verbally authorizes (45 CFR 164.510(b)). Details: `docs/feasibility.md`.

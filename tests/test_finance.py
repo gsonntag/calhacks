@@ -2,9 +2,9 @@ from datetime import date
 
 import pytest
 
-from billback import finance
-from billback.orchestrator import demo_case
-from billback.policies.store import PolicyStore
+from remy import finance
+from remy.orchestrator import demo_case
+from remy.policies.store import PolicyStore
 
 
 def stored_tiers(hospital_id: str) -> list[dict]:
@@ -137,12 +137,12 @@ def test_payment_plan_respects_policy_cap():
     assert (tight["months"], tight["monthly"]) == (12, 50.0) and "caps it at 2%" in tight["reason"]
 
 
-def test_payment_plan_says_when_the_cap_is_billbacks_default():
+def test_payment_plan_says_when_the_cap_is_remys_default():
     default = finance.payment_plan(150, 3033.33)
-    assert "under 4% of monthly income" in default["reason"] and "BillBack's default" in default["reason"]
+    assert "under 4% of monthly income" in default["reason"] and "Remy's default" in default["reason"]
     roomy = finance.payment_plan(600, 3033.33, policy_cap_pct=10)  # policy allows more, so our 4% still binds
-    assert "BillBack's default" in roomy["reason"] and "allows up to 10%" in roomy["reason"]
+    assert "Remy's default" in roomy["reason"] and "allows up to 10%" in roomy["reason"]
     tight = finance.payment_plan(600, 3033.33, policy_cap_pct=2)
-    assert "BillBack's default" not in tight["reason"] and "caps it at 2%" in tight["reason"]
+    assert "Remy's default" not in tight["reason"] and "caps it at 2%" in tight["reason"]
     mine = finance.payment_plan(600, 3033.33, max_monthly=75)
-    assert "BillBack's default" not in mine["reason"]
+    assert "Remy's default" not in mine["reason"]

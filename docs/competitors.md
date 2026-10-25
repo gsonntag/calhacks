@@ -1,4 +1,4 @@
-# BillBack: competitive landscape
+# Remy: competitive landscape
 
 Researched October 2026. Facts come from web searches of vendor pages, regulators and press; vendor claims are labelled as such.
 "Unverified" means I could not confirm it. Pricing and traction change quickly, so re-check before quoting on stage.
@@ -38,7 +38,7 @@ Framing from our product mentor: the general idea is "when you get billed, don't
 
 Legend: Y = yes, P = partial or varies, N = no / not found, ? = unverified.
 
-| Capability | BillBack | Dollar For | Goodbill / Resolve (human) | Rocket Money / Billshark | Pine AI | DIY with a chatbot |
+| Capability | Remy | Dollar For | Goodbill / Resolve (human) | Rocket Money / Billshark | Pine AI | DIY with a chatbot |
 |---|---|---|---|---|---|---|
 | End-to-end autonomy (find, argue, follow up) | P (call is demo-grade; follow-ups are planned) | N (guides patient) | P (humans do the work) | P | P | N |
 | Uses bank data to prove payments | Y | N | N | P (finds bills, not proof of payment) | N | N |

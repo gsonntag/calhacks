@@ -3,7 +3,7 @@
     uv run python scripts/sim_twilio_stream.py                 # agent voice: priya (Indian English)
     uv run python scripts/sim_twilio_stream.py --voice gemma --rep-voice katie --barge-in
 
-It starts the app (with billback.voice.router) on 127.0.0.1:8022, registers a hospital-call leg exactly as
+It starts the app (with remy.voice.router) on 127.0.0.1:8022, registers a hospital-call leg exactly as
 run_twilio_call does, then connects to ws://127.0.0.1:8022/voice/twilio/stream as Twilio would: sends
 "connected" and "start" (with the leg's token as a custom parameter), streams the billing rep's lines as
 μ-law 8 kHz media frames in real time (silence in between, like a real line), plays back what the agent
@@ -28,14 +28,14 @@ import httpx  # noqa: E402
 import uvicorn  # noqa: E402
 from websockets.asyncio.client import connect  # noqa: E402
 
-from billback import billcheck, config, finance, orchestrator  # noqa: E402
-from billback.agents import caller  # noqa: E402
-from billback.agents.policy import SAMPLE_TIERS  # noqa: E402
-from billback.app import app  # noqa: E402
-from billback.events import bus  # noqa: E402
-from billback.integrations.cartesia import API, VERSION  # noqa: E402
-from billback.voice import audio, calls, pronounce, router, voices  # noqa: E402
-from billback.voice.media import Leg  # noqa: E402
+from remy import billcheck, config, finance, orchestrator  # noqa: E402
+from remy.agents import caller  # noqa: E402
+from remy.agents.policy import SAMPLE_TIERS  # noqa: E402
+from remy.app import app  # noqa: E402
+from remy.events import bus  # noqa: E402
+from remy.integrations.cartesia import API, VERSION  # noqa: E402
+from remy.voice import audio, calls, pronounce, router, voices  # noqa: E402
+from remy.voice.media import Leg  # noqa: E402
 
 PORT = 8022
 OUT = config.DATA_DIR / "sim"
@@ -228,10 +228,10 @@ async def main() -> None:
     transcript = [(e["speaker"], e["text"]) for e in bus.history(case["id"]) if e["kind"] == "transcript"]
     (out / "transcript.json").write_text(json.dumps({"transcript": transcript, "outcome": session.outcome,
                                                      "stats": leg.stats}, indent=1))
-    print("\nTRANSCRIPT (rep = Cartesia Ink STT of the synthesized rep; billback = Claude):")
+    print("\nTRANSCRIPT (rep = Cartesia Ink STT of the synthesized rep; remy = Claude):")
     for who, text in transcript:
         print(f"  {who:8s} {text}")
-        if who == "billback" and pronounce.normalize(text, voice.language) != text:
+        if who == "remy" and pronounce.normalize(text, voice.language) != text:
             print(f"  {'':8s} -> Sonic got: {pronounce.normalize(text, voice.language)}")
     s = leg.stats
     print(f"\noutcome: {session.outcome}")

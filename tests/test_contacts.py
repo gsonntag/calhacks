@@ -5,10 +5,10 @@ import json
 
 import pytest
 
-from billback import config, contacts, llm
-from billback.policies import registry
-from billback.policies.fetch import markdown_text
-from billback.policies.store import DEFAULT_DIR
+from remy import config, contacts, llm
+from remy.policies import registry
+from remy.policies.fetch import markdown_text
+from remy.policies.store import DEFAULT_DIR
 
 spec = importlib.util.spec_from_file_location("build_contacts", config.ROOT / "scripts" / "build_contacts.py")
 build = importlib.util.module_from_spec(spec)

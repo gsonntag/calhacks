@@ -25,7 +25,7 @@ def load(case_file: str) -> None:
 
 
 def use(case: dict) -> None:
-    """Render from a case dict (also used by billback/scenarios.py for generated cases)."""
+    """Render from a case dict (also used by remy/scenarios.py for generated cases)."""
     global p, b, e, name, addr
     p, b, e = case["patient"], case["bill"], case["eob"]
     name = f"{p['first_name']} {p['last_name']}"

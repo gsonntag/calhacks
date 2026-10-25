@@ -2,8 +2,8 @@
 Offline (no Claude): the rules and templates answer, so these run without keys."""
 import pytest
 
-from billback import orchestrator
-from billback.events import bus
+from remy import orchestrator
+from remy.events import bus
 
 from test_flow import _wait_for, client  # noqa: F401  (client is a fixture)
 
@@ -123,6 +123,6 @@ async def test_ask_answers_from_that_agents_evidence(client):
     ("what's a case number?", None),
 ])
 def test_offline_intent(msg, patch):
-    from billback.agents.decide import _offline_intent
+    from remy.agents.decide import _offline_intent
     kind, got = _offline_intent(msg)
     assert (got if kind == "change" else None) == patch

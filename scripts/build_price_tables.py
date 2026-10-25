@@ -17,9 +17,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import prices  # noqa: E402
-from billback.price_sources import SOURCES, fetch  # noqa: E402
-from billback.policies.store import PolicyStore  # noqa: E402
+from remy import prices  # noqa: E402
+from remy.price_sources import SOURCES, fetch  # noqa: E402
+from remy.policies.store import PolicyStore  # noqa: E402
 
 LIMIT = 200 * 1024
 

@@ -1,7 +1,7 @@
-"""Onboarding asks only what can change the outcome (billback/onboarding.py)."""
+"""Onboarding asks only what can change the outcome (remy/onboarding.py)."""
 import httpx
 
-from billback import app as app_module, onboarding
+from remy import app as app_module, onboarding
 
 HOSPITALS = [
     {"id": "a", "name": "A", "city": "X", "tiers": [{"max_fpl_pct": 200, "discount_pct": 100, "applies_to": "all"},

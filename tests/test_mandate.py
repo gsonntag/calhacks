@@ -2,8 +2,8 @@
 The caller tests use a fake Claude (tests/test_latency.py), so they run offline."""
 import json
 
-from billback.agents import caller, mandate
-from billback.events import bus
+from remy.agents import caller, mandate
+from remy.events import bus
 
 from test_latency import claude, respond, tool_block  # noqa: F401  (claude is a fixture)
 
@@ -74,7 +74,7 @@ async def test_a_refusal_is_spoken_in_the_mandates_words(claude):
     assert [r["offer"] for r in s.refused] == ["payment_plan"]
     assert s.messages[-1] == {"role": "assistant", "content": want}  # the history matches what was said
     tr = [(e["speaker"], e["text"]) for e in bus.history("m1") if e["kind"] == "transcript"]
-    assert tr[-1] == ("billback", want)
+    assert tr[-1] == ("remy", want)
 
 
 async def test_an_allowed_check_lets_claude_answer(claude):

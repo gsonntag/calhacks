@@ -6,10 +6,10 @@ from types import SimpleNamespace
 import httpx
 import pytest
 
-from billback import app as app_module, finance, llm, orchestrator
-from billback.agents import policy
-from billback.events import bus
-from billback.orchestrator import demo_case
+from remy import app as app_module, finance, llm, orchestrator
+from remy.agents import policy
+from remy.events import bus
+from remy.orchestrator import demo_case
 
 BANK = {"annual": 36_400.0}  # Rosa's take-home: about $42,824-$48,533 before taxes
 
@@ -102,7 +102,7 @@ async def test_policy_stated_without_bank_income():
 
 
 def test_decide_lists_stated_vs_bank():
-    from billback.agents import decide
+    from remy.agents import decide
     check = finance.stated_check(BANK, 40_000)
     case = {**demo_case(), "facts": {
         "rec": {"payments": [], "billed_due": 600.0}, "findings": {},
@@ -176,7 +176,7 @@ async def test_new_case_records_chat_income(monkeypatch):
 
 
 def test_onboarding_checks_stated_income_against_the_bank():
-    from billback import onboarding
+    from remy import onboarding
     hs = [{"id": "a", "name": "A", "city": "X", "tiers": [{"max_fpl_pct": 200, "discount_pct": 100, "applies_to": "all"}]}]
     bank = {"annual": 36_400.0, "source": "test"}
     r = onboarding.assess({"hospital_id": "a", "household_size": 2, "income": 25_000}, bank=bank, hospitals=hs)
@@ -186,7 +186,7 @@ def test_onboarding_checks_stated_income_against_the_bank():
 
 
 def test_reset_forgets_local_onboarding_profiles(tmp_path, monkeypatch):
-    from billback import events, onboarding
+    from remy import events, onboarding
     monkeypatch.setattr(events, "DATA_DIR", tmp_path)
     (tmp_path / "profiles").mkdir()
     (tmp_path / "profiles" / "abc.json").write_text("{}")

@@ -10,14 +10,14 @@ import httpx
 import pytest
 from fastapi import FastAPI
 
-from billback import config, orchestrator
-from billback.agents import caller
-from billback.events import bus
-from billback.integrations import twilio
-from billback.voice import audio, calls, media, pronounce, voices
-from billback.voice.authorization import AuthorizationBrain, classify
-from billback.voice.cartesia_ws import STT, TTS, keyterm_params
-from billback.voice.routes import router
+from remy import config, orchestrator
+from remy.agents import caller
+from remy.events import bus
+from remy.integrations import twilio
+from remy.voice import audio, calls, media, pronounce, voices
+from remy.voice.authorization import AuthorizationBrain, classify
+from remy.voice.cartesia_ws import STT, TTS, keyterm_params
+from remy.voice.routes import router
 
 # ---------------------------------------------------------------- pronunciation
 
@@ -147,7 +147,7 @@ async def test_twilio_rest_requests(monkeypatch):
     monkeypatch.setattr(config, "TWILIO_AUTH_TOKEN", "tok")
     monkeypatch.setattr(config, "TWILIO_FROM_NUMBER", "+15550001111")
     assert await twilio.create_call("+15552223333", "https://x/voice/twilio/agent?token=t", "https://x/status") == "CA123"
-    await twilio.add_participant("billback-c1", "app:AP1?token=t", label="billback", status_callback="https://x/s",
+    await twilio.add_participant("remy-c1", "app:AP1?token=t", label="remy", status_callback="https://x/s",
                                  end_conference_on_exit=True)
     call, part = sent
     assert str(call.url) == "https://api.twilio.com/2010-04-01/Accounts/AC1/Calls.json"
@@ -158,7 +158,7 @@ async def test_twilio_rest_requests(monkeypatch):
     assert not {"Twiml", "Timeout", "StatusCallbackMethod"} & set(form)  # refused on Twilio's free trial
     assert form["StatusCallbackEvent"] == ["initiated", "ringing", "answered", "completed"]
     pform = parse_qs(part.content.decode())
-    assert str(part.url).endswith("/Conferences/billback-c1/Participants.json")
+    assert str(part.url).endswith("/Conferences/remy-c1/Participants.json")
     assert pform["To"] == ["app:AP1?token=t"] and pform["EndConferenceOnExit"] == ["true"] and pform["Beep"] == ["false"]
 
 
@@ -346,7 +346,7 @@ class Echo:
 
     async def turn(self, said):
         self.heard.append(said)
-        return f"You said {said}" if said else "Hello, this is BillBack."
+        return f"You said {said}" if said else "Hello, this is Remy."
 
 
 async def test_barge_in_sends_clear_and_cancels_tts(fakes):
@@ -385,7 +385,7 @@ async def test_speaks_first_when_line_is_silent(fakes):
     tw = FakeTwilio(leg.token, [])
     run = asyncio.create_task(media.MediaSession(tw, calls.legs.get).run())
     await asyncio.sleep(0.2)
-    assert brain.heard == [None] and FakeTTS.spoken == ["Hello, this is BillBack."]
+    assert brain.heard == [None] and FakeTTS.spoken == ["Hello, this is Remy."]
     await tw.close()
     await run
 
@@ -454,7 +454,7 @@ async def test_direct_call_end_to_end(phone):
     assert ready["mode"] == "phone" and ready["transport"] == "twilio" and ready["voice"] == "Priya"
     rep = [e["text"] for e in hist if e["kind"] == "transcript" and e["speaker"] == "rep"]
     assert rep == REP_LINES  # consent-call audio never lands in the billing transcript
-    assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "billback") == len(REP_LINES)
+    assert sum(1 for e in hist if e["kind"] == "transcript" and e["speaker"] == "remy") == len(REP_LINES)
     assert outcome["case_number"] == "58213" and outcome["account_on_hold"] is True
     assert case["call_done"].is_set() and any(e["kind"] == "call_ended" for e in hist)
     assert caller.sessions[case["call_id"]].brief["patient_authorization"]["given"] is True

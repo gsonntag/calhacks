@@ -1,4 +1,4 @@
-# BillBack: Competitive Landscape and Market Facts (healthcare billing)
+# Remy: Competitive Landscape and Market Facts (healthcare billing)
 
 Research date: 2026-10-25. Web search/fetch only, no paid APIs. Most traction and savings figures are **company-reported and unaudited**; this is flagged where it applies. "Not found" means I searched and could not find a public statement. It does not mean the company definitely lacks the feature.
 
@@ -143,7 +143,7 @@ Research date: 2026-10-25. Web search/fetch only, no paid APIs. Most traction an
 - **Kora voice agent:** Launched April 2025 and built with Twilio. The Kora Platform (Aug 2026) adds autonomous inbound and outbound voice plus two-way text.
 - **Reported results:** 600K+ inbound conversations, 40% containment, 7.4% more payment attempts than live agents. ApolloMD reported a 42% increase in collections. ([TechTarget](https://www.techtarget.com/revcyclemanagement/news/366649202/Cedar-deploys-agentic-AI-for-patient-billing-financial-experience))
 - **Affordability features:** Affordability Navigator and an "80 attributes" engine route at-risk patients to financial-assistance applications and Medicaid enrollment. ([Fierce](https://www.fiercehealthcare.com/health-tech/medical-billing-startup-cedar-roll-out-new-features-connect-patient-financial), [HIT Consultant Apr 2026](https://hitconsultant.net/2026/04/08/cedar-intelligence-ai-expansion-patient-financial-experience-billing/))
-- **Why it matters:** Cedar is paid by providers and optimized for collections. Its CSO markets an "agentic advocate in every patient's pocket," which directly contests our framing. BillBack's agent will often be talking to a Kora-type bot.
+- **Why it matters:** Cedar is paid by providers and optimized for collections. Its CSO markets an "agentic advocate in every patient's pocket," which directly contests our framing. Remy's agent will often be talking to a Kora-type bot.
 
 **Waystar** (RCM, public company)
 - Presumptive charity screening, from its 2019 PARO acquisition, scores hospital accounts against the hospital's financial assistance policy using public-record data, without credit checks. PARO screened about 11M visits in 2018 and flagged 3.5M as eligible (vendor figure). ([Waystar](https://waystar.com/our-platform/financial-clearance/charity-screening/), [HIT Consultant](https://hitconsultant.net/?p=49184))
@@ -168,7 +168,7 @@ Key: Y = yes · P = partial / human-only / limited · N = no or not found · ? =
 
 | | Who pays / price | Automation | Reconciles bill vs EOB | Uses bank transactions | Charity-care (FAP) eligibility | Price files | Phones the hospital | Tracks promises + follow-up | Cited, deterministic numbers |
 |---|---|---|---|---|---|---|---|---|---|
-| **BillBack** | TBD | Software + AI voice | Y | **Y (reconciliation)** | **Y (California law + hospital's own FAP)** | Y | **Y (AI, disclosed)** | **Y (case #, promise ledger, scoring)** | **Y** |
+| **Remy** | TBD | Software + AI voice | Y | **Y (reconciliation)** | **Y (California law + hospital's own FAP)** | Y | **Y (AI, disclosed)** | **Y (case #, promise ledger, scoring)** | **Y** |
 | Goodbill | 20% of savings, $1K cap | Software + human experts | P | N | P | Y | P (human) | P (human) | N (opaque) |
 | Resolve | $250–499 deposit + 10–25%, $1K min | Human advocate | P | N | P | ? | P (human) | P (human) | N |
 | CareRoute | 18–25%, $1K cap | App + human team | P | N | Y (per-hospital guides) | ? | P (human) | P | N |
@@ -188,14 +188,14 @@ Key: Y = yes · P = partial / human-only / limited · N = no or not found · ? =
 
 ## 3. Analysis
 
-### BillBack's genuine differentiators
+### Remy's genuine differentiators
 1. **Three-way reconciliation using the patient's bank transactions.** I found no consumer tool that matches bill + EOB + actual payments. Plaid appears in medical *payment* apps such as PayGround, not in auditing. That reconciliation is what surfaces "payment the hospital never credited" and duplicate payments. Goodbill explicitly refuses already-paid bills, so this is open ground.
-2. **A charity-care entitlement computed from the hospital's own policy plus California statute** (400% FPL floor, no asset test), turned into a cited legal ask. Dollar For does the application on paper. BillBack turns it into a demand on the phone, alongside error and duplicate disputes in the same call.
+2. **A charity-care entitlement computed from the hospital's own policy plus California statute** (400% FPL floor, no asset test), turned into a cited legal ask. Dollar For does the application on paper. Remy turns it into a demand on the phone, alongside error and duplicate disputes in the same call.
 3. **The patient's AI agent actually calls the billing office.**
    - Human advocates: Goodbill, Resolve, CareRoute.
    - Letters only: Dollar For, Claimable, Counterforce, MyMedBill.
    - The only AI callers found are Pine, which is horizontal, and Avelis, which pivoted to B2B.
-4. **Case management after the call.** BillBack captures the case number, keeps a ledger of promises, scores what the call won and plans the next call. Competitors either hand this to a human or leave it to the patient. Dollar For has the patient relay hospital updates.
+4. **Case management after the call.** Remy captures the case number, keeps a ledger of promises, scores what the call won and plans the next call. Competitors either hand this to a human or leave it to the patient. Dollar For has the patient relay hospital updates.
 5. **Every figure is deterministic and cited.** This contrasts with LLM bill checkers and with unsourced "80% of bills have errors" marketing. It matters because DoNotPay paid $193K to the FTC in 2025 over unsubstantiated AI "robot lawyer" claims. ([FTC](https://www.ftc.gov/node/87474))
 6. **Transparent guardrails.** The agent says it is automated, has written authorization and never agrees to pay. California's bot-disclosure law and the FCC's 2024 TCPA ruling on AI voices make disclosure a feature, not a cost. ([FCC ruling summary](https://www.akingump.com/en/insights/ai-law-and-regulation-tracker/fcc-issues-declaratory-ruling-on-ai-generated-voice-robocalls)) Note that the TCPA mainly governs calls *to* consumers. Calls to a business billing line are lower risk, but recording calls in California still needs every party's consent (Penal Code 632).
 
@@ -205,17 +205,17 @@ Key: Y = yes · P = partial / human-only / limited · N = no or not found · ? =
   - Resolve: $55M claimed.
   - Undue: $20B+.
   - Sheer: $5M returned.
-  - BillBack has zero outcomes.
+  - Remy has zero outcomes.
 - **Humans for hard cases:** human negotiators handle escalation, supervisors and judgment calls on large bills. Resolve targets bills of $5K–200K, where a human's 10% fee is worth paying.
-- **Insurer appeals:** Claimable (80%, $30M+) and Counterforce do denial appeals well. BillBack's scope is the hospital billing office, not insurer appeals.
+- **Insurer appeals:** Claimable (80%, $30M+) and Counterforce do denial appeals well. Remy's scope is the hospital billing office, not insurer appeals.
 - **Calling infrastructure:** Pine has $25M, its own voice model and real call volume. Cedar has 600K+ conversations. They will out-execute us on raw voice quality.
 - **Distribution:** employer navigators (Accolade/Transcarent, Collective) and payer-paid Baba reach patients without them having to buy anything.
 - **The hospital side is automating too.** Hospitals that use Waystar or Cedar may already screen for charity care. California AB 1312 (presumptive screening from July 1, 2027) will mandate some of what we do. The value shifts to verifying that the hospital actually applied the discount.
-- **Hospitals refuse to talk to third parties.** Dollar For reports that hospitals usually won't speak with it directly. BillBack's authorization flow and HIPAA/agent identity are unproven against that wall.
+- **Hospitals refuse to talk to third parties.** Dollar For reports that hospitals usually won't speak with it directly. Remy's authorization flow and HIPAA/agent identity are unproven against that wall.
 - **Unit economics:** Avelis tried consumer AI calling and moved to B2B within months. Contingency fees on small bills are thin.
 
 ### Devpost "why we're different" (one paragraph)
-> Medical-bill help today is either a human advocate who takes 20–35% of what they save, or a free nonprofit that files a paper charity-care application and waits. AI tools so far mostly write letters and leave the phone call to you. BillBack is the first patient-side agent we know of that does the whole loop. It checks the hospital bill against your insurance EOB and your own bank transactions to catch payments the hospital never credited, adjustments it never applied and duplicate charges. It reads that hospital's own financial-assistance policy, plus California's 400%-of-poverty charity-care law and the hospital's published prices, to compute the discount you are legally owed. Then it makes the call. Our voice agent identifies itself as automated, acts under your written authorization and never agrees to pay. It walks the billing office through each ask, gets a case number, logs every promise and plans the follow-up call when a promise slips. Every dollar figure comes from deterministic code with a cited source, the bill line, the EOB line, the bank transaction or the policy clause, so the AI can argue but never invent a number.
+> Medical-bill help today is either a human advocate who takes 20–35% of what they save, or a free nonprofit that files a paper charity-care application and waits. AI tools so far mostly write letters and leave the phone call to you. Remy is the first patient-side agent we know of that does the whole loop. It checks the hospital bill against your insurance EOB and your own bank transactions to catch payments the hospital never credited, adjustments it never applied and duplicate charges. It reads that hospital's own financial-assistance policy, plus California's 400%-of-poverty charity-care law and the hospital's published prices, to compute the discount you are legally owed. Then it makes the call. Our voice agent identifies itself as automated, acts under your written authorization and never agrees to pay. It walks the billing office through each ask, gets a case number, logs every promise and plans the follow-up call when a promise slips. Every dollar figure comes from deterministic code with a cited source, the bill line, the EOB line, the bank transaction or the policy clause, so the AI can argue but never invent a number.
 
 (Use "the first we know of" deliberately. Pine AI and the 2025 version of Avelis place AI calls, so do not claim "the only AI that calls hospitals.")
 
@@ -278,8 +278,8 @@ Key: Y = yes · P = partial / human-only / limited · N = no or not found · ? =
   - HCAI authority now reaches back to violations from Jan 1, 2022.
   - One outlet (Spectrum News) gives July 1, 2025 for part of SB 1061, likely the contract provisions; confirm in the chaptered text. Medical credit cards and loans are *not* covered. ([KEYT](https://keyt.com/news/california/2024/09/24/new-state-law-prevents-medical-debt-from-being-used-by-credit-reporting-agencies-effective-jan-1/), [Spectrum](https://spectrumlocalnews.com/ca/california/health/2024/10/02/a-new-state-law-will-prohibit-medical-debt-from-appearing-on-credit-reports))
 - **AB 1312 (Ch. 450, 2025; signed Oct 7, 2025):** starting **July 1, 2027**, hospitals must screen patients for financial assistance and **presume eligibility** for people enrolled in CalFresh, CalWORKs, WIC, Tribal TANF and similar programs. The screening group includes uninsured patients, Medi-Cal patients and those owing more than $500. The California Hospital Association opposed it unless amended. ([HCAI PIL 25-01](https://hcai.ca.gov/document/pil-25-01), [CalMatters](https://calmatters.org/health/2025/07/medical-debt-relief-hospitals/))
-  - **Strategic note:** this is a risk, because hospitals will do more screening themselves, and also a pitch line: "BillBack checks that the hospital actually did what AB 1312 now requires."
-- **Federal price transparency:** PatientRightsAdvocate found **49% of 2,000 hospitals fully compliant** (Sept 2026), up from 21% (Nov 2024). So price files are often missing or unusable, and BillBack must handle that. ([Healthcare Dive](https://www.healthcaredive.com/news/hospital-compliance-price-transparency-regulations-pra-report/830087/))
+  - **Strategic note:** this is a risk, because hospitals will do more screening themselves, and also a pitch line: "Remy checks that the hospital actually did what AB 1312 now requires."
+- **Federal price transparency:** PatientRightsAdvocate found **49% of 2,000 hospitals fully compliant** (Sept 2026), up from 21% (Nov 2024). So price files are often missing or unusable, and Remy must handle that. ([Healthcare Dive](https://www.healthcaredive.com/news/hospital-compliance-price-transparency-regulations-pra-report/830087/))
 
 ---
 

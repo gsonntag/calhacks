@@ -1,4 +1,4 @@
-"""Force every integration offline before billback reads .env (load_dotenv never overrides set vars)."""
+"""Force every integration offline before remy reads .env (load_dotenv never overrides set vars)."""
 import os
 
 for _k in ("ANTHROPIC_API_KEY", "NESSIE_API_KEY", "BRIGHTDATA_API_KEY", "BRIGHTDATA_UNLOCKER_ZONE",
@@ -8,7 +8,7 @@ for _k in ("ANTHROPIC_API_KEY", "NESSIE_API_KEY", "BRIGHTDATA_API_KEY", "BRIGHTD
 
 import pytest  # noqa: E402
 
-from billback import config, events, llm  # noqa: E402
+from remy import config, events, llm  # noqa: E402
 
 
 @pytest.fixture(autouse=True)

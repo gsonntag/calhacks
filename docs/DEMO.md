@@ -1,4 +1,4 @@
-# BillBack: 2-minute demo
+# Remy: 2-minute demo
 
 Demo first: one complete case (Marcus Lee, $5,600 at UCSF Medical Center → $0 under UCSF's own policy), with
 a live Bright Data recheck and a live Cartesia call in it. Then 20 seconds of problem and how it's built.
@@ -11,7 +11,7 @@ percent depending on the Nessie data.
 
 **0:00–0:10 · Hook** (presenter, holding the printed bill)
 > "Marcus got a $5,600 bill from UCSF for an ER visit. His insurance already paid its part. This $5,600 is
-> his share, and he can't pay it. Watch BillBack handle it."
+> his share, and he can't pay it. Watch Remy handle it."
 
 **0:10–0:20 · Start the case**
 - Click: `/flows/drop-go.html` → **Try the free-care example** (Marcus's bill + insurance statement,
@@ -44,7 +44,7 @@ percent depending on the Nessie data.
 - The plan: call UCSF financial assistance (through Patient Financial Services) with 3 asks, each with a
   "why ▸" link: free care under their own policy ($5,600 → $0), pause collections while it's corrected, a
   case number and the rep's name.
-- Point at the round **Ask BillBack** button (bottom right): "Questions go here: BillBack, either agent, or
+- Point at the round **Ask Remy** button (bottom right): "Questions go here: Remy, either agent, or
   the planner, which makes a new plan version if he says 'I can do $150 a month'." Don't send one on stage.
 - Click **Call now**.
 > "Nothing happens without his OK. It never agrees to pay on a call, and it always says it's automated."
@@ -53,16 +53,16 @@ percent depending on the Nessie data.
 - The rep's tab is this case's **Under the hood** page (top-bar link on the case page). When the call
   starts it shows "Calling… **rep console**"; the rep opens it and clicks **Answer**. The header says
   "listening with Cartesia Ink".
-- BillBack opens: "Hi, this is an automated assistant calling on behalf of Marcus Lee, with his
+- Remy opens: "Hi, this is an automated assistant calling on behalf of Marcus Lee, with his
   authorization. This call is transcribed…"
 - The rep says, in order:
-  1. "Can you pay the fifty-six hundred by card today?" → BillBack refuses to pay and asks for a
+  1. "Can you pay the fifty-six hundred by card today?" → Remy refuses to pay and asks for a
      financial-assistance review under UCSF's policy.
-  2. While BillBack is still answering: **"Wait, sorry, what's his income?"** → audio stops (barge-in);
-     the bubble shows the unheard part struck through; BillBack answers the question.
+  2. While Remy is still answering: **"Wait, sorry, what's his income?"** → audio stops (barge-in);
+     the bubble shows the unheard part struck through; Remy answers the question.
   3. "OK, I've opened a financial assistance review and put the account on hold. Case number FA 20931." →
-     BillBack reads it back: "F A, 2 0 9 3 1. Is that right?" Rep: "Yes. Goodbye."
-> "Cartesia Ink hears her, Sonic speaks, and when she interrupts, BillBack stops and only remembers what she
+     Remy reads it back: "F A, 2 0 9 3 1. Is that right?" Rep: "Yes. Goodbye."
+> "Cartesia Ink hears her, Sonic speaks, and when she interrupts, Remy stops and only remembers what she
 > actually heard."
 - If Cartesia fails (no credits, HTTP 402): the console says so and falls back to Chrome's speech and voice;
   the rep holds the mic button or types. Say: "Same call brain; the browser is standing in for Cartesia's
@@ -78,16 +78,16 @@ percent depending on the Nessie data.
 - Optional click: `/hospitals.html` (the same bill at all 12 hospitals: $0 at 7; $5,600 at Chinese Hospital
   and Highland, whose tiers are for uninsured patients, and at Stanford, Saint Francis and SF General, which
   have no verified tiers on record).
-> "Hospitals publish charity-care policies, and most patients never hear about them. BillBack reads the
+> "Hospitals publish charity-care policies, and most patients never hear about them. Remy reads the
 > bill with Claude, checks the bank with Capital One Nessie, finds the hospital's real policy and prices
 > with Bright Data, and makes the call with Cartesia. The same bill is $0 under seven of these hospitals'
-> policies; for the other five the page shows why not. BillBack knows which, and calls for you."
+> policies; for the other five the page shows why not. Remy knows which, and calls for you."
 
 ## Before judging (T-30 min)
 - [ ] `.env`: `ANTHROPIC_API_KEY`, `NESSIE_API_KEY`, `BRIGHTDATA_API_KEY` + both zones, `CARTESIA_API_KEY`,
-      `BILLBACK_ADMIN_TOKEN` (16+ characters), `BILLBACK_REQUIRE_LIVE=1`. Twilio + `PUBLIC_BASE_URL` only for
+      `REMY_ADMIN_TOKEN` (16+ characters), `REMY_REQUIRE_LIVE=1`. Twilio + `PUBLIC_BASE_URL` only for
       a real phone call.
-- [ ] Start the server (`uv run uvicorn billback.app:app --port <port>`). With `BILLBACK_REQUIRE_LIVE=1` it
+- [ ] Start the server (`uv run uvicorn remy.app:app --port <port>`). With `REMY_REQUIRE_LIVE=1` it
       won't start if a key is missing. Check `GET /api/mode`: Claude, Nessie, Bright Data, Cartesia true;
       `live_crawl` true.
 - [ ] Open `/case.html?key=<token>` once in the presenter's browser (the key is saved and removed from the

@@ -1,4 +1,4 @@
-# BillBack plan (from 2026-10-25)
+# Remy plan (from 2026-10-25)
 
 Working branch: `master` on GitHub `gsonntag/calhacks` (the only remote). Gavin said so on 2026-10-25:
 `after-david-takeover` was squashed onto master (d2a5b45), and fixes now go straight to master. The 6 PM
@@ -17,13 +17,13 @@ merging; this docs PR is #10.
 
 ### P0: before anyone sees it (bugs and disqualification risks)
 1. ✔ **✓ #2** **Login on approve and reset.** `POST /api/approvals/{id}` and `POST /api/reset` were open to
-   anyone. Now every call-placing, credit-spending or data-changing route needs `BILLBACK_ADMIN_TOKEN`
-   (`X-BillBack-Key`, or `?key=` once), or localhost when unset.
+   anyone. Now every call-placing, credit-spending or data-changing route needs `REMY_ADMIN_TOKEN`
+   (`X-Remy-Key`, or `?key=` once), or localhost when unset.
 2. ✔ **✓ #3** **No false win.** When billing only puts the account on hold, the case showed the target as the
    balance. Now billing's figure stays until confirmed ("expected $0 once they apply the corrections").
 3. ✔ **✓ #6** **A patient missing from Nessie stops the whole case.** Now it falls back to sample bank data and
    says so on the case page.
-4. **✓ #2** (`BILLBACK_REQUIRE_LIVE=1`) **The app can't run on sample policies on stage.** Judging mode refuses
+4. **✓ #2** (`REMY_REQUIRE_LIVE=1`) **The app can't run on sample policies on stage.** Judging mode refuses
    to start without the keys, and `SAMPLE_TIERS` is never used.
 5. **✓ #3, then moot** **The 6-month payment plan never ends.** #3 wrote one scheduled Nessie bill per
    payment; since 98eef7d the planner only proposes the plan and writes nothing to the bank.
@@ -55,7 +55,7 @@ merging; this docs PR is #10.
 - **✓ #7** Cartesia: keypad tones for phone menus, quiet during hold messages.
 
 Also merged: #1 (a line billed twice on insured bills, its own ask), #9 (the caller says only the plan's
-asks), #11 (Ask BillBack chat on the case page; hold-to-talk mic on the Cases page), #12 (the step bar fills
+asks), #11 (Ask Remy chat on the case page; hold-to-talk mic on the Cases page), #12 (the step bar fills
 with real progress). 98eef7d removed Ask on findings, the desk-mode console link on the case page, and the
 post-call payment-plan Yes/No card.
 
@@ -75,7 +75,7 @@ post-call payment-plan Yes/No card.
 - **Live checks still owed:** see "Still open" above. Each needs a small, stated credit cap (rule below).
 - **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/`. Uploading
   needs a server with API keys. Only Rosa and Marcus have Nessie bank accounts; Dana, Amara, Lena don't yet.
-- **Contacts:** `billback/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
+- **Contacts:** `remy/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
   we'll call" still takes the number from the bill; it can use `contacts.for_case(case)`.
 
 ## Rule: paid API credits
@@ -114,7 +114,7 @@ list: step 5 built (offline), step 4's live call screen not built, call speed me
 
 1. **Fold New case into Cases.** *(Built.)* Cases is home, with a "+ New case" button that opens the chat intake. With
    no cases yet, go straight to the chat. Top bar: Cases · Hospitals · Under the hood.
-2. **Shared format for the two app agents.** *(Built: `billback/agents/report.py`.)* One shape for what each agent reports: steps (label, status,
+2. **Shared format for the two app agents.** *(Built: `remy/agents/report.py`.)* One shape for what each agent reports: steps (label, status,
    result) and findings (what was found, money saved, proof, source). Both agents and the UI use it.
 3. **Generic Review screen.** *(Built, commit 6563e09.)* The case page shows a live panel for each app agent that reports in, not
    hard-coded Auditor/Policy columns. Findings feed the "ranked by money saved" list.
@@ -130,7 +130,7 @@ list: step 5 built (offline), step 4's live call screen not built, call speed me
 Steps 4 and 5 can run as two coding agents in parallel, each on its own branch.
 
 6. **Step 3: the plan (Decide agent) and in-place Ask / "This is wrong"** (see below). *(Built 2026-10-25:
-   `billback/agents/decide.py`, data format in `docs/plan-format.md`; gaps listed under "Step 3: what's
+   `remy/agents/decide.py`, data format in `docs/plan-format.md`; gaps listed under "Step 3: what's
    built".)*
 
 ## The flow (settled 2026-10-25)
@@ -154,7 +154,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   labels on answers (for judges). Asking never changes anything.
 - Each finding has **"This is wrong"**: saved as an explicit correction on that finding (logged in the case
   history). Allowed until the call starts; a change after approval resets the approval.
-- Reuse the existing "Ask BillBack" endpoint (`/api/cases/{id}/ask`) scoped to one agent's evidence.
+- Reuse the existing "Ask Remy" endpoint (`/api/cases/{id}/ask`) scoped to one agent's evidence.
 
 ### What reruns (no change-tracking needed)
 - **Fetched data** (Nessie transactions, Bright Data policy/prices) is slow and costs money: fetched once and
@@ -189,7 +189,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   points at the exact data.
 - **Questions** are answered in the chat only. **Change requests** ("refund first", "don't mention a plan",
   "I can do $150/mo", "ask for a supervisor if they say no") produce a new version of the plan.
-- The decision is **rules-based code** (`billback/agents/decide.py`, using `finance.settle` and
+- The decision is **rules-based code** (`remy/agents/decide.py`, using `finance.settle` and
   `finance.payment_plan`; it replaced `orchestrator.call_asks`); Claude writes the explanation and turns chat
   requests into plan changes, which the rules check.
 - Guardrails: the chat changes strategy, never facts; numbers always come from the code; every ask must be
@@ -204,7 +204,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 - Works differently from the text above:
   - "A change after approval resets the approval": built, but "Call now" starts the call at once, so there's
     almost never a gap to correct in.
-  - The fallback in "How I decided" is text only. On the call, BillBack uses its built-in rule (restate the
+  - The fallback in "How I decided" is text only. On the call, Remy uses its built-in rule (restate the
     evidence once, then ask for a supervisor or a written review). A "supervisor" ask goes on the plan only
     when you ask for it in the chat.
   - The committed replays were recorded before step 3, so they show only the old ask list. Re-record after
@@ -226,11 +226,11 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
   empty insurance statement.
 
 ### Step 4: the call (fully autonomous) *(design only, not built)*
-- No mid-call steering (no nudge box). When billing refuses an ask, BillBack follows the approved plan's
+- No mid-call steering (no nudge box). When billing refuses an ask, Remy follows the approved plan's
   fallback by itself; it doesn't pause to ask.
 - On screen: the live transcript, the plan's asks as a checklist that ticks off live as the rep agrees
   ("✓ Insurance applied, rep agreed"), and a running new balance.
-- Voice: Cartesia stock voices as today (no voice cloning: BillBack always says it's an automated assistant
+- Voice: Cartesia stock voices as today (no voice cloning: Remy always says it's an automated assistant
   calling on the patient's behalf).
 - Later: let the patient join the live call (Twilio conference) when billing insists on the patient.
 
@@ -244,7 +244,7 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 - A follow-up call reuses this plan with only the unfinished asks.
 
 ### Step 5: what's built (2026-10-25, offline while Cartesia has no credits)
-- **Scorecard** (`billback/agents/scorecard.py`): after every call each ask on the plan the call used gets
+- **Scorecard** (`remy/agents/scorecard.py`): after every call each ask on the plan the call used gets
   got / refused / promised later / unclear (supervisor: "not needed" when nothing was refused). Plain code
   reads what the call agent recorded and the rep's words; when Claude is on, the post-call transcript read
   (`followups.EXTRACT_SYSTEM`, now with an `asks` field) also marks each ask, but its mark only counts if its
@@ -269,14 +269,14 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 ### Call speed *(built, merged 2026-10-25, commit e1fa24f)*
 Claude's reply streams into Cartesia sentence by sentence, Claude starts on Ink's `turn.eager_end`, outcomes
 are recorded off the critical path instead of with a second Claude call, and prompts are cached. Desk mode
-streams too (`billback/voice/desk.py`). Measured live before the credits ran out: phone path 1.0–2.7 s →
+streams too (`remy/voice/desk.py`). Measured live before the credits ran out: phone path 1.0–2.7 s →
 0.44–1.1 s (10 of 11 turns under 0.8 s); desk mode median 3.0 s → 0.93 s. Details in `docs/voice.md`.
 Not done: a Chrome rehearsal of the new desk player in `web/rep.html` (needs Cartesia credits). Moss (Cal
 Hacks sponsor) was evaluated and skipped: it's fast retrieval, not LLM latency.
 
 ### Data on hand (added tonight)
 - 12 hospitals in the policy DB (8 new Bay Area); real price tables for 11 in `policydb/prices/`
-  (`billback/prices.py`). Check MarinHealth and El Camino tiers: they were read as "all patients".
+  (`remy/prices.py`). Check MarinHealth and El Camino tiers: they were read as "all patients".
 - Realistic cases from real prices with known answers: `demo/scenarios/` (`scripts/make_scenario.py`):
   rosa-real ($15,414 → $1,575), marcus-real ($4,174 → $0), dana-altabates-refund, amara-kaiser-uninsured,
   lena-johnmuir. Making rosa-real the main demo case means updating demo/case.json, PDFs, Nessie seed, tests,

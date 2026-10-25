@@ -1,6 +1,6 @@
 {
   "scenario": "marcus-real",
-  "generator": "billback/scenarios.py",
+  "generator": "remy/scenarios.py",
   "generator_version": 2,
   "seed": 1102,
   "as_of": "2026-10-25",

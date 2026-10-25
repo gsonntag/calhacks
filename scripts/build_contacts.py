@@ -20,12 +20,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import contacts, llm  # noqa: E402
-from billback.integrations import brightdata  # noqa: E402
-from billback.policies import registry  # noqa: E402
-from billback.policies.crawl import slim_serp  # noqa: E402
-from billback.policies.fetch import check_pdf, markdown_text, pdf_text  # noqa: E402
-from billback.policies.store import DEFAULT_DIR, sha256  # noqa: E402
+from remy import contacts, llm  # noqa: E402
+from remy.integrations import brightdata  # noqa: E402
+from remy.policies import registry  # noqa: E402
+from remy.policies.crawl import slim_serp  # noqa: E402
+from remy.policies.fetch import check_pdf, markdown_text, pdf_text  # noqa: E402
+from remy.policies.store import DEFAULT_DIR, sha256  # noqa: E402
 
 ROOT = DEFAULT_DIR
 OUT = contacts.CONTACTS_DIR

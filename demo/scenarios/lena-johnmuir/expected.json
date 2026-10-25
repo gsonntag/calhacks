@@ -1,6 +1,6 @@
 {
   "scenario": "lena-johnmuir",
-  "generator": "billback/scenarios.py",
+  "generator": "remy/scenarios.py",
   "generator_version": 2,
   "seed": 1105,
   "as_of": "2026-10-25",
@@ -339,7 +339,7 @@
     "monthly": 162.0,
     "last": 157.52,
     "total": 967.52,
-    "reason": "$162/mo stays under 4% of monthly income ($6,755): BillBack's default, not the hospital's rule; the hospital's policy allows up to 10%; you have about $3,644/mo left after regular bills",
+    "reason": "$162/mo stays under 4% of monthly income ($6,755): Remy's default, not the hospital's rule; the hospital's policy allows up to 10%; you have about $3,644/mo left after regular bills",
     "text": "5 × $162/mo, then $157.52"
   },
   "finance_reconcile": {

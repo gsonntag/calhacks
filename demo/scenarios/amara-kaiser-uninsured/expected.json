@@ -1,6 +1,6 @@
 {
   "scenario": "amara-kaiser-uninsured",
-  "generator": "billback/scenarios.py",
+  "generator": "remy/scenarios.py",
   "generator_version": 2,
   "seed": 1104,
   "as_of": "2026-10-25",
@@ -294,7 +294,7 @@
     "monthly": 200.0,
     "last": 199.28,
     "total": 2399.28,
-    "reason": "$200/mo stays under 4% of monthly income ($5,233): BillBack's default, not the hospital's rule; you have about $2,652/mo left after regular bills",
+    "reason": "$200/mo stays under 4% of monthly income ($5,233): Remy's default, not the hospital's rule; you have about $2,652/mo left after regular bills",
     "text": "11 × $200/mo, then $199.28"
   },
   "finance_reconcile": {

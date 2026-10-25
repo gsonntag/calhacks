@@ -1,7 +1,7 @@
 # Generated scenarios
 
 Demo patients built from **real hospital data**, with **planted errors whose correct answers are known**.
-Generator: `billback/scenarios.py` (specs in `SPECS`). Command: `scripts/make_scenario.py`.
+Generator: `remy/scenarios.py` (specs in `SPECS`). Command: `scripts/make_scenario.py`.
 
 ```bash
 uv run python scripts/make_scenario.py --list
@@ -23,7 +23,7 @@ and the PDFs when reportlab is available. Runs offline with fixed seeds; re-runn
 | `lena-johnmuir` | John Muir Walnut Creek | insured, 1 person, 508% FPL | insurance not applied, CT angiogram above posted price, dry-cleaner double charge | $27,619.57 → $967.52, no discount, 6 × $162/mo |
 
 ## What's real
-- **Hospital**: the registry entry (`billback/policies/registry.py`); the bill's facility line comes from the price file.
+- **Hospital**: the registry entry (`remy/policies/registry.py`); the bill's facility line comes from the price file.
 - **Prices**: every bill line is the hospital's posted **gross charge** for that code (the outpatient line
   where the file has one), with the file's own description, from `policydb/prices/<id>.json`. That table was
   built from the hospital's CMS price-transparency file. `expected.json → real.price_file` records the file
@@ -66,7 +66,7 @@ Income is annualised from the 90 days before `as_of` (2026-10-25). The app uses 
 long after that will count fewer paychecks (the same applies to `demo/case.json`).
 
 ## Add a scenario
-1. Add an entry to `SPECS` in `billback/scenarios.py`: `hospital_id` (one with a price table), `procedures`
+1. Add an entry to `SPECS` in `remy/scenarios.py`: `hospital_id` (one with a price table), `procedures`
    (codes in that table, with units), `patient`, `pay`, `rent`, `merchants`, `insurance` (or `None`), `visit`
    dates and `errors`. Give it its own `seed`.
 2. `uv run --with reportlab python scripts/make_scenario.py <name>`. The generator refuses inconsistent specs.

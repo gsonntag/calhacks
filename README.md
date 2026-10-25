@@ -1,6 +1,6 @@
-# BillBack
+# Remy
 
-**An AI agent that fights your hospital bill.** You upload the bill and your insurance statement. BillBack
+**An AI agent that fights your hospital bill.** You upload the bill and your insurance statement. Remy
 checks them against your bank records (Capital One Nessie) and the hospital's own published financial-assistance
 policy and prices (crawled with Bright Data). It works out what you really owe, makes a plan, and, with your
 OK, phones the hospital's billing office to get it fixed (Twilio + Cartesia Ink/Sonic + Claude). Then it
@@ -21,7 +21,7 @@ Needs Python 3.12 or later and [uv](https://docs.astral.sh/uv/).
 ```bash
 uv sync
 cp .env.example .env
-uv run uvicorn billback.app:app --port 8000
+uv run uvicorn remy.app:app --port 8000
 # open http://localhost:8000   (Cases; the chat intake when there are no cases yet; also /hospitals.html)
 uv run pytest -q                # offline, no keys needed
 ```
@@ -41,14 +41,14 @@ Claude, the browser's voice instead of Cartesia. `GET /api/mode` shows which int
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `REP_PHONE_NUMBER`, `PUBLIC_BASE_URL` | Real phone calls (optional; see below). On a Twilio free trial, `TWILIO_FROM_NUMBER` must be the trial number Twilio assigned for your verified recipient, and the call can't stream audio (see Known limitations) |
 | `TIGER_DATABASE_URL` | Optional: Tiger Data (Timescale Postgres) for household profiles and bank history over time. Unset: onboarding answers are kept in a small local file per profile |
 | `PATIENT_PHONE_NUMBER`, `TWILIO_TWIML_APP_SID` | Optional: the patient's verbal authorization on a 3-way call |
-| `BILLBACK_ADMIN_TOKEN` | Shared secret (16+ characters) for every action that places a call, spends API credits or changes data. Open any page once with `?key=<token>`; the browser keeps it and removes it from the address bar. Unset: those actions only work from `localhost` on the same machine, never through a tunnel |
-| `BILLBACK_REQUIRE_LIVE=1` | Judging mode: the server refuses to start unless the Claude, Bright Data and Nessie keys and the admin token are set (format check only, no API calls), and the sample policies are never used |
+| `REMY_ADMIN_TOKEN` | Shared secret (16+ characters) for every action that places a call, spends API credits or changes data. Open any page once with `?key=<token>`; the browser keeps it and removes it from the address bar. Unset: those actions only work from `localhost` on the same machine, never through a tunnel |
+| `REMY_REQUIRE_LIVE=1` | Judging mode: the server refuses to start unless the Claude, Bright Data and Nessie keys and the admin token are set (format check only, no API calls), and the sample policies are never used |
 
 **Ports.** The app serves everything on one port (8000 above; any port works). Real phone calls need Twilio
 to reach `/voice/twilio/*` over HTTPS: `cloudflared tunnel --url http://localhost:8000`, then set
 `PUBLIC_BASE_URL` (details in [`docs/voice.md`](docs/voice.md)). Without Twilio, calls run in **desk mode**:
 a teammate plays billing on the rep console (`rep.html?call=<id>`; once the call starts, the case's **Under the
-hood** page links it as "rep console"), and BillBack listens through Cartesia Ink and answers out loud through
+hood** page links it as "rep console"), and Remy listens through Cartesia Ink and answers out loud through
 Sonic.
 
 One-time data scripts (they call paid APIs; the results are already committed):
@@ -74,20 +74,20 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
      price, income from payroll deposits, 12 months of medical spending. **It double-checks the income the
      patient stated** against the bank (`finance.stated_check`): take-home pay is converted to a before-tax
      range. If the stated figure fits, it's used. If it's lower than the bank shows, the bank's lower estimate is
-     used and flagged ("have pay stubs ready"), so BillBack never claims a discount the hospital would reject on
+     used and flagged ("have pay stubs ready"), so Remy never claims a discount the hospital would reject on
      pay stubs. If it's higher, the stated figure is used and noted.
    - **Bright Data agent** (public rules): the hospital's financial-assistance policy from our policy DB
      (refreshed live when it's stale, crawled live for a new hospital), the discount the patient qualifies
      for, the payment-plan terms.
-3. **The plan.** Rules-based code (`billback/agents/decide.py`) turns the findings into a list of asks, biggest
-   money first, each linked to its proof. Mark a finding "This is wrong", or open **Ask BillBack** (the round
-   button bottom-right of the case page) and pick who answers: BillBack (the whole case), the Nessie agent, the
+3. **The plan.** Rules-based code (`remy/agents/decide.py`) turns the findings into a list of asks, biggest
+   money first, each linked to its proof. Mark a finding "This is wrong", or open **Ask Remy** (the round
+   button bottom-right of the case page) and pick who answers: Remy (the whole case), the Nessie agent, the
    Bright Data agent, or the Planner ("I can do $150/mo"). Every plan change makes a new version; "Call now"
    approves the version on screen. On the Cases page, each case has a hold-to-talk mic: ask where things
    stand or say "call them"; anything with consequences is said back first and runs only after a spoken yes.
-4. **The call.** BillBack phones billing (or the desk console), says it's an automated assistant, works
+4. **The call.** Remy phones billing (or the desk console), says it's an automated assistant, works
    through the asks, reads the case number back, and records what billing agreed. **Guardrails are enforced
-   in code, not just the prompt** (`billback/agents/mandate.py`):
+   in code, not just the prompt** (`remy/agents/mandate.py`):
    - Before agreeing to anything (a payment plan, a balance, a settlement, paying today) or giving out any
      information, the caller calls `check_offer`.
    - Code decides from the plan the patient approved, and fails closed. Plans are allowed only if
@@ -113,17 +113,17 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
  Intake        Nessie agent Bright Data      Decide (plan)        Caller             Follow-up / Planner
  Claude vision bank txns,   agent: policy DB rules-based asks,    Twilio or desk ↔   scorecard, next round,
  bill + EOB    payments,    ◄── SERP → Unlocker  versions,        Cartesia Ink/Sonic plan proposal,
-               duplicates,  → PDFs → Claude  Ask BillBack chat    ↔ Claude call brain bill corrected → Nessie
+               duplicates,  → PDFs → Claude  Ask Remy chat    ↔ Claude call brain bill corrected → Nessie
                income       → verified quotes                      ▲
                                                  APPROVAL GATE ────┘ (before every call)
 ```
 
-- **Orchestration** (`billback/orchestrator.py`): a fixed pipeline on purpose, so it's predictable on stage.
-- **Harness** (`billback/harness.py`): every tool has a permission tier (`read` runs freely, `act` is
+- **Orchestration** (`remy/orchestrator.py`): a fixed pipeline on purpose, so it's predictable on stage.
+- **Harness** (`remy/harness.py`): every tool has a permission tier (`read` runs freely, `act` is
   announced, `consequential` waits for the patient), and every call waits on the approval gate ("Call now",
   "Call again", the phone approval page or a spoken yes). Every tool call, result and approval is an event
   streamed to the UI and appended to the audit log.
-- **Money is computed, not generated** (`billback/finance.py`): reconciliation, duplicates, income from
+- **Money is computed, not generated** (`remy/finance.py`): reconciliation, duplicates, income from
   deposits, % of the 2026 federal poverty line, discount tiers, payment plans (written as "17 × $88/mo, then
   $78.98" so the total is exact). Claude extracts policy rules with verbatim quotes, and code checks each
   quote against the fetched document before any number is used.
@@ -142,17 +142,17 @@ brain ↔ Cartesia Sonic (streaming TTS).
 - **Sonic** (`/tts/websocket`, `sonic-3.6`): Claude's reply is spoken sentence by sentence as it streams.
   Word timestamps (`add_timestamps`) tell us what billing actually heard when they interrupt.
 - **Barge-in**: real words stop playback ("mm-hmm" doesn't); the call brain's memory is cut to the last word
-  played, so BillBack never assumes billing heard the rest.
-- **Pronunciation** (`billback/voice/pronounce.py`): money, dates, phone numbers, IDs, CPT codes (`<spell>`)
+  played, so Remy never assumes billing heard the rest.
+- **Pronunciation** (`remy/voice/pronounce.py`): money, dates, phone numbers, IDs, CPT codes (`<spell>`)
   and drug names (inline IPA phonemes). Case numbers are read back one character at a time, dashes said.
-- **Voices**: American, British and Indian English, and Mexican Spanish (`billback/voice/voices.py`).
+- **Voices**: American, British and Indian English, and Mexican Spanish (`remy/voice/voices.py`).
 - **Phone menus and hold**: keypad tones as in-band DTMF on the same stream; recorded hold messages are
   ignored without calling Claude.
 - **Latency** (measured live before credits ran out): first audio 0.44–1.1 s after the rep stops on the phone
   path (10 of 11 turns under 0.8 s); desk mode median 0.93 s (was 3.0 s).
 
-Code: `billback/voice/` (`media.py`, `cartesia_ws.py`, `desk.py`, `heard.py`, `pronounce.py`),
-`billback/integrations/cartesia.py`, `web/rep.html`, `scripts/sim_twilio_stream.py`. Docs:
+Code: `remy/voice/` (`media.py`, `cartesia_ws.py`, `desk.py`, `heard.py`, `pronounce.py`),
+`remy/integrations/cartesia.py`, `web/rep.html`, `scripts/sim_twilio_stream.py`. Docs:
 [`docs/voice.md`](docs/voice.md). Voice and pronunciation demo: `/voice.html`.
 
 ### Bright Data (hospital policies and prices)
@@ -165,23 +165,23 @@ Code: `billback/voice/` (`media.py`, `cartesia_ws.py`, `desk.py`, `heard.py`, `p
   under the Bright Data panel does the same on demand. Each request streams as its own line: tool, URL, and
   found / empty / blocked / timed out / rate-limited / not found / server error, "request n of at most 10".
   Retries and fallbacks (next page, `site:` search, URLs on record, skip a failed PDF, stored copy) each show
-  as a line. Hard cap: 10 requests per crawl (`billback/policies/crawl.py: HARD_CAP`).
+  as a line. Hard cap: 10 requests per crawl (`remy/policies/crawl.py: HARD_CAP`).
 - **Real prices**: each hospital's CMS price-transparency file, found through its `cms-hpt.txt`; about 67
   common ER and outpatient codes kept (`policydb/prices/`). The bill check flags lines above the hospital's
   posted price, for insured and self-pay bills (drug lines only when the units convert).
-- **Same bill, every hospital** (`/hospitals.html`, `billback/policies/compare.py`): Marcus's $5,600 UCSF bill
+- **Same bill, every hospital** (`/hospitals.html`, `remy/policies/compare.py`): Marcus's $5,600 UCSF bill
   run through each stored policy. $0 at CPMC, UCSF, Alta Bates Summit, El Camino, John Muir, Kaiser Oakland
   and MarinHealth (their high-medical-cost or income tiers cover him); $5,600 at Chinese Hospital and Highland
   (their tiers are for uninsured patients) and at Stanford, Saint Francis and SF General (no verified income
   tiers on record).
 
-Code: `billback/integrations/brightdata.py`, `billback/policies/`, `billback/agents/policy.py`,
-`billback/prices.py`, `billback/price_sources.py`, `billback/billcheck.py`, `scripts/crawl_policies.py`.
+Code: `remy/integrations/brightdata.py`, `remy/policies/`, `remy/agents/policy.py`,
+`remy/prices.py`, `remy/price_sources.py`, `remy/billcheck.py`, `scripts/crawl_policies.py`.
 Docs: [`docs/brightdata.md`](docs/brightdata.md).
 
 ### Capital One Nessie (the patient's bank)
 - **Reads**: the customer and account found by the patient's name, then purchases, deposits, withdrawals and
-  bills (`billback/integrations/nessie.py`).
+  bills (`remy/integrations/nessie.py`).
 - **Income**: payroll deposits annualised (pay varies per check), plus gig and payment-app deposits (Uber,
   DoorDash, Venmo, Zelle…) from the last 90 days. Labelled take-home pay.
 - **Payments the bill missed**: a payment to the hospital's health system ("SUTTER HEALTH PYMT") matched by
@@ -196,26 +196,26 @@ Docs: [`docs/brightdata.md`](docs/brightdata.md).
 - **Fallback**: if Nessie has no account for the patient or doesn't answer, the case uses sample bank data
   and says so on the case page.
 
-Code: `billback/integrations/nessie.py`, `billback/agents/auditor.py`, `billback/finance.py`,
-`billback/agents/planner.py`, `scripts/seed_nessie.py`.
+Code: `remy/integrations/nessie.py`, `remy/agents/auditor.py`, `remy/finance.py`,
+`remy/agents/planner.py`, `scripts/seed_nessie.py`.
 
 ### Tiger Data (household history)
-Optional (`TIGER_DATABASE_URL`). Every household BillBack helps is stored in Tiger Cloud (Timescale Postgres):
+Optional (`TIGER_DATABASE_URL`). Every household Remy helps is stored in Tiger Cloud (Timescale Postgres):
 - a `profiles` row per household (same person = same row across cases)
 - every Nessie transaction in a `transactions` hypertable, tagged income or not
 - a real-time `monthly_cashflow` continuous aggregate
 
 The case page shows "Income by month (Tiger Data)", and `/households.html` (admin only) lists households
 lowest % of poverty line first. Tiger only stores and rolls up data; eligibility math stays in `finance.py`. A
-Tiger failure never blocks a case. Code: `billback/tiger.py`, `billback/onboarding.py`.
+Tiger failure never blocks a case. Code: `remy/tiger.py`, `remy/onboarding.py`.
 
 ### Anthropic Claude
 Reads the bill and insurance statement (vision), extracts policy rules with verbatim quotes, runs the phone
 call (a tool-use loop with `record_outcome`, `press_keys`, `check_offer`, `end_call`;
-`billback/agents/caller.py`), reads the call transcript into outcomes and marks each ask (a mark only counts if
-its quote is really in the rep's words, `billback/agents/scorecard.py`), answers in the Ask BillBack chat (as BillBack, the Nessie agent, the Bright
+`remy/agents/caller.py`), reads the call transcript into outcomes and marks each ask (a mark only counts if
+its quote is really in the rep's words, `remy/agents/scorecard.py`), answers in the Ask Remy chat (as Remy, the Nessie agent, the Bright
 Data agent or the Planner) and on the Cases-page mic. Models:
-`claude-sonnet-5-5` and `claude-haiku-5-5` (`billback/config.py`). It never produces a dollar figure that code
+`claude-sonnet-5-5` and `claude-haiku-5-5` (`remy/config.py`). It never produces a dollar figure that code
 didn't compute.
 
 ## Real vs simulated
@@ -232,9 +232,9 @@ didn't compute.
 - **Real phone calls need a paid Twilio account.** On a Twilio free trial:
   - We place calls with a TwiML `Url`, because the trial refuses inline `Twiml`, `Timeout` and
     `StatusCallbackMethod`.
-  - The trial fetches that URL unsigned. BillBack accepts the unsigned fetch only when it carries both the
+  - The trial fetches that URL unsigned. Remy accepts the unsigned fetch only when it carries both the
     call's secret token and the CallSid Twilio returned when we placed the call; a wrong signature is still
-    refused (`billback/voice/routes.py`).
+    refused (`remy/voice/routes.py`).
   - The trial **strips `<Stream>`** ("The Stream verb is not available on trial accounts"), so the call can't
     reach our voice pipeline.
 
@@ -262,9 +262,9 @@ didn't compute.
 - **Synthetic data.** Patients, insurer and bank histories are made up. The live Nessie sandbox still has the
   older, cleaner histories until it is reseeded. Medical merchants are matched by keyword, not MCC codes.
   Nessie's account balance isn't read.
-- **Income.** When the patient states their income before taxes (onboarding or chat), BillBack uses it after
+- **Income.** When the patient states their income before taxes (onboarding or chat), Remy uses it after
   the bank double-check (see "How it works"). Without a stated income, it falls back to take-home pay from
-  bank deposits. The poverty-line test should use gross income, so BillBack labels the figure, estimates gross
+  bank deposits. The poverty-line test should use gross income, so Remy labels the figure, estimates gross
   as take-home ÷ 0.80, and warns on the case page when that would change the discount ("have pay stubs ready"),
   but eligibility still uses take-home. Using gross would flip one test
   patient (dana-altabates-refund, who shows the warning). Marcus stays eligible either way: his bill plus
@@ -286,31 +286,31 @@ didn't compute.
 
 ## Privacy and responsible use
 - **Says what it is.** Every call opens with "an automated assistant calling on behalf of <patient>, with their
-  authorization" and says the call is transcribed (`billback/agents/caller.py`). The Planner in Ask BillBack
-  refuses to hide this (`billback/agents/decide.py`).
+  authorization" and says the call is transcribed (`remy/agents/caller.py`). The Planner in Ask Remy
+  refuses to hide this (`remy/agents/decide.py`).
 - **Never agrees to pay, enforced in code.**
   - The call brain never pays, agrees to pay, or gives card or bank details, and the Planner refuses any
     strategy that would.
-  - On the call, `check_offer` (`billback/agents/mandate.py`) decides every offer or request against the
+  - On the call, `check_offer` (`remy/agents/mandate.py`) decides every offer or request against the
     approved plan.
   - Every sentence passes `mandate.screen` before it's spoken, so even if the model skips the check it can't
     say an SSN or card number, agree to something unapproved, or claim to be human.
   - Refusals are logged and shown in the transcript.
 - **Nothing happens without approval.** Every call waits for the patient's OK on the approval gate
-  (`billback/orchestrator.py`, `billback/harness.py`); on the Cases-page mic it takes two turns, and the words
-  come from code (`billback/agents/talk.py`). A change to the plan after approval resets the approval. The
+  (`remy/orchestrator.py`, `remy/harness.py`); on the Cases-page mic it takes two turns, and the words
+  come from code (`remy/agents/talk.py`). A change to the plan after approval resets the approval. The
   planner only proposes a payment plan and writes nothing to the bank.
 - **Patient authorization (HIPAA 45 CFR 164.510(b)).** A hospital may discuss a bill with someone the patient
-  involves in payment, with the patient's verbal agreement. With `PATIENT_PHONE_NUMBER` set, BillBack first
+  involves in payment, with the patient's verbal agreement. With `PATIENT_PHONE_NUMBER` set, Remy first
   calls the patient, asks one scripted question, and logs the question, the transcribed answer, the time and
-  the Twilio CallSid (`billback/voice/authorization.py`). Without it, the in-app approval is the recorded
+  the Twilio CallSid (`remy/voice/authorization.py`). Without it, the in-app approval is the recorded
   agreement.
 - **No audio is recorded.** Calls are transcribed only; the app saves no call audio (the
   `scripts/sim_twilio_stream.py` test tool saves its own simulated audio to `data/sim/<case>/`).
 - **Claims are checked.** Every policy figure needs a verbatim quote found in the fetched document; every
   finding shows its proof and source. The balance never drops before billing confirms it. Legal claims are
   reviewed in [`docs/legal-check.md`](docs/legal-check.md).
-- **Accessibility.** The patient never fills in a form: drop the documents (PDF or photo) or chat. BillBack
+- **Accessibility.** The patient never fills in a form: drop the documents (PDF or photo) or chat. Remy
   makes the phone call, so a patient who can't spend an hour on hold, or isn't comfortable arguing on the
   phone, doesn't have to. Every step, finding and call line is also plain text on the case page.
 - **Where patient data goes:** Anthropic (documents, transcripts), Nessie (lookup by name), Cartesia and
@@ -346,7 +346,7 @@ credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
 
 ## Layout
 ```
-billback/  app.py orchestrator.py harness.py events.py finance.py billcheck.py followups.py llm.py config.py auth.py prices.py contacts.py
+remy/  app.py orchestrator.py harness.py events.py finance.py billcheck.py followups.py llm.py config.py auth.py prices.py contacts.py
            onboarding.py tiger.py
            agents/        intake auditor (Nessie agent) policy (Bright Data agent) decide scorecard mandate caller planner talk report
            policies/      registry discover fetch extract store monitor pipeline crawl compare routes

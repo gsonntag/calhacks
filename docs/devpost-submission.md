@@ -1,4 +1,4 @@
-# BillBack: Devpost submission pack (Cal Hacks 13.0)
+# Remy: Devpost submission pack (Cal Hacks 13.0)
 
 Written 2026-10-25, about 1 AM PDT, from four research passes (Cal Hacks rules and prizes, winning Devposts,
 healthcare competitors, wider market and barriers). Full research with every source is in
@@ -56,7 +56,7 @@ Do these before 9 AM, in this order:
 | **Microsoft: Built for the Real World / Customer Impact** | Customer understanding, measurable usefulness, path to production, responsible design, end-to-end function | Sourced numbers; production path (section 3.11) | Low to medium |
 | **MLH Best Use of Gen AI** | Uses a generative AI API | Opt in | Low |
 | **MLH Commit Fellowship** | Opt in **and** MLH's supplemental form | Send the form | Missed if the form isn't sent |
-| Hyphenate: Finance Autonomy | A finance team's seats inside a company | Stretch: BillBack works for a patient, not a company's finance team | Skip unless pitched as the B2B version |
+| Hyphenate: Finance Autonomy | A finance team's seats inside a company | Stretch: Remy works for a patient, not a company's finance team | Skip unless pitched as the B2B version |
 
 No separate healthcare, fintech or "best AI agent" prize was listed. Every other sponsor prize requires that
 sponsor's own technology.
@@ -76,7 +76,7 @@ whichever case the video leads with.
 - "The billing advocate that checks the math and makes the call."
 
 **Elevator pitch (2 to 3 sentences):**
-> BillBack audits a hospital bill against your insurance statement and your own bank records, finds the
+> Remy audits a hospital bill against your insurance statement and your own bank records, finds the
 > discount the hospital's own published policy says you're owed, and then phones the billing office to get
 > it fixed. Every dollar figure comes from code with a cited source, so the AI can argue but never invent a
 > number. It never agrees to pay, always says it's automated, and asks your OK before anything that matters.
@@ -97,13 +97,13 @@ whichever case the video leads with.
 > **[fill: one sentence of the team's own story, e.g. a family member's ER bill, or someone you talked
 > to this weekend. Anthropic's prize asks for this.]**
 >
-> We built BillBack for **[fill: name the community narrowly, e.g. "low-income and underinsured patients
+> We built Remy for **[fill: name the community narrowly, e.g. "low-income and underinsured patients
 > of California nonprofit hospitals" or "students and hourly workers in the Bay Area with ER bills"]**:
 > people who qualify for help they've never heard of.
 
 ### 3.3 What it does
 
-> Drop in your hospital bill and insurance statement. BillBack works through five visible steps, and you
+> Drop in your hospital bill and insurance statement. Remy works through five visible steps, and you
 > can reopen every one of them with its full record.
 >
 > 1. **Reads your bill.** Claude reads the bill and the insurance statement (EOB) from PDFs or photos.
@@ -116,16 +116,16 @@ whichever case the video leads with.
 >      payroll deposits, and checks you against the hospital's discount tiers, payment-plan terms and real
 >      prices from its public price file.
 >    - Every check and every finding shows up live with its proof and source. Tap **This is wrong** on any
->      finding to correct it, or open **Ask BillBack** (the chat button on the case page) and pick who
->      answers: BillBack, the Nessie agent or the Bright Data agent.
+>      finding to correct it, or open **Ask Remy** (the chat button on the case page) and pick who
+>      answers: Remy, the Nessie agent or the Bright Data agent.
 > 3. **The plan.** A Decide agent turns the findings into a call plan: the money ($8,700 → $600), who to call,
->    and every ask the findings back up, biggest money first. In Ask BillBack you can also talk to the planner
+>    and every ask the findings back up, biggest money first. In Ask Remy you can also talk to the planner
 >    ("refund first", "I can do $150 a month") and it makes a new version of the plan. It changes strategy,
 >    never facts.
-> 4. **The call.** Once you tap "Call now", BillBack phones billing. It says it's an automated assistant
+> 4. **The call.** Once you tap "Call now", Remy phones billing. It says it's an automated assistant
 >    calling with your authorization, cites the evidence, asks for each correction, the discount and a hold
 >    on collections, and gets a case number. It never agrees to pay anything or gives card details.
-> 5. **What's next.** After the call, BillBack scores each ask (got it, refused, promised later, no clear
+> 5. **What's next.** After the call, Remy scores each ask (got it, refused, promised later, no clear
 >    answer), keeping only marks it can back with the rep's own words. The Decide agent then plans the
 >    follow-up call with only what's left, and tracks every promise ("a corrected statement within 5
 >    business days") so it knows when to call back.
@@ -135,7 +135,7 @@ whichever case the video leads with.
 >   policy writes it off.
 >   **[check: the older demo data and pitch say $5,600; use the number from the case you demo]**
 > - **Rosa, CPMC:** $8,700 → $600. The insurance adjustment was never applied and a $500 payment was missed.
->   That leaves 6 × $100 on an interest-free plan under Sutter's own billing policy. BillBack also tells her
+>   That leaves 6 × $100 on an interest-free plan under Sutter's own billing policy. Remy also tells her
 >   honestly that she isn't eligible for the write-off.
 > - **Same bill, different hospitals:** the same patient gets different answers at different San Francisco
 >   hospitals, because each hospital's own policy is different.
@@ -155,7 +155,7 @@ whichever case the video leads with.
 > **Sponsor technology:**
 > - **Anthropic Claude** (Sonnet 5.5 / Haiku 5.5): reads bills and EOBs (vision); extracts policy rules
 >   with quotes; is the brain on the live call (streaming tool use); answers questions in the Ask
->   BillBack chat (the Nessie and Bright Data agents answer only from what they checked); turns planner requests into strategy changes that our rules then check;
+>   Remy chat (the Nessie and Bright Data agents answer only from what they checked); turns planner requests into strategy changes that our rules then check;
 >   reads the finished call to mark each ask, but its mark only counts if its quote is really in the rep's
 >   words.
 > - **Bright Data** (SERP API + Web Unlocker): discovers and fetches each hospital's financial-assistance
@@ -202,9 +202,9 @@ whichever case the video leads with.
 >   and the follow-up flow.
 > - **A full loop:** audit → plan → call → score → next call, with a human approving every consequential step.
 
-### 3.6b How BillBack meets each judging criterion (one line each; winners do this)
+### 3.6b How Remy meets each judging criterion (one line each; winners do this)
 
-> - **Application:** 4 in 10 adults think they've had a billing error; BillBack fixes it end to end for the
+> - **Application:** 4 in 10 adults think they've had a billing error; Remy fixes it end to end for the
 >   patient.
 > - **Intentionality:** every design choice protects the patient: cited numbers, an approval gate, it never
 >   pays, it always says it's automated.
@@ -231,7 +231,7 @@ whichever case the video leads with.
 
 ### 3.9 Known limitations, and how we'd solve them
 
-| Limitation | What BillBack does now / next |
+| Limitation | What Remy does now / next |
 |---|---|
 | **Billing reps may refuse to talk to an AI or a third party.** Dollar For reports hospitals usually won't talk to advocates directly. | The patient can be conferenced into the call to give verbal permission (HIPAA 45 CFR 164.510(b)). Next: a signed authorization form per hospital, and a letter fallback when the rep refuses. |
 | **Hold queues and phone menus** | Next: navigate menus with keypad tones and stay silent through hold music until a human answers. |
@@ -247,7 +247,7 @@ whichever case the video leads with.
 | **Patient data (PHI)** | Read-only bank access, an audit log the patient can see, nothing used for training. Next: encryption at rest and a retention limit. |
 | **Unproven outcomes:** all demo patients are synthetic | Next: pilot with a patient-advocacy nonprofit. |
 
-### 3.10 Competition: who else does this, and why BillBack is different
+### 3.10 Competition: who else does this, and why Remy is different
 
 > Medical-bill help today is either a **human advocate who takes 20 to 35% of what they save** (Goodbill,
 > Resolve, CareRoute, CoPatient), or a **free nonprofit that files a paper charity-care application and
@@ -255,14 +255,14 @@ whichever case the video leads with.
 > Counterforce, MyMedBill). General AI calling agents like Pine AI phone companies for you, but don't audit
 > the bill or know charity-care law.
 >
-> BillBack is the first patient-side agent we know of that does the whole loop. It checks the bill against
+> Remy is the first patient-side agent we know of that does the whole loop. It checks the bill against
 > your insurance statement **and your own bank transactions**, and computes the discount the hospital's own
 > policy and California law say you're owed. Then it makes the call, tracks every promise and plans the
 > follow-up. Every number is deterministic and cited, so the AI can argue but never invent a figure.
 
 | | Who pays | Checks bill vs insurance | Uses bank data | Charity-care eligibility | Calls the hospital | Follows up | Cited numbers |
 |---|---|---|---|---|---|---|---|
-| **BillBack** | TBD | Yes | **Yes** | **Yes (hospital policy + CA law)** | **Yes (AI, disclosed)** | **Yes (case #, promises, scorecard)** | **Yes** |
+| **Remy** | TBD | Yes | **Yes** | **Yes (hospital policy + CA law)** | **Yes (AI, disclosed)** | **Yes (case #, promises, scorecard)** | **Yes** |
 | Goodbill / Resolve / CareRoute | 10 to 25% of savings, or a deposit | Partly | No | Partly | Humans | Humans | No |
 | Dollar For | Free (nonprofit) | No | Income proof only | **Yes** | No | Check-ins | No |
 | Claimable / Counterforce | ~$40 per appeal / free | No | No | No | No (letters) | No | No |
@@ -282,14 +282,14 @@ Health place AI calls too.
 **Hospital-bill teams at Cal Hacks 13.0** (found on GitHub on Oct 25, 1 AM: 310 repos mentioning Cal Hacks
 created this week; READMEs searched for hospital, medical bill, patient, charity care and similar):
 
-| Team | What it does | Overlap with us | How BillBack differs |
+| Team | What it does | Overlap with us | How Remy differs |
 |---|---|---|---|
 | [**Switchboard**](https://github.com/navinagrawalchung07/switchboard) | "An AI advocate that makes the phone calls you dread, and cites federal law when the rep says no." Uses **Cartesia + Claude**. Claims a **real recorded outbound call** to a (role-played) hospital: No Surprises Act dispute ($14,730 bill vs a $6,200 estimate), collections hold, reference number. Legal claims come only from a fixed "rights pack" of 12 clauses. | **Highest.** Same Cartesia prize, same "AI calls billing" story, and they have the recorded call we don't. | We find the money first: we check the bill against the insurance statement and bank records, and work out the hospital's own charity-care discount from its crawled policy. Then the plan, the call, the scorecard and the follow-up call. Switchboard argues one federal rule (the $400 estimate dispute); we ask for everything the evidence backs. |
 | [**Recount**](https://github.com/VolodymyrLinuxovich/recount) | Reads a photo of a California hospital bill, checks each line against the hospital's published prices, applies California charity-care law, flags hospital policies that conflict with state law (all 470 CA hospitals on a map), and **drafts letters**. "Nothing is sent for you." Live site, Android app, English and Spanish. Tracks: Microsoft, Anthropic Public Benefit, Apify, Convex, People-First. | **High** on the Anthropic and Microsoft prizes: the same California charity-care angle, with more polish and a much wider hospital map. | We act: we call billing and follow up. We use the patient's bank records and insurance statement to catch missed payments and unapplied insurance. Recount stops at letters for the patient to send. |
 | [**Halcyon Bay**](https://github.com/batyrkhan9/halcyon-bay) | "Runs the patient billing office of a nonprofit hospital." Simulated hospital. README is still a stub. | **Opposite side** of the same call. | We work for the patient, not the hospital. |
 
 In the pitch, a judge may well have seen Switchboard or Recount. Have one line ready for each: "Switchboard
-makes the call, Recount finds the discount; BillBack does both, checks your own payments, and follows up
+makes the call, Recount finds the discount; Remy does both, checks your own payments, and follows up
 until it's done."
 
 **Also at this event:** another Cal Hacks 13.0 team,
@@ -297,7 +297,7 @@ until it's done."
 exact official clause, and follows up until the problem is fixed". Docket is a caseworker for F-1 students
 (tax withholding, forms, work-hour caps), not hospital bills. It targets the same sponsors (Anthropic,
 Cartesia, Nessie, Bright Data). Make our differences explicit in the text and the pitch:
-- BillBack makes the call itself.
+- Remy makes the call itself.
 - It uses policies it crawled and verified live.
 - It checks payments against the patient's bank records.
 
@@ -320,7 +320,7 @@ Cartesia, Nessie, Bright Data). Make our differences explicit in the text and th
 > **Path to production:** a signed HIPAA authorization; a letter fallback; a pilot with a patient-advocacy
 > nonprofit; free for patients who qualify for charity care, with a capped success fee charged only after the
 > corrected bill posts. California's AB 1312 will make hospitals screen for charity eligibility from July
-> 2027, and BillBack checks that they actually applied it.
+> 2027, and Remy checks that they actually applied it.
 
 ### 3.12 What's next: beyond hospital bills
 
@@ -355,7 +355,7 @@ voice-over; show the real app, not slides.
 | 0:45 to 1:00 | The plan: $4,174 → $0, each ask with "why ▸"; a planner chat change | "Every number comes from code with a source. The AI argues; it never invents a number." | Anthropic, overall |
 | 1:00 to 1:30 | The call: transcript and voice, "I'm an automated assistant calling for Marcus…", rep agrees, case number | "Cartesia Ink and Sonic, first word in under a second. It never agrees to pay." | Cartesia |
 | 1:30 to 1:45 | Step 5: the scorecard and "What's next" | "It scores what the call won, keeps the rep's words as proof, and plans the follow-up." | Overall, Microsoft |
-| 1:45 to 2:00 | Same bill at four hospitals: $0 vs $4,174; tagline | "Same bill, different hospital, different answer. BillBack knows the rules so you don't have to." | Close |
+| 1:45 to 2:00 | Same bill at four hospitals: $0 vs $4,174; tagline | "Same bill, different hospital, different answer. Remy knows the rules so you don't have to." | Close |
 
 Rules of thumb:
 - Lead with "the moment" (Marcus $4,174 → $0), not the architecture.
@@ -400,7 +400,7 @@ judges preferred Marcus because the hospital's policy decides his case), use thi
 - **Video:** YouTube or Vimeo link.
 - **Images:** JPG, PNG or GIF, 5 MB max each. The thumbnail is cropped to **3:2**. Winners use 4 to 8 gallery
   images, an architecture diagram, and a GIF of the product working. The first image is the thumbnail:
-  1. A cover image: the BillBack logo + "$4,174 → $0" + the tagline.
+  1. A cover image: the Remy logo + "$4,174 → $0" + the tagline.
   2. The Review step with both agent checklists and findings.
   3. The plan with "why ▸" sources.
   4. The call transcript.

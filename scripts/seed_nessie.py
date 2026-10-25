@@ -19,9 +19,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from billback import config  # noqa: E402
-from billback.integrations.nessie import NessieClient, hospital_bill_nickname, ids_file  # noqa: E402
-from billback.orchestrator import SCENARIOS  # noqa: E402
+from remy import config  # noqa: E402
+from remy.integrations.nessie import NessieClient, hospital_bill_nickname, ids_file  # noqa: E402
+from remy.orchestrator import SCENARIOS  # noqa: E402
 
 
 async def main() -> None:

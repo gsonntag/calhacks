@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BillBack — Case</title>
+<title>Remy — Case</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
 <link rel="stylesheet" href="m3.css">
 <!--
-  BillBack — live case timeline, driven by the backend.
+  Remy — live case timeline, driven by the backend.
   Case tabs = /api/cases. The active case streams events over /ws/cases/{id}; render() derives the
   top summary (headline, stat cards, what needs you), the Steps card and the assistant line from those events.
 -->
@@ -289,7 +289,7 @@
   .finds li.flash { border-radius: var(--md-shape-m); }
   .replay .find-acts, .replay #chatForm, .replay .plan-banner .actions { display: none !important; }
 
-  /* the agent chat: one bubble in the corner; pick who answers (BillBack, the two Review agents, the planner) */
+  /* the agent chat: one bubble in the corner; pick who answers (Remy, the two Review agents, the planner) */
   .chat-fab { position: fixed; right: 24px; bottom: 24px; z-index: 40; width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer;
               display: grid; place-items: center; background: var(--md-primary-container); color: var(--md-on-primary-container); box-shadow: var(--md-elev-3); }
   .chat-fab .material-symbols-rounded { font-size: 28px; }
@@ -327,9 +327,9 @@
 <body>
 
 <header class="m3-top-app-bar">
-  <a href="/" class="m3-brand" aria-label="BillBack home">
+  <a href="/" class="m3-brand" aria-label="Remy home">
     <span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span>
-    <span class="m3-brand-name">BillBack</span>
+    <span class="m3-brand-name">Remy</span>
   </a>
   <nav class="m3-tabs" aria-label="Main">
     <a class="m3-tab" href="/" aria-current="page">Cases</a>
@@ -498,21 +498,21 @@
     </ol>
   </section>
 
-  <!-- BillBack Assistant -->
+  <!-- Remy Assistant -->
   <section class="m3-assistant assistant" aria-labelledby="asstHead" hidden>
-    <div class="m3-assistant-head" id="asstHead"><span class="m3-wave" id="asstWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>BillBack Assistant</div>
+    <div class="m3-assistant-head" id="asstHead"><span class="m3-wave" id="asstWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Remy Assistant</div>
     <p class="m3-quote" id="asstQuote" aria-live="polite"></p>
     <span class="m3-status" id="asstChip">Voice agent ready</span>
   </section>
 </main>
 
 <!-- the agent chat: the only place to ask any agent anything (it replaced Ask on findings and the planner chat) -->
-<button type="button" class="chat-fab" id="chatFab" aria-label="Ask BillBack" aria-expanded="false" aria-controls="chatPanel" hidden>
+<button type="button" class="chat-fab" id="chatFab" aria-label="Ask Remy" aria-expanded="false" aria-controls="chatPanel" hidden>
   <span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span>
 </button>
 <section class="chat-panel" id="chatPanel" role="dialog" aria-labelledby="chatTitle" hidden>
   <div class="chat-head">
-    <h2 id="chatTitle">Ask BillBack</h2>
+    <h2 id="chatTitle">Ask Remy</h2>
     <button type="button" class="m3-icon-btn" id="chatClose" aria-label="Close"><span class="material-symbols-rounded" aria-hidden="true">close</span></button>
   </div>
   <div class="chat-who" id="chatWho" role="radiogroup" aria-label="Who answers"></div>
@@ -657,7 +657,7 @@ function rowStage(m) {
 }
 
 // ---------- rendering ----------
-// Every app agent that reports in the shared format (billback/agents/report.py) gets a live panel, in the
+// Every app agent that reports in the shared format (remy/agents/report.py) gets a live panel, in the
 // order they started. Recordings made before agents named themselves fall back to these two.
 const LEGACY_AGENTS = { auditor: ['Nessie agent', 'Your own records: bank, the bill, your insurance statement'],
                         policy: ['Bright Data agent', 'Public rules: the hospital’s own financial-assistance policy'] };
@@ -736,7 +736,7 @@ function phaseText(m) {
   if (m.outcome.case_number) return `Billing agreed · case ${m.outcome.case_number}`;
   const last = m.lines.filter((l) => l.who !== 'guard').pop();  // guardrail notes aren't speech
   if (!last) return 'Dialing…';
-  return last.who === 'rep' ? 'Billing is responding' : 'BillBack is making your case';
+  return last.who === 'rep' ? 'Billing is responding' : 'Remy is making your case';
 }
 
 function quoteHTML(q) {
@@ -751,7 +751,7 @@ function quoteHTML(q) {
 
 function outcomeText(m) {
   const o = m.outcome || {};
-  if (m.callDeclined) return 'You chose not to have BillBack call yet';
+  if (m.callDeclined) return 'You chose not to have Remy call yet';
   const bits = [];
   if (o.case_number) bits.push(`Case ${o.case_number} opened`);
   if (o.account_on_hold) bits.push('account on hold');
@@ -839,7 +839,7 @@ function assistantLine(m, ds, tab) {
     .filter(Boolean).join('; ');
   if (ds === 2) return { text: (found || (reviewed ? `I checked your bill. ${reviewed}.` : '')) + ` Want me to call ${prov} billing?`, chip: 'Voice agent ready' };
   if (ds === 3) {
-    const mine = m.lines.filter((l) => l.who === 'billback').pop();
+    const mine = m.lines.filter((l) => l.who === 'remy').pop();
     const said = mine ? (mine.text.length > 180 ? mine.text.slice(0, 177).trimEnd() + '…' : mine.text) : '';
     return { text: said ? `“${said}”` : `I’m dialing ${prov} billing.`, chip: 'On the call', cls: 'success', live: true };
   }
@@ -869,7 +869,7 @@ function headline(m, ds, tab) {
   if (m.done && openNext(m)) return ['Call done. Here’s what’s next', prov];
   if (m.done) return ['Resolved', prov + (m.done.case_number ? ` · case ${m.done.case_number}` : '')];
   if (planPending) return ['Waiting for your OK', `${prov} · one more decision: the payment plan.`];
-  if (m.callDeclined) return ['Call not approved', `You chose not to have BillBack call ${prov} yet.`];
+  if (m.callDeclined) return ['Call not approved', `You chose not to have Remy call ${prov} yet.`];
   return ['Wrapping up', prov];
 }
 
@@ -980,13 +980,13 @@ function render() {
   setHTML($('transcript'), m.lines.map((l, i) => {
     if (l.who === 'guard') return `<div class="guard-note${l.refused ? ' refused' : ''}${i >= (seen[tk] || 0) ? ' in' : ''}">${sym(l.refused ? 'block' : 'verified_user')}<span>${esc(l.text)}</span></div>`;
     const them = l.who === 'rep';
-    return `<div class="bubble-wrap ${them ? 'them' : 'me'}${i >= (seen[tk] || 0) ? ' in' : ''}"><span class="bubble-who">${them ? 'Billing' : 'BillBack'}</span><span class="m3-bubble ${them ? 'them' : 'me'}">${esc(l.text)}</span></div>`;
+    return `<div class="bubble-wrap ${them ? 'them' : 'me'}${i >= (seen[tk] || 0) ? ' in' : ''}"><span class="bubble-who">${them ? 'Billing' : 'Remy'}</span><span class="m3-bubble ${them ? 'them' : 'me'}">${esc(l.text)}</span></div>`;
   }).join(''));
   seen[tk] = m.lines.length;
   $('endCallBtn').hidden = !(m.call && !m.callEnded && !m.done);
   $('callSummary').textContent = m.callDeclined ? 'No call made'
     : m.call ? (m.callEnded ? `${outcomeText(m)} · ${timer(el)}` : `${phaseText(m)} · ${timer(el)}`)
-    : ds === 3 ? 'Dialing…' : 'BillBack calls billing for you';
+    : ds === 3 ? 'Dialing…' : 'Remy calls billing for you';
 
   // 5 · Resolved
   const final = m.done ? m.done.now : m.balances[m.balances.length - 1];
@@ -1029,7 +1029,7 @@ function render() {
     $('planYes').hidden = $('planNo').hidden = $('planYes').parentNode.hidden = !(pa && pa.resolved === undefined);
   }
 
-  // ---- BillBack Assistant ----
+  // ---- Remy Assistant ----
   const a = assistantLine(m, ds, tab);
   setText($('asstQuote'), a.text);
   setText($('asstChip'), a.chip);
@@ -1272,7 +1272,7 @@ function nowText(m, ds, a) {
   if (ds === 2) return `Check the plan, then tap Call now and I’ll call ${prov} billing.`;
   if (ds === 3) {
     const l = m.lines.filter((x) => x.who !== 'guard').pop();
-    return l ? `${l.who === 'rep' ? 'Billing' : 'BillBack'}: “${l.text.length > 160 ? l.text.slice(0, 157).trimEnd() + '…' : l.text}”` : `Dialing ${prov} billing…`;
+    return l ? `${l.who === 'rep' ? 'Billing' : 'Remy'}: “${l.text.length > 160 ? l.text.slice(0, 157).trimEnd() + '…' : l.text}”` : `Dialing ${prov} billing…`;
   }
   return a.text;
 }
@@ -1531,7 +1531,7 @@ document.querySelector('main').addEventListener('submit', async (e) => {
 
 // ---------- the agent chat (bubble in the corner): one log per case, you pick who answers ----------
 const CHAT_AGENTS = [
-  { k: 'billback', name: 'BillBack', what: 'knows the whole case: what was found, the plan, the calls and what’s next. Start here.',
+  { k: 'remy', name: 'Remy', what: 'knows the whole case: what was found, the plan, the calls and what’s next. Start here.',
     hint: 'Ask anything about your case' },
   { k: 'auditor', name: 'Nessie agent', what: 'checked your own records: your bank (Capital One Nessie), the bill and your insurance statement.',
     hint: 'Ask about your payments, bill or insurance' },
@@ -1541,9 +1541,9 @@ const CHAT_AGENTS = [
     hint: 'Ask why, or tell it what to change' },
 ];
 const CHAT_NAME = Object.fromEntries(CHAT_AGENTS.map((a) => [a.k, a.name]));
-const chat = { open: false, agent: 'billback', busy: false, err: '', pending: null };
+const chat = { open: false, agent: 'remy', busy: false, err: '', pending: null };
 // The Review agents and the planner answer from the saved plan facts, so they wait for the plan
-const chatReady = (m, k) => k === 'billback' || !!m.plans.length;
+const chatReady = (m, k) => k === 'remy' || !!m.plans.length;
 
 function chatEntries(m) {
   const out = [];
@@ -1567,7 +1567,7 @@ function renderAgentChat(m) {
   $('chatFab').firstElementChild.textContent = chat.open && hasCase ? 'close' : 'ecg_heart';
   $('chatPanel').hidden = !(chat.open && hasCase);
   if ($('chatPanel').hidden) return;
-  if (!chatReady(m, chat.agent)) chat.agent = 'billback';
+  if (!chatReady(m, chat.agent)) chat.agent = 'remy';
   setHTML($('chatWho'), CHAT_AGENTS.map((a) => {
     const ok = chatReady(m, a.k), on = a.k === chat.agent;
     return `<button type="button" class="m3-chip${on ? ' selected' : ''}" role="radio" aria-checked="${on}" data-agent="${a.k}"${ok ? ''
@@ -1581,7 +1581,7 @@ function renderAgentChat(m) {
     || m.qa.some((e) => e.question === p.text && e.ts >= p.ts - 1));
   if (p && !echoed) items.push({ me: true, text: p.text });
   const log = items.map((x) => x.me
-    ? `<div class="bubble-wrap me"><span class="bubble-who">You${x.spoken ? ' · by voice' : ''}</span><span class="m3-bubble me">${esc(x.text)}</span>${x.via ? '<span class="chat-note">BillBack passed this to the planner</span>' : ''}</div>`
+    ? `<div class="bubble-wrap me"><span class="bubble-who">You${x.spoken ? ' · by voice' : ''}</span><span class="m3-bubble me">${esc(x.text)}</span>${x.via ? '<span class="chat-note">Remy passed this to the planner</span>' : ''}</div>`
     : `<div class="bubble-wrap them"><span class="bubble-who">${esc(CHAT_NAME[x.who] || agentName(m, x.who))}</span><span class="m3-bubble them">${esc(x.text)}</span>
         ${(x.sources || []).length ? `<span class="chat-src">Source: ${x.sources.map(srcHTML).join(' · ')}</span>` : ''}
         ${x.v ? `<button type="button" class="made-v" data-v="${x.v}" data-sec="${x.round > m.round ? 'next' : 'plan'}">→ plan v${x.v}</button>` : ''}</div>`).join('')
