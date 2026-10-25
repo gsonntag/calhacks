@@ -241,15 +241,6 @@ async def list_cases():
              "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
 
 
-@app.get("/api/households", dependencies=ADMIN)
-async def households():
-    """Every household we've helped, lowest income vs the poverty line first, with 12 months of income from
-    Tiger Data. Admin-only: names, income and household size are personal."""
-    if not tiger.enabled():
-        return {"enabled": False, "households": []}
-    return {"enabled": True, "households": await tiger.households_by_need()}
-
-
 class Onboarding(BaseModel):
     answers: dict = {}
     skipped: list[str] = []

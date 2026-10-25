@@ -140,28 +140,6 @@ async def cashflow(pid: str, months: int = 12) -> list[dict]:
     return await asyncio.wait_for(_cashflow(await _db(), pid, months), TIMEOUT) if enabled() else []
 
 
-async def households_by_need(limit: int = 200) -> list[dict]:
-    """Every household, lowest income relative to the poverty line first, with its last 12 months of income
-    from the continuous aggregate (12 months back from its newest transaction, not from today)."""
-    if not enabled():
-        return []
-    db = await _db()
-    cur = await asyncio.wait_for(db.execute(
-        """SELECT p.id, p.first_name, p.last_name, p.city, p.zip, p.household_size, p.insured, p.hospital,
-                  p.income_annual::float AS income_annual, p.income_source, p.fpl_pct::float AS fpl_pct,
-                  p.discount_pct::float AS discount_pct, p.last_case_id, p.updated_at,
-                  p.income_reported::float AS income_reported, p.onboarded_at IS NOT NULL AS onboarded,
-                  coalesce(sum(m.income), 0)::float AS income_12mo, count(m.month) AS months_on_file,
-                  coalesce(json_agg(json_build_object('month', m.month::date, 'income', m.income::float)
-                                    ORDER BY m.month) FILTER (WHERE m.month IS NOT NULL), '[]') AS months
-           FROM profiles p
-           LEFT JOIN monthly_cashflow m ON m.profile_id = p.id AND m.month > p.last_txn_at - INTERVAL '12 months'
-           GROUP BY p.id
-           ORDER BY p.fpl_pct ASC NULLS LAST, p.updated_at DESC
-           LIMIT %s""", (limit,)), TIMEOUT)
-    return [{**r, "updated_at": r["updated_at"].isoformat()} for r in await cur.fetchall()]
-
-
 async def save_onboarding(answers: dict, assessment: dict, hospital: str | None) -> str | None:
     """Upsert what the patient told us at onboarding. Bank-derived columns (income_annual, fpl_pct from a case)
     are left alone: a later case fills them from the bank. Returns the profile id, None when Tiger is off."""

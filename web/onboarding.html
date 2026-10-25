@@ -47,7 +47,7 @@
 <body>
 <header class="m3-top-app-bar">
   <a href="/" class="m3-brand" aria-label="BillBack home"><span class="m3-brand-mark"><span class="material-symbols-rounded" aria-hidden="true">ecg_heart</span></span><span class="m3-brand-name">BillBack</span></a>
-  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="onboarding.html" aria-current="page">Get started</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="households.html">Households</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
+  <nav class="m3-tabs" aria-label="Main"><a class="m3-tab" href="onboarding.html" aria-current="page">Get started</a><a class="m3-tab" href="/">Cases</a><a class="m3-tab" href="hospitals.html">Hospitals</a><a class="m3-tab" href="ops.html">Under the hood</a></nav>
 </header>
 <main class="m3-page m3-stack">
   <div class="hero">
@@ -148,7 +148,7 @@ async function save() {
   try {
     const r = await post('/api/onboarding');
     $('saved').innerHTML = r.saved
-      ? `Saved to your profile (Tiger Data). <a href="new.html">Start a case with your bill</a> · <a href="households.html">Households</a>`
+      ? `Saved to your profile (Tiger Data). <a href="new.html">Start a case with your bill</a>`
       : 'Tiger Data isn\'t connected here, so nothing was saved.';
   } catch (e) { $('save').disabled = false; err(e); }
 }
