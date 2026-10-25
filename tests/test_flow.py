@@ -8,6 +8,7 @@ import pytest
 
 from remy import app as app_mod
 from remy import config, orchestrator
+from remy.agents import caller
 from remy.events import bus
 
 # Kinds web/case.html renders from the /ws/cases/{id} stream.
@@ -258,6 +259,33 @@ class _RajDay(date):
         return date(2026, 10, 25)  # the as_of of demo/scenarios/raj-cpmc/expected.json
 
 
+def test_discount_line_says_the_tiers_own_reason():
+    """A high-medical-cost tier qualifies on 12 months of medical costs; an income-only tier on the poverty line."""
+    high = {"policy_tier": {"min_oop_pct_income": 10.0}, "medical_costs_pct_income": 14.1, "income_pct_fpl": 134.5,
+            "medical_costs_12_months": {"this_bill": 4200.0, "other_medical_bills_in_bank": 2053.35}}
+    said = caller._qualifies_line(high)
+    assert "medical expenses over the past 12 months are about 14% of family income" in said
+    assert "over your policy's 10%" in said and "$2,053" in said and "poverty" not in said
+    income = {"policy_tier": {"min_oop_pct_income": None}, "income_pct_fpl": 180.0}
+    assert "about 180 percent of the poverty line, which qualifies" in caller._qualifies_line(income)
+
+
+def test_bill_line_asks_are_said_from_the_auditors_line_errors():
+    rec = {"line_errors": [
+        {"kind": "duplicate_line", "line": 7, "code": "96360", "amount": 1160.0, "source": "bill · lines 6 and 7",
+         "detail": "Line 7 repeats line 6: HCHG INFUSION HYDRATION INITIAL UP TO 1 HR, $1,160.00."},
+        {"kind": "price_above_posted", "line": 2, "code": "74176", "amount": 776.0, "billed": 7150.0, "posted": 6374.0,
+         "source": "CPMC price file, 2026-04-01", "detail": "Line 2 charges $7,150.00; the posted price is $6,374.00."}]}
+    asks = [{"kind": "insurance", "findings": ["auditor:insurance"]},
+            {"kind": "bill_line", "findings": ["auditor:price_above_posted-2"]},
+            {"kind": "bill_line", "findings": ["auditor:duplicate_line-7"]}]
+    got = caller._bill_corrections(asks, rec)
+    assert [c["line"] for c in got] == [2, 7]  # the plan's order
+    ct, dup = (caller._correction_line(c) for c in got)
+    assert "Line 2" in ct and "$7,150" in ct and "$6,374" in ct and "$776" in ct and "price file dated 2026-04-01" in ct
+    assert "Line 7" in dup and "repeats line 6" in dup and "$1,160" in dup and "duplicate" in dup
+
+
 async def test_raj_hero_case_end_to_end(client, monkeypatch):
     """?scenario=raj: both app agents + the Decide agent, offline, reach the answer key, and the plan asks for every
     correction, free care and the refund; the offline call ends at $0 + the $400 back."""
@@ -286,17 +314,46 @@ async def test_raj_hero_case_end_to_end(client, monkeypatch):
 
     await _approve(c, case_id, "caller")
     ready = await _wait_for(case_id, lambda e: e["kind"] == "call_ready")
-    for line in ["Patient Financial Services, this is Diane, how can I help you?", "Okay, let me pull that up.",
-                 "I see it.", "Okay.", "Yes, I've opened a financial assistance review and put the account on hold.",
-                 "Your case number is 58213.", "Yes, that's right."]:
-        r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": line})).json()
-        if r["ended"]:
-            break
+    remy = await _billing_plays(c, ready["call_id"])
     said = " ".join(e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "remy")
     assert "$400" in said
+    # both line errors are said, in the plan's order, each with its line, amount and source
+    dup = next(i for i, x in enumerate(remy) if "Line 7" in x)
+    ct = next(i for i, x in enumerate(remy) if "Line 2" in x)
+    assert (dup < ct) == ([a["id"] for a in plan["asks"]].index("bill_line-7") < [a["id"] for a in plan["asks"]].index("bill_line-2"))
+    assert "repeats line 6" in remy[dup] and "96360" in remy[dup] and "$1,160" in remy[dup]
+    assert "$7,150" in remy[ct] and "$6,374" in remy[ct] and "$776" in remy[ct] and "price file" in remy[ct]
+    # free care for the real reason: an insured high-medical-cost write-off, not income alone
+    assert "medical expenses over the past 12 months are about 14% of family income" in said
+    assert "over your policy's 10%" in said and "$2,053 of other medical bills" in said
+    assert "poverty" not in said.lower()
+    brief = orchestrator.cases[case_id]["result"]["brief"]
+    assert brief["medical_costs_pct_income"] == exp["discount"]["oop_pct_income"]
+    assert [f"bill_line-{x['line']}" for x in brief["bill_corrections"]] == [
+        a["id"] for a in plan["asks"] if a["kind"] == "bill_line"]
+    assert all(any(x["detail"] in g for g in brief["goals"]) for x in brief["bill_corrections"])  # a live call asks too
     s = (await _wait_for(case_id, lambda e: e["kind"] == "case_done"))["summary"]
     # not confirmed by billing yet: $0 and the $400 refund are what Remy expects once the corrections land
     assert s["expected"] == 0 and s["expected_refund"] == 400 and s["case_number"] == "58213"
+    # billing promised every correction for later; nothing billing answered is "no clear answer"
+    marks = {m["id"]: m["status"] for m in next(e for e in bus.history(case_id) if e["kind"] == "scorecard")["marks"]}
+    assert marks == {"bill_line-7": "later", "bill_line-2": "later", "insurance": "later", "payment": "later",
+                     "discount": "later", "refund": "later", "hold": "got", "case_number": "got"}
+
+
+async def _billing_plays(c, call_id: str) -> list[str]:
+    """The offline billing rep (offline.billing_reply) answers each of Remy's lines; returns what Remy said."""
+    from remy import offline
+    said, out, n = "", [], 0
+    for i in range(offline.MAX_TURNS):
+        line = offline.billing_reply(i, said, n)
+        n += line in (offline.REP_CORRECTION, offline.REP_CORRECTION_MORE)
+        r = (await c.post(f"/api/calls/{call_id}/turn", json={"rep_said": line})).json()
+        said = r["say"]
+        out.append(said)
+        if r["ended"]:
+            break
+    return out
 
 
 class _Later(date):
