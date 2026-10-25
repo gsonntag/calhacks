@@ -74,7 +74,11 @@ async def test_whole_case_runs_with_nobody_playing_billing(offline_client):
     done = await _wait(case_id, lambda e: e["kind"] == "case_done")
     assert done["summary"]["case_number"] == "58213"
     rep = [e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "rep"]
-    assert rep[0] == offline.REP_SCRIPT[0]
+    assert rep == offline.REP_SCRIPT  # Rosa's call: billing answers each ask
+    # billing promised the corrections for later and answered every ask: nothing is "no clear answer"
+    marks = next(e for e in bus.history(case_id) if e["kind"] == "scorecard")["marks"]
+    assert {m["id"]: m["status"] for m in marks} == {"insurance": "later", "payment": "later", "hold": "got",
+                                                    "case_number": "got"}
 
     # after the call: status first, then the follow-up
     t = (await c.post(f"/api/cases/{case_id}/talk", data={"heard": ""})).json()
