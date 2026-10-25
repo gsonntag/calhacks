@@ -102,6 +102,41 @@ Users don't know what "Nessie" or "Bright Data" are, so they never have to pick 
 - Guardrails: the chat changes strategy, never facts; numbers always come from the code; every ask must be
   backed by a finding (otherwise it explains why not); never agree to pay, always say it's automated.
 
+### Step 4: the call (fully autonomous)
+- No mid-call steering (no nudge box). When billing refuses an ask, BillBack follows the approved plan's
+  fallback by itself; it doesn't pause to ask.
+- On screen: the live transcript, the plan's asks as a checklist that ticks off live as the rep agrees
+  ("✓ Insurance applied, rep agreed"), and a running new balance.
+- Voice: Cartesia stock voices as today (no voice cloning: BillBack always says it's an automated assistant
+  calling on the patient's behalf).
+- Later: let the patient join the live call (Twilio conference) when billing insists on the patient.
+
+### Step 5: What's next (the Decide agent again)
+- Top: a scorecard of every ask: ✓ got it / ✗ refused / ⏳ promised later.
+- Below: the **same Decide agent**, run again with the call outcome as new input (plus everything Nessie and
+  Bright Data found and the original plan). Same screen pattern as step 3: what happened, what it concludes,
+  the next plan (call again with a different strategy, written dispute, financial-assistance form, ask to
+  pause collections, wait for a promised callback), the planner chat, versions, approve.
+- If everything was won, it just confirms and schedules the check-back.
+- A follow-up call reuses this plan with only the unfinished asks.
+
+### Call speed (in progress)
+Reply latency is 1.4–2.7 s per turn (Claude 1.3–2.6 s). Fixes being built: stream Claude's reply into
+Cartesia sentence by sentence, start Claude on Ink's `turn.eager_end`, record outcomes in the background
+instead of a second Claude call, prompt caching. Goal: first audio under ~1 s after the rep stops, in both
+the phone path and desk mode. Moss (Cal Hacks sponsor) was evaluated and skipped: it's fast retrieval, not
+LLM latency.
+
+### Data on hand (added tonight)
+- 12 hospitals in the policy DB (8 new Bay Area); real price tables for 11 in `policydb/prices/`
+  (`billback/prices.py`). Check MarinHealth and El Camino tiers: they were read as "all patients".
+- Realistic cases from real prices with known answers: `demo/scenarios/` (`scripts/make_scenario.py`):
+  rosa-real ($15,414 → $1,575), marcus-real ($4,174 → $0), dana-altabates-refund, amara-kaiser-uninsured,
+  lena-johnmuir. Making rosa-real the main demo case means updating demo/case.json, PDFs, Nessie seed, tests,
+  docs and re-recording the replay.
+- Nessie agent bugs being fixed: loose payment matching, crash on uninsured patients, credited payments
+  reported as missed.
+
 ### Still to design
 - What the planner chat refuses, in detail.
 - "This is wrong": which things can be corrected (a transaction, income, household size, insurance) and
