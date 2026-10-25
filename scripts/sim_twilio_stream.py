@@ -237,7 +237,8 @@ async def main() -> None:
     print(f"\noutcome: {session.outcome}")
     print(f"turns {s['turns']}  barge-ins {s['barge_ins']} (Twilio clears {tw.clears})")
     print(f"response latency ms (rep turn.end -> first agent audio): {s['latency_ms']}")
-    print(f"  of which Claude turn ms: {s['llm_ms']}   Sonic first-chunk ms: {s['tts_first_ms']}")
+    print(f"  brain turn start -> first sentence ms: {s['llm_ms']}   first sentence -> Sonic first chunk ms: "
+          f"{s['tts_first_ms']}   speculative drafts (eager_end): {s['drafts']}")
     print(f"audio: STT streamed {s['audio_in_s']:.1f}s, agent TTS {s['audio_out_s']:.1f}s, "
           f"rep TTS generated {rep_tts_s:.1f}s (cached after first run); call {elapsed:.1f}s")
     print(f"recordings + transcript: {out}")

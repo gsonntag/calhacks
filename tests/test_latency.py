@@ -400,3 +400,22 @@ async def test_desk_route_without_cartesia_streams_text_only(monkeypatch):
         assert lines[-1]["say"] == "Hi, this is an automated assistant."
         assert (await c.post("/api/calls/nope/turn/stream", json={})).status_code == 404
     caller.sessions.pop(s.id)
+
+
+async def test_desk_tts_failure_still_returns_text_for_the_browser_voice(claude, monkeypatch):
+    """E.g. Cartesia quota exceeded (HTTP 402): the turn still completes; rep.html falls back to speech."""
+    class Broken:
+        async def ensure(self):
+            raise RuntimeError("HTTP 402")
+
+        async def stream_many(self, texts, prefix):
+            await self.ensure()
+            yield b""  # pragma: no cover
+
+    monkeypatch.setattr(desk, "_tts_for", lambda v: Broken())
+    claude.script = [respond("Thank you. Could you apply the adjustment?")]
+    s = caller.CallSession("c12", {"goals": []})
+    lines = [json.loads(b) async for b in desk.events(s, "Okay.")]
+    assert [e["type"] for e in lines] == ["text", "text", "done"]
+    assert lines[-1]["audio"] is False and lines[-1]["say"] == "Thank you. Could you apply the adjustment?"
+    assert any("Desk text-to-speech failed" in e.get("text", "") for e in bus.history("c12"))
