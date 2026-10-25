@@ -17,7 +17,7 @@ from remy.events import bus
 from remy.integrations import brightdata
 from remy.integrations.brightdata import BDResponse, BrightDataError
 from remy.policies import crawl as crawl_mod
-from remy.policies import discover, fetch, pipeline, registry
+from remy.policies import discover, fetch, hcai, pipeline, registry
 from remy.policies.store import DEFAULT_DIR, PolicyStore
 
 from test_flow import _wait_for, client  # noqa: F401  (client is a fixture)
@@ -73,7 +73,19 @@ def db(tmp_path, monkeypatch) -> PolicyStore:
     shutil.copytree(DEFAULT_DIR, tmp_path / "db")
     store = PolicyStore(tmp_path / "db")
     monkeypatch.setattr(policy, "store", lambda: store)
+
+    async def no_network(crawl, url, timeout=60):  # HCAI is plain HTTPS: tests that want it replay it
+        raise RuntimeError(f"plain HTTPS disabled in tests: {url}")
+    monkeypatch.setattr(hcai, "_get", no_network)
     return store
+
+
+def _as_first_crawl(store: PolicyStore, hid: str) -> dict:
+    """Make the hospital's version 1 current again (Saint Francis's: "no tiers", before its HCAI copy).
+    Test-only: the store numbers a new version current + 1, so the next one repeats version 2."""
+    store.db.execute("UPDATE policy_versions SET is_current = (version = 1) WHERE hospital_id = ?", (hid,))
+    store.db.commit()
+    return store.current(hid)
 
 
 # ---- the crawl session: visible retries, outcomes, the hard cap ----
@@ -214,13 +226,15 @@ def test_staleness_rule(tmp_path):
     assert policy.staleness(store, none, later + timedelta(hours=1)) is None
 
 
-def test_committed_no_tiers_hospitals_are_refreshable():
-    """Saint Francis is stored as "no tiers": the rule re-crawls it (6 hours after the last try) instead of
-    keeping a wrong answer forever. (Stanford and ZSFG were too, until their HCAI-filed policies were added.)"""
-    for hid in ("ucsf-saint-francis",):
-        row = COMMITTED.current(hid)
-        assert row["status"] == "no_tiers"
-        assert policy.staleness(COMMITTED, row, policy._when(row["fetched_at"]) + timedelta(days=1))
+def test_committed_no_tiers_versions_are_refreshable():
+    """A "no tiers" version is re-crawled (6 hours after the last try) instead of keeping a wrong answer
+    forever. Saint Francis, Stanford and ZSFG were all stored that way first (version 1); their HCAI-filed
+    policies (version 2) fixed them."""
+    for hid in ("ucsf-saint-francis", "stanford-health", "zsfg"):
+        first = COMMITTED.versions(hid)[-1]
+        assert first["version"] == 1 and first["status"] == "no_tiers"
+        assert policy.staleness(COMMITTED, first, policy._when(first["fetched_at"]) + timedelta(days=1))
+        assert COMMITTED.current(hid)["status"] == "ok"
 
 
 # ---- the live moment: a stale "no tiers" hospital re-crawled, streamed into the panel ----
@@ -234,7 +248,7 @@ def _fake_saint_francis(monkeypatch) -> list[str]:
     gave in the committed crawl (no English policy: the ranking now asks for a second search). The second
     search (site:) returns an English policy PDF. Its bytes are UCSF Health's real policy PDF from the committed
     crawl, standing in for a document we don't have: this tests the path, not Saint Francis's policy."""
-    real = COMMITTED.read_artifact(COMMITTED.current("ucsf-saint-francis")["discovery"]["serp_artifacts"][0])
+    real = COMMITTED.read_artifact(COMMITTED.versions("ucsf-saint-francis")[-1]["discovery"]["serp_artifacts"][0])
     first = json.dumps({"status_code": 200, "headers": {}, "body": real}).encode()
     second = _serp_body([{"link": SF_POLICY_URL, "title": "Financial Assistance Policy | UCSF Health Saint Francis",
                           "description": "Financial assistance and charity care policy (PDF)", "rank": 1}])
@@ -273,7 +287,7 @@ async def test_stale_no_tiers_hospital_is_recrawled_live_and_streamed(db, live_k
     calls = _fake_saint_francis(monkeypatch)
     monkeypatch.setattr(llm, "json_out", _fake_claude)
     monkeypatch.setattr(policy, "staleness", lambda store, row, now=None: "no verified discount tiers on file")
-    before = db.current("ucsf-saint-francis")
+    before = _as_first_crawl(db, "ucsf-saint-francis")
     r = policy.report("live-sf")
     got = await policy.find_policy("live-sf", r, {"name": "Saint Francis Memorial Hospital"})
 
@@ -292,7 +306,7 @@ async def test_stale_no_tiers_hospital_is_recrawled_live_and_streamed(db, live_k
     # the verified quote is shown with its source
     assert any(UCSF_TIER[:40] in p["text"] and p["source"] == SF_POLICY_URL for p in steps["verify"]["proof"])
     assert steps["find"]["status"] == "ok" and "Checked live via Bright Data" in steps["find"]["result"]
-    assert COMMITTED.current("ucsf-saint-francis")["version"] == before["version"]  # committed DB untouched
+    assert COMMITTED.current("ucsf-saint-francis")["version"] == 2  # committed DB untouched
 
 
 async def test_failed_refresh_falls_back_to_the_stored_copy(db, live_keys, monkeypatch):
@@ -305,7 +319,7 @@ async def test_failed_refresh_falls_back_to_the_stored_copy(db, live_keys, monke
     monkeypatch.setattr(brightdata, "page", unreachable)
     monkeypatch.setattr(brightdata, "document", unreachable)
     monkeypatch.setattr(policy, "staleness", lambda store, row, now=None: "no verified discount tiers on file")
-    stored = db.current("ucsf-saint-francis")
+    stored = _as_first_crawl(db, "ucsf-saint-francis")  # HCAI fails too: the db fixture disables plain HTTPS
     got = await policy.find_policy("live-fail", policy.report("live-fail"), {"name": "UCSF Health Saint Francis Hospital"})
     assert got["origin"] == "policy_db" and got["version"] == stored["version"]
     steps = _steps("live-fail")
