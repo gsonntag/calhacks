@@ -12,7 +12,7 @@ number (policy figures need an exact quote from the crawled page, code does the 
 its source). Scores: General "finalist, not yet a winner" · Cartesia 6.9/10, "likely loses to a team with a
 real phone call" · Nessie "likely top 3" · Bright Data "strong contender, moderate fixable risk of
 disqualification" (Live-ness 4/10). Gavin's picks are marked ✔. Status (2026-10-25): "→ #n" is the open PR that
-addresses the item (PRs #1–#8 and this docs PR #9, which merges last); **open** means nothing addresses it yet.
+addresses the item (PRs #1–#8, #9 in progress, and this docs PR #10, which merges last); **open** means nothing addresses it yet.
 
 ### P0: before anyone sees it (bugs and disqualification risks)
 1. ✔ **→ #2** **Login on approve and reset.** `POST /api/approvals/{id}` and `POST /api/reset` (`billback/app.py:421`,
@@ -27,7 +27,7 @@ addresses the item (PRs #1–#8 and this docs PR #9, which merges last); **open*
 5. **→ #3** (one scheduled Nessie bill per payment) **The 6-month payment plan never ends.** It's written to Nessie as a recurring bill with no end date.
 
 ### P1: the demo (every judge raised these)
-6. **→ #9** (`docs/DEMO.md` leads with Marcus and the 12-hospital comparison) **Lead with a case that shows off the sponsors.** Rosa's $8,700 → $600 is subtraction (insurance
+6. **→ #10** (`docs/DEMO.md` leads with Marcus and the 12-hospital comparison) **Lead with a case that shows off the sponsors.** Rosa's $8,700 → $600 is subtraction (insurance
    already covered + one $500 bank payment). Bright Data says she's "not eligible", and California law
    already requires the interest-free plan. Lead with Marcus ($5,600 → $0 free care), or show "same bill at
    CPMC: $0, at ZSFG: $5,600". (See also item 5 of "Rough version": rosa-real.)
@@ -38,7 +38,7 @@ addresses the item (PRs #1–#8 and this docs PR #9, which merges last); **open*
    - ✔ **→ #7** Cartesia: desk mode listens with Chrome's speech recognition (`web/rep.html:150`). Route it through
      Ink so the whole demo uses Cartesia, and allow interrupting. Can be built offline; live test needs
      credits.
-8. **→ #9** (README, DEMO; `docs/brightdata.md` price tables → #5) **Docs agree with each other and with the code.** README says 139 tests (281); `docs/DEMO.md` says 4
+8. **→ #10** (README, DEMO; `docs/brightdata.md` price tables → #5) **Docs agree with each other and with the code.** README says 139 tests (281); `docs/DEMO.md` says 4
    hospitals (12) and is a 3-minute script (judging is 2); `docs/brightdata.md` says price tables aren't
    used (they are); add a "Known limitations" section to the README (the Cartesia track asks for it) with
    PHI data-retention notes.
