@@ -302,7 +302,7 @@ def who_to_call(case: dict, discount: float) -> dict:
                 "phone": bill.get("billing_phone") or None,
                 "why": "You qualify for a discount, which their financial-assistance team applies"}
     return {"who": "billing", "department": f"{hosp['name']} {dept}", "phone": bill.get("billing_phone") or None,
-            "why": "No discount applies, so billing can correct the balance and set up the plan"}
+            "why": "Billing can correct the balance and set up the plan (no financial-assistance discount applies)"}
 
 
 def decided(case: dict, share: float, paid: float, d: float, owed: float, target: float, refund: float,
