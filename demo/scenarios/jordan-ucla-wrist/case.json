@@ -4,11 +4,11 @@
     "first_name": "Jordan",
     "last_name": "Reyes",
     "household_size": 1,
-    "dob": "1999-04-12",
+    "dob": "2006-02-03",
     "phone_label": "Jordan's phone",
     "address": {
-      "street_number": "10960",
-      "street_name": "Strathmore Dr",
+      "street_number": "515",
+      "street_name": "Landfair Ave",
       "city": "Los Angeles",
       "state": "CA",
       "zip": "90024"
@@ -25,13 +25,13 @@
     "facility": "Ronald Reagan UCLA Medical Center, 757 Westwood Plaza, Los Angeles, CA 90095",
     "account_number": "UCLA-41907263",
     "statement_date": "2026-10-09",
-    "notice": "Self-pay statement - payment due by 2026-11-08.",
+    "notice": "Statement - payment due by 2026-11-08. Call to set up a payment plan.",
     "due_date": "2026-11-08",
     "service_date": "2026-08-09",
-    "total_charges": 4700.0,
+    "total_charges": 4990.0,
     "insurance_adjustments": 0.0,
     "patient_payments": 0.0,
-    "amount_due": 4700.0,
+    "amount_due": 4990.0,
     "billing_phone": "",
     "collection_agency": "",
     "collection_phone": "",
@@ -45,38 +45,114 @@
       {
         "code": "73110",
         "description": "HB WRIST 3+ VIEWS",
-        "units": 2,
-        "amount": 980.0
+        "units": 1,
+        "amount": 490.0
+      },
+      {
+        "code": "73110",
+        "description": "HB WRIST 3+ VIEWS",
+        "units": 1,
+        "amount": 490.0
       },
       {
         "code": "29125",
         "description": "HB SPLINT APPLY SHORT ARM STATIC",
         "units": 1,
-        "amount": 460.0
+        "amount": 1460.0
       },
       {
-        "code": "96374",
-        "description": "HB NONCHEMO IV PUSH SINGLE INITIAL",
+        "code": "96372",
+        "description": "HB NONCHEMO IM /SUBQ INJECTION EACH",
         "units": 1,
-        "amount": 840.0
+        "amount": 130.0
       }
     ]
   },
-  "eob": {},
+  "eob": {
+    "insurer": "Sunline Student Health Plan",
+    "member_id": "SSH-20618834",
+    "claim_number": "C-2026-0812-57304",
+    "provider": "Ronald Reagan UCLA Medical Center",
+    "service_date": "2026-08-09",
+    "billed": 4990.0,
+    "allowed": 2450.0,
+    "plan_paid": 760.0,
+    "patient_responsibility": 1690.0,
+    "status": "Processed 2026-08-27 (deductible applied)",
+    "deductible_applied": 1500.0,
+    "coinsurance": 190.0,
+    "lines": [
+      {
+        "line": 1,
+        "code": "99284",
+        "billed": 2420.0,
+        "allowed": 1694.0,
+        "deductible": 1500.0,
+        "coinsurance": 38.8,
+        "plan_paid": 155.2,
+        "patient_responsibility": 1538.8,
+        "remark": ""
+      },
+      {
+        "line": 2,
+        "code": "73110",
+        "billed": 490.0,
+        "allowed": 343.0,
+        "deductible": 0.0,
+        "coinsurance": 68.6,
+        "plan_paid": 274.4,
+        "patient_responsibility": 68.6,
+        "remark": ""
+      },
+      {
+        "line": 3,
+        "code": "73110",
+        "billed": 490.0,
+        "allowed": 0.0,
+        "deductible": 0.0,
+        "coinsurance": 0.0,
+        "plan_paid": 0.0,
+        "patient_responsibility": 0.0,
+        "remark": "Denied: duplicate of line 2"
+      },
+      {
+        "line": 4,
+        "code": "29125",
+        "billed": 1460.0,
+        "allowed": 322.0,
+        "deductible": 0.0,
+        "coinsurance": 64.4,
+        "plan_paid": 257.6,
+        "patient_responsibility": 64.4,
+        "remark": ""
+      },
+      {
+        "line": 5,
+        "code": "96372",
+        "billed": 130.0,
+        "allowed": 91.0,
+        "deductible": 0.0,
+        "coinsurance": 18.2,
+        "plan_paid": 72.8,
+        "patient_responsibility": 18.2,
+        "remark": ""
+      }
+    ]
+  },
   "transactions": [
     {
       "type": "purchase",
       "date": "2025-10-26",
-      "amount": 47.1,
+      "amount": 32.6,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2025-10-28",
-      "amount": 55.44,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 17.27,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -88,13 +164,13 @@
     {
       "type": "deposit",
       "date": "2025-10-31",
-      "amount": 1448.61,
+      "amount": 704.7,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2025-10-31",
-      "amount": 36.61,
+      "amount": 24.63,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
@@ -108,30 +184,30 @@
     {
       "type": "purchase",
       "date": "2025-11-02",
-      "amount": 37.89,
+      "amount": 23.71,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2025-11-03",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2025-11-04",
-      "amount": 52.73,
+      "amount": 36.88,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2025-11-07",
-      "amount": 39.45,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 7.67,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -150,7 +226,7 @@
     {
       "type": "purchase",
       "date": "2025-11-12",
-      "amount": 61.8,
+      "amount": 41.0,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
     },
@@ -163,15 +239,15 @@
     {
       "type": "deposit",
       "date": "2025-11-14",
-      "amount": 1468.59,
+      "amount": 731.42,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2025-11-16",
-      "amount": 8.57,
-      "merchant": "ESPRESSO PROFETA #850",
-      "description": "Coffee"
+      "amount": 21.77,
+      "merchant": "WESTWOOD BIKE SHOP #850",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
@@ -183,16 +259,16 @@
     {
       "type": "purchase",
       "date": "2025-11-18",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2025-11-21",
-      "amount": 46.61,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 8.32,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -204,7 +280,7 @@
     {
       "type": "purchase",
       "date": "2025-11-25",
-      "amount": 80.96,
+      "amount": 54.85,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
@@ -218,27 +294,27 @@
     {
       "type": "deposit",
       "date": "2025-11-28",
-      "amount": 1501.35,
+      "amount": 775.26,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2025-11-30",
-      "amount": 47.98,
+      "amount": 31.0,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2025-12-03",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2025-12-03",
-      "amount": 49.28,
+      "amount": 34.25,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
@@ -252,9 +328,9 @@
     {
       "type": "purchase",
       "date": "2025-12-07",
-      "amount": 11.55,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 33.26,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
@@ -273,22 +349,22 @@
     {
       "type": "deposit",
       "date": "2025-12-12",
-      "amount": 1516.84,
+      "amount": 795.98,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2025-12-12",
-      "amount": 11.04,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 31.29,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2025-12-17",
-      "amount": 23.41,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 3.68,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "withdrawal",
@@ -299,14 +375,14 @@
     {
       "type": "purchase",
       "date": "2025-12-18",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2025-12-21",
-      "amount": 48.18,
+      "amount": 33.42,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
@@ -320,13 +396,13 @@
     {
       "type": "deposit",
       "date": "2025-12-26",
-      "amount": 1451.65,
+      "amount": 708.76,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2025-12-26",
-      "amount": 88.68,
+      "amount": 60.43,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
@@ -340,37 +416,37 @@
     {
       "type": "purchase",
       "date": "2025-12-29",
-      "amount": 5.64,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 10.45,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2025-12-31",
-      "amount": 5.96,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 11.71,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-01-02",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-01-03",
-      "amount": 5.55,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 10.14,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-01-06",
-      "amount": 22.42,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 3.48,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -382,7 +458,7 @@
     {
       "type": "deposit",
       "date": "2026-01-09",
-      "amount": 1485.79,
+      "amount": 754.43,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
@@ -401,14 +477,14 @@
     {
       "type": "purchase",
       "date": "2026-01-11",
-      "amount": 38.11,
+      "amount": 25.76,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-01-15",
-      "amount": 87.86,
+      "amount": 59.84,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
@@ -429,28 +505,28 @@
     {
       "type": "purchase",
       "date": "2026-01-18",
-      "amount": 36.62,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 5.97,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-01-19",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-01-22",
-      "amount": 41.83,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 9.1,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-01-23",
-      "amount": 1500.54,
+      "amount": 774.17,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
@@ -463,42 +539,42 @@
     {
       "type": "purchase",
       "date": "2026-01-26",
-      "amount": 33.25,
+      "amount": 22.07,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-01-28",
-      "amount": 31.04,
+      "amount": 20.39,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-02-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-02-02",
-      "amount": 10.9,
-      "merchant": "ESPRESSO PROFETA #850",
-      "description": "Coffee"
+      "amount": 30.75,
+      "merchant": "WESTWOOD BIKE SHOP #850",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-02-05",
-      "amount": 10.01,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 27.32,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "deposit",
       "date": "2026-02-06",
-      "amount": 1432.76,
+      "amount": 683.48,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
@@ -511,9 +587,9 @@
     {
       "type": "purchase",
       "date": "2026-02-09",
-      "amount": 8.61,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 21.94,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
@@ -538,16 +614,16 @@
     {
       "type": "purchase",
       "date": "2026-02-11",
-      "amount": 9.63,
-      "merchant": "ESPRESSO PROFETA #850",
-      "description": "Coffee"
+      "amount": 25.85,
+      "merchant": "WESTWOOD BIKE SHOP #850",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-02-14",
-      "amount": 28.88,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 4.78,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -559,9 +635,9 @@
     {
       "type": "purchase",
       "date": "2026-02-19",
-      "amount": 39.36,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 7.61,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -573,22 +649,22 @@
     {
       "type": "deposit",
       "date": "2026-02-20",
-      "amount": 1487.74,
+      "amount": 757.05,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-02-22",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-02-22",
-      "amount": 48.9,
-      "merchant": "METRO TAP RELOAD #552",
-      "description": "Transit"
+      "amount": 8.78,
+      "merchant": "DIDDY RIESE #552",
+      "description": "Food"
     },
     {
       "type": "withdrawal",
@@ -599,21 +675,21 @@
     {
       "type": "purchase",
       "date": "2026-02-27",
-      "amount": 20.96,
-      "merchant": "METRO TAP RELOAD #552",
-      "description": "Transit"
+      "amount": 3.19,
+      "merchant": "DIDDY RIESE #552",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-03-03",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-03-03",
-      "amount": 20.89,
+      "amount": 12.67,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
@@ -634,13 +710,13 @@
     {
       "type": "deposit",
       "date": "2026-03-06",
-      "amount": 1476.69,
+      "amount": 742.26,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-03-07",
-      "amount": 25.09,
+      "amount": 15.87,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
@@ -654,7 +730,7 @@
     {
       "type": "purchase",
       "date": "2026-03-12",
-      "amount": 53.1,
+      "amount": 37.16,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
@@ -668,14 +744,14 @@
     {
       "type": "purchase",
       "date": "2026-03-15",
-      "amount": 48.89,
+      "amount": 33.95,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-03-17",
-      "amount": 33.86,
+      "amount": 22.53,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
@@ -695,50 +771,50 @@
     {
       "type": "deposit",
       "date": "2026-03-20",
-      "amount": 1453.64,
+      "amount": 711.43,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-03-20",
-      "amount": 9.95,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 27.09,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-03-21",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-03-22",
-      "amount": 61.36,
+      "amount": 43.44,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-03-26",
-      "amount": 35.5,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 6.1,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-03-30",
-      "amount": 46.38,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 11.83,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-04-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
@@ -750,13 +826,13 @@
     {
       "type": "deposit",
       "date": "2026-04-03",
-      "amount": 1463.79,
+      "amount": 725.01,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-04-03",
-      "amount": 29.29,
+      "amount": 19.06,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
@@ -770,16 +846,16 @@
     {
       "type": "purchase",
       "date": "2026-04-06",
-      "amount": 21.08,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 3.22,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-04-09",
-      "amount": 5.76,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 10.94,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
@@ -797,21 +873,21 @@
     {
       "type": "purchase",
       "date": "2026-04-13",
-      "amount": 81.12,
+      "amount": 54.97,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-04-15",
-      "amount": 22.36,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 3.47,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-04-17",
-      "amount": 1459.08,
+      "amount": 718.7,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
@@ -824,14 +900,14 @@
     {
       "type": "purchase",
       "date": "2026-04-19",
-      "amount": 26.59,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 4.32,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-04-21",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
@@ -845,41 +921,41 @@
     {
       "type": "purchase",
       "date": "2026-04-24",
-      "amount": 22.56,
-      "merchant": "METRO TAP RELOAD #552",
-      "description": "Transit"
+      "amount": 3.51,
+      "merchant": "DIDDY RIESE #552",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-04-28",
-      "amount": 46.02,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 11.61,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-05-01",
-      "amount": 1466.1,
+      "amount": 728.09,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-05-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-05-01",
-      "amount": 78.18,
+      "amount": 52.84,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-05-05",
-      "amount": 31.74,
+      "amount": 19.26,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
@@ -900,9 +976,9 @@
     {
       "type": "purchase",
       "date": "2026-05-09",
-      "amount": 44.3,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 10.58,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -920,50 +996,50 @@
     {
       "type": "purchase",
       "date": "2026-05-12",
-      "amount": 46.8,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 12.08,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-05-15",
-      "amount": 1515.76,
+      "amount": 794.52,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-05-15",
-      "amount": 53.94,
+      "amount": 37.79,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-05-17",
-      "amount": 32.75,
+      "amount": 19.99,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-05-20",
-      "amount": 30.09,
+      "amount": 19.67,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-05-22",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-05-25",
-      "amount": 46.68,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
+      "amount": 8.34,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -988,43 +1064,43 @@
     {
       "type": "deposit",
       "date": "2026-05-29",
-      "amount": 1518.38,
+      "amount": 798.04,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-05-30",
-      "amount": 31.45,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
+      "amount": 5.29,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-06-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-06-01",
-      "amount": 61.91,
+      "amount": 41.08,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-06-06",
-      "amount": 76.2,
+      "amount": 51.41,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-06-09",
-      "amount": 32.24,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
+      "amount": 5.45,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1036,20 +1112,20 @@
     {
       "type": "deposit",
       "date": "2026-06-12",
-      "amount": 1431.88,
+      "amount": 682.31,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-06-13",
-      "amount": 58.57,
-      "merchant": "CHEVRON WILSHIRE BLVD #973",
-      "description": "Gas"
+      "amount": 19.14,
+      "merchant": "METRO TAP RELOAD #973",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-06-16",
-      "amount": 72.68,
+      "amount": 48.86,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
@@ -1076,41 +1152,41 @@
     {
       "type": "purchase",
       "date": "2026-06-19",
-      "amount": 67.26,
+      "amount": 44.94,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-06-21",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-06-22",
-      "amount": 40.56,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 8.33,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-06-25",
-      "amount": 23.52,
-      "merchant": "METRO TAP RELOAD #552",
-      "description": "Transit"
+      "amount": 3.7,
+      "merchant": "DIDDY RIESE #552",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-06-26",
-      "amount": 1517.85,
+      "amount": 797.33,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-06-27",
-      "amount": 31.74,
+      "amount": 19.26,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
@@ -1124,23 +1200,23 @@
     {
       "type": "purchase",
       "date": "2026-07-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-07-02",
-      "amount": 9.03,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 23.53,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-07-05",
-      "amount": 40.7,
-      "merchant": "CHEVRON WILSHIRE BLVD #973",
-      "description": "Gas"
+      "amount": 8.42,
+      "merchant": "METRO TAP RELOAD #973",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -1158,9 +1234,9 @@
     {
       "type": "purchase",
       "date": "2026-07-09",
-      "amount": 38.71,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 6.74,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1179,70 +1255,70 @@
     {
       "type": "deposit",
       "date": "2026-07-10",
-      "amount": 1447.32,
+      "amount": 702.97,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-07-11",
-      "amount": 34.91,
+      "amount": 23.33,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-07-13",
-      "amount": 9.92,
-      "merchant": "ESPRESSO PROFETA #850",
-      "description": "Coffee"
+      "amount": 26.96,
+      "merchant": "WESTWOOD BIKE SHOP #850",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-07-15",
-      "amount": 40.55,
+      "amount": 25.63,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-07-17",
-      "amount": 10.9,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 30.76,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-07-18",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-07-21",
-      "amount": 39.05,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 7.43,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-07-24",
-      "amount": 1444.65,
+      "amount": 699.4,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-07-24",
-      "amount": 51.61,
-      "merchant": "POS DEBIT CHEVRON WILSHIRE BLVD",
-      "description": "Gas"
+      "amount": 14.96,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-07-28",
-      "amount": 37.08,
-      "merchant": "CHEVRON WILSHIRE BLVD #973",
-      "description": "Gas"
+      "amount": 6.25,
+      "merchant": "METRO TAP RELOAD #973",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -1254,9 +1330,9 @@
     {
       "type": "purchase",
       "date": "2026-08-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
@@ -1268,27 +1344,27 @@
     {
       "type": "purchase",
       "date": "2026-08-02",
-      "amount": 9.25,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 24.41,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-08-06",
-      "amount": 9.46,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 25.19,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "deposit",
       "date": "2026-08-07",
-      "amount": 1477.72,
+      "amount": 743.64,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-08-08",
-      "amount": 46.76,
+      "amount": 30.12,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
     },
@@ -1302,7 +1378,7 @@
     {
       "type": "purchase",
       "date": "2026-08-10",
-      "amount": 21.99,
+      "amount": 12.99,
       "merchant": "CVS/PHARMACY #9180",
       "description": "Prescription"
     },
@@ -1315,9 +1391,9 @@
     {
       "type": "purchase",
       "date": "2026-08-13",
-      "amount": 48.78,
-      "merchant": "METRO TAP RELOAD #552",
-      "description": "Transit"
+      "amount": 8.76,
+      "merchant": "DIDDY RIESE #552",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1328,10 +1404,24 @@
     },
     {
       "type": "purchase",
+      "date": "2026-08-14",
+      "amount": 225.0,
+      "merchant": "Westside Ortho Clinic",
+      "description": "Fracture follow-up visit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-14",
+      "amount": 185.0,
+      "merchant": "Westside Ortho Clinic",
+      "description": "Short arm cast"
+    },
+    {
+      "type": "purchase",
       "date": "2026-08-17",
-      "amount": 35.48,
-      "merchant": "METRO TAP RELOAD #552",
-      "description": "Transit"
+      "amount": 6.1,
+      "merchant": "DIDDY RIESE #552",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1343,34 +1433,34 @@
     {
       "type": "deposit",
       "date": "2026-08-21",
-      "amount": 1510.22,
+      "amount": 432.92,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-08-21",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-08-21",
-      "amount": 11.3,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 32.29,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-08-24",
-      "amount": 63.12,
+      "amount": 44.77,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-08-28",
-      "amount": 28.72,
+      "amount": 18.63,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
@@ -1397,36 +1487,36 @@
     {
       "type": "purchase",
       "date": "2026-09-01",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
       "date": "2026-09-02",
-      "amount": 50.82,
+      "amount": 33.05,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-09-04",
-      "amount": 1443.86,
+      "amount": 349.17,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-09-04",
-      "amount": 69.31,
+      "amount": 46.42,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-07",
-      "amount": 50.67,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 14.4,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -1438,9 +1528,16 @@
     {
       "type": "purchase",
       "date": "2026-09-10",
-      "amount": 69.92,
+      "amount": 46.87,
       "merchant": "RALPHS WESTWOOD #822",
       "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-11",
+      "amount": 95.0,
+      "merchant": "Westside Ortho Clinic",
+      "description": "Follow-up X-ray"
     },
     {
       "type": "purchase",
@@ -1448,6 +1545,13 @@
       "amount": 39.07,
       "merchant": "Venmo",
       "description": "VENMO PAYMENT 3964"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-12",
+      "amount": 34.99,
+      "merchant": "CVS/PHARMACY #9180",
+      "description": "Wrist brace"
     },
     {
       "type": "purchase",
@@ -1459,27 +1563,27 @@
     {
       "type": "purchase",
       "date": "2026-09-15",
-      "amount": 57.14,
-      "merchant": "CHEVRON WILSHIRE BLVD #973",
-      "description": "Gas"
+      "amount": 18.28,
+      "merchant": "METRO TAP RELOAD #973",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-09-18",
-      "amount": 1451.49,
+      "amount": 460.56,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-09-19",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-09-19",
-      "amount": 34.3,
+      "amount": 22.86,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
@@ -1492,7 +1596,7 @@
     {
       "type": "purchase",
       "date": "2026-09-21",
-      "amount": 63.31,
+      "amount": 44.92,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },
@@ -1506,36 +1610,36 @@
     {
       "type": "purchase",
       "date": "2026-09-23",
-      "amount": 32.79,
+      "amount": 21.72,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-28",
-      "amount": 11.46,
-      "merchant": "Espresso Profeta",
-      "description": "Coffee"
+      "amount": 32.92,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-10-01",
-      "amount": 68.31,
+      "amount": 45.7,
       "merchant": "Ralphs Westwood",
       "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-10-02",
-      "amount": 1491.69,
+      "amount": 762.32,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-10-02",
-      "amount": 1650.0,
-      "merchant": "Strathmore Apartments",
-      "description": "Rent (shared apt)"
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
@@ -1547,21 +1651,21 @@
     {
       "type": "purchase",
       "date": "2026-10-03",
-      "amount": 22.31,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
+      "amount": 3.46,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-10-06",
-      "amount": 27.36,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 4.47,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2026-10-09",
-      "amount": 82.55,
+      "amount": 56.0,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
@@ -1588,28 +1692,28 @@
     {
       "type": "purchase",
       "date": "2026-10-11",
-      "amount": 52.68,
-      "merchant": "CHEVRON WILSHIRE BLVD #973",
-      "description": "Gas"
+      "amount": 15.61,
+      "merchant": "METRO TAP RELOAD #973",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-10-13",
-      "amount": 10.31,
-      "merchant": "ESPRESSO PROFETA #850",
-      "description": "Coffee"
+      "amount": 28.5,
+      "merchant": "WESTWOOD BIKE SHOP #850",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
       "date": "2026-10-15",
-      "amount": 9.88,
-      "merchant": "POS DEBIT ESPRESSO PROFETA",
-      "description": "Coffee"
+      "amount": 26.82,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "deposit",
       "date": "2026-10-16",
-      "amount": 1487.9,
+      "amount": 757.25,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
@@ -1622,28 +1726,28 @@
     {
       "type": "purchase",
       "date": "2026-10-18",
-      "amount": 50.0,
+      "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-10-18",
-      "amount": 46.45,
-      "merchant": "Chevron Wilshire Blvd",
-      "description": "Gas"
+      "amount": 11.87,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-10-22",
-      "amount": 54.09,
+      "amount": 37.9,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-10-24",
-      "amount": 40.11,
+      "amount": 27.28,
       "merchant": "TRADER JOE'S WESTWOOD #60",
       "description": "Groceries"
     },

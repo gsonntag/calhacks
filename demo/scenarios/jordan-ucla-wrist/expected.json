@@ -4,7 +4,7 @@
   "generator_version": 2,
   "seed": 1106,
   "as_of": "2026-10-25",
-  "story": "Jordan, uninsured, fell off a bike and broke a wrist (non-displaced distal radius fracture), seen in Ronald Reagan UCLA's emergency department (real UCLA prices): X-rays before and after the splint, an IV push for pain. Single, Westwood resident, about 240% of the poverty line. No billing errors: UCLA's own policy gives uninsured patients at or below 400% FPL 100% charity care, so the bill goes to $0.",
+  "story": "Jordan, 20, a UCLA junior, came off his bike on Bruin Walk and broke his wrist: a non-displaced distal radius fracture. Ronald Reagan UCLA's emergency department X-rayed it, splinted it and gave a pain shot (real UCLA prices). He has a student health plan and works about 20 hours a week at a coffee shop, so his paychecks drop while he can't work: a week of sick pay, then light duty. About 120% of the poverty line. He got overcharged: the bill ignores his insurance, charges the wrist X-ray twice and prices the splint above UCLA's own posted charge. Once fixed, his share plus his cash follow-up care is over 10% of his income (take-home or gross), so UCLA's policy writes it off: $0.",
   "real": {
     "hospital_id": "ucla-reagan",
     "hospital": "Ronald Reagan UCLA Medical Center",
@@ -54,12 +54,43 @@
   },
   "synthetic": [
     "patient",
-    "no insurer (uninsured)",
+    "insurer and insurance terms",
     "bank history",
     "account and claim numbers",
     "the planted errors"
   ],
-  "planted_errors": [],
+  "planted_errors": [
+    {
+      "type": "duplicate_line",
+      "what": "Line 3 repeats line 2 (73110 HB WRIST 3+ VIEWS, $490.00)",
+      "effect_on_amount_owed": -490.0,
+      "lines": [
+        2,
+        3
+      ],
+      "code": "73110",
+      "amount": 490.0,
+      "eob_remark": "insurer denied line 3 as a duplicate"
+    },
+    {
+      "type": "price_above_posted",
+      "what": "Line 4 (29125 HB SPLINT APPLY SHORT ARM STATIC) billed $1,460.00; the hospital's own posted gross charge is $460.00",
+      "effect_on_amount_owed": -1000.0,
+      "line": 4,
+      "code": "29125",
+      "billed": 1460.0,
+      "posted": 460.0,
+      "overcharge": 1000.0,
+      "price_source": "https://www.uclahealth.org/sites/default/files/cms-hpt/956006143_ronald-reagan-ucla-medical-center_standardcharges.json"
+    },
+    {
+      "type": "insurance_not_applied",
+      "what": "The bill asks for full charges; the EOB says her share is $1,690.00",
+      "effect_on_amount_owed": -1810.0,
+      "eob_claim": "C-2026-0812-57304",
+      "correct_charges": 3500.0
+    }
+  ],
   "bill_lines": [
     {
       "line": 1,
@@ -82,13 +113,13 @@
     {
       "line": 2,
       "code": "73110",
-      "units": 2,
+      "units": 1,
       "description_from_file": "HB WRIST 3+ VIEWS",
       "common_name": "X-ray wrist, 3+ views",
       "setting": "outpatient",
       "posted_gross_per_unit": 490.0,
-      "posted_gross": 980.0,
-      "billed": 980.0,
+      "posted_gross": 490.0,
+      "billed": 490.0,
       "planted_error": null,
       "duplicate_of_line": null,
       "negotiated_median_of_payers": 343.0,
@@ -100,6 +131,25 @@
     },
     {
       "line": 3,
+      "code": "73110",
+      "units": 1,
+      "description_from_file": "HB WRIST 3+ VIEWS",
+      "common_name": "X-ray wrist, 3+ views",
+      "setting": "outpatient",
+      "posted_gross_per_unit": 490.0,
+      "posted_gross": 490.0,
+      "billed": 490.0,
+      "planted_error": "duplicate_line",
+      "duplicate_of_line": 2,
+      "negotiated_median_of_payers": 343.0,
+      "payer_dollar_rates": 115,
+      "file_notes": [
+        "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+        "File note: 0 remits to support allowed amounts"
+      ]
+    },
+    {
+      "line": 4,
       "code": "29125",
       "units": 1,
       "description_from_file": "HB SPLINT APPLY SHORT ARM STATIC",
@@ -107,8 +157,8 @@
       "setting": "outpatient",
       "posted_gross_per_unit": 460.0,
       "posted_gross": 460.0,
-      "billed": 460.0,
-      "planted_error": null,
+      "billed": 1460.0,
+      "planted_error": "price_above_posted",
       "duplicate_of_line": null,
       "negotiated_median_of_payers": 322.0,
       "payer_dollar_rates": 115,
@@ -118,76 +168,109 @@
       ]
     },
     {
-      "line": 4,
-      "code": "96374",
+      "line": 5,
+      "code": "96372",
       "units": 1,
-      "description_from_file": "HB NONCHEMO IV PUSH SINGLE INITIAL",
-      "common_name": "IV push, single or first drug",
+      "description_from_file": "HB NONCHEMO IM /SUBQ INJECTION EACH",
+      "common_name": "Injection under skin or into muscle",
       "setting": "outpatient",
-      "posted_gross_per_unit": 840.0,
-      "posted_gross": 840.0,
-      "billed": 840.0,
+      "posted_gross_per_unit": 130.0,
+      "posted_gross": 130.0,
+      "billed": 130.0,
       "planted_error": null,
       "duplicate_of_line": null,
-      "negotiated_median_of_payers": 588.0,
+      "negotiated_median_of_payers": 91.0,
       "payer_dollar_rates": 124,
       "file_notes": [
         "File note: 0 remits to support allowed amounts"
       ]
     }
   ],
-  "eob_basis": null,
+  "eob_basis": {
+    "insurer": "Sunline Student Health Plan (fictional)",
+    "allowed_statistic": "median of the payer-specific dollar rates the hospital's file lists for the code (price table field `negotiated_median_of_payers`) x billed units",
+    "fallback_statistic": "the file lists no payer rate for this code: estimated as gross x this hospital's median (payer median / gross) ratio across every code in its table that has both",
+    "hospital_ratio": 0.7,
+    "lines_using_fallback": [],
+    "allowed_never_exceeds": "the line's posted gross charge",
+    "terms": {
+      "deductible_remaining": 1500.0,
+      "coinsurance_pct": 20,
+      "oop_max_remaining": 3500.0
+    },
+    "order": "deductible first, then coinsurance on the rest, line by line in bill order, capped at the out-of-pocket max; coinsurance rounded half up to the cent per line"
+  },
   "totals": {
-    "total_charges": 4700.0,
-    "correct_charges": 4700.0,
+    "total_charges": 4990.0,
+    "correct_charges": 3500.0,
     "insurance_adjustments_on_bill": 0.0,
     "patient_payments_on_bill": 0.0,
-    "amount_due": 4700.0,
-    "allowed": null,
-    "plan_paid": null,
-    "patient_responsibility": 4700.0,
+    "amount_due": 4990.0,
+    "allowed": 2450.0,
+    "plan_paid": 760.0,
+    "patient_responsibility": 1690.0,
     "paid_uncredited": 0.0,
     "paid_total": 0.0
   },
   "waterfall": {
     "start": {
       "label": "Hospital says you owe",
-      "amount": 4700.0
+      "amount": 4990.0
     },
-    "steps": [],
-    "owed_before_discount": 4700.0
+    "steps": [
+      {
+        "error": "duplicate_line",
+        "label": "Duplicated line removed",
+        "amount": -490.0
+      },
+      {
+        "error": "price_above_posted",
+        "label": "Line charged above the hospital's posted price",
+        "amount": -1000.0
+      },
+      {
+        "error": "insurance_not_applied",
+        "label": "Insurance applied (EOB patient responsibility)",
+        "amount": -1810.0
+      }
+    ],
+    "owed_before_discount": 1690.0
   },
   "income": {
-    "annual": 38405.81,
-    "monthly": 3200.48,
-    "source": "6 Nessie payroll deposits, paid every two weeks (avg $1,477 x 26); take-home pay",
+    "annual": 15192.06,
+    "monthly": 1266.0,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $584 x 26); take-home pay",
     "deposits_counted": 6,
     "basis": "take-home",
-    "gross_annual_est": 48007.26,
-    "bills_monthly": 2308.08,
-    "bills_source": "48 regular Nessie payments in the last 90 days (ATM WITHDRAWAL LOS ANGELES CA, Amazon Marketplace, CHEVRON WILSHIRE BLVD #973, Chevron Wilshire Blvd…)"
+    "gross_annual_est": 18990.07,
+    "bills_monthly": 1676.16,
+    "bills_source": "53 regular Nessie payments in the last 90 days (ATM WITHDRAWAL LOS ANGELES CA, Amazon Marketplace, CVS/PHARMACY #9180, Landfair Apartments…)"
   },
   "medical_spending": {
     "since": "2025-10-25",
-    "bank_total": 38.48,
-    "this_bill": 0.0,
-    "out_of_pocket": 38.48,
+    "bank_total": 569.47,
+    "this_bill": 1690.0,
+    "out_of_pocket": 2259.47,
     "txn_ids": [
       "mirror-081",
-      "mirror-181"
+      "mirror-181",
+      "mirror-185",
+      "mirror-186",
+      "mirror-204",
+      "mirror-206"
     ],
     "discount_without_bank": 100.0,
     "bank_decides_eligibility": false
   },
   "discount": {
-    "fpl_pct": 240.6,
+    "fpl_pct": 95.2,
     "fpl_amount": 15960,
     "fpl_year": 2026,
     "household_size": 1,
-    "insured": false,
-    "oop_pct_income": 0.1,
+    "insured": true,
+    "oop_pct_income": 14.9,
     "discount_pct": 100.0,
-    "tier_quote": "Self-Pay Patients with Patient's Family incomes not exceeding 400% of the FPL and who reside in the Hospital's primary service area as defined in Appendix 1 may be eligible for a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
+    "tier_quote": "High Medical Cost Patients with Patient's Family incomes not exceeding 400% of the FPL, who reside in the Hospital's primary service area as defined in Appendix 1, may be extended a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
     "at_estimated_gross": null
   },
   "settle": {
@@ -212,41 +295,53 @@
     "reason": "nothing owed"
   },
   "finance_reconcile": {
-    "billed_due": 4700.0,
-    "patient_responsibility": 4700.0,
-    "insurance_adjustment": 0.0,
+    "billed_due": 4990.0,
+    "patient_responsibility": 1690.0,
+    "insurance_adjustment": 3300.0,
     "paid": 0.0,
-    "owed": 4700.0,
-    "overbilled_by": 0.0,
+    "owed": 1690.0,
+    "overbilled_by": 3300.0,
     "payment_txn_ids": [],
     "duplicate_txn_ids": []
   },
   "findings": [
     {
+      "id": "duplicate_line",
+      "agent": "nessie",
+      "title": "73110 billed twice",
+      "money": 490.0,
+      "proof": "bill lines 2 and 3"
+    },
+    {
+      "id": "price_above_posted",
+      "agent": "bright_data",
+      "title": "29125 charged above the hospital's posted price",
+      "money": 1000.0,
+      "overcharge": 1000.0,
+      "proof": "bill line 4 $1,460.00 vs posted $460.00 (Ronald Reagan UCLA Medical Center price file, 2026-03-29)"
+    },
+    {
+      "id": "insurance_not_applied",
+      "agent": "nessie",
+      "title": "Insurance wasn't applied",
+      "money": 1810.0,
+      "proof": "EOB claim C-2026-0812-57304: patient responsibility $1,690.00",
+      "note": "Excludes the duplicate line and overcharge, reported separately. The app's current auditor reports amount_due - responsibility as one number ($3,300.00)."
+    },
+    {
       "id": "discount",
       "agent": "bright_data",
       "title": "Free care under their policy",
-      "money": 4700.0,
-      "quote": "Self-Pay Patients with Patient's Family incomes not exceeding 400% of the FPL and who reside in the Hospital's primary service area as defined in Appendix 1 may be eligible for a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
+      "money": 1690.0,
+      "quote": "High Medical Cost Patients with Patient's Family incomes not exceeding 400% of the FPL, who reside in the Hospital's primary service area as defined in Appendix 1, may be extended a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
       "source": "https://www.uclahealth.org/sites/default/files/documents/financial-assistance-policy-hs5310.pdf?f=1b1b90f9"
     }
   ],
   "must_not_report": [
     {
-      "what": "a duplicate line on the bill",
-      "why": "every bill line is distinct"
-    },
-    {
-      "what": "a line above the posted price",
-      "why": "every line equals the posted gross charge"
-    },
-    {
       "what": "a duplicate bank charge",
       "why": "none planted; generator checked find_duplicates"
     }
   ],
-  "app_notes": [
-    "Uninsured: case.json has \"eob\": {}. finance.reconcile here was given a self-pay pseudo-EOB whose patient_responsibility is the corrected charges. The app's Nessie agent (agents/auditor.py) reads eob['patient_responsibility'] directly, so it cannot run this case until it handles a missing EOB.",
-    "Not modeled: California caps charges for uninsured patients at or under 400% FPL at the greater of Medicare or Medi-Cal (HSC 127405(d)); a real audit could argue more off."
-  ]
+  "app_notes": []
 }
