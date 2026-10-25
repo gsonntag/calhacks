@@ -1,5 +1,7 @@
 """The admin key for routes that place a call, spend API credits or wipe state.
 
+Reading a case made from uploaded documents needs it too (can_read); the built-in sample cases stay open.
+
 The browser sends it as the X-Remy-Key header (web/auth.js: opened once with ?key=..., kept in
 localStorage). With REMY_ADMIN_TOKEN unset (local development), these routes only answer requests made
 directly on this machine: a tunnel (cloudflared, ngrok) also connects from localhost, but it adds forwarding
@@ -42,6 +44,19 @@ def require_admin(request: Request) -> None:
 
 
 ADMIN = [Depends(require_admin)]
+
+
+def can_read(conn: HTTPConnection, case: dict | None) -> bool:
+    """A built-in sample case (started without patient documents) is open to anyone, so demo links work. A
+    case made from uploaded documents holds a real patient's name, DOB, IDs and transcripts: key only."""
+    if case and case.get("sample"):
+        return True
+    return ws_allowed(conn) if conn.scope["type"] == "websocket" else allowed(conn)
+
+
+def require_read(request: Request, case: dict | None) -> None:
+    if not can_read(request, case):
+        raise HTTPException(401, "admin key required", headers={"X-Remy-Auth": "required"})
 
 
 def startup_warning() -> str | None:

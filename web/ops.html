@@ -311,7 +311,7 @@ function handle(e) {
 }
 
 function connect() {
-  const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}`);
+  const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}${window.remyKeyQuery ? remyKeyQuery() : ''}`);
   ws.onmessage = (m) => handle(JSON.parse(m.data));
   ws.onclose = () => setTimeout(connect, 1500);
   connect.ws = ws;

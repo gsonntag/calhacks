@@ -107,8 +107,8 @@ async def sample(line: Line):
 
 @router.post("/api/voices/normalize")
 async def normalize(line: Line):
-    v = voices.resolve(line.voice_id)
-    return {"text": line.text, "spoken": pronounce.normalize(line.text, v.language), "voice": v.name}
+    v, text = voices.resolve(line.voice_id), line.text[:500]  # open route: same cap as /api/voices/sample
+    return {"text": text, "spoken": pronounce.normalize(text, v.language), "voice": v.name}
 
 
 class DeskTurn(BaseModel):

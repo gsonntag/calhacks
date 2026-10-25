@@ -1591,7 +1591,7 @@ function follow(id) {
   const m = blankModel();
   if (!state.models[id]) state.models[id] = m;  // a reconnect keeps showing the old model until the new one has events
   const feed = liveFeed(id, m);
-  const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}`);
+  const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}${window.remyKeyQuery ? remyKeyQuery() : ''}`);
   ws.onmessage = (msg) => feed(JSON.parse(msg.data));
   ws.onclose = () => {
     if (state.socks[id] !== ws) return;
