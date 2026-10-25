@@ -82,6 +82,16 @@ def call_goals(rec: dict, elig: dict, policy: dict) -> list[str]:
     return goals
 
 
+def _ask_kinds(rec: dict, elig: dict, policy: dict) -> list[str]:
+    """The ask kinds call_goals() covers, for a brief built without an approved plan (decide.KINDS names)."""
+    kinds = ["insurance"] * (rec["billed_due"] > rec["patient_responsibility"]) + ["payment"] * bool(rec["paid"])
+    if elig["discount_pct"]:
+        kinds += ["discount"] + ["refund"] * bool(policy.get("refund"))
+    elif (policy.get("plan") or {}).get("months") and policy["target"] > 0:
+        kinds.append("plan")
+    return kinds + ["hold", "case_number"]
+
+
 def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None) -> dict:
     """plan: the approved plan version (agents/decide.py). Its asks are the goals, in its order, and its money
     replaces the Review's (corrections and strategy changes are already applied)."""
@@ -89,6 +99,7 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
     eob = case.get("eob") or {}  # empty for uninsured patients
     brief = {
         "goals": call_goals(rec, elig, policy),
+        "ask_kinds": _ask_kinds(rec, elig, policy),
         "patient": f"{case['patient']['first_name']} {case['patient']['last_name']}",
         "hospital": case["hospital"]["name"],
         "account_number": case["bill"]["account_number"],
@@ -118,10 +129,13 @@ def build_brief(case: dict, audit: dict, policy: dict, plan: dict | None = None)
     if plan:
         m, plan_ask = plan["money"], next((a for a in plan["asks"] if a["kind"] == "plan"), None)
         kept = {k.removeprefix("auditor:paid-") for a in plan["asks"] for k in a["findings"] if k.startswith("auditor:paid-")}
-        brief.update({"goals": [a["goal"] for a in plan["asks"]], "plan_version": plan["v"], "correct_balance": m["owed"],
+        brief.update({"goals": [a["goal"] for a in plan["asks"]], "ask_kinds": [a["kind"] for a in plan["asks"]],
+                      "plan_version": plan["v"], "correct_balance": m["owed"],
                       "balance_after_assistance": m["target"], "refund_due_after_assistance": m["refund"],
                       "proposed_payment_plan": plan_ask["plan"] if plan_ask else None,
                       "payments_made": [p for p, raw in zip(brief["payments_made"], rec["payments"]) if str(raw["id"]) in kept]})
+    if "discount" not in brief["ask_kinds"]:  # no discount ask: nothing the caller could read as "the patient qualifies"
+        brief.update(income_pct_fpl=None, policy_tier=None, policy_quotes=[])
     return brief
 
 
@@ -185,29 +199,55 @@ class CallSession:
     def _system(self) -> str:
         return SYSTEM + "\nCASE BRIEF (JSON):\n" + json.dumps(self.brief, indent=1)
 
-    def _scripted(self, rep_said: str | None) -> list[str]:
-        """Offline fallback (no Claude key): walks the goals in order with lines built from the brief."""
+    def _kinds(self) -> list[str]:
+        """The approved plan's ask kinds; a hand-made brief without them gets only what its numbers show."""
         b = self.brief
+        if b.get("ask_kinds") is not None:
+            return b["ask_kinds"]
+        ins = b.get("insurer") and b.get("hospital_says_due", 0) > b.get("eob_patient_responsibility", 0)
+        return ["insurance"] * bool(ins) + ["payment"] * bool(b.get("payments_made")) + ["hold", "case_number"]
+
+    def _scripted(self, rep_said: str | None) -> list[str]:
+        """Offline fallback (no Claude key): one line per ask in the approved plan, built from the brief. Never
+        says anything the plan doesn't ask for. The last three lines are always: the hold ask (with the discount
+        or plan ask when there is one), the case-number ask, goodbye."""
+        b, kinds = self.brief, self._kinds()
         if b.get("call_type") == "follow_up":
             return self._scripted_follow_up()
-        pay = b["payments_made"][0] if b["payments_made"] else None
-        return [
-            f"Hi, this is an automated assistant calling on behalf of {b['patient']}, with their authorization, "
-            f"about account {b['account_number']}. {_follow_up(b)}"
-            "The balance looks incorrect and I'd like to get it corrected.",
-            (f"Your statement shows ${b['hospital_says_due']:,.0f} due, but {b['insurer']}'s EOB for claim "
-             f"{b['claim_number']} lists patient responsibility of ${b['eob_patient_responsibility']:,.0f}. "
-             "Could you apply the insurance adjustment?" if b["insurer"] else
-             f"Your statement shows ${b['hospital_says_due']:,.0f} due. The patient is uninsured."),
-            (f"There's also a ${pay['amount']:,.0f} payment made on {pay['date']} that should be on the account. "
-             "With both applied the balance is "
-             f"${b['correct_balance']:,.0f}." if pay else "Could you confirm the corrected balance?"),
-            f"The patient's income is about {b['income_pct_fpl']:.0f} percent of the poverty line, which qualifies "
-            "under your own financial assistance policy. Can you open a financial assistance review and hold the "
-            "account from collections while it's pending?",
-            "Thank you. Could I get a case or reference number for this?",
-            "Thanks so much for your help today. Goodbye.",
-        ]
+        pay = b["payments_made"][0] if b["payments_made"] and "payment" in kinds else None
+        why = ("The balance looks incorrect and I'd like to get it corrected." if {"insurance", "payment"} & set(kinds)
+               else "I'd like to request a financial assistance review." if "discount" in kinds
+               else "I'd like to set up a payment plan." if "plan" in kinds else "I'd like to go over the balance.")
+        lines = [f"Hi, this is an automated assistant calling on behalf of {b['patient']}, with their authorization, "
+                 f"about account {b['account_number']}. {_follow_up(b)}{why}",
+                 (f"Your statement shows ${b['hospital_says_due']:,.0f} due, but {b['insurer']}'s EOB for claim "
+                  f"{b['claim_number']} lists patient responsibility of ${b['eob_patient_responsibility']:,.0f}. "
+                  "Could you apply the insurance adjustment?" if "insurance" in kinds else
+                  f"Your statement shows ${b['hospital_says_due']:,.0f} due."
+                  + ("" if b.get("insurer") else " The patient is uninsured."))]
+        if pay:
+            lines.append(f"There's also a ${pay['amount']:,.0f} payment made on {pay['date']} that should be on the "
+                         f"account. With {'both' if 'insurance' in kinds else 'it'} applied the balance is "
+                         f"${b['correct_balance']:,.0f}.")
+        elif "insurance" in kinds:
+            lines.append("Could you confirm the corrected balance?")
+        hold = "hold the account from collections while it's pending?"
+        plan = b.get("proposed_payment_plan") if "plan" in kinds else None
+        if "discount" in kinds:
+            fpl = (f"The patient's income is about {b['income_pct_fpl']:.0f} percent of the poverty line, which "
+                   if b.get("income_pct_fpl") is not None else "The patient ")
+            refund = (f" and refund the ${b['refund_due_after_assistance']:,.0f} already paid once it's applied,"
+                      if "refund" in kinds and b.get("refund_due_after_assistance") else "")
+            lines.append(f"{fpl}qualifies under your own financial assistance policy. Can you open a financial "
+                         f"assistance review{refund} and {hold}")
+        elif plan:
+            lines.append(f"Once it's corrected to ${b['balance_after_assistance']:,.0f}, could you set up an "
+                         f"interest-free payment plan of {plan['months']} monthly payments of ${plan['monthly']:,.0f}, "
+                         f"and {hold.replace('pending', 'corrected')}")
+        else:
+            lines.append("Could you place the account on hold so it isn't sent to collections while this is corrected?")
+        return lines + ["Thank you. Could I get a case or reference number for this?",
+                        "Thanks so much for your help today. Goodbye."]
 
     async def turn(self, rep_said: str | None) -> str:
         """rep_said=None means the call just connected and BillBack speaks first."""
@@ -317,6 +357,13 @@ class CallSession:
         return lines + ["Could you keep the account on hold until the corrected statement goes out?",
                         "Thanks so much for your help today. Goodbye."]
 
+    def _held(self) -> dict:
+        """The offline outcome: the hold is always asked; an assistance review only when the plan asks for one."""
+        if "discount" in self._kinds():
+            return {"account_on_hold": True, "assistance_review_opened": True,
+                    "next_step": "Hospital reviewing financial assistance"}
+        return {"account_on_hold": True, "next_step": "Hospital correcting the balance"}
+
     async def _scripted_turn(self, rep_said: str | None) -> str:
         """Offline: the outcome follows the script step, so it never depends on how the rep phrases things."""
         lines = self._scripted(rep_said)
@@ -324,21 +371,18 @@ class CallSession:
         if self.brief.get("call_type") == "follow_up":
             if rep_said and step == len(lines) - 1:  # replying to the hold ask
                 await self.reg.call("record_outcome", {
-                    "account_on_hold": True, "assistance_review_opened": True,
-                    "case_number": _last_call(self.brief).get("case_number"),
+                    **self._held(), "case_number": _last_call(self.brief).get("case_number"),
                     "next_step": "Corrected statement pending"})
-        elif rep_said and step >= 4:  # replying to the assistance ask (4) or the case-number ask (5)
-            fields = {"account_on_hold": True, "assistance_review_opened": True,
-                      "next_step": "Hospital reviewing financial assistance"}
-            if step == 5:
+        elif rep_said and len(lines) >= 4 and step >= len(lines) - 2:  # replying to the hold ask or the case-number ask
+            fields = self._held()
+            if step == len(lines) - 1:
                 fields["case_number"] = _case_number(rep_said)
             await self.reg.call("record_outcome", fields)
         say = lines[min(step, len(lines) - 1)]
         self.messages += [{"role": "user", "content": rep_said or ""}, {"role": "assistant", "content": say}]
         if step >= len(lines) - 1:
-            if not self.outcome.get("assistance_review_opened"):
-                await self.reg.call("record_outcome", {"account_on_hold": True, "assistance_review_opened": True,
-                                                       "next_step": "Hospital reviewing financial assistance"})
+            if not self.outcome.get("account_on_hold"):
+                await self.reg.call("record_outcome", self._held())
             await self.reg.call("end_call", {"reason": "done"})
         bus.emit(self.case_id, "transcript", "caller", speaker="billback", text=say)
         return say
