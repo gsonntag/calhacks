@@ -194,9 +194,12 @@
   .now-track li::before { content: ""; height: 4px; border-radius: 2px; background: var(--md-outline-variant); transition: background var(--md-dur-m) var(--md-ease); }
   .now-track li.done::before { background: var(--md-primary); }
   .now-track li.active { color: var(--md-on-surface); font-weight: 500; }
-  .now-track li.active::before { background: linear-gradient(90deg, var(--md-primary) 0 40%, var(--md-outline-variant) 40%); background-size: 250% 100%; animation: nowpulse 1.6s linear infinite; }
-  @keyframes nowpulse { from { background-position: 100% 0; } to { background-position: 0 0; } }
-  @media (prefers-reduced-motion: reduce) { .now-track li.active::before, .now-dot.live { animation: none; } .now-track li.active::before { background: var(--md-primary); opacity: .6; } }
+  /* the current step fills to --p (set by paintTrack from how far along it is); red where it stopped on an error */
+  @property --p { syntax: '<percentage>'; inherits: true; initial-value: 0%; }
+  .now-track li.active { transition: --p .8s var(--md-ease); }
+  .now-track li.active::before { background: linear-gradient(90deg, var(--md-primary) var(--p), var(--md-outline-variant) var(--p)); }
+  .now-track li.active.error::before { background: linear-gradient(90deg, var(--md-error) var(--p), var(--md-outline-variant) var(--p)); }
+  @media (prefers-reduced-motion: reduce) { .now-dot.live { animation: none; } .now-track li.active { transition: none; } }
   .now-ctl { display: flex; align-items: center; gap: 4px; margin-left: auto; }
   .now-ctl .m3-btn { min-height: 32px; padding: 0 12px; white-space: nowrap; }
   .now-ctl .m3-select { width: auto; max-width: 120px; min-width: 0; min-height: 32px; padding-top: 0; padding-bottom: 0; }
@@ -1277,9 +1280,36 @@ function renderNow(m, ds, tab, a) {
   setText($('nowOwe'), now != null && (m.review || ds > 1) ? money(now) : 'checking…');
   $('nowOwe').classList.toggle('pending', !(now != null && (m.review || ds > 1)));
   setText($('nowSave'), $('statOweSupport').textContent === 'Checking…' ? '' : $('statOweSupport').textContent);
+  paintTrack(m, ds);
+}
+
+// How full the current step's bar is (0-1): what the agents have reported where it can be counted, plus a slow
+// creep with time so a step with nothing to count still moves. It never reaches the end before the step does,
+// never goes backwards, holds while the step waits on you, and freezes where it stopped on an error.
+const creep = (t, tau) => 1 - Math.exp(-t / tau);
+function checksDone(m, k, expect) {
+  const st = m.steps[k] || [];
+  return (m.agent[k] || {}).done ? 1 : st.filter((s) => s.status !== 'running').length / Math.max(expect, st.length + 1);
+}
+function stageProgress(m, ds, t) {
+  const ask = (who) => m.approvals[who] && m.approvals[who].resolved === undefined;
+  switch (ds) {
+    case 0: return Math.max((m.agent.intake || {}).done ? 0.6 : 0, 0.9 * creep(t, 4));  // intake takes ~4s, then the case opens
+    case 1: { const ks = reviewAgents(m); return Math.max(ks.reduce((s, k) => s + checksDone(m, k, 7), 0) / ks.length, 0.3 * creep(t, 3)); }
+    case 2: return ask('caller') ? 0.85 : 0.85 * Math.max(checksDone(m, decKey(m.round), 6), 0.3 * creep(t, 2));
+    case 3: return Object.keys(m.outcome || {}).length ? 0.9 : m.call ? 0.1 + 0.75 * creep(t, 60) : 0.1 * creep(t, 5);
+    default: return m.planDecided != null ? 0.9 : ask('planner') ? 0.6 : 0.6 * creep(t, 4);
+  }
+}
+function paintTrack(m, ds) {
+  const now = Date.now() / 1000;
+  if (!m.prog || m.prog.ds !== ds) m.prog = { ds, t: now, p: 0 };
+  if (!m.error) m.prog.p = Math.max(m.prog.p, Math.min(0.95, stageProgress(m, ds, now - m.prog.t)));
   [...$('nowTrack').children].forEach((li, i) => {
     li.classList.toggle('done', !!m.done || i < ds);
     li.classList.toggle('active', !m.done && i === ds);
+    li.classList.toggle('error', !!m.error && i === ds);
+    if (i === ds) li.style.setProperty('--p', Math.round(100 * (m.error ? Math.max(m.prog.p, 0.15) : m.prog.p)) + '%');
   });
 }
 
@@ -1598,7 +1628,11 @@ $('nextCallBtn').addEventListener('click', async () => {
 $('listenBtn').addEventListener('click', () => { const m = model(state.active); m.listening = !m.listening; render(); });
 window.addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
-setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.active]; if (m && m.call && !m.callEnded) render(); }, 500);
+setInterval(() => {
+  state.now = Date.now() / 1000; const m = state.models[state.active];
+  if (m && m.call && !m.callEnded) render();
+  else if (m && m.prog && !m.done && !m.error) paintTrack(m, m.prog.ds);  // keep the current step's bar creeping
+}, 500);
 setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);
 
 // ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5][&jump=call] ----------
