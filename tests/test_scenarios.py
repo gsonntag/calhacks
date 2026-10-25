@@ -82,7 +82,7 @@ def test_finance_reproduces_expected(name):
     case, exp = load(name)
     txns = LocalMirror(case).txns
     assert txns == scenarios.mirror_ids(case["transactions"])  # same ids the app's offline bank assigns
-    insured = bool(case["eob"])
+    insured = billcheck.insured(case)
     eob = case["eob"] if insured else {"patient_responsibility": exp["totals"]["patient_responsibility"],
                                        "claim_number": "self-pay"}
     rec = finance.reconcile(case["bill"], eob, txns)
@@ -167,7 +167,7 @@ async def test_app_agents_reach_expected_balance(name):
     assert pol["target"] == exp["correct"]["balance"]
     assert pol["refund"] == exp["correct"]["refund"]
     assert pol["eligibility"]["discount_pct"] == exp["correct"]["discount_pct"]
-    assert pol["eligibility"]["insured"] is exp["discount"]["insured"] is bool(case["eob"])
+    assert pol["eligibility"]["insured"] is exp["discount"]["insured"] is billcheck.insured(case)
     assert (pol["plan"]["months"], pol["plan"]["monthly"]) == (exp["plan"]["months"], exp["plan"]["monthly"])
 
     # what the Nessie agent reported: exactly the missed payments expected.json lists, never credited ones

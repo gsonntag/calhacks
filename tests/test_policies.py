@@ -275,10 +275,10 @@ async def test_recheck_detects_change_only_when_content_changes(monkeypatch, tmp
 
 def test_same_bill_different_hospitals():
     rosa = {r["hospital_id"]: r for r in compare.compare(DB, "default")["results"]}
-    # Rosa: insured, 233% FPL, her $1,100 share is 3% of income. CPMC and UCSF write off insured patients'
+    # Rosa: insured, 228% FPL, her $1,100 share is 3% of income. CPMC and UCSF write off insured patients'
     # shares only above 10% of income, Chinese Hospital's free care is self-pay only, ZSFG has no tier: $600 everywhere
     assert rosa["sutter-cpmc"]["balance"] == 600 and rosa["sutter-cpmc"]["refund"] == 0
-    assert rosa["sutter-cpmc"]["fpl_pct"] == pytest.approx(232.6, abs=0.1)
+    assert rosa["sutter-cpmc"]["fpl_pct"] == pytest.approx(228.1, abs=0.1)
     assert rosa["sutter-cpmc"]["oop_pct_income"] == pytest.approx(3.0, abs=0.1)
     assert "not above 10%" in rosa["sutter-cpmc"]["why_not"]
     assert rosa["chinese-hospital"]["balance"] == 600 and rosa["chinese-hospital"]["discount_pct"] == 0

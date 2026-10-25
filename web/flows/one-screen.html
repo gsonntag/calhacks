@@ -130,7 +130,7 @@ async function run(names) {
   await count(600, 1400); $('num').classList.add('green');
   await wait(1400); say('After what you already paid', 'Also spotted: Berkeley Urgent Care charged you <b>$75 twice</b>. That one is separate; we drafted a dispute for your bank.');
   agent('bank', 'done'); agent('policy', 'work');
-  await wait(700); say('Under Sutter\'s own policy', 'Paychecks: $1,400 every two weeks = $36,400/yr, 233% of the poverty line. Not eligible for a write-off: it needs medical bills over 10% of income; yours are 3%. But Sutter\'s billing policy says <b>"All payment plans shall be interest-free."</b> So: 6 × $100/month, 0% interest.');
+  await wait(700); say('Under Sutter\'s own policy', 'Paychecks: $1,400 every two weeks = $36,400/yr, 228% of the poverty line. Not eligible for a write-off: it needs medical bills over 10% of income; yours are 3%. But Sutter\'s billing policy says <b>"All payment plans shall be interest-free."</b> So: 6 × $100/month, 0% interest.');
   await wait(2200);
   agent('policy', 'done'); agent('caller', 'work');
   $('call').classList.add('in');

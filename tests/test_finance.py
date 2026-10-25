@@ -45,7 +45,7 @@ def test_demo_income_fpl_and_discount(demo):
                                     finance.clean_tiers([{"max_fpl_pct": 200, "discount_pct": 100},
                                                          {"max_fpl_pct": 400, "discount_pct": 75}]))
     assert inc["annual"] == 1400 * 26  # biweekly pay annualized by frequency, not by the 90-day window
-    assert elig["fpl_pct"] == pytest.approx(232.6, abs=0.1)
+    assert elig["fpl_pct"] == pytest.approx(228.1, abs=0.1)
     assert elig["discount_pct"] == 75
     # her hospital's real policy (Sutter CPMC, from policydb/): insured, <= 400% FPL, but the write-off needs
     # out-of-pocket over 10% of income and her $1,100 share is 3% -> no discount; $600 left, on a plan
@@ -80,7 +80,7 @@ def test_freecare_scenario():
     elig = finance.charity_discount(inc["annual"], 3, stored_tiers("ucsf-health"),  # UCSF's real policy
                                     insured=True, out_of_pocket=c["eob"]["patient_responsibility"])
     assert rec["owed"] == 5600 and elig["discount_pct"] == 100
-    assert elig["fpl_pct"] == pytest.approx(174.0, abs=0.5) and elig["oop_pct_income"] == pytest.approx(12.1, abs=0.1)
+    assert elig["fpl_pct"] == pytest.approx(169.6, abs=0.5) and elig["oop_pct_income"] == pytest.approx(12.1, abs=0.1)
     assert finance.settle(rec["patient_responsibility"], rec["paid"], 100)["balance"] == 0
 
 
