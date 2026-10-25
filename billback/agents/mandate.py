@@ -166,6 +166,9 @@ _NOW = re.compile(r"\b(?:today|now|right now|over the phone|on this call)\b", re
 _CLAUSE = re.compile(r"[,;:]\s|[.!?]\s|[—–]|\bbut\b|\bthough\b", re.I)
 
 
+_ZIP4 = re.compile(r"(?<![\d\-])\d{5}-\d{4}(?![\d\-])")
+
+
 def _digits(s) -> str:
     return re.sub(r"\D", "", str(s or ""))
 
@@ -195,7 +198,7 @@ def screen(text: str, brief: dict, allowed=(), heard=()) -> tuple[str, list[dict
     ok = [_digits(brief.get(f)) for f in SHAREABLE.values() if f != "patient"]
     ok = [d for d in ok if len(d) >= 4]
     rep = [r for h in heard for r in _runs(h or "")]
-    for run in _runs(text):
+    for run in _runs(_ZIP4.sub(" ", text)):  # a ZIP+4 (94702-1234) is 9 digits but not an SSN (123-45-6789)
         if len(run) != 9 and not 13 <= len(run) <= 19 or any(run in d for d in ok):
             continue
         if len(run) != 9 and run in rep:  # reading back a long reference number the rep just gave

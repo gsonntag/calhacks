@@ -129,3 +129,12 @@ async def test_scripted_path_is_screened(monkeypatch):
     assert await s.turn(None) == mandate.SAY["pii"]
     assert s.messages[-1]["content"] == mandate.SAY["pii"]
     assert [e["offer"] for e in bus.history("sp4") if e["kind"] == "guardrail"] == ["speech"]
+
+
+def test_zip_plus_four_is_not_an_ssn():
+    brief = {"account_number": "CPMC-48213977"}
+    for line in ("The mailing address is 2210 Sacramento St, Berkeley, CA 94702-1234.",
+                 "Her ZIP code is 94702-1234."):
+        assert mandate.screen(line, brief)[1] == [], line
+    assert mandate.screen("Her number is 123-45-6789.", brief)[1]           # SSN shape still blocked
+    assert mandate.screen("It's 947021234.", brief)[1]                      # bare 9 digits: can't tell, blocked
