@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import auth, config, events, followups, llm, orchestrator
+from . import auth, caselist, config, events, followups, llm, orchestrator
 from .agents import caller, decide, intake
 from .auth import ADMIN
 from .integrations import cartesia
@@ -36,6 +36,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="BillBack", lifespan=lifespan)
 WEB = config.ROOT / "web"
 _tasks: set[asyncio.Task] = set()
+_case_tasks: dict[str, asyncio.Task] = {}  # the run (or follow-up call) working on each case, for delete
 
 CHAT_SYSTEM = """You are Billie, BillBack's assistant. BillBack fights incorrect or unaffordable hospital bills:
 it checks what was already paid, finds duplicate charges, looks up the hospital's own financial-assistance
@@ -66,6 +67,8 @@ def _launch(case: dict, coro=None) -> dict:
     t = asyncio.create_task(coro or orchestrator.run_case(case))
     _tasks.add(t)
     t.add_done_callback(_tasks.discard)
+    _case_tasks[case["id"]] = t
+    t.add_done_callback(lambda _: _case_tasks.get(case["id"]) is t and _case_tasks.pop(case["id"]))
     return case
 
 
@@ -219,16 +222,62 @@ async def start_case(files: list[UploadFile] = File(default=[]), scenario: str =
 
 @app.get("/api/cases")
 async def list_cases():
+    """Every case, with its step and attention (caselist.overview) for the case page's case switcher."""
     return [{"id": c["id"], "provider": c["bill"]["provider"], "amount_due": c["bill"]["amount_due"],
              "status": c["status"], "case_number": orchestrator.summary(c)["case_number"],
-             "next": orchestrator.next_action(c)} for c in orchestrator.cases.values()]
+             "next": orchestrator.next_action(c), **caselist.overview(c)} for c in orchestrator.cases.values()]
 
 
 @app.get("/api/dashboard")
 async def dashboard():
-    """Every case, newest first: balances, calls, follow-ups and the next action with its due date."""
-    rows = [orchestrator.summary(c) for c in orchestrator.cases.values()]
-    return sorted(rows, key=lambda r: r.get("created_at") or 0, reverse=True)
+    """Every case (archived ones flagged): balances, calls, follow-ups, the next action with its due date, and
+    the at-a-glance step and attention. Sorted needs you, running, waiting on the hospital, done; newest first."""
+    rows = [{**orchestrator.summary(c), **caselist.overview(c)} for c in orchestrator.cases.values()]
+    return sorted(rows, key=caselist.rank)
+
+
+# ---- archive / restore / delete (caselist.py): a running case or one that needs the patient asks first ----
+class Confirm(BaseModel):
+    confirm: bool = False
+
+
+def _guarded(fn):
+    try:
+        return fn()
+    except caselist.NeedsConfirm as e:
+        return JSONResponse({"error": str(e), "needs_confirm": True}, 409)
+    except caselist.Blocked as e:
+        return JSONResponse({"error": str(e), "blocked": True}, 409)
+
+
+@app.post("/api/cases/{case_id}/archive", dependencies=ADMIN)
+async def archive_case(case_id: str, c: Confirm | None = None):
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    return _guarded(lambda: caselist.archive(case, confirm=bool(c and c.confirm)))
+
+
+@app.post("/api/cases/{case_id}/restore", dependencies=ADMIN)
+async def restore_case(case_id: str):
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    return caselist.restore(case)
+
+
+@app.delete("/api/cases/{case_id}", dependencies=ADMIN)
+async def delete_case(case_id: str, confirm: bool = False):
+    """Delete for good. Blocked mid-call; a running case (or one waiting on the patient) needs ?confirm=true
+    and its run is cancelled first."""
+    case = _case_or_404(case_id)
+    if not case:
+        return JSONResponse({"error": "not found"}, 404)
+    out = _guarded(lambda: caselist.delete(case, _case_tasks.get(case_id), confirm=confirm))
+    if out is not None:
+        return out
+    _case_tasks.pop(case_id, None)
+    return {"ok": True}
 
 
 def _case_or_404(case_id: str) -> dict | None:
@@ -572,6 +621,7 @@ async def speak(s: Speak):
 async def reset():
     for t in list(_tasks):
         t.cancel()
+    _case_tasks.clear()
     orchestrator.cases.clear()
     caller.sessions.clear()
     orchestrator.calls_by_cartesia_id.clear()

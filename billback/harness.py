@@ -59,6 +59,14 @@ class ApprovalGate:
         fut.set_result(approved)
         return True
 
+    def forget(self, case_id: str) -> None:
+        """A deleted case: drop its open approvals (its run was cancelled, so nothing awaits them)."""
+        for aid in [a for a, r in self._requests.items() if r["case_id"] == case_id]:
+            self._requests.pop(aid, None)
+            fut = self._pending.pop(aid, None)
+            if fut is not None and not fut.done():
+                fut.cancel()
+
     def pending_for(self, case_id: str) -> list[dict]:
         return [r for r in self._requests.values() if r["case_id"] == case_id]
 

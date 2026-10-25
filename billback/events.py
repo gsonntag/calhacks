@@ -43,6 +43,10 @@ class EventBus:
     def reset(self) -> None:
         self._history.clear()
 
+    def forget(self, case_id: str) -> None:
+        """A deleted case: drop its in-memory history (the audit log on disk stays)."""
+        self._history.pop(case_id, None)
+
     def restore(self, case_id: str) -> None:
         """Reload a case's history from its audit log (after a restart)."""
         f = DATA_DIR / f"{case_id}.audit.jsonl"
@@ -85,3 +89,7 @@ def load_cases() -> list[dict]:
 def delete_cases() -> None:
     for f in _cases_dir().glob("*.json"):
         f.unlink(missing_ok=True)
+
+
+def delete_case(case_id: str) -> None:
+    (_cases_dir() / f"{case_id}.json").unlink(missing_ok=True)

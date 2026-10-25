@@ -99,6 +99,37 @@
     .ask-row .m3-btn { padding: 0 16px; }
   }
 </style>
+<style>
+  /* ---- cases at a glance (step, status, money), Active/Archived filter, archive/delete ---- */
+  .gl-status { flex: none; align-self: center; display: flex; gap: 6px; }
+  .gl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 10px; font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+  .gl-row .gl-line { flex: 1 1 200px; min-width: 0; color: var(--md-on-surface); }
+  .gl-row .gl-money { flex: none; font-variant-numeric: tabular-nums; font-weight: 500; color: var(--md-on-surface); }
+  .gl-row .gl-money .down { color: var(--st-money); }
+  .stages { list-style: none; margin: 0; padding: 0; display: inline-flex; align-items: center; gap: 3px; flex: none; }
+  .stages li { width: 18px; height: 6px; border-radius: 3px; background: var(--md-outline-variant); }
+  .stages li.done { background: var(--md-primary); }
+  .stages li.active { background: var(--st-info); animation: m3-pulse 1.4s var(--md-ease) infinite; }
+  .stages li.waiting { background: var(--st-warn); }
+  .stages li.hold { background: var(--md-outline); }
+  .stages li.failed { background: var(--md-error); }
+  .stage-name { flex: none; font-weight: 500; min-width: 72px; }
+  .case.needs { border-color: var(--st-warn); }
+  .case.archived .case-head { opacity: .8; }
+  .cases-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .cases-bar .counts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cases-empty { margin: 0; padding: 24px; text-align: center; color: var(--md-on-surface-variant); }
+  .manage { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid var(--md-outline-variant); }
+  .manage .del { color: var(--md-error); }
+  dialog.m3-dialog { border: 0; margin: 0; }
+  dialog.m3-dialog::backdrop { background: rgb(0 0 0 / .32); }
+  dialog.m3-dialog h2 { margin: 0 0 12px; }
+  dialog.m3-dialog p { margin: 0 0 8px; font: 400 14px/20px var(--md-font); }
+  dialog.m3-dialog .warnline { display: flex; gap: 8px; align-items: flex-start; color: var(--st-on-warn-container); background: var(--st-warn-container); padding: 10px 12px; border-radius: var(--md-shape-m); }
+  dialog.m3-dialog .row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+  @media (max-width: 560px) { .gl-status .m3-status { height: 24px; padding: 0 10px; font-size: 13px; } }
+  @media (prefers-reduced-motion: reduce) { .stages li.active { animation: none; } }
+</style>
 </head>
 <body>
 <header class="m3-top-app-bar">
@@ -114,8 +145,21 @@
     </div>
     <a class="m3-btn filled" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
   </div>
-  <h2 class="title-l section-title" id="casesTitle" hidden>All cases <span class="body-m muted">· most saved first</span></h2>
+  <h2 class="title-l section-title" id="casesTitle" hidden>All cases <span class="body-m muted">· needs you first</span></h2>
+  <!-- cases at a glance: Active / Archived filter and counts -->
+  <div class="cases-bar" id="casesBar" hidden>
+    <div class="m3-segmented" role="group" aria-label="Show"><button type="button" data-view="active" aria-pressed="true">Active</button><button type="button" data-view="archived" aria-pressed="false">Archived</button></div>
+    <div class="counts" id="casesCounts" aria-live="polite"></div>
+  </div>
+  <p class="cases-empty" id="casesEmpty" hidden></p>
   <div id="cases" aria-live="polite"></div>
+  <dialog class="m3-dialog" id="confirmBox" aria-labelledby="confirmTitle">
+    <form method="dialog">
+      <h2 class="title-l" id="confirmTitle"></h2>
+      <div id="confirmBody"></div>
+      <div class="row"><button type="submit" class="m3-btn text" id="confirmCancel" value="cancel">Cancel</button><button type="submit" class="m3-btn filled" id="confirmOk" value="ok"></button></div>
+    </form>
+  </dialog>
 </main>
 
 <script src="/auth.js"></script>
@@ -147,24 +191,49 @@ function when(n) {
   return `<span>${day(n.due)}</span>`;
 }
 
-/* needs the patient: a call or payment plan waiting for approval, or a follow-up past due; returns the quiet chip */
-function needsYou(c) {
-  if (c.status === 'awaiting_call_approval') return ['Approve the call', 'warn'];
-  if (c.needs_plan_ok) return ['Approve the plan', 'warn'];
-  if (c.next && c.next.overdue) return ['Overdue', 'warn'];
-  return null;
-}
+/* needs the patient (billback/caselist.py): plan or payment plan to approve, follow-up overdue, a failed step */
+const needsYou = (c) => c.attention === 'needs_you';
 
 const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0)) + (c.refund || 0);
 
-/* collapsed row: hospital and patient on the left, money saved on the right; everything else is one click away */
+/* collapsed row: hospital, patient and status; then the 5 steps, what's happening and the money (glanceHTML) */
 function headHTML(c) {
-  const saved = savedOf(c), flag = needsYou(c);
   return `<span class="ch-top">
-      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}${flag ? ` · <span class="m3-status ${flag[1]}">${esc(flag[0])}</span>` : ''}</span></span>
-      <span class="ch-saved ${saved ? '' : 'zero'}">${saved ? `<b>${money(saved)}</b><span>saved</span>` : '<span>Nothing saved yet</span>'}</span>
+      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}</span></span>
+      ${glanceStatus(c)}
       ${icon('expand_more', 'chev')}
-    </span>`;
+    </span>${glanceHTML(c)}`;
+}
+
+// ---- cases at a glance: step indicator, status, money (fields from billback/caselist.py) ----
+const STEP_NAMES = ['Read bill', 'Review', 'Plan', 'Call', 'Resolved'];
+const ATT = { needs_you: ['warn', 'priority_high'], running: ['info live', ''], waiting: ['', 'schedule'], done: ['success', 'check'] };
+const ATT_RANK = { needs_you: 0, running: 1, waiting: 2, done: 3 };
+
+function glanceStatus(c) {
+  const [cls, ic] = ATT[c.attention] || ['', ''];
+  return `<span class="gl-status">${c.archived ? '<span class="m3-status">Archived</span>' : ''}<span class="m3-status ${cls}">${ic ? icon(ic) : ''}${esc(c.attention_label || c.status)}</span></span>`;
+}
+
+function stagesHTML(c) {
+  const now = c.step_state === 'waiting' && !needsYou(c) ? 'hold' : c.step_state;  // waiting on the hospital isn't amber
+  const state = (i) => (i + 1 < c.step || (i + 1 === c.step && c.step_state === 'done')) ? 'done' : i + 1 === c.step ? now : '';
+  const what = { active: 'working now', waiting: needsYou(c) ? 'waiting on you' : 'waiting', failed: 'stopped', done: 'done' }[c.step_state] || '';
+  return `<ol class="stages" role="img" aria-label="Step ${c.step} of 5, ${STEP_NAMES[c.step - 1]}: ${what}">${STEP_NAMES.map((n, i) => `<li class="${state(i)}" title="${i + 1} ${n}"></li>`).join('')}</ol>
+    <span class="stage-name">${c.step} · ${STEP_NAMES[c.step - 1]}</span>`;
+}
+
+function glanceHTML(c) {
+  const to = c.current_balance, from = c.original;
+  const amt = to !== from ? `${money(from)} → <span class="${to < from ? 'down' : ''}">${money(to)}</span>` : money(from);
+  return `<span class="gl-row">${stagesHTML(c)}<span class="gl-line">${esc(c.headline || '')}</span><span class="gl-money">${amt}${c.refund ? ` + ${money(c.refund)} back` : ''}</span></span>`;
+}
+
+function manageHTML(c) {
+  const del = `<button type="button" class="m3-btn text del" data-manage="delete" data-id="${c.id}">${icon('delete')}Delete</button>`;
+  return c.archived
+    ? `<button type="button" class="m3-btn tonal" data-manage="restore" data-id="${c.id}">${icon('unarchive')}Restore</button>${del}`
+    : `<button type="button" class="m3-btn outlined" data-manage="archive" data-id="${c.id}">${icon('archive')}Archive</button>${del}`;
 }
 
 /* first thing in the expanded card: status, billed -> now, and the next action */
@@ -249,6 +318,7 @@ function ensureCard(c) {
         <div class="answer" aria-live="polite"></div>
       </div>
       <div class="clock"></div>
+      <div class="manage"></div>
     </div>`;
   $('cases').appendChild(el);
   return (cards[c.id] = el);
@@ -263,15 +333,21 @@ function render(list) {
   const has = list.length > 0;
   $('casesTitle').hidden = !has;
   if (!has) { location.replace('new.html'); return; }  // nothing to list yet: start with the chat
+  allCases = list;
+  watchLive(list);
+  list = renderBar(list);  // Active or Archived
   const ids = new Set(list.map((c) => c.id));
   Object.keys(cards).forEach((id) => { if (!ids.has(id)) { cards[id].remove(); delete cards[id]; } });
-  // cases that need the patient first, then biggest savings (stable, so equal savings keep the newest-first order)
-  list = [...list].sort((a, b) => !needsYou(b) - !needsYou(a) || savedOf(b) - savedOf(a));
+  // needs you, running, waiting on the hospital, done (stable: newest first within each, the server's order)
+  list = [...list].sort((a, b) => (ATT_RANK[a.attention] ?? 9) - (ATT_RANK[b.attention] ?? 9));
   list.forEach((c, i) => {
     const fresh = !cards[c.id];
     const el = ensureCard(c);
     if ($('cases').children[i] !== el) $('cases').insertBefore(el, $('cases').children[i] || null);
     el.classList.toggle('overdue', !!(c.next && c.next.overdue));
+    el.classList.toggle('needs', needsYou(c));
+    el.classList.toggle('archived', !!c.archived);
+    setHTML(el.querySelector('.manage'), manageHTML(c));
     el._case = c;
     // open what needs attention, unless the user has already toggled this case
     if (!el._touched && (fresh || needsYou(c))) setOpen(el, !!needsYou(c));
@@ -281,6 +357,88 @@ function render(list) {
     setHTML(el.querySelector('.tl'), detailHTML(c));
     setHTML(el.querySelector('.clock'), clockHTML(c));
   });
+}
+
+// ---- cases at a glance: counts + Active/Archived filter, live updates, archive/restore/delete ----
+let view = 'active', allCases = [];
+
+function renderBar(list) {
+  const active = list.filter((c) => !c.archived), archived = list.filter((c) => c.archived);
+  const n = (att) => active.filter((c) => c.attention === att).length;
+  const pills = [[n('needs_you'), 'need you', 'warn'], [n('running'), 'running', 'info live'],
+    [n('waiting'), 'waiting on hospital', ''], [n('done'), 'done', 'success']]
+    .filter(([k]) => k).map(([k, t, cls]) => `<span class="m3-status ${cls}">${k} ${k === 1 && t === 'need you' ? 'needs you' : t}</span>`);
+  setHTML($('casesCounts'), pills.join(''));
+  $('casesBar').hidden = false;
+  if (view === 'archived' && !archived.length) view = 'active';
+  document.querySelectorAll('[data-view]').forEach((b) => {
+    b.setAttribute('aria-pressed', String(b.dataset.view === view));
+    if (b.dataset.view === 'archived') { b.textContent = `Archived${archived.length ? ` (${archived.length})` : ''}`; b.disabled = !archived.length; }
+  });
+  const shown = view === 'archived' ? archived : active;
+  $('casesEmpty').hidden = shown.length > 0;
+  $('casesEmpty').textContent = shown.length ? '' : 'No active cases. Finished ones are under Archived.';
+  return shown;
+}
+
+/* live: every case that's running or waiting on the patient streams its events (/ws/cases/{id}); a new event
+   refreshes the list right away. The 3 s poll stays as the fallback. */
+const sockets = {};
+let soon = null;
+const refreshSoon = () => { clearTimeout(soon); soon = setTimeout(refresh, 250); };
+function watchLive(list) {
+  const want = new Set(list.filter((c) => c.attention === 'running' || c.attention === 'needs_you').map((c) => c.id));
+  Object.keys(sockets).forEach((id) => { if (!want.has(id)) { sockets[id].onclose = null; sockets[id].close(); delete sockets[id]; } });
+  want.forEach((id) => {
+    if (sockets[id]) return;
+    const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/cases/${id}`);
+    const opened = Date.now() / 1000;  // the socket replays the history first: only newer events matter here
+    ws.onmessage = (m) => { try { if (JSON.parse(m.data).ts >= opened - 1) refreshSoon(); } catch (e) {} };
+    ws.onclose = () => { delete sockets[id]; };
+    sockets[id] = ws;
+  });
+}
+
+function confirmBox(title, html, ok, cancel = 'Cancel') {
+  $('confirmTitle').textContent = title;
+  $('confirmBody').innerHTML = html;
+  $('confirmOk').textContent = ok;
+  $('confirmCancel').hidden = !cancel;
+  $('confirmCancel').textContent = cancel || '';
+  const d = $('confirmBox');
+  return new Promise((resolve) => {
+    d.returnValue = '';
+    d.addEventListener('close', () => resolve(d.returnValue === 'ok'), { once: true });
+    d.showModal();
+  });
+}
+const warnHTML = (text) => `<p class="warnline">${icon('warning')}<span>${esc(text)}</span></p>`;
+const post = (url, body) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+
+/* archive: quiet for a finished case; the server refuses a live one (409) until the patient confirms the warning.
+   delete: always confirmed; refused outright during a call; a live case is stopped first (?confirm=true). */
+async function manage(action, id) {
+  const c = allCases.find((x) => x.id === id); if (!c) return;
+  const name = `<b>${esc(c.provider)}</b> (${esc(c.patient)})`;
+  if (action === 'restore') await post(`/api/cases/${id}/restore`);
+  if (action === 'archive') {
+    const r = await post(`/api/cases/${id}/archive`);
+    if (r.status === 409 && await confirmBox('This case is still going', `${warnHTML((await r.json()).error)}<p>${name} moves to Archived. Restore it any time.</p>`, 'Archive anyway')) {
+      await post(`/api/cases/${id}/archive`, { confirm: true });
+    }
+  }
+  if (action === 'delete') {
+    if (c.status === 'calling') {
+      await confirmBox("Can't delete during a call", warnHTML(`BillBack is on a call with ${c.hospital || 'billing'}. End the call on the case page first, then delete.`), 'OK', '');
+      return;
+    }
+    const live = c.attention === 'running' || needsYou(c);
+    const warn = c.attention === 'running' ? 'This case is still running: BillBack is working on it right now.' : needsYou(c) ? `This case still needs you: ${c.headline}.` : '';
+    if (!await confirmBox('Delete this case?', `${warn ? warnHTML(warn) : ''}<p>${name}, its calls and follow-ups are removed for good. This can't be undone.</p>`, live ? 'Stop and delete' : 'Delete')) return;
+    const r = await fetch(`/api/cases/${id}?confirm=true`, { method: 'DELETE' });
+    if (r.status === 409) await confirmBox("Couldn't delete", warnHTML((await r.json()).error), 'OK', '');
+  }
+  refresh();
 }
 
 async function refresh() {
@@ -305,6 +463,10 @@ document.addEventListener('submit', (e) => {
   e.preventDefault(); const q = f.q.value.trim(); f.q.value = ''; ask(f.dataset.ask, q);
 });
 document.addEventListener('click', async (e) => {
+  const vw = e.target.closest('[data-view]');
+  if (vw) { view = vw.dataset.view; render(allCases); return; }
+  const mg = e.target.closest('[data-manage]');
+  if (mg) { mg.disabled = true; try { await manage(mg.dataset.manage, mg.dataset.id); } finally { mg.disabled = false; } return; }
   const head = e.target.closest('.case-head');
   if (head) { const el = head.closest('.case'); el._touched = true; setOpen(el, head.getAttribute('aria-expanded') !== 'true'); return; }
   const chip = e.target.closest('[data-q]');

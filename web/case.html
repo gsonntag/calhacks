@@ -296,6 +296,16 @@
   .replay .find-acts, .replay .find-ask, .replay #plannerForm, .replay .plan-banner .actions { display: none !important; }
   @media (prefers-reduced-motion: reduce) { .flash, .filling i { animation: none; } }
 </style>
+<style>
+  /* ---- case switcher: other cases' status in the case strip, count on the Cases tab ---- */
+  .cases-badge { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px; border-radius: 10px;
+    font: 600 12px/20px var(--md-font); background: var(--st-warn-container); color: var(--st-on-warn-container); }
+  .cases-badge.info { background: var(--st-info-container); color: var(--st-on-info-container); }
+  .tab-count { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 0 4px 0 0; font: 500 13px/20px var(--md-font); color: var(--md-on-surface-variant); text-decoration: none; white-space: nowrap; }
+  .tab-count b { color: var(--st-on-warn-container); background: var(--st-warn-container); border-radius: 10px; padding: 0 8px; font-weight: 600; }
+  .tab.needs { border-color: var(--st-warn); }
+  .tab.needs .status { color: var(--st-warn); font-weight: 500; opacity: 1; }
+</style>
 </head>
 <body>
 
@@ -305,12 +315,13 @@
     <span class="m3-brand-name">BillBack</span>
   </a>
   <nav class="m3-tabs" aria-label="Main">
-    <a class="m3-tab" href="/" aria-current="page">Cases</a>
+    <a class="m3-tab" href="/" aria-current="page">Cases<span class="cases-badge" id="casesBadge" hidden></span></a>
     <a class="m3-tab" href="hospitals.html">Hospitals</a>
     <a class="m3-tab" id="hoodLink" href="ops.html">Under the hood</a>
   </nav>
 </header>
 <nav class="case-tabs" aria-label="Cases">
+  <a class="tab-count" id="tabCount" href="/" hidden></a>
   <div id="tabList" style="display:contents"></div>
   <a class="m3-chip new-case" id="newCase" href="new.html"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</a>
 </nav>
@@ -670,13 +681,36 @@ function renderAgent(key, m, forceOpen = false) {
 }
 
 function renderTabs() {
-  const tabs = state.tabs.map((t) => {
+  const tabs = state.tabs.filter((t) => !t.archived || t.id === state.active).map((t) => {
     const stage = state.models[t.id] && t.id === state.active ? stageOf(state.models[t.id]) : AGENT_STATUS[t.status] ?? 1;
-    const dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
-    return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}">
-      <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${STATUS[stage]}</span></button>`;
+    let dot = stage === 4 ? 'green' : stage === 2 ? 'amber' : (stage === 1 || stage === 3) ? 'live' : '';
+    let label = STATUS[stage];
+    if (t.attention && t.id !== state.active) [dot, label] = switcherTab(t);  // other cases: their status from the server
+    return `<button type="button" class="m3-chip tab${t.id === state.active ? ' selected' : ''}${t.attention === 'needs_you' && t.id !== state.active ? ' needs' : ''}" data-tab="${t.id}" aria-current="${t.id === state.active ? 'page' : 'false'}"${t.headline ? ` title="${esc(t.headline)}"` : ''}>
+      <span class="dot ${dot}"></span>${esc(t.name)}<span class="status">· ${esc(label)}</span></button>`;
   });
   setHTML($('tabList'), tabs.join(''));
+  renderSwitcherCount();
+}
+
+// ---- case switcher: the other cases' status at a glance (billback/caselist.py) ----
+function switcherTab(t) {
+  if (t.attention === 'needs_you') return ['amber', 'Needs you'];
+  if (t.attention === 'running') return ['live', { created: 'Reading bill', reviewing: 'Reviewing', deciding: 'Planning', calling: 'On a call', planning: 'Planning' }[t.status] || 'Running'];
+  if (t.attention === 'waiting') return ['', 'Waiting on hospital'];
+  return ['green', 'Resolved'];
+}
+function renderSwitcherCount() {
+  const others = state.tabs.filter((t) => t.attention && !t.archived && t.id !== state.active);
+  const needs = others.filter((t) => t.attention === 'needs_you').length, running = others.filter((t) => t.attention === 'running').length;
+  const badge = $('casesBadge');
+  badge.hidden = !(needs || running);
+  badge.className = 'cases-badge' + (needs ? '' : ' info');
+  badge.textContent = needs || running;
+  badge.title = needs ? `${needs} other case${needs === 1 ? '' : 's'} need${needs === 1 ? 's' : ''} you` : `${running} other case${running === 1 ? '' : 's'} running`;
+  const count = $('tabCount');
+  count.hidden = !others.length;
+  setHTML(count, `${state.tabs.filter((t) => !t.archived).length} cases${needs ? ` <b>${needs} need${needs === 1 ? 's' : ''} you</b>` : ''}`);
 }
 
 function phaseText(m) {
@@ -1334,7 +1368,8 @@ function liveFeed(id) {
 // ---------- data ----------
 async function loadTabs() {
   const list = await (await fetch('/api/cases')).json();
-  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status }));
+  state.tabs = list.map((c) => ({ id: c.id, name: c.provider, status: c.status,
+    attention: c.attention, step: c.step, headline: c.headline, archived: c.archived }));
 }
 function openCase(id) {
   state.active = id;
