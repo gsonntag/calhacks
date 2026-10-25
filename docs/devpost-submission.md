@@ -190,10 +190,26 @@ whichever case the video leads with.
 
 ### 3.6 Accomplishments we're proud of
 
-> - Every number on screen traces back to a bill line, an EOB line, a bank transaction or a policy clause.
-> - A real policy database for 12 hospitals, with quotes verified against the source.
-> - Sub-second voice replies through our own Twilio + Cartesia pipeline.
-> - A full loop: audit → plan → call → score → next call, with a human approving every consequential step.
+> - **Every number on screen traces to a source:** a bill line, an EOB line, a bank transaction or a policy
+>   clause.
+> - **12 Bay Area hospitals** in a policy database built from live Bright Data crawls, with every rule's quote
+>   verified against the source page. Real price tables for 11 of them, from their public price files.
+> - **Voice replies in 0.44 to 0.8 s** after the rep stops talking (phone simulator). Desk mode went from a
+>   3.0 s median to 0.93 s.
+> - **281 automated tests**, all offline: money math, both review agents, the plan rules, the call scorecard
+>   and the follow-up flow.
+> - **A full loop:** audit → plan → call → score → next call, with a human approving every consequential step.
+
+### 3.6b How BillBack meets each judging criterion (one line each; winners do this)
+
+> - **Application:** 4 in 10 adults think they've had a billing error; BillBack fixes it end to end for the
+>   patient.
+> - **Intentionality:** every design choice protects the patient: cited numbers, an approval gate, it never
+>   pays, it always says it's automated.
+> - **Functionality:** the whole flow runs live, from upload to the follow-up call plan.
+> - **Creativity:** it's the patient's own agent, using the hospital's own published rules against the bill.
+> - **Technical complexity:** two parallel review agents, a rules engine with versioned plans, a streaming
+>   voice pipeline, and a post-call scorecard that checks Claude's reading against the transcript.
 
 ### 3.7 What we learned
 
@@ -261,6 +277,15 @@ whichever case the video leads with.
 Say "the first patient-side agent we know of", **not** "the only AI that calls hospitals": Pine AI and Avelis
 Health place AI calls too.
 
+**At this event:** another Cal Hacks 13.0 team,
+[Docket](https://github.com/AnushaAgarwal27/Docket), has a very similar pitch: "proves every rule with the
+exact official clause, and follows up until the problem is fixed". Docket is a caseworker for F-1 students
+(tax withholding, forms, work-hour caps), not hospital bills. It targets the same sponsors (Anthropic,
+Cartesia, Nessie, Bright Data). Make our differences explicit in the text and the pitch:
+- BillBack makes the call itself.
+- It uses policies it crawled and verified live.
+- It checks payments against the patient's bank records.
+
 ### 3.11 Why this hasn't been built, and why now
 
 > **Why not before:** no hospital billing system has an API; reps resist third parties; HIPAA authorization,
@@ -326,7 +351,27 @@ Rules of thumb:
 - Make a 3-minute cut for the main judges: add Rosa's case (bank data finds the missed $500) and the
   approval gate.
 
-**[Waiting on the winning-Devposts research: it may refine this outline. Section 6 will be updated.]**
+From winning Devposts and Devpost's own advice:
+- Say what it does in the first few seconds, and show it working within 10 to 15 seconds.
+- Cut every wait: no spinners, no hold music, no typing.
+- Roughly 60% explaining, 40% demo.
+- Sponsor judges judge from the video, so name each sponsor on screen when its part is running.
+- Upload early as unlisted, then check the link works when logged out.
+- Keep a recorded fallback for the live table demo (the replay mode does this: `case.html?replay=1`).
+
+**If you lead with Rosa instead of Marcus** (the winners' report suggests her as the thumbnail; the mock
+judges preferred Marcus because the hospital's policy decides his case), use this order:
+
+| Time | Segment |
+|---|---|
+| 0:00 | Hook: the $8,700 "final notice" |
+| 0:10 | Drop in the bill and EOB |
+| 0:20 | Audit and policy check side by side ($1,100 → $600; "not eligible for the write-off") |
+| 0:45 | Approval: "never pays on a call" |
+| 0:55 | The call with transcript: pushback, citations, case number |
+| 1:30 | Resolved: $8,700 → $600, 6 × $100 at 0%, collections paused |
+| 1:40 | Architecture and sponsors |
+| 1:52 | Same bill at different hospitals; tagline |
 
 ---
 
@@ -338,7 +383,8 @@ Rules of thumb:
   - update the README test count (it says 139; it's now 281);
   - add a short "Known limitations" section to the README (Cartesia requires it), copied from 3.9.
 - **Video:** YouTube or Vimeo link.
-- **Images** (the first one is the thumbnail):
+- **Images:** JPG, PNG or GIF, 5 MB max each. The thumbnail is cropped to **3:2**. Winners use 4 to 8 gallery
+  images, an architecture diagram, and a GIF of the product working. The first image is the thumbnail:
   1. A cover image: the BillBack logo + "$4,174 → $0" + the tagline.
   2. The Review step with both agent checklists and findings.
   3. The plan with "why ▸" sources.
@@ -370,5 +416,6 @@ Rules of thumb:
   dates and evidence quality.
 - `docs/research/market-and-barriers.md`: other billing markets, AI phone agents, barriers, mitigations,
   expansion story.
-- `docs/research/winning-devposts.md`: patterns from winning Devposts and video outlines (pending).
+- `docs/research/winning-devposts.md`: 10 winning projects (Cal Hacks 11.0 and 12.0, TreeHacks, Berkeley AI
+  Hackathon), patterns, Devpost's advice, and outlines.
 - `docs/legal-check.md`: legal claims checked against the law.
