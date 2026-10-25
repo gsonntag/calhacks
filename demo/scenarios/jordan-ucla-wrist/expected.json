@@ -2,7 +2,7 @@
   "scenario": "jordan-ucla-wrist",
   "generator": "remy/scenarios.py",
   "generator_version": 2,
-  "seed": 1106,
+  "seed": 1107,
   "as_of": "2026-10-25",
   "story": "Jordan, 20, a UCLA junior, came off his bike on Bruin Walk and broke his wrist: a non-displaced distal radius fracture. Ronald Reagan UCLA's emergency department X-rayed it, splinted it and gave a pain shot (real UCLA prices). He has a student health plan and works about 20 hours a week at a coffee shop, so his paychecks drop while he can't work: a week of sick pay, then light duty. About 120% of the poverty line. He got overcharged: the bill ignores his insurance, charges the wrist X-ray twice and prices the splint above UCLA's own posted charge. Once fixed, his share plus his cash follow-up care is over 10% of his income (take-home or gross), so UCLA's policy writes it off: $0.",
   "real": {
@@ -237,14 +237,14 @@
     "owed_before_discount": 1690.0
   },
   "income": {
-    "annual": 15192.06,
-    "monthly": 1266.0,
-    "source": "6 Nessie payroll deposits, paid every two weeks (avg $584 x 26); take-home pay",
+    "annual": 15242.15,
+    "monthly": 1270.18,
+    "source": "6 Nessie payroll deposits, paid every two weeks (avg $586 x 26); take-home pay",
     "deposits_counted": 6,
     "basis": "take-home",
-    "gross_annual_est": 18990.07,
-    "bills_monthly": 1676.16,
-    "bills_source": "53 regular Nessie payments in the last 90 days (ATM WITHDRAWAL LOS ANGELES CA, Amazon Marketplace, CVS/PHARMACY #9180, Landfair Apartments…)"
+    "gross_annual_est": 19052.69,
+    "bills_monthly": 1544.95,
+    "bills_source": "44 regular Nessie payments in the last 90 days (ATM WITHDRAWAL LOS ANGELES CA, Amazon Marketplace, CVS/PHARMACY #9180, Diddy Riese…)"
   },
   "medical_spending": {
     "since": "2025-10-25",
@@ -252,23 +252,23 @@
     "this_bill": 1690.0,
     "out_of_pocket": 2259.47,
     "txn_ids": [
-      "mirror-081",
-      "mirror-181",
+      "mirror-085",
       "mirror-185",
-      "mirror-186",
-      "mirror-204",
-      "mirror-206"
+      "mirror-187",
+      "mirror-188",
+      "mirror-207",
+      "mirror-208"
     ],
     "discount_without_bank": 100.0,
     "bank_decides_eligibility": false
   },
   "discount": {
-    "fpl_pct": 95.2,
+    "fpl_pct": 95.5,
     "fpl_amount": 15960,
     "fpl_year": 2026,
     "household_size": 1,
     "insured": true,
-    "oop_pct_income": 14.9,
+    "oop_pct_income": 14.8,
     "discount_pct": 100.0,
     "tier_quote": "High Medical Cost Patients with Patient's Family incomes not exceeding 400% of the FPL, who reside in the Hospital's primary service area as defined in Appendix 1, may be extended a 100% Charity Care discount on services rendered and billed by the Hospital for emergency and Medically Necessary Care.",
     "at_estimated_gross": null

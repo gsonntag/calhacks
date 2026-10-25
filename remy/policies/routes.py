@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
-from .. import config, llm
+from .. import config, examples, llm
 from ..agents import policy as policy_agent
 from ..auth import ADMIN
 from ..integrations import brightdata
@@ -75,8 +75,8 @@ async def artifact(hospital_id: str, name: str):
 
 @router.get("/compare")
 async def compare(scenario: str = "default"):
-    if scenario not in compare_mod.SCENARIOS:
-        raise HTTPException(400, f"scenario must be one of {sorted(compare_mod.SCENARIOS)}")
+    if not examples.exists(scenario):
+        raise HTTPException(400, f"unknown scenario: {scenario} (GET /api/examples lists the demo patients)")
     return compare_mod.compare(PolicyStore(), scenario)
 
 

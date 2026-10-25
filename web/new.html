@@ -30,6 +30,14 @@
   .starts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 24px; }
   .starts .m3-chip { height: 40px; }
   .starts .m3-chip .material-symbols-rounded { color: var(--md-primary); }
+  /* "Try an example": the demo patients (GET /api/examples), Raj first */
+  .examples { margin-top: 24px; }
+  .examples h2 { margin: 0; }
+  .examples .starts { margin-top: 8px; }
+  .examples:has(.starts:empty) { display: none; }
+  .examples .m3-chip { height: auto; min-height: 40px; padding-top: 6px; padding-bottom: 6px; text-align: left; }
+  .examples .m3-chip:disabled { opacity: .55; cursor: default; }
+  .examples .m3-chip small { display: block; font-weight: 400; color: var(--md-on-surface-variant); }
 
   /* thread */
   .thread { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 0 24px; }
@@ -110,9 +118,12 @@
   <main>
     <section class="hero col" aria-labelledby="heroTitle">
       <h1 class="display-s" id="heroTitle">Your billing, handled.</h1>
-      <p class="body-l muted">Share your hospital bill. Billie finds the errors and gets it lowered.</p>
+      <p class="body-l muted">Share your hospital bill. Remy finds the errors and gets it lowered.</p>
+      <div class="examples">
+        <h2 class="label-l muted" id="examplesHead">Try an example</h2>
+        <div class="starts" id="examples" role="group" aria-labelledby="examplesHead"></div>
+      </div>
       <div class="starts" role="group" aria-label="Quick start">
-        <button class="m3-chip" id="sampleChip" type="button"><span class="material-symbols-rounded" aria-hidden="true">description</span>Use a sample bill</button>
         <button class="m3-chip" id="uploadChip" type="button"><span class="material-symbols-rounded" aria-hidden="true">upload_file</span>Upload bill + insurance</button>
         <button class="m3-chip" id="gmailBtn" type="button"><span class="material-symbols-rounded" aria-hidden="true">mail</span><span>Demo inbox</span></button>
       </div>
@@ -128,7 +139,7 @@
             <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Attach a bill or insurance statement">
             <span class="material-symbols-rounded" aria-hidden="true">attach_file</span>
           </label>
-          <input class="msg-input" id="msgInput" type="text" aria-label="Message Billie" placeholder="Tell me about your bill…">
+          <input class="msg-input" id="msgInput" type="text" aria-label="Message Remy" placeholder="Tell me about your bill…">
           <button class="m3-icon-btn send" id="sendBtn" type="button" aria-label="Send message" disabled>
             <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
           </button>
@@ -143,6 +154,7 @@
 <script src="/auth.js"></script>
 <script src="/ask-remy.js" data-page="cases"></script>
 <script src="/rail.js"></script>
+<script src="/examples.js"></script>
 <script>
 const state = { files: [], sentFiles: [], typing: false, gmail: 'off', history: [], caseId: null };
 const $ = (id) => document.getElementById(id);
@@ -168,7 +180,7 @@ function showTyping() {
   app.classList.remove('empty');
   state.typing = true; refresh();
   const t = document.createElement('div');
-  t.className = 'bot'; t.innerHTML = AVATAR + '<div class="typing" role="status" aria-label="Billie is typing"><span></span><span></span><span></span></div>';
+  t.className = 'bot'; t.innerHTML = AVATAR + '<div class="typing" role="status" aria-label="Remy is typing"><span></span><span></span><span></span></div>';
   inner.appendChild(t); scroll();
   return () => { t.remove(); state.typing = false; refresh(); };
 }
@@ -209,8 +221,23 @@ pill.addEventListener('dragover', (e) => { e.preventDefault(); pill.classList.ad
 pill.addEventListener('dragleave', () => pill.classList.remove('dragging'));
 pill.addEventListener('drop', (e) => { e.preventDefault(); pill.classList.remove('dragging'); addFiles(e.dataTransfer.files); });
 
-// Quick starts: the sample chip just says it in the chat; the upload chip opens the file picker.
-$('sampleChip').addEventListener('click', () => { input.value = 'Use the sample bill'; sendText(); });
+// Quick starts: an example patient opens their case right away; the upload chip opens the file picker.
+const exBox = $('examples');
+let exList = [];
+function renderExamples() {
+  exBox.innerHTML = exList.map((ex, i) => `<button class="m3-chip" type="button" data-i="${i}"${ex.available ? '' : ' disabled'}>
+    <span class="material-symbols-rounded" aria-hidden="true">person</span><span>${Examples.esc(ex.label)}${ex.available ? '' : `<small>${Examples.esc(ex.note)}</small>`}</span></button>`).join('');
+}
+exBox.addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-i]');
+  if (!b || b.disabled) return;
+  const ex = exList[+b.dataset.i];
+  exBox.querySelectorAll('button').forEach((x) => { x.disabled = true; });
+  b.querySelector('.material-symbols-rounded').outerHTML = '<span class="m3-spinner" aria-hidden="true"></span>';
+  try { location.href = `case.html?id=${await Examples.start(ex)}`; }
+  catch (err) { renderExamples(); app.classList.remove('empty'); addBot(`Sorry, I couldn't open ${ex.name}'s example. Try again in a moment.`); }
+});
+Examples.load().then((list) => { exList = list; renderExamples(); });
 $('uploadChip').addEventListener('click', () => $('fileInput').click());
 
 const GMAIL_OFF = '<span class="material-symbols-rounded" aria-hidden="true">mail</span><span>Demo inbox</span>';
@@ -231,7 +258,7 @@ gmailBtn.addEventListener('click', async () => {
     gmailBtn.setAttribute('aria-label', 'Demo inbox loaded. Remove');
     gmailBtn.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">check</span><span>Demo inbox</span>';
     const bill = r.found.find((f) => f.type === 'bill'), eob = r.found.find((f) => f.type === 'eob');
-    const msg = `I found a final notice from ${bill.from} for $${bill.amount.toLocaleString()} and an EOB from ${eob.from}. Want me to start on that bill?`;
+    const msg = `I found a final notice from ${bill.from} for $${Number(bill.amount).toLocaleString('en-US', Math.round(bill.amount * 100) % 100 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})} and an EOB from ${eob.from}. Want me to start on that bill?`;
     state.history.push({ role: 'user', content: `[Connected Gmail. Found: ${JSON.stringify(r.found)}]` }, { role: 'assistant', content: msg });
     app.classList.remove('empty'); addBot(msg);
     if (r.simulated) inner.insertAdjacentHTML('beforeend', '<div class="sim body-s muted">Demo inbox (simulated Gmail)</div>');

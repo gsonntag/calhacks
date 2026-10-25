@@ -142,55 +142,34 @@
   "transactions": [
     {
       "type": "purchase",
-      "date": "2025-10-26",
-      "amount": 32.6,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-10-28",
-      "amount": 17.27,
-      "merchant": "Metro TAP Reload",
+      "date": "2025-10-25",
+      "amount": 16.53,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
       "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2025-10-28",
-      "amount": 12.51,
-      "merchant": "Venmo",
-      "description": "VENMO *1157"
+      "date": "2025-10-29",
+      "amount": 38.09,
+      "merchant": "Trader Joe's Westwood",
+      "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2025-10-31",
-      "amount": 704.7,
+      "amount": 797.92,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2025-10-31",
-      "amount": 24.63,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
+      "amount": 15.78,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2025-10-31",
-      "amount": 76.63,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*4E6E4C78"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-11-02",
-      "amount": 23.71,
-      "merchant": "Ralphs Westwood",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-11-03",
+      "date": "2025-11-01",
       "amount": 950.0,
       "merchant": "Landfair Apartments",
       "description": "Rent (shared room)"
@@ -198,16 +177,36 @@
     {
       "type": "purchase",
       "date": "2025-11-04",
-      "amount": 36.88,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
+      "amount": 22.94,
+      "merchant": "RALPHS WESTWOOD #681",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2025-11-07",
-      "amount": 7.67,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
+      "date": "2025-11-04",
+      "amount": 17.41,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*15D93A63"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-05",
+      "amount": 49.78,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5008"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-06",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-08",
+      "amount": 27.79,
+      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -219,90 +218,97 @@
     {
       "type": "purchase",
       "date": "2025-11-11",
-      "amount": 10.78,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*5AD34B3B"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-11-12",
-      "amount": 41.0,
-      "merchant": "RALPHS WESTWOOD #822",
-      "description": "Groceries"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2025-11-12",
-      "amount": 40.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+      "amount": 5.39,
+      "merchant": "DIDDY RIESE #946",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2025-11-14",
-      "amount": 731.42,
+      "amount": 683.42,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2025-11-16",
-      "amount": 21.77,
-      "merchant": "WESTWOOD BIKE SHOP #850",
-      "description": "Bike parts"
+      "date": "2025-11-15",
+      "amount": 18.8,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-11-15",
+      "amount": 28.08,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 4763"
     },
     {
       "type": "purchase",
       "date": "2025-11-17",
-      "amount": 50.98,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 6642"
+      "amount": 60.31,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*1EF0531D"
     },
     {
       "type": "purchase",
-      "date": "2025-11-18",
+      "date": "2025-11-19",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2025-11-21",
-      "amount": 8.32,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
+      "date": "2025-11-20",
+      "amount": 11.07,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2025-11-21",
-      "amount": 62.75,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*3A5DC02E"
+      "date": "2025-11-24",
+      "amount": 28.81,
+      "merchant": "WESTWOOD BIKE SHOP #222",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
-      "date": "2025-11-25",
-      "amount": 54.85,
-      "merchant": "Ralphs Westwood",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-11-27",
-      "amount": 33.34,
+      "date": "2025-11-24",
+      "amount": 36.39,
       "merchant": "Venmo",
-      "description": "VENMO PAYMENT 1861"
+      "description": "VENMO *9952"
     },
     {
       "type": "deposit",
       "date": "2025-11-28",
-      "amount": 775.26,
+      "amount": 796.18,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2025-11-30",
-      "amount": 31.0,
-      "merchant": "RALPHS WESTWOOD #822",
-      "description": "Groceries"
+      "date": "2025-11-28",
+      "amount": 16.33,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2025-11-28",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-01",
+      "amount": 6.42,
+      "merchant": "Diddy Riese",
+      "description": "Food"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-01",
+      "amount": 59.19,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*6442F7E"
     },
     {
       "type": "purchase",
@@ -313,24 +319,24 @@
     },
     {
       "type": "purchase",
-      "date": "2025-12-03",
-      "amount": 34.25,
-      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
-      "description": "Groceries"
+      "date": "2025-12-04",
+      "amount": 7.21,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
       "date": "2025-12-06",
-      "amount": 52.27,
+      "amount": 50.75,
       "merchant": "Venmo",
-      "description": "VENMO *9137"
+      "description": "VENMO *6766"
     },
     {
       "type": "purchase",
-      "date": "2025-12-07",
-      "amount": 33.26,
-      "merchant": "Westwood Bike Shop",
-      "description": "Bike parts"
+      "date": "2025-12-09",
+      "amount": 63.73,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -340,92 +346,99 @@
       "description": "NETFLIX.COM"
     },
     {
-      "type": "purchase",
-      "date": "2025-12-10",
-      "amount": 13.71,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*74726CBE"
-    },
-    {
       "type": "deposit",
       "date": "2025-12-12",
-      "amount": 795.98,
+      "amount": 687.88,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
-      "type": "purchase",
-      "date": "2025-12-12",
-      "amount": 31.29,
-      "merchant": "Westwood Bike Shop",
-      "description": "Bike parts"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-12-17",
-      "amount": 3.68,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
-    },
-    {
       "type": "withdrawal",
-      "date": "2025-12-17",
-      "amount": 100.0,
+      "date": "2025-12-12",
+      "amount": 60.0,
       "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "purchase",
-      "date": "2025-12-18",
+      "date": "2025-12-13",
+      "amount": 8.96,
+      "merchant": "DIDDY RIESE #946",
+      "description": "Food"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-17",
+      "amount": 28.42,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-19",
+      "amount": 84.24,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*66C0134B"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-21",
+      "amount": 40.78,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 4808"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-22",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2025-12-21",
-      "amount": 33.42,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-12-23",
-      "amount": 38.45,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*4A1E4685"
-    },
-    {
-      "type": "deposit",
-      "date": "2025-12-26",
-      "amount": 708.76,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-12-26",
-      "amount": 60.43,
-      "merchant": "POS DEBIT RALPHS WESTWOOD",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-12-26",
-      "amount": 18.58,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 8806"
-    },
-    {
-      "type": "purchase",
-      "date": "2025-12-29",
-      "amount": 10.45,
+      "date": "2025-12-22",
+      "amount": 14.03,
       "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
       "description": "Bike parts"
     },
     {
       "type": "purchase",
-      "date": "2025-12-31",
-      "amount": 11.71,
+      "date": "2025-12-24",
+      "amount": 16.8,
       "merchant": "Westwood Bike Shop",
       "description": "Bike parts"
+    },
+    {
+      "type": "deposit",
+      "date": "2025-12-26",
+      "amount": 773.39,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-27",
+      "amount": 46.22,
+      "merchant": "Ralphs Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-28",
+      "amount": 19.03,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*22D3C90E"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-30",
+      "amount": 12.2,
+      "merchant": "Venmo",
+      "description": "VENMO *3731"
+    },
+    {
+      "type": "purchase",
+      "date": "2025-12-31",
+      "amount": 14.21,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -436,30 +449,29 @@
     },
     {
       "type": "purchase",
-      "date": "2026-01-03",
-      "amount": 10.14,
-      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "date": "2026-01-04",
+      "amount": 22.76,
+      "merchant": "Westwood Bike Shop",
       "description": "Bike parts"
     },
     {
-      "type": "purchase",
-      "date": "2026-01-06",
-      "amount": 3.48,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-01-06",
-      "amount": 32.18,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*578506F2"
+      "type": "withdrawal",
+      "date": "2026-01-04",
+      "amount": 200.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "deposit",
       "date": "2026-01-09",
-      "amount": 754.43,
+      "amount": 740.46,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-09",
+      "amount": 41.81,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -469,49 +481,43 @@
       "description": "NETFLIX.COM"
     },
     {
-      "type": "withdrawal",
-      "date": "2026-01-09",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
       "type": "purchase",
       "date": "2026-01-11",
-      "amount": 25.76,
-      "merchant": "Trader Joe's Westwood",
+      "amount": 22.64,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-01-15",
-      "amount": 59.84,
-      "merchant": "Ralphs Westwood",
-      "description": "Groceries"
+      "amount": 9.56,
+      "merchant": "WESTWOOD BIKE SHOP #222",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
-      "date": "2026-01-16",
-      "amount": 69.25,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*51569FB9"
+      "date": "2026-01-15",
+      "amount": 56.72,
+      "merchant": "Venmo",
+      "description": "VENMO *4790"
     },
     {
       "type": "purchase",
       "date": "2026-01-17",
-      "amount": 55.42,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 6642"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-01-18",
-      "amount": 5.97,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 66.45,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*8A8655E"
     },
     {
       "type": "purchase",
       "date": "2026-01-19",
+      "amount": 46.25,
+      "merchant": "Trader Joe's Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-21",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
@@ -519,36 +525,56 @@
     {
       "type": "purchase",
       "date": "2026-01-22",
-      "amount": 9.1,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "amount": 42.88,
+      "merchant": "TRADER JOE'S WESTWOOD #410",
+      "description": "Groceries"
     },
     {
       "type": "deposit",
       "date": "2026-01-23",
-      "amount": 774.17,
+      "amount": 722.39,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-01-25",
-      "amount": 61.61,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*5F7D6C34"
+      "date": "2026-01-24",
+      "amount": 11.05,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-01-26",
-      "amount": 22.07,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
-      "description": "Groceries"
+      "amount": 53.51,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 5228"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-01-26",
+      "amount": 40.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "purchase",
-      "date": "2026-01-28",
-      "amount": 20.39,
-      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
-      "description": "Groceries"
+      "date": "2026-01-29",
+      "amount": 16.15,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-31",
+      "amount": 15.2,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-01-31",
+      "amount": 42.21,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*697CC4B7"
     },
     {
       "type": "purchase",
@@ -560,36 +586,36 @@
     {
       "type": "purchase",
       "date": "2026-02-02",
-      "amount": 30.75,
-      "merchant": "WESTWOOD BIKE SHOP #850",
-      "description": "Bike parts"
+      "amount": 29.67,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-04",
+      "amount": 39.81,
+      "merchant": "Venmo",
+      "description": "VENMO *6966"
     },
     {
       "type": "purchase",
       "date": "2026-02-05",
-      "amount": 27.32,
-      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
-      "description": "Bike parts"
+      "amount": 8.99,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-02-06",
-      "amount": 683.48,
+      "amount": 725.53,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-02-07",
-      "amount": 12.99,
-      "merchant": "Venmo",
-      "description": "VENMO *8613"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-02-09",
-      "amount": 21.94,
-      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
-      "description": "Bike parts"
+      "amount": 48.1,
+      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -599,85 +625,86 @@
       "description": "NETFLIX.COM"
     },
     {
-      "type": "withdrawal",
-      "date": "2026-02-09",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
       "type": "purchase",
       "date": "2026-02-10",
-      "amount": 39.69,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*30366AD3"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-02-11",
-      "amount": 25.85,
-      "merchant": "WESTWOOD BIKE SHOP #850",
-      "description": "Bike parts"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-02-14",
-      "amount": 4.78,
+      "amount": 6.69,
       "merchant": "POS DEBIT DIDDY RIESE",
       "description": "Food"
     },
     {
       "type": "purchase",
-      "date": "2026-02-18",
-      "amount": 48.05,
+      "date": "2026-02-12",
+      "amount": 30.8,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-15",
+      "amount": 36.25,
       "merchant": "Venmo",
-      "description": "VENMO *9182"
+      "description": "VENMO *3629"
     },
     {
       "type": "purchase",
-      "date": "2026-02-19",
-      "amount": 7.61,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "date": "2026-02-16",
+      "amount": 4.36,
+      "merchant": "DIDDY RIESE #946",
+      "description": "Food"
     },
     {
       "type": "purchase",
-      "date": "2026-02-19",
-      "amount": 34.17,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*D7EB676"
+      "date": "2026-02-18",
+      "amount": 36.22,
+      "merchant": "Trader Joe's Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-02-18",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "deposit",
       "date": "2026-02-20",
-      "amount": 757.05,
+      "amount": 772.13,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-02-22",
+      "date": "2026-02-21",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-02-22",
-      "amount": 8.78,
-      "merchant": "DIDDY RIESE #552",
-      "description": "Food"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-02-26",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+      "date": "2026-02-21",
+      "amount": 44.01,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*21C14DC1"
     },
     {
       "type": "purchase",
-      "date": "2026-02-27",
-      "amount": 3.19,
-      "merchant": "DIDDY RIESE #552",
-      "description": "Food"
+      "date": "2026-02-22",
+      "amount": 13.22,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-26",
+      "amount": 43.11,
+      "merchant": "Ralphs Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-02-28",
+      "amount": 26.11,
+      "merchant": "WESTWOOD BIKE SHOP #222",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
@@ -689,7 +716,7 @@
     {
       "type": "purchase",
       "date": "2026-03-03",
-      "amount": 12.67,
+      "amount": 28.95,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
@@ -703,22 +730,29 @@
     {
       "type": "purchase",
       "date": "2026-03-05",
-      "amount": 46.84,
-      "merchant": "Venmo",
-      "description": "VENMO *3667"
+      "amount": 7.01,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-03-06",
-      "amount": 742.26,
+      "amount": 745.39,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-03-07",
-      "amount": 15.87,
-      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
-      "description": "Groceries"
+      "amount": 19.59,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-09",
+      "amount": 6.45,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -729,477 +763,464 @@
     },
     {
       "type": "purchase",
-      "date": "2026-03-12",
-      "amount": 37.16,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
+      "date": "2026-03-10",
+      "amount": 28.84,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 3630"
     },
     {
       "type": "purchase",
-      "date": "2026-03-12",
-      "amount": 18.32,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*53416D32"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-03-15",
-      "amount": 33.95,
+      "date": "2026-03-14",
+      "amount": 41.57,
       "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-03-17",
-      "amount": 22.53,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-03-17",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+      "date": "2026-03-15",
+      "amount": 23.72,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*364E73C3"
     },
     {
       "type": "purchase",
-      "date": "2026-03-19",
-      "amount": 42.79,
-      "merchant": "Venmo",
-      "description": "VENMO *9605"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-03-20",
-      "amount": 711.43,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-03-20",
-      "amount": 27.09,
-      "merchant": "Westwood Bike Shop",
+      "date": "2026-03-17",
+      "amount": 9.06,
+      "merchant": "WESTWOOD BIKE SHOP #222",
       "description": "Bike parts"
     },
     {
       "type": "purchase",
-      "date": "2026-03-21",
+      "date": "2026-03-19",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
-      "type": "purchase",
-      "date": "2026-03-22",
-      "amount": 43.44,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-03-26",
-      "amount": 6.1,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-03-30",
-      "amount": 11.83,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-04-01",
-      "amount": 950.0,
-      "merchant": "Landfair Apartments",
-      "description": "Rent (shared room)"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-04-01",
-      "amount": 55.23,
-      "merchant": "Venmo",
-      "description": "VENMO *6545"
-    },
-    {
       "type": "deposit",
-      "date": "2026-04-03",
-      "amount": 725.01,
+      "date": "2026-03-20",
+      "amount": 734.58,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-04-03",
-      "amount": 19.06,
+      "date": "2026-03-21",
+      "amount": 19.83,
+      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-03-21",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-23",
+      "amount": 18.31,
+      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-03-25",
+      "amount": 41.39,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-04-03",
-      "amount": 26.43,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*755A0CB1"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-04-06",
-      "amount": 3.22,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-04-09",
-      "amount": 10.94,
+      "date": "2026-03-29",
+      "amount": 20.65,
       "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
       "description": "Bike parts"
     },
     {
       "type": "purchase",
+      "date": "2026-03-30",
+      "amount": 37.37,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*53CDC8B3"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-01",
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-04-03",
+      "amount": 771.57,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-03",
+      "amount": 57.45,
+      "merchant": "Ralphs Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-03",
+      "amount": 41.84,
+      "merchant": "Venmo",
+      "description": "VENMO *7278"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-08",
+      "amount": 7.59,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
       "date": "2026-04-09",
       "amount": 15.49,
       "merchant": "Netflix",
       "description": "NETFLIX.COM"
     },
     {
-      "type": "withdrawal",
-      "date": "2026-04-09",
-      "amount": 200.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+      "type": "purchase",
+      "date": "2026-04-10",
+      "amount": 20.56,
+      "merchant": "WESTWOOD BIKE SHOP #222",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
-      "date": "2026-04-13",
-      "amount": 54.97,
-      "merchant": "Ralphs Westwood",
+      "date": "2026-04-14",
+      "amount": 21.42,
+      "merchant": "TRADER JOE'S WESTWOOD #410",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-04-15",
-      "amount": 3.47,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
+      "date": "2026-04-14",
+      "amount": 57.2,
+      "merchant": "Venmo",
+      "description": "VENMO *5208"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-16",
+      "amount": 23.22,
+      "merchant": "WESTWOOD BIKE SHOP #222",
+      "description": "Bike parts"
     },
     {
       "type": "deposit",
       "date": "2026-04-17",
-      "amount": 718.7,
+      "amount": 737.35,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
       "date": "2026-04-18",
-      "amount": 49.55,
-      "merchant": "Venmo",
-      "description": "VENMO *8021"
+      "amount": 35.0,
+      "merchant": "SoCal Wireless",
+      "description": "Phone bill"
     },
     {
       "type": "purchase",
       "date": "2026-04-19",
-      "amount": 4.32,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
+      "amount": 34.99,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-04-21",
-      "amount": 35.0,
-      "merchant": "SoCal Wireless",
-      "description": "Phone bill"
+      "date": "2026-04-19",
+      "amount": 42.68,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*711D05FE"
     },
     {
-      "type": "purchase",
+      "type": "withdrawal",
       "date": "2026-04-22",
-      "amount": 33.61,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*2EBB7F5"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-04-24",
-      "amount": 3.51,
-      "merchant": "DIDDY RIESE #552",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-04-28",
-      "amount": 11.61,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-05-01",
-      "amount": 728.09,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-01",
-      "amount": 950.0,
-      "merchant": "Landfair Apartments",
-      "description": "Rent (shared room)"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-01",
-      "amount": 52.84,
-      "merchant": "POS DEBIT RALPHS WESTWOOD",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-05",
-      "amount": 19.26,
-      "merchant": "POS DEBIT RALPHS WESTWOOD",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-06",
-      "amount": 53.75,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*3BD47FF9"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-06",
-      "amount": 40.42,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 3061"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-09",
-      "amount": 10.58,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-09",
-      "amount": 15.49,
-      "merchant": "Netflix",
-      "description": "NETFLIX.COM"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-05-10",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-12",
-      "amount": 12.08,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-05-15",
-      "amount": 794.52,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-15",
-      "amount": 37.79,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-17",
-      "amount": 19.99,
-      "merchant": "RALPHS WESTWOOD #822",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-20",
-      "amount": 19.67,
-      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-22",
-      "amount": 35.0,
-      "merchant": "SoCal Wireless",
-      "description": "Phone bill"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-25",
-      "amount": 8.34,
-      "merchant": "Diddy Riese",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-26",
-      "amount": 14.4,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*6F0AF125"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-26",
-      "amount": 23.76,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 8560"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-05-26",
-      "amount": 40.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-05-29",
-      "amount": 798.04,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-05-30",
-      "amount": 5.29,
-      "merchant": "Diddy Riese",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-01",
-      "amount": 950.0,
-      "merchant": "Landfair Apartments",
-      "description": "Rent (shared room)"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-01",
-      "amount": 41.08,
-      "merchant": "RALPHS WESTWOOD #822",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-06",
-      "amount": 51.41,
-      "merchant": "POS DEBIT RALPHS WESTWOOD",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-09",
-      "amount": 5.45,
-      "merchant": "Diddy Riese",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-09",
-      "amount": 15.49,
-      "merchant": "Netflix",
-      "description": "NETFLIX.COM"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-06-12",
-      "amount": 682.31,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-13",
-      "amount": 19.14,
-      "merchant": "METRO TAP RELOAD #973",
-      "description": "Transit"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-16",
-      "amount": 48.86,
-      "merchant": "Ralphs Westwood",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-16",
-      "amount": 13.84,
-      "merchant": "Venmo",
-      "description": "VENMO *6390"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-06-18",
-      "amount": 73.83,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*9205789"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-06-18",
       "amount": 200.0,
       "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "purchase",
-      "date": "2026-06-19",
-      "amount": 44.94,
+      "date": "2026-04-24",
+      "amount": 8.12,
+      "merchant": "Diddy Riese",
+      "description": "Food"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-04-29",
+      "amount": 25.32,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-01",
+      "amount": 745.83,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-01",
+      "amount": 36.92,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-06-21",
+      "date": "2026-05-02",
+      "amount": 54.27,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*DFD9A76"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-06",
+      "amount": 29.46,
+      "merchant": "Ralphs Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-08",
+      "amount": 13.28,
+      "merchant": "Venmo",
+      "description": "VENMO *8357"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-11",
+      "amount": 33.41,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-14",
+      "amount": 25.4,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-05-15",
+      "amount": 703.55,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-17",
+      "amount": 23.45,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-17",
+      "amount": 15.75,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*46D7D22E"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-20",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-06-22",
-      "amount": 8.33,
+      "date": "2026-05-21",
+      "amount": 19.07,
       "merchant": "POS DEBIT METRO TAP RELOAD",
       "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2026-06-25",
-      "amount": 3.7,
-      "merchant": "DIDDY RIESE #552",
-      "description": "Food"
+      "date": "2026-05-22",
+      "amount": 41.28,
+      "merchant": "Venmo",
+      "description": "VENMO *5262"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-05-25",
+      "amount": 53.28,
+      "merchant": "Ralphs Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-05-27",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "deposit",
-      "date": "2026-06-26",
-      "amount": 797.33,
+      "date": "2026-05-29",
+      "amount": 738.64,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-06-27",
-      "amount": 19.26,
+      "date": "2026-05-29",
+      "amount": 31.47,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-02",
+      "amount": 950.0,
+      "merchant": "Landfair Apartments",
+      "description": "Rent (shared room)"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-03",
+      "amount": 20.14,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-06",
+      "amount": 19.69,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 22.26,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 2705"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-09",
+      "amount": 15.49,
+      "merchant": "Netflix",
+      "description": "NETFLIX.COM"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-10",
+      "amount": 13.0,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-10",
+      "amount": 76.05,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*5408B901"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-12",
+      "amount": 798.12,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-15",
+      "amount": 22.16,
+      "merchant": "Trader Joe's Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-18",
+      "amount": 35.0,
+      "merchant": "SoCal Wireless",
+      "description": "Phone bill"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-20",
+      "amount": 48.03,
+      "merchant": "Trader Joe's Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-21",
+      "amount": 18.71,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*35A8C488"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-22",
+      "amount": 20.16,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-22",
+      "amount": 43.19,
+      "merchant": "Venmo",
+      "description": "VENMO *7668"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-24",
+      "amount": 56.44,
       "merchant": "Ralphs Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-06-24",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-06-26",
+      "amount": 773.91,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-06-26",
+      "amount": 42.82,
+      "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-06-29",
-      "amount": 37.8,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*50C28044"
+      "amount": 18.02,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-07-01",
+      "date": "2026-07-02",
       "amount": 950.0,
       "merchant": "Landfair Apartments",
       "description": "Rent (shared room)"
@@ -1207,43 +1228,37 @@
     {
       "type": "purchase",
       "date": "2026-07-02",
-      "amount": 23.53,
-      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
-      "description": "Bike parts"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-05",
-      "amount": 8.42,
-      "merchant": "METRO TAP RELOAD #973",
-      "description": "Transit"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-07-07",
-      "amount": 27.18,
+      "amount": 45.62,
       "merchant": "Venmo",
-      "description": "VENMO *2811"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-07-08",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
+      "description": "VENMO PAYMENT 7288"
     },
     {
       "type": "purchase",
-      "date": "2026-07-09",
-      "amount": 6.74,
-      "merchant": "POS DEBIT DIDDY RIESE",
+      "date": "2026-07-04",
+      "amount": 20.8,
+      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-06",
+      "amount": 6.29,
+      "merchant": "DIDDY RIESE #946",
       "description": "Food"
     },
     {
       "type": "purchase",
-      "date": "2026-07-09",
-      "amount": 57.77,
+      "date": "2026-07-07",
+      "amount": 68.91,
       "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*507C243B"
+      "description": "AMAZON.COM*565C424A"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-09",
+      "amount": 11.47,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -1255,118 +1270,131 @@
     {
       "type": "deposit",
       "date": "2026-07-10",
-      "amount": 702.97,
+      "amount": 723.48,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-07-11",
-      "amount": 23.33,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
+      "date": "2026-07-12",
+      "amount": 18.82,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-07-13",
-      "amount": 26.96,
-      "merchant": "WESTWOOD BIKE SHOP #850",
-      "description": "Bike parts"
+      "amount": 42.97,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 7463"
     },
     {
       "type": "purchase",
       "date": "2026-07-15",
-      "amount": 25.63,
-      "merchant": "RALPHS WESTWOOD #822",
+      "amount": 33.83,
+      "merchant": "RALPHS WESTWOOD #681",
       "description": "Groceries"
     },
     {
-      "type": "purchase",
-      "date": "2026-07-17",
-      "amount": 30.76,
-      "merchant": "Westwood Bike Shop",
-      "description": "Bike parts"
+      "type": "withdrawal",
+      "date": "2026-07-15",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "purchase",
       "date": "2026-07-18",
+      "amount": 15.47,
+      "merchant": "POS DEBIT METRO TAP RELOAD",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-21",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-07-21",
-      "amount": 7.43,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "date": "2026-07-22",
+      "amount": 27.79,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     },
     {
       "type": "deposit",
       "date": "2026-07-24",
-      "amount": 699.4,
+      "amount": 704.07,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-07-24",
-      "amount": 14.96,
-      "merchant": "POS DEBIT METRO TAP RELOAD",
-      "description": "Transit"
+      "date": "2026-07-26",
+      "amount": 3.53,
+      "merchant": "DIDDY RIESE #946",
+      "description": "Food"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-27",
+      "amount": 31.73,
+      "merchant": "Venmo",
+      "description": "VENMO *2276"
     },
     {
       "type": "purchase",
       "date": "2026-07-28",
-      "amount": 6.25,
-      "merchant": "METRO TAP RELOAD #973",
-      "description": "Transit"
+      "amount": 23.86,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-07-28",
+      "amount": 81.02,
+      "merchant": "Amazon Marketplace",
+      "description": "AMAZON.COM*4D6ADDC1"
     },
     {
       "type": "purchase",
       "date": "2026-07-30",
-      "amount": 59.62,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 5054"
+      "amount": 59.82,
+      "merchant": "RALPHS WESTWOOD #681",
+      "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-08-01",
+      "date": "2026-08-03",
       "amount": 950.0,
       "merchant": "Landfair Apartments",
       "description": "Rent (shared room)"
     },
     {
       "type": "purchase",
-      "date": "2026-08-01",
-      "amount": 83.71,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*23FD824C"
+      "date": "2026-08-03",
+      "amount": 10.42,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2026-08-02",
-      "amount": 24.41,
-      "merchant": "Westwood Bike Shop",
-      "description": "Bike parts"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-06",
-      "amount": 25.19,
-      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
-      "description": "Bike parts"
+      "date": "2026-08-05",
+      "amount": 7.79,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-08-07",
-      "amount": 743.64,
+      "amount": 737.45,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-08-08",
-      "amount": 30.12,
-      "merchant": "RALPHS WESTWOOD #822",
-      "description": "Groceries"
+      "date": "2026-08-09",
+      "amount": 7.15,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1383,24 +1411,11 @@
       "description": "Prescription"
     },
     {
-      "type": "withdrawal",
-      "date": "2026-08-11",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-13",
-      "amount": 8.76,
-      "merchant": "DIDDY RIESE #552",
-      "description": "Food"
-    },
-    {
       "type": "purchase",
       "date": "2026-08-14",
-      "amount": 15.35,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*5DBCA5C0"
+      "amount": 4.93,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1418,71 +1433,78 @@
     },
     {
       "type": "purchase",
-      "date": "2026-08-17",
-      "amount": 6.1,
-      "merchant": "DIDDY RIESE #552",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-19",
-      "amount": 46.65,
+      "date": "2026-08-15",
+      "amount": 31.26,
       "merchant": "Venmo",
-      "description": "VENMO *6616"
-    },
-    {
-      "type": "deposit",
-      "date": "2026-08-21",
-      "amount": 432.92,
-      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+      "description": "VENMO PAYMENT 8643"
     },
     {
       "type": "purchase",
-      "date": "2026-08-21",
+      "date": "2026-08-16",
+      "amount": 29.86,
+      "merchant": "Trader Joe's Westwood",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-18",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-08-21",
-      "amount": 32.29,
-      "merchant": "Westwood Bike Shop",
+      "date": "2026-08-18",
+      "amount": 17.06,
+      "merchant": "WESTWOOD BIKE SHOP #222",
       "description": "Bike parts"
     },
     {
-      "type": "purchase",
-      "date": "2026-08-24",
-      "amount": 44.77,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-28",
-      "amount": 18.63,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-31",
-      "amount": 16.86,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*6EAD9D21"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-08-31",
-      "amount": 36.67,
-      "merchant": "Venmo",
-      "description": "VENMO *2602"
-    },
-    {
       "type": "withdrawal",
-      "date": "2026-08-31",
-      "amount": 100.0,
+      "date": "2026-08-18",
+      "amount": 200.0,
       "description": "ATM WITHDRAWAL LOS ANGELES CA"
+    },
+    {
+      "type": "deposit",
+      "date": "2026-08-21",
+      "amount": 430.5,
+      "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-21",
+      "amount": 28.01,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*BE4B80E"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-22",
+      "amount": 27.29,
+      "merchant": "TRADER JOE'S WESTWOOD #410",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-27",
+      "amount": 8.65,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-29",
+      "amount": 21.4,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 1495"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-08-31",
+      "amount": 16.57,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
@@ -1494,29 +1516,36 @@
     {
       "type": "purchase",
       "date": "2026-09-02",
-      "amount": 33.05,
-      "merchant": "POS DEBIT RALPHS WESTWOOD",
-      "description": "Groceries"
+      "amount": 5.92,
+      "merchant": "Diddy Riese",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-09-04",
-      "amount": 349.17,
+      "amount": 354.84,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-09-04",
-      "amount": 46.42,
-      "merchant": "Ralphs Westwood",
-      "description": "Groceries"
+      "date": "2026-09-07",
+      "amount": 5.57,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
       "date": "2026-09-07",
-      "amount": 14.4,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
+      "amount": 48.72,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4F14983F"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-09-09",
+      "amount": 3.61,
+      "merchant": "DIDDY RIESE #946",
+      "description": "Food"
     },
     {
       "type": "purchase",
@@ -1524,13 +1553,6 @@
       "amount": 15.49,
       "merchant": "Netflix",
       "description": "NETFLIX.COM"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-09-10",
-      "amount": 46.87,
-      "merchant": "RALPHS WESTWOOD #822",
-      "description": "Groceries"
     },
     {
       "type": "purchase",
@@ -1542,13 +1564,6 @@
     {
       "type": "purchase",
       "date": "2026-09-12",
-      "amount": 39.07,
-      "merchant": "Venmo",
-      "description": "VENMO PAYMENT 3964"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-09-12",
       "amount": 34.99,
       "merchant": "CVS/PHARMACY #9180",
       "description": "Wrist brace"
@@ -1556,22 +1571,28 @@
     {
       "type": "purchase",
       "date": "2026-09-14",
-      "amount": 76.27,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*7CCBCB7E"
+      "amount": 7.79,
+      "merchant": "POS DEBIT DIDDY RIESE",
+      "description": "Food"
     },
     {
       "type": "purchase",
-      "date": "2026-09-15",
-      "amount": 18.28,
-      "merchant": "METRO TAP RELOAD #973",
-      "description": "Transit"
+      "date": "2026-09-17",
+      "amount": 6.86,
+      "merchant": "DIDDY RIESE #946",
+      "description": "Food"
     },
     {
       "type": "deposit",
       "date": "2026-09-18",
-      "amount": 460.56,
+      "amount": 507.15,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-09-18",
+      "amount": 60.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "purchase",
@@ -1582,56 +1603,43 @@
     },
     {
       "type": "purchase",
-      "date": "2026-09-19",
-      "amount": 22.86,
-      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
-      "description": "Groceries"
-    },
-    {
-      "type": "withdrawal",
-      "date": "2026-09-19",
-      "amount": 60.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
-      "type": "purchase",
       "date": "2026-09-21",
-      "amount": 44.92,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
+      "amount": 24.95,
+      "merchant": "RALPHS WESTWOOD #681",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-22",
-      "amount": 26.85,
+      "amount": 56.34,
       "merchant": "Venmo",
-      "description": "VENMO *7090"
+      "description": "VENMO PAYMENT 6462"
     },
     {
       "type": "purchase",
-      "date": "2026-09-23",
-      "amount": 21.72,
+      "date": "2026-09-24",
+      "amount": 12.38,
       "merchant": "Trader Joe's Westwood",
       "description": "Groceries"
     },
     {
       "type": "purchase",
       "date": "2026-09-28",
-      "amount": 32.92,
-      "merchant": "Westwood Bike Shop",
-      "description": "Bike parts"
+      "amount": 17.78,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "purchase",
-      "date": "2026-10-01",
-      "amount": 45.7,
-      "merchant": "Ralphs Westwood",
-      "description": "Groceries"
+      "date": "2026-09-30",
+      "amount": 35.5,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*6D894DFA"
     },
     {
       "type": "deposit",
       "date": "2026-10-02",
-      "amount": 762.32,
+      "amount": 777.19,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
@@ -1644,37 +1652,29 @@
     {
       "type": "purchase",
       "date": "2026-10-02",
-      "amount": 16.52,
-      "merchant": "Amazon Marketplace",
-      "description": "AMAZON.COM*27720AA3"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-03",
-      "amount": 3.46,
-      "merchant": "Diddy Riese",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-06",
-      "amount": 4.47,
-      "merchant": "POS DEBIT DIDDY RIESE",
-      "description": "Food"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-09",
-      "amount": 56.0,
+      "amount": 29.16,
       "merchant": "POS DEBIT RALPHS WESTWOOD",
       "description": "Groceries"
     },
     {
       "type": "purchase",
-      "date": "2026-10-09",
-      "amount": 36.04,
-      "merchant": "Venmo",
-      "description": "VENMO *6720"
+      "date": "2026-10-04",
+      "amount": 44.6,
+      "merchant": "POS DEBIT TRADER JOE'S WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-08",
+      "amount": 18.66,
+      "merchant": "METRO TAP RELOAD #73",
+      "description": "Transit"
+    },
+    {
+      "type": "withdrawal",
+      "date": "2026-10-08",
+      "amount": 100.0,
+      "description": "ATM WITHDRAWAL LOS ANGELES CA"
     },
     {
       "type": "purchase",
@@ -1684,79 +1684,66 @@
       "description": "NETFLIX.COM"
     },
     {
-      "type": "withdrawal",
-      "date": "2026-10-10",
-      "amount": 40.0,
-      "description": "ATM WITHDRAWAL LOS ANGELES CA"
-    },
-    {
       "type": "purchase",
       "date": "2026-10-11",
-      "amount": 15.61,
-      "merchant": "METRO TAP RELOAD #973",
-      "description": "Transit"
+      "amount": 37.39,
+      "merchant": "Venmo",
+      "description": "VENMO PAYMENT 4888"
     },
     {
       "type": "purchase",
       "date": "2026-10-13",
-      "amount": 28.5,
-      "merchant": "WESTWOOD BIKE SHOP #850",
-      "description": "Bike parts"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-15",
-      "amount": 26.82,
-      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
-      "description": "Bike parts"
+      "amount": 19.8,
+      "merchant": "Metro TAP Reload",
+      "description": "Transit"
     },
     {
       "type": "deposit",
       "date": "2026-10-16",
-      "amount": 757.25,
+      "amount": 710.29,
       "description": "PAYROLL DIRECT DEP - WESTWOOD COFFEE CO"
     },
     {
       "type": "purchase",
-      "date": "2026-10-17",
-      "amount": 51.83,
-      "merchant": "Amazon Marketplace",
-      "description": "AMZN Mktp US*59BB46B3"
+      "date": "2026-10-16",
+      "amount": 8.86,
+      "merchant": "POS DEBIT WESTWOOD BIKE SHOP",
+      "description": "Bike parts"
     },
     {
       "type": "purchase",
-      "date": "2026-10-18",
+      "date": "2026-10-20",
+      "amount": 25.26,
+      "merchant": "POS DEBIT RALPHS WESTWOOD",
+      "description": "Groceries"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-21",
       "amount": 35.0,
       "merchant": "SoCal Wireless",
       "description": "Phone bill"
     },
     {
       "type": "purchase",
-      "date": "2026-10-18",
-      "amount": 11.87,
-      "merchant": "Metro TAP Reload",
-      "description": "Transit"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-22",
-      "amount": 37.9,
-      "merchant": "Trader Joe's Westwood",
-      "description": "Groceries"
+      "date": "2026-10-24",
+      "amount": 27.06,
+      "merchant": "Amazon Marketplace",
+      "description": "AMZN Mktp US*4D975C14"
     },
     {
       "type": "purchase",
       "date": "2026-10-24",
-      "amount": 27.28,
-      "merchant": "TRADER JOE'S WESTWOOD #60",
-      "description": "Groceries"
-    },
-    {
-      "type": "purchase",
-      "date": "2026-10-24",
-      "amount": 47.16,
+      "amount": 47.85,
       "merchant": "Venmo",
-      "description": "VENMO PAYMENT 9065"
+      "description": "VENMO PAYMENT 5911"
+    },
+    {
+      "type": "purchase",
+      "date": "2026-10-25",
+      "amount": 33.47,
+      "merchant": "Westwood Bike Shop",
+      "description": "Bike parts"
     }
   ]
 }

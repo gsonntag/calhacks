@@ -15,6 +15,9 @@ and the findings a correct audit should report.
 
 Money is handled in integer cents so every total adds up exactly.
 
+Optional `gig` in a spec: weekly gig-platform payouts (descriptions, first_payout, amount, vary_pct, skip, off),
+which finance.income counts as income.
+
 Planted errors (each optional, `errors` in a spec):
   insurance_not_applied   the bill asks for full charges although the insurer processed the claim
   uncredited_payment      {"amount", "date"}: a payment in the bank that the bill doesn't show
@@ -224,8 +227,71 @@ SPECS: dict[str, dict] = {
                    "duplicate_bank_charge": {"merchant": "Gregory Lane Cleaners", "amount": 26.50,
                                              "date": "2026-09-28", "description": "Dry cleaning"}},
     },
-    "jordan-ucla-wrist": {
+    "raj-cpmc": {
         "seed": 1106,
+        "story": "Raj drives for Uber and Lyft; a kidney stone put him in CPMC's emergency department (CT, labs, "
+                 "IV fluids), rebuilt from CPMC's real price file. Insured, household of 4 (his wife's part-time "
+                 "paychecks plus his gig payouts) at about 135% of the poverty line. The bill lists the IV "
+                 "hydration twice, charges the CT above CPMC's own posted price, ignores his insurance and misses "
+                 "the $400 he paid. His share of this bill alone is under Sutter's 10%-of-income bar; his last "
+                 "12 months of medical bills in the bank (urgent care, imaging, pharmacy, physical therapy, the "
+                 "kids' pediatrician) put him over it, so Sutter writes his share off and the $400 comes back.",
+        "hospital_id": "sutter-cpmc",
+        "patient": {"first_name": "Raj", "last_name": "Mehta", "household_size": 4, "dob": "1987-09-12",
+                    "phone_label": "Raj's phone",
+                    "address": {"street_number": "471", "street_name": "Excelsior Ave", "city": "San Francisco",
+                                "state": "CA", "zip": "94112"}},
+        "pay": {"employer": "SF UNIFIED SCHOOL DIST", "frequency": "biweekly", "amount": 980.00,
+                "first_payday": "2026-07-17"},
+        "gig": [{"descriptions": ["UBER DRIVER PAYOUT", "UBER BV EARNINGS", "UBER INSTANT PAY"],
+                 "first_payout": "2026-07-13", "amount": 400.00, "vary_pct": 35, "skip": 0.06,
+                 "off": [["2026-08-14", "2026-08-30"]]},
+                {"descriptions": ["LYFT INC DRIVER EARNINGS", "LYFT EXPRESS PAY"],
+                 "first_payout": "2026-07-15", "amount": 120.00, "vary_pct": 50, "skip": 0.25,
+                 "off": [["2026-08-14", "2026-08-30"]]}],
+        "rent": {"merchant": "Excelsior Flats LLC", "amount": 2350.00, "description": "Rent"},
+        "merchants": [("Safeway Mission St", "Groceries", 45, 160), ("Mission Produce Market", "Groceries", 15, 60),
+                      ("Shell Alemany Blvd", "Gas", 35, 70), ("Chevron Geneva Ave", "Gas", 30, 65),
+                      ("Excelsior Car Wash", "Car wash", 12, 25), ("Bay Wireless Co", "Phone bill", 95, 95),
+                      ("Mission Auto Credit", "Car payment", 389, 389)],
+        # a family's year of care plus Raj's first stone episode and his back (hours in the driver's seat)
+        "medical": [("Excelsior Pediatrics", "Office visit copay", 40.00, "2025-12-03"),
+                    ("CVS/PHARMACY #4127", "Prescription", 64.20, "2025-12-04"),
+                    ("Mission Urgent Care", "Visit copay", 125.00, "2026-01-20"),
+                    ("Excelsior Pediatrics", "Office visit copay", 40.00, "2026-01-21"),
+                    ("Mission Urgent Care", "Visit copay", 125.00, "2026-02-17"),
+                    ("Bay Imaging Partners", "Imaging copay", 250.00, "2026-02-24"),
+                    ("WALGREENS #3127", "Prescription", 41.85, "2026-02-25"),
+                    ("Bay Imaging Partners", "Ultrasound copay", 250.00, "2026-03-10"),
+                    ("Excelsior Pediatrics", "Urgent visit copay", 75.00, "2026-03-30"),
+                    ("Sunset Physical Therapy", "PT evaluation copay", 55.00, "2026-03-31"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-04-14"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-04-28"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-05-12"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-05-26"),
+                    ("CVS/PHARMACY #4127", "Prescription", 64.20, "2026-06-08"),
+                    ("Excelsior Family Dental", "Filling copay", 185.00, "2026-07-09"),
+                    ("WALGREENS #3127", "Prescription", 38.90, "2026-08-15"),
+                    ("Bay Imaging Partners", "Imaging copay", 250.00, "2026-09-02"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-09-22"),
+                    ("CVS/PHARMACY #4127", "Prescription", 64.20, "2026-09-10"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-10-06"),
+                    ("Sunset Physical Therapy", "PT session copay", 55.00, "2026-10-20")],
+        "insurance": {"insurer": "Fogline Health Plan", "member_id": "FHP-6630918", "claim_number": "C-2026-0814-52760",
+                      "deductible_remaining": 3000.00, "coinsurance_pct": 30, "oop_max_remaining": 4200.00,
+                      "processed": "2026-08-31"},
+        "visit": {"service_date": "2026-08-14", "statement_date": "2026-10-09", "due_date": "2026-11-08",
+                  "account_number": "CPMC-51862304",
+                  "notice": "PAST DUE - second notice. Please pay the balance below or call to arrange payment."},
+        "procedures": [("99284", 1), ("74176", 1), ("80048", 1), ("85025", 1), ("81001", 1), ("96360", 1),
+                       ("96374", 1), ("J1885", 1), ("J2405", 4)],
+        "errors": {"duplicate_line": {"code": "96360"},
+                   "price_above_posted": {"code": "74176", "billed": 7150.00},
+                   "insurance_not_applied": True,
+                   "uncredited_payment": {"amount": 400.00, "date": "2026-09-05"}},
+    },
+    "jordan-ucla-wrist": {
+        "seed": 1107,
         "story": "Jordan, 20, a UCLA junior, came off his bike on Bruin Walk and broke his wrist: a non-displaced "
                  "distal radius fracture. Ronald Reagan UCLA's emergency department X-rayed it, splinted it and "
                  "gave a pain shot (real UCLA prices). He has a student health plan and works about 20 hours a week "
@@ -468,6 +534,20 @@ def bank(spec: dict, provider: str, start: date, end: date,
                      "amount": round(pay["amount"] * pay.get("factors", {}).get(_iso(d), 1)
                                      * (1 + pay_rng.uniform(-vary, vary)), 2),
                      "description": f"PAYROLL DIRECT DEP - {pay['employer']}"})
+    # gig payouts (spec `gig`): weekly platform deposits that vary a lot from week to week, with weeks off
+    # (`off`: date ranges with no driving). finance.income counts them as income (OTHER_INCOME). Own random
+    # stream, so specs without `gig` generate exactly what they did before.
+    gig_rng = random.Random(spec["seed"] * 53 + 11)
+    for g in spec.get("gig", []):
+        off = [(date.fromisoformat(a), date.fromisoformat(b)) for a, b in g.get("off", [])]
+        d = date.fromisoformat(g["first_payout"])
+        d -= timedelta(days=7) * ((d - start).days // 7)
+        while d <= end:
+            if d >= start and not any(a <= d <= b for a, b in off) and gig_rng.random() >= g.get("skip", 0):
+                txns.append({"type": "deposit", "date": _iso(d),
+                             "amount": round(g["amount"] * (1 + gig_rng.uniform(-g["vary_pct"], g["vary_pct"]) / 100), 2),
+                             "description": gig_rng.choice(g["descriptions"])})
+            d += timedelta(days=7)
     r = spec["rent"]
     for m in _months(start, end, 1):  # rent goes out on the 1st or a day or two later
         txns.append({"type": "purchase", "date": _iso(m + timedelta(days=rng.choice((0, 0, 1, 2)))),
@@ -733,11 +813,12 @@ def _expected(name, spec, case, prov, adj, pol, src, table, as_of, planted, m) -
                          else f"{elig['discount_pct']:.0f}% discount under their policy",
                          "money": round(saved, 2), "quote": elig["tier"].get("quote"),
                          "source": elig["tier"].get("source_url")})
-    if st["refund"]:
+    if st["refund"] and errs.get("refund_owed"):
         cr = [p for p in planted["hospital_payments"] if p["credited"]]
         err("refund_owed", f"Payments of ${rec['paid']:,.2f} exceed her discounted share of "
                            f"${st['discounted_share']:,.2f}: the hospital owes ${st['refund']:,.2f} back", 0,
             refund=st["refund"], credited_payments=cr)
+    if st["refund"]:
         findings.append({"id": "refund", "agent": "bright_data", "title": "Refund owed", "money": st["refund"],
                          "proof": "; ".join(f"bank txn {t['id']} ${t['amount']:,.2f} on {t['date']}"
                                             for t in rec["payments"])})

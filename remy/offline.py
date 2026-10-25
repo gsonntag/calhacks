@@ -21,16 +21,48 @@ from .events import bus
 
 LABEL = "offline demo"
 
-# Billing's side of the call. The scripted caller (agents/caller.py) answers each line; after the script, billing
-# keeps confirming until the caller wraps up. Same lines the offline end-to-end test plays (tests/test_flow.py).
-REP_SCRIPT = ["Patient Financial Services, this is Diane. How can I help you?",
-              "Okay, let me pull that account up.",
-              "I see it here.",
-              "Okay.",
-              "Yes, I've opened a financial assistance review and put the account on hold.",
-              "Your case number is 58213.",
-              "Yes, that's right."]
+# Billing's side of the call. Billing answers what the scripted caller (agents/caller.py) just asked: it promises a
+# corrected statement for the corrections (the insurance adjustment, a missed payment, a wrong line), opens the
+# financial-assistance review and puts the account on hold, gives a case number and confirms the read-back. It
+# agrees to nothing on the spot: corrections are promised for later. After that it keeps confirming until the
+# caller wraps up. REP_SCRIPT is what billing says on Rosa's call (insurance, payment, hold).
+REP_GREETING = "Patient Financial Services, this is Diane. How can I help you?"
+REP_LOOKUP = "Okay, let me pull that account up."
+REP_CORRECTION = ("I see that. I'll send it to be corrected, and we'll send you a corrected statement once the "
+                  "corrections are processed.")
+REP_CORRECTION_MORE = "Okay, I've noted that too. It'll be on the corrected statement."
+REP_REVIEW = "Okay, I've opened a financial assistance review and put the account on hold."
+REP_HOLD = "Okay, I've put the account on hold."
+REP_CASE = "Your case number is 58213."
+REP_CONFIRM = "Yes, that's right."
+REP_OK = "Okay, I see it here."
 REP_AFTER = "Okay. Your case number is 58213. Is there anything else?"
+REP_SCRIPT = [REP_GREETING, REP_LOOKUP, REP_CORRECTION, REP_CORRECTION_MORE, REP_HOLD, REP_CASE, REP_CONFIRM]
+
+
+def billing_reply(i: int, remy_said: str, corrections: int = 0) -> str:
+    """What billing says to Remy's last line. i: billing's turn number; corrections: how many correction asks
+    billing has already answered this call."""
+    s = (remy_said or "").lower()
+    if i == 0:
+        return REP_GREETING
+    if i == 1:
+        return REP_LOOKUP
+    if "read that back" in s:
+        return REP_CONFIRM
+    if "case or reference number" in s:
+        return REP_CASE
+    if "open a financial assistance review" in s:
+        return REP_REVIEW
+    if "on hold" in s or "hold the account" in s:
+        return REP_HOLD
+    if re.search(r"\b(insurance|eob|payment|line \d+|duplicate|posted price|corrected balance)\b", s):
+        return REP_CORRECTION_MORE if corrections else REP_CORRECTION
+    if "goodbye" in s or "anything else" in s or re.search(r"\b58213\b", s):
+        return REP_AFTER
+    return REP_OK
+
+
 MAX_TURNS = 16
 FIRST = 2.5          # seconds before billing picks up
 PAUSE = 1.2          # seconds billing "thinks" before answering
@@ -39,12 +71,13 @@ READ_SPEED = 0.055   # seconds per character of Remy's last line, so the case pa
 
 async def play_billing(case: dict, session) -> None:
     """Drive a desk-mode call from billing's side until it ends. Same path as POST /api/calls/{id}/turn."""
-    said = ""
+    said, corrections = "", 0
     for i in range(MAX_TURNS):
         await asyncio.sleep(PAUSE + min(7.0, len(said) * READ_SPEED) if i else FIRST)
         if session.ended:
             break
-        line = REP_SCRIPT[i] if i < len(REP_SCRIPT) else REP_AFTER
+        line = billing_reply(i, said, corrections)
+        corrections += line in (REP_CORRECTION, REP_CORRECTION_MORE)
         try:
             said = await session.turn(line) or ""
         except Exception as e:

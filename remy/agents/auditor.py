@@ -14,6 +14,22 @@ def _dup_note(d: dict) -> str:
     return f"also: possible double charge at {d['duplicate']['merchant']} (${d['amount']:,.2f}), separate from this bill"
 
 
+def mistakes(rec: dict) -> int:
+    """Mistakes found on the bill: each line error, insurance not applied, each payment it doesn't show."""
+    ins = any(ln["label"].startswith("Insurance") and ln["amount"] < 0 for ln in rec["lines"])
+    return len(rec.get("line_errors") or []) + ins + len(rec["uncredited_payments"])
+
+
+def summary(rec: dict) -> dict:
+    """The headline (agent_finished and review_done): the balance, then what was actually found ('4 mistakes
+    found'; 'no errors on the bill' only when there are none), plus a bank double charge when there is one."""
+    n = mistakes(rec)
+    note = f"{n} mistake{'s' if n != 1 else ''} found" if n else "no errors on the bill"
+    if rec["duplicates"]:
+        note += f" · {_dup_note(rec['duplicates'][0])}"
+    return {"result": f"${rec['owed']:,.0f} owed", "note": note}
+
+
 def report(case_id: str, bank_label: str) -> Report:
     return Report(case_id, "auditor", "Nessie agent",
                   f"Your own records: bank ({bank_label.split(' (')[0]}), the bill, your insurance statement")
@@ -146,9 +162,8 @@ async def run(case: dict, bank, account_id: str, bank_label: str,
     owed_ready.set_result({"owed": rec["owed"], "responsibility": rec["patient_responsibility"], "paid": rec["paid"],
                            "insured": insured})
 
-    note = (_dup_note(rec["duplicates"][0]) if rec["duplicates"]
-            else "no errors on the bill")
-    r.finish(f"${rec['owed']:,.0f} owed", note)
+    done = summary(rec)
+    r.finish(done["result"], done["note"])
     return {"reconciliation": rec, "transactions": txns, "medical": med}
 
 

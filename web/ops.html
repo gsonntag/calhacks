@@ -172,7 +172,8 @@
 const id = new URLSearchParams(location.search).get('id');
 const $ = (x) => document.getElementById(x);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const money = (n) => '$' + Number(n).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+// whole dollars when there are no cents ($400), otherwise exactly two decimals ($16,088.70)
+const money = (n) => { const v = Number(n); return '$' + v.toLocaleString('en-US', Math.round(v * 100) % 100 ? {minimumFractionDigits: 2, maximumFractionDigits: 2} : {maximumFractionDigits: 0}); };
 const LANES = {
   auditor: ['receipt_long', 'Nessie agent', 'Your records: bill vs insurance, payments & duplicates in your bank (Nessie)'],
   policy: ['travel_explore', 'Bright Data agent', "The hospital's own discount and payment-plan rules (Bright Data)"],

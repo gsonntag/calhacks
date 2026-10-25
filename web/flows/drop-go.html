@@ -60,7 +60,9 @@
   .progress .chip.on { opacity: 1; background: var(--st-success-container); color: var(--st-on-success-container); }
   .progress .chip.on .material-symbols-rounded { display: inline-block; }
   .alt { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-left: -12px; }
-  .alt .m3-btn { height: 40px; }
+  .alt .m3-btn { height: auto; min-height: 40px; text-align: left; }
+  .alt .m3-btn:disabled small { display: block; font-weight: 400; }
+  .alt .lead { width: 100%; margin: 0 0 0 12px; }
   .trust { display: flex; flex-wrap: wrap; gap: 8px; }
   @media (max-width: 600px) {
     .slots { grid-template-columns: 1fr; gap: 12px; }
@@ -126,10 +128,7 @@
       <span class="chip m3-status" data-p="2"><span class="material-symbols-rounded" aria-hidden="true">check</span>Opening your case</span>
     </div>
     <div class="err body-m text-error" id="err" role="alert"></div>
-    <div class="alt">
-      <button class="m3-btn text" id="sample" type="button">Don't have it handy? Use a sample bill</button>
-      <button class="m3-btn text" id="freecare" type="button">Try the free-care example</button>
-    </div>
+    <div class="alt" id="examples" role="group" aria-label="Don't have it handy? Try an example"></div>
     <div class="trust">
       <span class="m3-status success"><span class="material-symbols-rounded" aria-hidden="true">verified_user</span>Nothing is paid without your OK</span>
       <span class="m3-status"><span class="material-symbols-rounded" aria-hidden="true">lock</span>Your files stay private</span>
@@ -138,6 +137,7 @@
 </main>
 
 <script src="/auth.js"></script>
+<script src="/examples.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const files = { bill: null, eob: null };
@@ -212,8 +212,17 @@ async function start(withFiles, scenario, hh) {
   }
 }
 go.addEventListener('click', () => start(true));
-$('sample').addEventListener('click', () => start(false));
-$('freecare').addEventListener('click', () => start(false, 'freecare', 3));  // Marcus's household: 3
+// "Try an example": the demo patients from GET /api/examples (remy/examples.py), Raj first
+Examples.load().then((list) => {
+  const box = $('examples');
+  if (!list.length) return;
+  box.innerHTML = `<p class="lead body-m muted">Don't have it handy? Try an example:</p>` + list.map((ex, i) =>
+    `<button class="m3-btn text" type="button" data-i="${i}"${ex.available ? '' : ' disabled'}>${Examples.esc(ex.label)}${ex.available ? '' : `<small>${Examples.esc(ex.note)}</small>`}</button>`).join('');
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-i]');
+    if (b && !b.disabled) { const ex = list[+b.dataset.i]; start(false, ex.scenario, ex.household_size); }
+  });
+});
 render();
 </script>
 </body>

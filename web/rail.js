@@ -11,6 +11,20 @@ const Rail = (() => {
     calling: ['On a call', 'live'], planning: ['Planning', 'live'], done: ['Resolved', 'green'], interrupted: ['Interrupted', ''], error: ['Error', ''],
   };
   const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0)) + (c.refund || 0);
+  // the money line: billed → what it should be (+ any refund owed), e.g. "$16,089 → $0 + $400 back"
+  function moneyLine(c) {
+    const billed = c.original || 0, to = c.target != null ? c.target : c.current_balance, back = c.expected_refund || 0;
+    if (to == null || (to >= billed && !back)) return billed ? money(billed) : '';
+    return `${money(billed)} → ${money(to)}${back ? ` + ${money(back)} back` : ''}`;
+  }
+  // a long hospital name shortens to its initials ("California Pacific Medical Center" → "CPMC"); the full name is
+  // the row's tooltip
+  function shortName(name) {
+    const s = String(name || '');
+    if (s.length <= 24) return s;
+    const caps = s.split(/[\s-]+/).filter((w) => /^[A-Z]/.test(w)).map((w) => w[0]).join('');
+    return caps.length >= 2 ? caps : s;
+  }
   // needs the patient: a call or a call plan waiting for approval, or a follow-up past due
   function needsYou(c) {
     if (c.status === 'awaiting_call_approval') return 'Approve the call';
@@ -46,11 +60,14 @@ const Rail = (() => {
         const on = c.id === R.active, saved = savedOf(c);
         // the open case's own stream may still be playing earlier steps: then it, not the poll, says what's needed
         const live = R.live && R.live(c), [label, dot] = live || statusOf(c), need = live ? '' : needsYou(c);
-        return `<li class="rc-item"><button type="button" class="rc${need ? ' needs' : ''}" data-tab="${esc(c.id)}"${on ? ' aria-current="page"' : ''}>
-          <span class="rc-top"><span class="rc-name">${esc(c.provider)}</span>${saved ? `<span class="rc-saved">−${money(saved)}</span>` : ''}</span>
-          <span class="rc-sub"><span class="dot ${dot}"></span><span>${esc(label)} · ${esc(c.patient)}</span></span>
+        const amt = moneyLine(c), who = c.patient || c.provider;
+        // patient first; the money line; then the status and a short hospital name
+        return `<li class="rc-item"><button type="button" class="rc${need ? ' needs' : ''}" data-tab="${esc(c.id)}"${on ? ' aria-current="page"' : ''} title="${esc(c.patient)} · ${esc(c.provider)}">
+          <span class="rc-top"><span class="rc-name">${esc(who)}</span>${saved ? `<span class="rc-saved">−${money(saved)}</span>` : ''}</span>
+          ${amt ? `<span class="rc-money">${esc(amt)}</span>` : ''}
+          <span class="rc-sub"><span class="dot ${dot}"></span><span>${esc(label)} · ${esc(shortName(c.provider))}</span></span>
           ${need ? `<span class="m3-status warn">${esc(need)}</span>` : ''}</button>
-          <button type="button" class="m3-icon-btn rc-more" data-more="${esc(c.id)}" aria-haspopup="menu" aria-label="More for ${esc(c.provider)}">
+          <button type="button" class="m3-icon-btn rc-more" data-more="${esc(c.id)}" aria-haspopup="menu" aria-label="More for ${esc(who)}">
             <span class="material-symbols-rounded" aria-hidden="true">more_vert</span></button></li>`;
       };
       const archived = R.cases.filter((c) => c.archived);

@@ -8,6 +8,7 @@ import pytest
 
 from remy import app as app_mod
 from remy import config, orchestrator
+from remy.agents import caller
 from remy.events import bus
 
 # Kinds web/case.html renders from the /ws/cases/{id} stream.
@@ -250,3 +251,182 @@ async def test_caller_llm_error_keeps_history_valid(monkeypatch):
     say = await s.turn("hello?")
     assert say == "Sorry, could you say that again?" and s.messages == [] and not s.ended
     assert any(e["kind"] == "warning" for e in bus.history("c1"))
+
+
+class _RajDay(date):
+    @classmethod
+    def today(cls):
+        return date(2026, 10, 25)  # the as_of of demo/scenarios/raj-cpmc/expected.json
+
+
+def test_discount_line_says_the_tiers_own_reason():
+    """A high-medical-cost tier qualifies on 12 months of medical costs; an income-only tier on the poverty line."""
+    high = {"policy_tier": {"min_oop_pct_income": 10.0}, "medical_costs_pct_income": 14.1, "income_pct_fpl": 134.5,
+            "medical_costs_12_months": {"this_bill": 4200.0, "other_medical_bills_in_bank": 2053.35}}
+    said = caller._qualifies_line(high)
+    assert "medical expenses over the past 12 months are about 14% of family income" in said
+    assert "over your policy's 10%" in said and "$2,053" in said and "poverty" not in said
+    income = {"policy_tier": {"min_oop_pct_income": None}, "income_pct_fpl": 180.0}
+    assert "about 180 percent of the poverty line, which qualifies" in caller._qualifies_line(income)
+
+
+def test_bill_line_asks_are_said_from_the_auditors_line_errors():
+    rec = {"line_errors": [
+        {"kind": "duplicate_line", "line": 7, "code": "96360", "amount": 1160.0, "source": "bill · lines 6 and 7",
+         "detail": "Line 7 repeats line 6: HCHG INFUSION HYDRATION INITIAL UP TO 1 HR, $1,160.00."},
+        {"kind": "price_above_posted", "line": 2, "code": "74176", "amount": 776.0, "billed": 7150.0, "posted": 6374.0,
+         "source": "CPMC price file, 2026-04-01", "detail": "Line 2 charges $7,150.00; the posted price is $6,374.00."}]}
+    asks = [{"kind": "insurance", "findings": ["auditor:insurance"]},
+            {"kind": "bill_line", "findings": ["auditor:price_above_posted-2"]},
+            {"kind": "bill_line", "findings": ["auditor:duplicate_line-7"]}]
+    got = caller._bill_corrections(asks, rec)
+    assert [c["line"] for c in got] == [2, 7]  # the plan's order
+    ct, dup = (caller._correction_line(c) for c in got)
+    assert "Line 2" in ct and "$7,150" in ct and "$6,374" in ct and "$776" in ct and "price file dated 2026-04-01" in ct
+    assert "Line 7" in dup and "repeats line 6" in dup and "$1,160" in dup and "duplicate" in dup
+
+
+async def test_raj_hero_case_end_to_end(client, monkeypatch):
+    """?scenario=raj: both app agents + the Decide agent, offline, reach the answer key, and the plan asks for every
+    correction, free care and the refund; the offline call ends at $0 + the $400 back."""
+    monkeypatch.setattr(orchestrator, "date", _RajDay)
+    exp = json.loads((config.DEMO_DIR / "scenarios" / "raj-cpmc" / "expected.json").read_text())
+    c = client
+    case_id = (await c.post("/api/cases?scenario=raj&household_size=4")).json()["case_id"]
+    plan = (await _wait_for(case_id, lambda e: e["kind"] == "plan_version"))["plan"]
+    hist = bus.history(case_id)
+    finds = {e["key"].split(":", 1)[1]: e for e in hist if e["kind"] == "finding" and e["agent"] == "auditor"}
+    assert finds["duplicate_line-7"]["saved"] == 1160 and finds["price_above_posted-2"]["saved"] == 776
+    assert finds["insurance"]["saved"] == next(f["money"] for f in exp["findings"] if f["id"] == "insurance_not_applied")
+    assert [k for k in finds if k.startswith("paid-")] == [f["id"] for f in exp["findings"] if f["id"].startswith("paid-")]
+
+    m = plan["money"]
+    assert m["billed"] == exp["totals"]["amount_due"] and m["owed"] == exp["waterfall"]["owed_before_discount"]
+    assert m["target"] == 0 and m["refund"] == exp["correct"]["refund"] == 400
+    asks = {a["id"]: a for a in plan["asks"]}
+    assert {"bill_line-7", "bill_line-2", "insurance", "payment", "discount", "refund", "hold", "case_number"} <= set(asks)
+    assert "bills 96360 a second time" in asks["bill_line-7"]["text"]
+    assert "74176 above the hospital's posted price" in asks["bill_line-2"]["text"]
+    assert "free care" in asks["discount"]["text"] and asks["refund"]["money"] == 400
+
+    elig = orchestrator.cases[case_id]["facts"]["pol"]["eligibility"]
+    assert elig["discount_pct"] == 100 and not elig.get("gross_check")
+    _assert_raj_review_reads_right(case_id, plan, exp)
+
+    await _approve(c, case_id, "caller")
+    ready = await _wait_for(case_id, lambda e: e["kind"] == "call_ready")
+    remy = await _billing_plays(c, ready["call_id"])
+    said = " ".join(e["text"] for e in bus.history(case_id) if e["kind"] == "transcript" and e["speaker"] == "remy")
+    assert "$400" in said
+    # both line errors are said, in the plan's order, each with its line, amount and source
+    dup = next(i for i, x in enumerate(remy) if "Line 7" in x)
+    ct = next(i for i, x in enumerate(remy) if "Line 2" in x)
+    assert (dup < ct) == ([a["id"] for a in plan["asks"]].index("bill_line-7") < [a["id"] for a in plan["asks"]].index("bill_line-2"))
+    assert "repeats line 6" in remy[dup] and "96360" in remy[dup] and "$1,160" in remy[dup]
+    assert "$7,150" in remy[ct] and "$6,374" in remy[ct] and "$776" in remy[ct] and "price file" in remy[ct]
+    # free care for the real reason: an insured high-medical-cost write-off, not income alone
+    assert "medical expenses over the past 12 months are about 14% of family income" in said
+    assert "over your policy's 10%" in said and "$2,053 of other medical bills" in said
+    assert "poverty" not in said.lower()
+    brief = orchestrator.cases[case_id]["result"]["brief"]
+    assert brief["medical_costs_pct_income"] == exp["discount"]["oop_pct_income"]
+    assert [f"bill_line-{x['line']}" for x in brief["bill_corrections"]] == [
+        a["id"] for a in plan["asks"] if a["kind"] == "bill_line"]
+    assert all(any(x["detail"] in g for g in brief["goals"]) for x in brief["bill_corrections"])  # a live call asks too
+    s = (await _wait_for(case_id, lambda e: e["kind"] == "case_done"))["summary"]
+    # not confirmed by billing yet: $0 and the $400 refund are what Remy expects once the corrections land
+    assert s["expected"] == 0 and s["expected_refund"] == 400 and s["case_number"] == "58213"
+    # billing promised every correction for later; nothing billing answered is "no clear answer"
+    marks = {m["id"]: m["status"] for m in next(e for e in bus.history(case_id) if e["kind"] == "scorecard")["marks"]}
+    assert marks == {"bill_line-7": "later", "bill_line-2": "later", "insurance": "later", "payment": "later",
+                     "discount": "later", "refund": "later", "hold": "got", "case_number": "got"}
+
+
+async def _billing_plays(c, call_id: str) -> list[str]:
+    """The offline billing rep (offline.billing_reply) answers each of Remy's lines; returns what Remy said."""
+    from remy import offline
+    said, out, n = "", [], 0
+    for i in range(offline.MAX_TURNS):
+        line = offline.billing_reply(i, said, n)
+        n += line in (offline.REP_CORRECTION, offline.REP_CORRECTION_MORE)
+        r = (await c.post(f"/api/calls/{call_id}/turn", json={"rep_said": line})).json()
+        said = r["say"]
+        out.append(said)
+        if r["ended"]:
+            break
+    return out
+
+
+def _assert_raj_review_reads_right(case_id: str, plan: dict, exp: dict) -> None:
+    """What the Review and the plan say about Raj: the mistakes found, that his bank history is what qualifies him,
+    and money that reads the same in the findings, the asks and the math."""
+    hist = bus.history(case_id)
+    done = {e["agent"]: e for e in hist if e["kind"] == "agent_finished"}
+    review = next(e for e in hist if e["kind"] == "review_done")
+    # 1. the Nessie headline counts what it found (2 line errors, insurance, the missed $400), never "no errors"
+    for note in (done["auditor"]["note"], review["auditor"]["note"]):
+        assert note == "4 mistakes found" and "no errors" not in note
+    # 2. the bank's other medical bills tip him over the 10% line: the headline of the step, finding and Review line
+    bank = ("Your bank history qualifies you: this bill alone is 9.5% of income; with $2,053 of other medical bills "
+            "it's 14.1% — over Sutter Health's 10% limit")
+    free = [e for e in hist if e["kind"] == "step" and e["key"] == "policy:free"][-1]
+    assert free["status"] == "win" and free["result"] == bank
+    disc = next(e for e in hist if e["kind"] == "finding" and e["key"] == "policy:discount")
+    assert disc["title"] == "Free care: your bank history qualifies you" and disc["proof"][0] == bank + "."
+    assert any(exp["discount"]["tier_quote"] in p for p in disc["proof"])  # the policy quote stays in the proof
+    assert review["policy"]["result"] == "Your bank history qualifies you: free care → $0 + $400 back"
+    assert done["policy"]["summary"] == review["policy"]["result"]
+    # 3. the finding says what's written off; the ask says what that does to what he owes
+    assert disc["value"] == "$4,200 share written off"
+    ask = next(a for a in plan["asks"] if a["id"] == "discount")
+    assert ask["text"] == "Ask for free care under their own policy: it brings the $3,800 you owe to $0, and $400 back"
+    assert ask["value"] == "$3,800 owed → $0"
+    # the math: the same split as the findings (insurance −$9,952.70, each bill error apart), and it adds up
+    lines = plan["math"]
+    owe = next(i for i, ln in enumerate(lines) if ln["label"] == "You owe")
+    assert round(sum(ln["amount"] for ln in lines[:owe]), 2) == lines[owe]["amount"] == 3800
+    assert next(ln for ln in lines if ln["label"] == "Insurance not applied")["amount"] == -9952.70
+    assert lines[owe + 1]["label"] == "Free care: your $4,200 share written off"
+    assert round(lines[owe]["amount"] + lines[owe + 1]["amount"], 2) == -lines[-1]["amount"] == -400
+    m = plan["decided"]["math"]
+    assert m[0] == "$16,088.70 billed − $9,952.70 insurance − $776 bill error − $1,160 bill error − $400 paid = $3,800 owed"
+    assert m[1] == "$4,200 share, 100% written off under their policy = $0 − $400 paid → they owe you $400"
+    assert "11,889" not in " ".join(m) and "×" not in " ".join(m)
+
+
+async def test_marcus_review_stays_plain(client):
+    """Marcus (?scenario=freecare) qualifies on this bill alone: no "bank history qualifies you", no mistakes."""
+    case_id = (await client.post("/api/cases?scenario=freecare&household_size=4")).json()["case_id"]
+    plan = (await _wait_for(case_id, lambda e: e["kind"] == "plan_version"))["plan"]
+    hist = bus.history(case_id)
+    assert orchestrator.cases[case_id]["facts"]["pol"]["eligibility"]["needs_bank_medical"] is False
+    text = json.dumps([e for e in hist if e["agent"] == "policy"] + [plan], ensure_ascii=False)
+    assert "bank history qualifies" not in text
+    free = [e for e in hist if e["kind"] == "step" and e["key"] == "policy:free"][-1]
+    assert free["result"].startswith("You qualify for free care (your out-of-pocket is ")
+    disc = next(e for e in hist if e["kind"] == "finding" and e["key"] == "policy:discount")
+    assert disc["title"] == "Free care under their policy"
+    assert next(e for e in hist if e["kind"] == "agent_finished" and e["agent"] == "auditor")["note"] == "no errors on the bill"
+    assert plan["decided"]["math"] == ["$5,600 billed = $5,600 owed", "$5,600 share, 100% written off under their policy = $0"]
+
+
+class _Later(date):
+    @classmethod
+    def today(cls):
+        return date(2026, 12, 15)  # weeks after the answer key's as_of
+
+
+async def test_raj_numbers_are_date_stable(client, monkeypatch):
+    """Started on a later day, Raj's case reads his bank as of the scenario's as_of: same eligibility, $0, $400."""
+    monkeypatch.setattr(orchestrator, "date", _Later)
+    exp = json.loads((config.DEMO_DIR / "scenarios" / "raj-cpmc" / "expected.json").read_text())
+    case_id = (await client.post("/api/cases?scenario=raj&household_size=4")).json()["case_id"]
+    plan = (await _wait_for(case_id, lambda e: e["kind"] == "plan_version"))["plan"]
+    case = orchestrator.cases[case_id]
+    assert case["today"] == exp["as_of"] and orchestrator.case_now(case) == date(2026, 12, 15)
+    elig = case["facts"]["pol"]["eligibility"]
+    assert elig["fpl_pct"] == exp["discount"]["fpl_pct"] and elig["oop_pct_income"] == exp["discount"]["oop_pct_income"]
+    assert elig["discount_pct"] == 100 and not elig.get("gross_check")
+    assert plan["money"]["target"] == 0 and plan["money"]["refund"] == 400
+    # hand-made demo cases still run on today's date
+    assert orchestrator.scenario_as_of("freecare") is None and orchestrator.scenario_as_of("default") is None
