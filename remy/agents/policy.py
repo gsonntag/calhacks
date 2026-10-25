@@ -104,44 +104,54 @@ def _short(url: str) -> str:
     return u.netloc.removeprefix("www.") + (f"/…/{tail}" if tail else "")
 
 
-def streamer(cid: str, r: Report):
-    """Crawl events -> lines in the Bright Data agent's panel: one line per request (which tool, which URL, what
-    came back), one per fallback, and the pipeline stages with their proof (choices, verified quotes)."""
-    def on_event(kind: str, **e) -> None:
+def crawl_line(kind: str, **e) -> dict | None:
+    """One crawl event -> the line it updates (same key = same line): one per Bright Data request (which tool,
+    which URL, what came back), one per fallback, and the pipeline stages with their proof. Shared by the case
+    page's Bright Data panel (streamer) and "Add a hospital" (policies/routes.py)."""
+    def line(key, label, status, text, proof=()):
+        return {"key": key, "label": label, "status": status, "result": text, "proof": [tuple(p) for p in proof]}
+    if kind in ("brightdata_request", "brightdata") and "n" in e:
+        tool = "SERP API" if e["product"] == brightdata.SERP else "Web Unlocker"
+        label = f"Bright Data {tool} · {_short(e['url'])}"
         if kind == "brightdata_request":
-            tool = "SERP API" if e["product"] == brightdata.SERP else "Web Unlocker"
-            r.step(f"bd-{e['n']}", f"Bright Data {tool} · {_short(e['url'])}", "running",
-                   f"Request {e['n']} of at most {e['cap']}" + (" (retry)" if e.get("attempt", 1) > 1 else ""))
-        elif kind == "brightdata":
+            return line(f"bd-{e['n']}", label, "running",
+                        f"Request {e['n']} of at most {e['cap']}" + (" (retry)" if e.get("attempt", 1) > 1 else ""))
+        out = e.get("outcome") or ("found" if e["ok"] else "error")
+        secs = (e.get("latency_ms") or 0) / 1000
+        text = OUTCOME_TEXT.get(out, out)
+        if out == "found":
+            text += f": {(e.get('bytes') or 0) / 1024:,.0f} KB in {secs:.1f} s"
+        elif out == "timeout":
+            text += f" after {secs:.0f} s"
+        elif out != "empty" and e.get("status"):
+            text += f" (HTTP {e['status']})"
+        if e.get("retrying"):
+            text += " → retrying once"
+        return line(f"bd-{e['n']}", label, "ok" if out == "found" else "flag",
+                    f"{text} · request {e['n']} of at most {e['cap']}",
+                    [(e.get("error") or e["url"], e["url"] if e["url"].startswith("http") else "")])
+    if kind == "crawl_fallback":
+        return line(f"fallback-{e['n']}", "Fallback", "flag", e["text"])
+    if kind == "budget":
+        return line("budget", "Request cap", "flag", f"Stopped at the cap of {e['cap']} Bright Data requests")
+    if kind == "crawl_stage" and e["stage"] in CRAWL_STEPS:
+        key, label = CRAWL_STEPS[e["stage"]]
+        return line(key, label, e["status"], e["text"], e.get("proof") or [])
+    return None
+
+
+def streamer(cid: str, r: Report):
+    """Crawl events -> lines in the Bright Data agent's panel (crawl_line), plus the raw request events."""
+    def on_event(kind: str, **e) -> None:
+        if kind == "brightdata":
             bus.emit(cid, "brightdata", "policy", product=e["product"], stage=e["stage"], url=e["url"],
                      status=e["status"], bytes=e["bytes"], latency_ms=e["latency_ms"], ok=bool(e["ok"]),
                      outcome=e.get("outcome"), n=e.get("n"), cap=e.get("cap"), retrying=e.get("retrying"))
-            if "n" not in e:
-                return
-            tool = "SERP API" if e["product"] == brightdata.SERP else "Web Unlocker"
-            out = e.get("outcome") or ("found" if e["ok"] else "error")
-            secs = (e.get("latency_ms") or 0) / 1000
-            text = OUTCOME_TEXT.get(out, out)
-            if out == "found":
-                text += f": {(e.get('bytes') or 0) / 1024:,.0f} KB in {secs:.1f} s"
-            elif out == "timeout":
-                text += f" after {secs:.0f} s"
-            elif out != "empty" and e.get("status"):
-                text += f" (HTTP {e['status']})"
-            if e.get("retrying"):
-                text += " → retrying once"
-            r.step(f"bd-{e['n']}", f"Bright Data {tool} · {_short(e['url'])}", "ok" if out == "found" else "flag",
-                   f"{text} · request {e['n']} of at most {e['cap']}",
-                   [(e.get("error") or e["url"], e["url"] if e["url"].startswith("http") else "")])
-        elif kind == "crawl_fallback":
-            r.step(f"fallback-{e['n']}", "Fallback", "flag", e["text"])
-        elif kind == "budget":
-            r.step("budget", "Request cap", "flag", f"Stopped at the cap of {e['cap']} Bright Data requests")
-        elif kind == "crawl_stage" and e["stage"] in CRAWL_STEPS:
-            key, label = CRAWL_STEPS[e["stage"]]
-            r.step(key, label, e["status"], e["text"], [tuple(p) for p in e.get("proof") or []])
         elif kind == "policy_changed":
             bus.emit(cid, "policy_changed", "policy", version=e["version"], previous=e["previous"], diff=e["diff"])
+        ln = crawl_line(kind, **e)
+        if ln:
+            r.step(ln["key"], ln["label"], ln["status"], ln["result"], ln["proof"])
     return on_event
 
 
