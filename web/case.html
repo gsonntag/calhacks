@@ -1715,13 +1715,13 @@ document.querySelector('main').addEventListener('submit', async (e) => {
 // ---------- the agent chat (bubble in the corner): one log per case, you pick who answers ----------
 const CHAT_AGENTS = [
   { k: 'remy', name: 'Remy', what: 'knows the whole case: what was found, the plan, the calls and what’s next. Start here.',
-    hint: 'Ask anything about your case' },
+    hint: 'Ask about your case' },
   { k: 'auditor', name: 'Nessie agent', what: 'checked your own records: your bank (Capital One Nessie), the bill and your insurance statement.',
-    hint: 'Ask about your payments, bill or insurance' },
+    hint: 'Payments, bill, insurance' },
   { k: 'policy', name: 'Bright Data agent', what: 'checked public rules: the hospital’s own financial-assistance policy and payment-plan terms.',
-    hint: 'Ask about the hospital’s policy' },
+    hint: 'The hospital’s policy' },
   { k: 'decide', name: 'Planner', what: 'built your call plan. Ask why, or tell it what to change (“refund first”) and it makes a new version.',
-    hint: 'Ask why, or tell it what to change' },
+    hint: 'Why? Or what to change' },
 ];
 const CHAT_NAME = Object.fromEntries(CHAT_AGENTS.map((a) => [a.k, a.name]));
 const chat = { open: false, agent: 'remy', busy: false, err: '', pending: null };

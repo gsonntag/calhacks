@@ -803,26 +803,79 @@ def as_messages(history: list[dict]) -> list[dict]:
 
 
 _MONEY = re.compile(r"\$\s?(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?")
-_NUM = re.compile(r"(?<![\w.])(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?")
+# an amount as an answer may write it: $1,234 / $1,234.5 / $1,234.56 / $1.5k / $12k / 900 dollars
+_SAID = re.compile(r"\$\s?(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?(?:\s?([kK])\b)?|"
+                   r"(?<![\w$.,])(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{1,2}))?\s*(k\s+)?dollars?\b", re.I)
+# Keys whose numbers are money. Anything else (zip codes, phone numbers, percents, days, counts) never grounds
+# an amount, whatever its digits.
+MONEY_KEY = re.compile(r"amount|bill|balance|owe|paid|refund|target|money|saved|due|price|gross|cash|negotiated|"
+                       r"median|posted|total|share|responsib|adjust|allowed|income|annual|monthly|cost|oop|stake|"
+                       r"expected|confirmed|charge|deposit|spend|medical|dollar|^value$|^min$|^max$|^billed", re.I)
+NOT_MONEY = re.compile(r"pct|percent|_id$|^id$|phone|zip|days|year|date|count|units|^line$|round|^v$|^n$|rank|txns|^bills$|review|"
+                       r"number|size", re.I)
 
 
 def _cents(whole: str, frac: str | None) -> int:
     return int(whole.replace(",", "")) * 100 + (int((frac or "0")[:2].ljust(2, "0")) if frac else 0)
 
 
-def grounded(answer: str, ctx_json: str) -> bool:
-    """Every dollar amount in the answer ($1,234 / $1,234.56 / $600) is a number in the context: exactly, or
-    rounded to whole dollars (amounts are shown rounded). No sums or differences: the context already carries
-    every total the code computed."""
-    said = [_cents(w, f) for w, f in _MONEY.findall(answer or "")]
+def _said(text: str) -> list[tuple[int, int, str]]:
+    """Amounts in an answer: (cents, k-unit in cents or 0, decimals written: "" / "1" / "2")."""
+    out = []
+    for m in _SAID.finditer(text or ""):
+        whole, frac, k = (m.group(1), m.group(2), m.group(3)) if m.group(1) else (m.group(4), m.group(5), m.group(6))
+        c = _cents(whole, frac)
+        if k:
+            out.append((c * 1000, 10_000 if frac else 100_000, "k"))
+        else:
+            out.append((c, 0, str(len(frac)) if frac else ""))
+    return out
+
+
+def money_values(ctx) -> set[int]:
+    """Every money amount in a context, in cents: numbers under money keys, and every "$..." written in its
+    text (proof lines, policy quotes, docs)."""
+    out: set[int] = {0}
+
+    def walk(x, key: str = "") -> None:
+        if isinstance(x, dict):
+            for k, v in x.items():
+                walk(v, str(k))
+        elif isinstance(x, list):
+            for v in x:
+                walk(v, key)
+        elif isinstance(x, bool):
+            return
+        elif isinstance(x, (int, float)):
+            if MONEY_KEY.search(key) and not NOT_MONEY.search(key):
+                out.add(round(float(x) * 100))
+        elif isinstance(x, str):
+            out.update(_cents(w, f) for w, f in _MONEY.findall(x))
+    walk(ctx)
+    return out
+
+
+def grounded(answer: str, ctx) -> bool:
+    """Every dollar amount in the answer is a money amount in the context (money_values): exactly, rounded or
+    cut to whole dollars or to one decimal, or, for "$1.5k" / "$12k", within that rounding. No sums or
+    differences: the context already carries every total the code computed. ctx: the context, or its JSON."""
+    said = _said(answer)
     if not said:
         return True
-    have, whole = {0}, {0}
-    for w, f in _NUM.findall(ctx_json or ""):
-        c = _cents(w, f)
-        have.add(c)
-        whole.add(round(c / 100) * 100)
-    return all(c in have or (c % 100 == 0 and c in whole) for c in said)
+    if isinstance(ctx, str):
+        try:
+            ctx = json.loads(ctx)
+        except ValueError:
+            pass
+    have = money_values(ctx)
+    whole = {(v + 50) // 100 * 100 for v in have} | {round(v / 100) * 100 for v in have} | {v // 100 * 100 for v in have}
+    tenth = {(v + 5) // 10 * 10 for v in have} | {v // 10 * 10 for v in have}
+
+    def ok(c: int, unit: int, dec: str) -> bool:
+        if dec == "k":
+            return any(abs(v - c) <= unit // 2 for v in have)
+        return c in have or (dec == "" and c in whole) or (dec == "1" and c in tenth)
+    return all(ok(*s) for s in said)
 
 
 async def _answer(system: str, evidence: dict, question: str, what: str,
@@ -885,7 +938,7 @@ async def answer_agent(case: dict, agent: str, question: str, emit: bool = True,
         answer = ("What I found: " + " ".join(f"{x['title']} ({x['value']}): {' '.join(x['proof'])}"
                                               + (" (you said this one is wrong, so the plan leaves it out)" if x.get("marked_wrong") else "")
                                               for x in mine)
-                  if mine else " ".join(latest(case)["decided"]["brightdata"]) + "."
+                  if mine else ". ".join(x.rstrip(".") for x in latest(case)["decided"]["brightdata"]) + "."
                   if agent == "policy" and latest(case) else "I found nothing to correct in what I checked.")
     sources = list(dict.fromkeys(x["source"] for x in mine if x.get("source")))
     if emit:

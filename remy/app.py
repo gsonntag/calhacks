@@ -359,9 +359,10 @@ async def ask(case_id: str, q: Question):
     case = _case_or_404(case_id)
     if not case:
         return JSONResponse({"error": "not found"}, 404)
-    question = q.question.strip()[:500]
-    if q.agent == "remy":
-        out = await _decide_call(orchestrator.ask_remy(case, question or "What's the status?", q.page))
+    raw = q.question.strip()[:500]
+    question = askremy.redact(raw)  # SSN / card / account digits never reach the log, memory or a model
+    if q.agent == "remy":  # Remy sees the raw text only to refuse it, and redacts it itself
+        out = await _decide_call(orchestrator.ask_remy(case, raw or "What's the status?", q.page))
         orchestrator.save(case)  # a handoff may have made a new plan version
         return out
     if q.agent == "decide":
@@ -403,10 +404,11 @@ async def ask_remy_anywhere(q: RemyQuestion):
     return await orchestrator.ask_general(question, q.page, q.history, q.session_id, q.profile)
 
 
-@app.get("/api/remy/chat")
-async def remy_chat(page: str = "cases"):
-    """The chat log for a tab with no case open (oldest first)."""
-    return askremy.chat_log(page)
+@app.get("/api/remy/chat", dependencies=ADMIN)
+async def remy_chat(session_id: str = ""):
+    """One browser session's case-less chat (oldest first); none without a session id. Admin key: it's what the
+    patient typed."""
+    return askremy.chat_log(session_id or None)
 
 
 async def _decide_call(coro):
