@@ -75,7 +75,8 @@ def _launch(case: dict, coro=None) -> dict:
 
 
 SAMPLE_DOCS = {"default": ("sample-hospital-bill.pdf", "sample-insurance-eob.pdf"),
-               "freecare": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf")}
+               "freecare": ("sample-hospital-bill-freecare.pdf", "sample-insurance-eob-freecare.pdf"),
+               "raj": ("scenarios/raj-cpmc/bill.pdf", "scenarios/raj-cpmc/eob.pdf")}
 REQUIRED = (("patient", "first_name"), ("patient", "last_name"), ("bill", "provider"), ("bill", "amount_due"),
             ("eob", "patient_responsibility"))
 
@@ -126,7 +127,9 @@ async def _apply_uploads(case: dict, uploads: list[tuple[str, bytes]]) -> None:
 
 
 def _sample_uploads(scenario: str) -> list[tuple[str, bytes]]:
-    return [(n, (config.DEMO_DIR / n).read_bytes()) for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
+    # a generated scenario's files are scenarios/<name>/bill.pdf: named <name>-bill.pdf for the case
+    return [(n.removeprefix("scenarios/").replace("/", "-"), (config.DEMO_DIR / n).read_bytes())
+            for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
 
 
 def _stated_income(v) -> float | None:
@@ -153,7 +156,8 @@ async def _new_case(uploads: list[tuple[str, bytes]], scenario: str = "default",
         case["patient"].update(stated_income_annual=income_annual, stated_income_source="chat")
     if live and not uploads:
         uploads = _sample_uploads(scenario)
-    case["documents"] = [n for n, _ in uploads] or list(SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"]))
+    case["documents"] = [n for n, _ in uploads] or [n.removeprefix("scenarios/").replace("/", "-")
+                                                    for n in SAMPLE_DOCS.get(scenario, SAMPLE_DOCS["default"])]
     if live:
         try:
             await _apply_uploads(case, uploads)
@@ -257,7 +261,8 @@ async def gmail_scan():
 async def start_case(files: list[UploadFile] = File(default=[]), scenario: str = "default",
                      household_size: int | None = None, income_annual: float | None = None):
     """Start a case from uploaded bill/EOB files, or the sample bill when none are sent.
-    ?scenario=freecare picks the second demo patient (bank history + sample policy).
+    ?scenario=freecare picks the second demo patient (bank history + sample policy); ?scenario=raj the hero
+    case (demo/scenarios/raj-cpmc: bill errors, a missed payment, and a bank history that qualifies him).
     ?income_annual: what the household earns a year before taxes, if the patient said."""
     uploads = [(f.filename, await f.read()) for f in files if f.filename]
     case = await _new_case(uploads, scenario, household_size, income_annual)

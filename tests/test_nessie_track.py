@@ -197,8 +197,12 @@ def test_scenarios_record_medical_spending():
         ms = exp["medical_spending"]
         assert ms["out_of_pocket"] == round(ms["this_bill"] + ms["bank_total"], 2)
         assert ms["txn_ids"] and ms["bank_total"] > 0, name
-        # no generated patient's outcome hinges on the bank today (see docs: the bank only adds margin)
-        assert ms["bank_decides_eligibility"] is False and ms["discount_without_bank"] == exp["correct"]["discount_pct"]
+        # only Raj's outcome hinges on the bank (the hero case); for the others it only adds margin
+        if name == "raj-cpmc":
+            assert ms["bank_decides_eligibility"] is True and ms["discount_without_bank"] == 0
+            assert exp["correct"]["discount_pct"] == 100
+        else:
+            assert ms["bank_decides_eligibility"] is False and ms["discount_without_bank"] == exp["correct"]["discount_pct"]
 
 
 # ---- 3. the hospital bill is marked updated once billing confirms -----------------------------------------
