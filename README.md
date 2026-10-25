@@ -44,7 +44,7 @@ code verifies against the fetched document, and does the talking; it never inven
 ## Sponsor map (where to look)
 | Sponsor | What it does here | Code | Docs |
 |---|---|---|---|
-| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts discount tiers, collections rules and payment-plan terms (interest-free, income cap) whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 12 Bay Area hospitals; same bill → different answers. Real price tables: each hospital's CMS price file found via its `cms-hpt.txt`, ~67 common ER/outpatient codes kept (gross, cash, negotiated min/max, named payer rates). | `remy/policies/`, `remy/integrations/brightdata.py`, `scripts/crawl_policies.py`, `remy/prices.py`, `remy/price_sources.py`, `scripts/build_price_tables.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
+| **Bright Data** | Hospital policy database: SERP API discovers each hospital's financial-assistance policy, Web Unlocker fetches the page and its policy PDFs, Claude extracts discount tiers, collections rules and payment-plan terms (interest-free, income cap) whose quotes are verified against the source, versioned SQLite store, hash-based change detection. Seeded live with 12 Bay Area hospitals, all with verified discount tiers; same bill → different answers. When a hospital's own site doesn't give the real policy (Stanford, ZSFG, Saint Francis), the copy it filed with California HCAI is fetched over plain HTTPS (Bright Data refuses .gov sites) and checked the same way. Real price tables: each hospital's CMS price file found via its `cms-hpt.txt`, ~67 common ER/outpatient codes kept (gross, cash, negotiated min/max, named payer rates). | `remy/policies/` (HCAI: `remy/policies/hcai.py`), `remy/integrations/brightdata.py`, `scripts/crawl_policies.py`, `remy/prices.py`, `remy/price_sources.py`, `scripts/build_price_tables.py` | [`docs/brightdata.md`](docs/brightdata.md); crawl evidence in `policydb/` |
 | **Cartesia** | Our own voice pipeline: Twilio Media Streams ↔ Cartesia Ink streaming STT + Sonic TTS ↔ Claude call brain, barge-in, voice/accent picker (American, British, Indian English, Spanish), pronunciation normalizer for money, IDs, CPT codes and medical terms. Managed Agents path kept as an alternative. | `remy/voice/`, `remy/integrations/cartesia.py`, `scripts/sim_twilio_stream.py` | [`docs/voice.md`](docs/voice.md); voice demo at `/voice.html` |
 | **Capital One Nessie** | The patient's bank: payroll deposits → income, the $500 payment the hospital missed, a duplicate charge, and a payment plan written back as a recurring bill when something is still owed. | `remy/integrations/nessie.py`, `remy/agents/auditor.py`, `scripts/seed_nessie.py` | [`docs/feasibility.md`](docs/feasibility.md) (how real bank data is obtained) |
 | **Anthropic Claude** | Intake (vision on bill/EOB), policy extraction with quotes, the call brain, outcome/follow-up extraction, status answers. | `remy/agents/`, `remy/followups.py` | |
@@ -67,6 +67,7 @@ Setup scripts (once):
 uv run python scripts/seed_nessie.py [freecare]    # synthetic patient's bank in Nessie
 uv run python scripts/crawl_policies.py crawl      # (re)build the hospital policy DB via Bright Data
 uv run python scripts/crawl_policies.py recheck    # detect policy changes
+uv run python scripts/crawl_policies.py hcai <id>  # add a hospital's HCAI-filed policy (no Bright Data request)
 uv run python scripts/build_price_tables.py        # rebuild policydb/prices/ from data/price_files/ (--fetch to download)
 ```
 
@@ -94,7 +95,8 @@ scripted caller so the whole flow still runs offline. `case.html?replay=1` repla
 | 10 of the 12 intake designs in `/flows/` | Clickable mockups (labelled Mock); Drop & Go is the live one | `web/flows/index.html` |
 
 ## Real vs simulated (say this to judges)
-- **Real:** Bright Data crawls of real hospital policies (committed in `policydb/`), real prices from the
+- **Real:** Bright Data crawls of real hospital policies, plus the policies hospitals filed with California HCAI
+  (both committed in `policydb/`), real prices from the
   hospitals' public CMS price-transparency files (`policydb/prices/`), Nessie API records,
   Claude reasoning, Cartesia STT/TTS, the approval gate and audit log.
 - **Simulated:** the patient, bill, EOB and bank history are synthetic (PDFs are watermarked SAMPLE).

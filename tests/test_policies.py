@@ -268,7 +268,7 @@ HCAI_PAGE = (
 
 
 def test_hcai_page_gives_newest_policy_per_section_not_forms():
-    from billback.policies import hcai
+    from remy.policies import hcai
     got = hcai.filed_policies(HCAI_PAGE)
     # the newest charity care filing (not the older one, not the application form); the discount section's newest
     # is the same PDF, listed once; debt collection is not a discount policy
@@ -278,7 +278,7 @@ def test_hcai_page_gives_newest_policy_per_section_not_forms():
 async def test_crawl_falls_back_to_hcai_when_site_links_no_policy_pdf(monkeypatch, tmp_path):
     """ZSFG: Google + Web Unlocker give only web pages (committed responses); the policy then comes from HCAI
     over plain HTTPS, logged without a Bright Data product, and goes to extraction as a state_filed PDF."""
-    from billback.policies import hcai
+    from remy.policies import hcai
     calls = replay_brightdata(monkeypatch, "zsfg")
     pdf = (DB.root / "raw/chinese-hospital/pdf-6bde4c69e798.pdf").read_bytes()
     plain = []
@@ -305,7 +305,7 @@ async def test_crawl_falls_back_to_hcai_when_site_links_no_policy_pdf(monkeypatc
 
 def replay_hcai(monkeypatch, hid: str) -> list[str]:
     """Serve the committed HCAI lookup page and filed PDF(s) for this hospital in place of plain HTTPS."""
-    from billback.policies import hcai
+    from remy.policies import hcai
     filed = {d["url"]: (DB.root / next(a for a in d["artifacts"] if a.endswith(".pdf"))).read_bytes()
              for d in current(hid)["documents"] if d["role"] == "state_filed"}
     page = next((DB.raw / hid).glob("hcai-page-*.html")).read_bytes()
