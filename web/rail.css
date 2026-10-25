@@ -28,6 +28,8 @@
 .rc-name { flex: 1; min-width: 0; font: 500 15px/20px var(--md-font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rc-saved { flex: none; font: 600 14px/20px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; }
 .rc[aria-current="page"] .rc-saved { color: inherit; }
+.rc-money { font: 500 13px/18px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rc[aria-current="page"] .rc-money { color: inherit; }
 .rc-sub { display: flex; align-items: center; gap: 6px; min-width: 0; font: 400 13px/18px var(--md-font); color: var(--md-on-surface-variant); }
 .rc[aria-current="page"] .rc-sub { color: inherit; opacity: .85; }
 .rc-sub span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

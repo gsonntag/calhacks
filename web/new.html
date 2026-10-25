@@ -110,7 +110,7 @@
   <main>
     <section class="hero col" aria-labelledby="heroTitle">
       <h1 class="display-s" id="heroTitle">Your billing, handled.</h1>
-      <p class="body-l muted">Share your hospital bill. Billie finds the errors and gets it lowered.</p>
+      <p class="body-l muted">Share your hospital bill. Remy finds the errors and gets it lowered.</p>
       <div class="starts" role="group" aria-label="Quick start">
         <button class="m3-chip" id="sampleChip" type="button"><span class="material-symbols-rounded" aria-hidden="true">description</span>Use a sample bill</button>
         <button class="m3-chip" id="uploadChip" type="button"><span class="material-symbols-rounded" aria-hidden="true">upload_file</span>Upload bill + insurance</button>
@@ -128,7 +128,7 @@
             <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp" aria-label="Attach a bill or insurance statement">
             <span class="material-symbols-rounded" aria-hidden="true">attach_file</span>
           </label>
-          <input class="msg-input" id="msgInput" type="text" aria-label="Message Billie" placeholder="Tell me about your bill…">
+          <input class="msg-input" id="msgInput" type="text" aria-label="Message Remy" placeholder="Tell me about your bill…">
           <button class="m3-icon-btn send" id="sendBtn" type="button" aria-label="Send message" disabled>
             <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span>
           </button>
@@ -168,7 +168,7 @@ function showTyping() {
   app.classList.remove('empty');
   state.typing = true; refresh();
   const t = document.createElement('div');
-  t.className = 'bot'; t.innerHTML = AVATAR + '<div class="typing" role="status" aria-label="Billie is typing"><span></span><span></span><span></span></div>';
+  t.className = 'bot'; t.innerHTML = AVATAR + '<div class="typing" role="status" aria-label="Remy is typing"><span></span><span></span><span></span></div>';
   inner.appendChild(t); scroll();
   return () => { t.remove(); state.typing = false; refresh(); };
 }
@@ -231,7 +231,7 @@ gmailBtn.addEventListener('click', async () => {
     gmailBtn.setAttribute('aria-label', 'Demo inbox loaded. Remove');
     gmailBtn.innerHTML = '<span class="material-symbols-rounded" aria-hidden="true">check</span><span>Demo inbox</span>';
     const bill = r.found.find((f) => f.type === 'bill'), eob = r.found.find((f) => f.type === 'eob');
-    const msg = `I found a final notice from ${bill.from} for $${bill.amount.toLocaleString()} and an EOB from ${eob.from}. Want me to start on that bill?`;
+    const msg = `I found a final notice from ${bill.from} for $${Number(bill.amount).toLocaleString('en-US', Math.round(bill.amount * 100) % 100 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})} and an EOB from ${eob.from}. Want me to start on that bill?`;
     state.history.push({ role: 'user', content: `[Connected Gmail. Found: ${JSON.stringify(r.found)}]` }, { role: 'assistant', content: msg });
     app.classList.remove('empty'); addBot(msg);
     if (r.simulated) inner.insertAdjacentHTML('beforeend', '<div class="sim body-s muted">Demo inbox (simulated Gmail)</div>');
