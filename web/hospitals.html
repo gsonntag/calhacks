@@ -27,6 +27,7 @@
   section > h2 { margin: 0; }
   section > p { margin: 0; max-width: 760px; }
   .seg-wrap { max-width: 100%; overflow-x: auto; }
+  .seg button:disabled { opacity: .5; cursor: default; }
   .facts { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
   .facts b { color: var(--md-on-surface); font-weight: 500; }
 
@@ -176,6 +177,7 @@
 </main>
 <script src="/auth.js"></script>
 <script src="/ask-remy.js" data-page="hospitals"></script>
+<script src="/examples.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -446,7 +448,15 @@ $('addForm').addEventListener('submit', addHospital);
 
 addEventListener('scroll', () => document.querySelector('.m3-top-app-bar').classList.toggle('scrolled', scrollY > 4), { passive: true });
 
-loadCompare('freecare').catch(showErr);
+// the patients to compare: the demo examples (GET /api/examples, Raj first); the two built-in buttons stay if that fails.
+// An example not on this server yet is shown disabled.
+Examples.load().then((list) => {
+  if (list.some((ex) => ex.available)) {
+    document.querySelector('.seg').innerHTML = list.map((ex) => `<button type="button" data-s="${Examples.esc(ex.scenario)}" aria-pressed="false"${ex.available ? '' : ` disabled title="${Examples.esc(ex.note)}"`}>${Examples.esc(ex.available ? ex.short : `${ex.name} · ${ex.note.toLowerCase()}`)}</button>`).join('');
+  }
+  const first = list.find((ex) => ex.available);
+  return loadCompare(first ? first.scenario : 'freecare');
+}).catch(showErr);
 loadHospitals().catch(showErr);
 </script>
 </body>

@@ -1,16 +1,14 @@
 """Same bill, same patient, every hospital in the database: what would each hospital's own policy give?
 All money math is finance.py (the same functions the case flow uses)."""
-import json
 from datetime import timedelta
 
-from .. import billcheck, config, finance
+from .. import billcheck, examples, finance
 from .store import PolicyStore
 
-SCENARIOS = {"default": "case.json", "freecare": "case_freecare.json"}
 
 
 def load_case(scenario: str) -> dict:
-    case = json.loads((config.DEMO_DIR / SCENARIOS.get(scenario, "case.json")).read_text())
+    case = examples.load(scenario if examples.exists(scenario) else "default")
     case["transactions"] = [{"id": f"t{i}", "merchant": "", **t} for i, t in enumerate(case["transactions"])]
     return case
 

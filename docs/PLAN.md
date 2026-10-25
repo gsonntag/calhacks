@@ -73,8 +73,12 @@ post-call payment-plan Yes/No card.
 - **Cartesia is out of credits** (HTTP 402). Phone path, desk mode on Ink and the Cases-page mic's Ink STT are
   untested live; each falls back to the browser's speech and voice.
 - **Live checks still owed:** see "Still open" above. Each needs a small, stated credit cap (rule below).
-- **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/`. Uploading
+- **Test bills:** `web/samples/test-bills/` (served at /samples/test-bills/), from `demo/scenarios/` via
+  `python scripts/copy_test_bills.py [name]` (Raj: run it with `raj-cpmc` once his scenario lands). Uploading
   needs a server with API keys. Only Rosa and Marcus have Nessie bank accounts; Dana, Amara, Lena don't yet.
+- **Demo patients ("Try an example"):** one list, `remy/examples.py` → GET /api/examples, read by New case,
+  drop-go and the Hospitals compare picker. Raj (`raj`, demo/scenarios/raj-cpmc) first, then Marcus, Rosa; shown disabled until
+  `demo/scenarios/raj-cpmc/` is on the server.
 - **Contacts:** `remy/contacts.py` + `policydb/contacts/` (merged). Not wired in yet: step 3's "Who
   we'll call" still takes the number from the bill; it can use `contacts.for_case(case)`.
 
