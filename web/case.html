@@ -39,6 +39,8 @@
   .attn-card { border: 2px solid var(--md-primary); background: var(--md-surface-container-low); display: flex; flex-direction: column; gap: 16px; }
   .attn-head { display: flex; align-items: center; gap: 8px; color: var(--md-primary); }
   .attn-card p { margin: 0; }
+  .attn-card h2 { margin: 0; overflow-wrap: anywhere; }
+  .attn-card .actions { margin-top: 4px; }
   .ask { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
   .ask li { display: flex; align-items: flex-start; gap: 12px; }
   .ask .material-symbols-rounded { color: var(--md-primary); font-size: 20px; margin-top: 2px; }
@@ -148,14 +150,58 @@
   @media (max-width: 640px) {
     .m3-top-app-bar { padding: 8px 12px; }
     main.m3-page { padding-top: 20px; gap: 20px; }
-    .hero h1 { font-size: 26px; line-height: 32px; }
+    .now h1, .hero h1 { font-size: 26px; line-height: 32px; }
     .steps-card { padding: 12px 16px 4px; }
     .row-btn { width: calc(100% + 16px); margin: 0 -8px; padding: 12px 8px; gap: 8px; }
     .m3-card { padding: 16px; }
   }
   @media (pointer: coarse), (max-width: 640px) { .case-tabs button, .case-tabs a { min-height: 44px; } }
-  #jumpCall { position: fixed; right: 24px; bottom: 24px; z-index: 20; }
-  @media (max-width: 640px) { #jumpCall { right: 16px; bottom: 16px; } }
+  /* Header: which step, what is happening right now, the money, progress */
+  .now { display: flex; flex-direction: column; gap: 10px; }
+  .now h1 { margin: 0; overflow-wrap: anywhere; }
+  .now-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 40px; }
+  .now-step { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: .01em; color: var(--md-on-surface-variant); }
+  .now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); }
+  .now-dot.off { display: none; }
+  .now-dot.warn { background: var(--st-warn, #b26a00); }
+  .now-dot.success { background: var(--st-money, var(--md-primary)); }
+  .now-dot.error { background: var(--md-error); }
+  .now-dot.live { animation: nowdot 1.4s ease-in-out infinite; }
+  @keyframes nowdot { 50% { opacity: .35; } }
+  .now-text { margin: 0; color: var(--md-on-surface-variant); min-height: 1.5em; overflow-wrap: anywhere; }
+  .now-money { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; }
+  .now-money s { font-size: 20px; color: var(--md-on-surface-variant); }
+  .now-money .material-symbols-rounded { font-size: 20px; color: var(--md-on-surface-variant); align-self: center; }
+  .now-money b { font-size: 36px; line-height: 44px; font-weight: 600; color: var(--st-money, var(--md-primary)); }
+  .now-money b.pending { font-size: 20px; font-weight: 400; color: var(--md-on-surface-variant); }
+  .now-track { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+  .now-track li { display: flex; flex-direction: column; gap: 6px; font-size: 12px; line-height: 16px; color: var(--md-on-surface-variant); min-width: 0; }
+  .now-track li::before { content: ""; height: 4px; border-radius: 2px; background: var(--md-outline-variant); transition: background var(--md-dur-m) var(--md-ease); }
+  .now-track li.done::before { background: var(--md-primary); }
+  .now-track li.active { color: var(--md-on-surface); font-weight: 500; }
+  .now-track li.active::before { background: linear-gradient(90deg, var(--md-primary) 0 40%, var(--md-outline-variant) 40%); background-size: 250% 100%; animation: nowpulse 1.6s linear infinite; }
+  @keyframes nowpulse { from { background-position: 100% 0; } to { background-position: 0 0; } }
+  @media (prefers-reduced-motion: reduce) { .now-track li.active::before, .now-dot.live { animation: none; } .now-track li.active::before { background: var(--md-primary); opacity: .6; } }
+  .now-ctl { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .now-ctl .m3-btn { min-height: 32px; padding: 0 12px; white-space: nowrap; }
+  .now-ctl .m3-select { width: auto; max-width: 120px; min-width: 0; min-height: 32px; padding-top: 0; padding-bottom: 0; }
+  .replay .case-tabs { display: none; }
+  .finds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .finds li + li { border-top: 1px solid var(--md-outline-variant); }
+  .finds summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; }
+  .finds summary::-webkit-details-marker { display: none; }
+  .finds summary::after { content: "expand_more"; font-family: "Material Symbols Rounded"; font-size: 20px; color: var(--md-on-surface-variant); transition: transform var(--md-dur-m) var(--md-ease); }
+  .finds details[open] summary::after { transform: rotate(180deg); }
+  .finds .fl { flex: 1; min-width: 0; font: 500 16px/24px var(--md-font); }
+  .finds b { font: 600 18px/24px var(--md-font); color: var(--st-money); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .finds b.plain { font-weight: 500; font-size: 16px; color: var(--md-on-surface); }
+  .finds .fd { display: flex; flex-direction: column; gap: 6px; padding: 0 0 14px; overflow-wrap: anywhere; }
+  .finds .fd p { margin: 0; }
+  .more summary { cursor: pointer; color: var(--md-primary); font-weight: 500; padding: 4px 0; }
+  .more[open] summary { margin-bottom: 12px; }
+  .more > div + div { margin-top: 16px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 640px) { .now-track li span { display: none; } .now-track li.active span { display: inline; } .now-money b { font-size: 30px; line-height: 36px; } }
 </style>
 </head>
 <body>
@@ -177,29 +223,30 @@
   <button type="button" class="m3-chip new-case" id="newCase"><span class="material-symbols-rounded" aria-hidden="true">add</span>New case</button>
 </nav>
 
-<button class="m3-fab" id="jumpCall" type="button" hidden><span class="material-symbols-rounded" aria-hidden="true">skip_next</span>Jump to the call</button>
 <main class="m3-page narrow">
   <div id="caseError" class="m3-card error" role="alert" hidden></div>
   <div id="caseWarnings" class="body-m" aria-live="polite"></div>
 
-  <!-- TOP: what's happening, the money, what needs you -->
-  <section class="hero" aria-live="polite">
+  <!-- TOP: which step, what is happening, the money -->
+  <section class="now" id="nowCard" aria-live="polite">
+    <div class="now-top">
+      <span class="now-step"><i class="now-dot" id="nowDot"></i><span id="nowStep"></span></span>
+      <span class="now-ctl" id="nowCtl" hidden>
+        <span class="body-s muted" id="nowReplayNote">Replay</span>
+        <button class="m3-btn text" id="jumpCall" type="button" hidden>Skip to the call</button>
+        <button type="button" class="m3-icon-btn" id="nowPause" aria-label="Pause"><span class="material-symbols-rounded" aria-hidden="true">pause</span></button>
+        <select class="m3-select compact" id="nowSpeed" aria-label="Replay speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="0">Real time</option></select>
+      </span>
+    </div>
     <h1 class="headline-l" id="caseTitle">Loading your case…</h1>
-    <p class="body-l muted" id="caseSub"></p>
+    <p class="body-l now-text" id="nowText"></p>
+    <div class="now-money" id="nowMoney" hidden><s id="nowWas"></s><span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span><b id="nowOwe"></b><span class="body-m muted" id="nowSave"></span></div>
+    <ol class="now-track" id="nowTrack" aria-label="Progress">
+      <li><span>Read bill</span></li><li><span>Review</span></li><li><span>Your OK</span></li><li><span>Call</span></li><li><span>Resolved</span></li>
+    </ol>
+    <!-- kept for the render code; the line above replaces them -->
+    <div hidden><p id="caseSub"></p><span id="statOrig"></span><span id="statOwe"></span><span id="statOweSupport"></span></div>
   </section>
-
-  <div class="m3-grid-2" id="stats">
-    <div class="m3-card m3-stat">
-      <span class="stat-label">Hospital says</span>
-      <span class="stat-value" id="statOrig">—</span>
-      <span class="stat-support">Original statement</span>
-    </div>
-    <div class="m3-card success m3-stat">
-      <span class="stat-label">You actually owe</span>
-      <span class="stat-value" id="statOwe">—</span>
-      <span class="stat-support" id="statOweSupport">Checking…</span>
-    </div>
-  </div>
 
   <!-- new case: upload -->
   <section class="m3-card m3-stack" id="uploadPanel" hidden aria-label="Upload your bill">
@@ -218,25 +265,30 @@
 
   <!-- needs you: call approval -->
   <section class="m3-card attn-card" id="approvalCard" hidden aria-labelledby="approvalHead">
-    <div class="attn-head"><span class="material-symbols-rounded" aria-hidden="true">front_hand</span><span class="title-m" id="approvalHead">Needs your OK</span></div>
-    <p class="body-l">Can BillBack call <strong id="approveProvider"></strong> billing <span id="approveAgain">for you</span>? On the call we’ll:</p>
-    <ul class="ask" id="askList"></ul>
-    <p class="body-m muted">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
-    <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
-      <select id="voiceSel" class="m3-select compact"></select>
-      <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
-    </label>
-    <p class="body-m muted">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
+    <h2 class="title-l" id="approvalHead">Call <span id="approveProvider"></span> billing<span id="approveAgain"></span>?</h2>
+    <ul class="ask" id="askShort"></ul>
     <div class="actions">
-      <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Call billing</button>
-      <button type="button" class="m3-btn outlined" id="notYetBtn">Not now</button>
+      <button type="button" class="m3-btn filled" id="approveBtn"><span class="material-symbols-rounded" aria-hidden="true">call</span>Yes, call</button>
+      <button type="button" class="m3-btn text" id="notYetBtn">No</button>
     </div>
+    <details class="more" id="approveMore"><summary class="body-m">More details</summary>
+      <div class="m3-stack">
+        <p class="body-m">On the call we’ll:</p>
+        <ul class="ask" id="askList"></ul>
+        <p class="body-m muted">We won’t agree to pay anything on the call. Any payment comes back to you first.</p>
+        <label class="voice-pick body-m" for="voiceSel"><span>Caller voice</span>
+          <select id="voiceSel" class="m3-select compact"></select>
+          <button type="button" class="m3-btn text" id="voicePlay" aria-label="Hear this voice"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>Hear it</button>
+        </label>
+        <p class="body-m muted">On your phone: <a id="phoneApprove" target="_blank" style="overflow-wrap:anywhere"></a></p>
+      </div>
+    </details>
   </section>
   <div id="planSlotTop"></div>
 
   <!-- Steps -->
   <section class="m3-card steps-card" aria-labelledby="stepsHead">
-    <h2 class="title-l" id="stepsHead">Steps</h2>
+    <h2 class="sr-only" id="stepsHead">Steps</h2>
     <ol class="steps">
       <li class="step" data-step="0">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail0">
@@ -249,16 +301,21 @@
 
       <li class="step" data-step="1">
         <button type="button" class="row-btn" aria-expanded="false" aria-controls="detail1">
-          <span class="row-text"><span class="row-title">Review <span class="muted" style="font-weight:400">(Auditor + Policy)</span></span><span class="row-sum" id="reviewLine"></span></span>
+          <span class="row-text"><span class="row-title">Review</span><span class="row-sum" id="reviewLine"></span></span>
           <span class="row-status" id="status1"></span>
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail1" hidden>
-          <span class="body-m muted" id="reviewMeta"></span>
-          <div class="agents" id="agents"></div>
-          <dl class="sum-list body-m" id="reviewSummary"></dl>
-          <div class="m3-stack" id="evidenceBox" hidden><h3 class="title-s sub-h">Evidence</h3><ul class="ev-list" id="evidenceList"></ul></div>
-          <div class="m3-stack" id="quoteBox" hidden><h3 class="title-s sub-h">From the hospital’s own policy</h3><div class="m3-stack" id="quoteList"></div></div>
+          <span class="body-m muted" id="reviewMeta" hidden></span>
+          <ul class="finds" id="findings" hidden></ul>
+          <details class="more" id="checksBox"><summary class="body-m" id="checksSum">Show every check</summary>
+            <div class="m3-stack">
+              <div class="agents" id="agents"></div>
+              <dl class="sum-list body-m" id="reviewSummary"></dl>
+              <div class="m3-stack" id="evidenceBox" hidden><h3 class="title-s sub-h">Evidence</h3><ul class="ev-list" id="evidenceList"></ul></div>
+              <div class="m3-stack" id="quoteBox" hidden><h3 class="title-s sub-h">From the hospital’s own policy</h3><div class="m3-stack" id="quoteList"></div></div>
+            </div>
+          </details>
         </div>
       </li>
 
@@ -310,8 +367,7 @@
           <span class="material-symbols-rounded chev" aria-hidden="true">expand_more</span>
         </button>
         <div class="row-detail" id="detail4" hidden>
-          <div class="final"><b class="money-xl" id="finalAmt"></b><s id="finalWas"></s></div>
-          <span class="title-m" id="finalOutcome"></span>
+          <div hidden><b id="finalAmt"></b><s id="finalWas"></s><span id="finalOutcome"></span></div>
           <div id="planSlotFinal">
             <div class="m3-card plan" id="planBox" hidden>
               <p class="body-l" id="planText"></p>
@@ -336,7 +392,7 @@
   </section>
 
   <!-- BillBack Assistant -->
-  <section class="m3-assistant assistant" aria-labelledby="asstHead">
+  <section class="m3-assistant assistant" aria-labelledby="asstHead" hidden>
     <div class="m3-assistant-head" id="asstHead"><span class="m3-wave" id="asstWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>BillBack Assistant</div>
     <p class="m3-quote" id="asstQuote" aria-live="polite"></p>
     <span class="m3-status" id="asstChip">Voice agent ready</span>
@@ -391,6 +447,7 @@ function apply(m, e) {
       if (i < 0) list.push(s); else list[i] = s;
       break;
     }
+    case 'reconciliation': m.rec = e; break;
     case 'review_done': m.review = { auditor: e.auditor, policy: e.policy }; break;
     case 'balance': m.balances.push(e.amount); break;
     case 'approval_requested': m.approvals[e.agent] = { id: e.approval_id, detail: e.detail, title: e.title, ts: e.ts }; if (e.agent === 'caller') m.asks = e.detail.asks || []; if (e.agent === 'planner') m.plan = { ...(m.plan || {}), ...e.detail }; break;
@@ -454,7 +511,7 @@ function renderAgent(key, name, role, m) {
   seen[sk] = steps.length;
   return `<div class="agent"><div style="display:flex;flex-direction:column;gap:2px">
       <div class="agent-head"><b class="title-m">${name}</b><span class="m3-status ${cls}">${a.done ? sym('check', '') : ''}${status}</span></div>
-      <span class="body-m muted">${role}</span></div><ol>${items}</ol></div>`;
+      ${role ? `<span class="body-m muted">${role}</span>` : ''}</div><ol>${items}</ol></div>`;
 }
 
 function renderTabs() {
@@ -502,6 +559,30 @@ function correctedBalance(m) {
 function planOf(m) {
   if (m.done && m.done.plan && m.done.plan.months > 0) return m.done.plan;
   return m.plan && m.plan.months > 0 ? m.plan : null;
+}
+
+// what the review found, as money: bill corrections from the reconciliation, then the policy's discount, then the plan
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+function findingsOf(m) {
+  const out = [], quote = (topic) => m.quotes.find((q) => q.matched && q.quote && (!topic || q.topic === topic)) || null;
+  const qline = (q) => q ? `“${esc(q.quote)}” <span class="muted">· ${esc(host(q.source || ''))}</span>` : '';
+  const NAMES = [[/^insurance/i, 'Insurance wasn’t applied'], [/^payment already made/i, 'A payment you made was missed'], [/duplicate/i, 'Duplicate charge']];
+  for (const l of (m.rec && m.rec.lines) || []) {
+    if (l.total || !(l.amount < 0)) continue;
+    const name = (NAMES.find(([re]) => re.test(l.label)) || [, l.label])[1];
+    const ev = m.evidence.find((e) => /payment/i.test(e.label) && /payment/i.test(l.label));
+    out.push({ label: name, amount: -l.amount, value: '−' + money(-l.amount), detail: [ev ? `${esc(ev.value)} <span class="muted">· ${esc(ev.source)}</span>` : `<span class="muted">${esc(l.source || '')}</span>`] });
+  }
+  const owed = m.rec ? m.rec.owed : null, now = correctedBalance(m);
+  if (owed != null && now != null && now < owed) {
+    const inc = m.evidence.find((e) => /income/i.test(e.label));
+    out.push({ label: now === 0 ? 'Free care under their policy' : 'Discount under their policy', amount: owed - now, value: '−' + money(owed - now),
+      detail: [esc(cap((m.review.policy || {}).note || '')), inc ? `<span class="muted">${esc(inc.label)}: ${esc(inc.value)}</span>` : '', qline(quote())].filter(Boolean) });
+  }
+  out.sort((a, b) => b.amount - a.amount);
+  const pm = /(\d+)\s*×\s*\$([\d,]+)\/mo/.exec((m.review.policy || {}).result || '');
+  if (pm) out.push({ label: 'Interest-free payment plan', amount: 0, value: `${pm[1]} × $${pm[2]}/mo`, detail: [qline(quote('payment_plan')) || 'Their billing policy allows an interest-free plan.'] });
+  return out;
 }
 
 function rowStatusHTML(i, ds, m, draft) {
@@ -596,7 +677,6 @@ function render() {
   // ---- TOP: headline, stats, what needs you ----
   const [h, sub] = headline(m, ds, draft, tab);
   setText($('caseTitle'), h); setText($('caseSub'), sub);
-  $('stats').hidden = !!draft;
   $('uploadPanel').hidden = !draft;
   const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
   setText($('statOrig'), orig != null ? money(orig) : '—');
@@ -646,8 +726,8 @@ function render() {
 
   // 2 · Review
   $('reviewMeta').textContent = ds === 1 && !m.error ? 'Two agents are on it' : '';
-  setHTML($('agents'), renderAgent('auditor', 'Auditor', 'Finds what you actually owe', m) +
-                       renderAgent('policy', 'Policy', 'Checks the charity-care policy', m));
+  setHTML($('agents'), renderAgent('auditor', 'Auditor', '', m) +
+                       renderAgent('policy', 'Policy', '', m));
   const ra = (m.review && m.review.auditor) || m.agent.auditor || {}, rp = (m.review && m.review.policy) || m.agent.policy || {};
   const ares = ra.result || ra.summary, pres = rp.result || rp.summary;
   setText($('reviewLine'), (ares || pres) ? `Auditor: ${ares || 'working…'} · Policy: ${pres || 'working…'}`
@@ -657,6 +737,17 @@ function render() {
     `<dt>Auditor</dt><dd><b>${esc(ares || '')}</b>${ra.note ? ` <span>· ${esc(ra.note)}</span>` : ''}</dd>` +
     `<dt>Policy</dt><dd><b>${esc(pres || '')}</b>${rp.note ? ` <span>· ${esc(rp.note)}</span>` : ''}</dd>`);
   $('evidenceBox').hidden = !m.evidence.length;
+  // finished review: the findings, biggest saving first; every check sits in one fold (open while it runs)
+  const finds = m.review ? findingsOf(m) : [];
+  $('findings').hidden = !finds.length;
+  setHTML($('findings'), finds.map((f) => `<li><details><summary><span class="fl">${esc(f.label)}</span><b class="${f.amount ? '' : 'plain'}">${esc(f.value)}</b></summary>
+    <div class="fd body-m">${f.detail.map((d) => `<p>${d}</p>`).join('')}</div></details></li>`).join(''));
+  const box = $('checksBox'), phase = state.active + (m.review ? ':done' : ':run');
+  if (box.dataset.phase !== phase) { box.open = !m.review; box.dataset.phase = phase; }
+  $('checksSum').hidden = !m.review;
+  const nChecks = m.steps.auditor.length + m.steps.policy.length;
+  setText($('checksSum'), `Show all ${nChecks} checks, evidence and policy quotes`);
+  $('reviewSummary').hidden = true;
   setHTML($('evidenceList'), m.evidence.map((e) =>
     `<li><span class="title-s">${esc(e.label)}</span><span class="body-l">${esc(e.value)}</span><span class="body-s ev-src">${esc(e.source || '')}</span></li>`).join(''));
   const quotes = [...m.quotes].sort((a, b) => (b.matched ? 1 : 0) - (a.matched ? 1 : 0));
@@ -669,7 +760,12 @@ function render() {
   $('approveProvider').textContent = prov;
   setHTML($('askList'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
   setHTML($('askDone'), m.asks.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
-  $('approveAgain').textContent = m.round > 1 ? 'again' : 'for you';
+  $('approveAgain').textContent = m.round > 1 ? ' again' : '';
+  // the short version: what it gets you, in two lines; the full ask list sits under "More details"
+  const owe = correctedBalance(m), billed = m.bill ? m.bill.amount_due : null;
+  const short = [owe != null && billed != null && owe < billed ? `Get the bill from ${money(billed)} down to ${money(owe)}` : m.asks[0],
+    m.asks.some((q) => /payment plan/i.test(q)) ? 'Set up an interest-free plan and pause collections' : 'Pause collections and get a case number'].filter(Boolean);
+  setHTML($('askShort'), short.map((q) => `<li>${ICON.check}<span>${esc(q)}</span></li>`).join(''));
   $('callTitle').textContent = m.round > 1 ? 'Follow-up call' : 'Call billing';
   setHTML($('approveSummary'), m.callDeclined ? 'You chose not to call yet'
     : ds > 2 ? `<span class="text-success" style="font-weight:500">Accepted</span> · you approved the call to ${esc(prov)}${m.asks.length ? '. On the call we asked to:' : ''}`
@@ -710,6 +806,7 @@ function render() {
   setText($('finalLine'), m.done ? `${money(m.done.now)} · ${outcomeText(m)}` : planPending ? 'Payment plan waiting on you · see above'
     : ds === 4 && !m.error ? 'Wrapping up' : 'Final balance and next steps');
   const refund = m.done && m.done.refund;
+  $('finalNote').hidden = !refund;
   $('finalNote').innerHTML = refund
     ? `<b class="text-success">+ ${money(refund)} back to you</b>: you paid ${money(refund)} before the write-off, so the hospital owes it back.`
     : 'We’ll check back once billing confirms your new balance.';
@@ -743,6 +840,48 @@ function render() {
   setText($('asstChip'), a.chip);
   $('asstChip').className = 'm3-status' + (a.cls ? ' ' + a.cls : '') + (a.live ? ' live' : '');
   $('asstWave').classList.toggle('live', !!a.live);
+  renderNow(m, ds, draft, tab, a);
+}
+
+// "Now" panel: the current step (1-5), what is happening inside it, and its state
+const STEP_NAMES = ['Read your bill', 'Review', 'Your approval', 'Call billing', 'Resolved'];
+function nowText(m, ds, a) {
+  const prov = m.bill ? m.bill.provider : 'the hospital';
+  if (m.error) return a.text;
+  if (ds === 0) return 'Claude is reading your bill and insurance statement…';
+  if (ds === 1) {
+    const doing = ['auditor', 'policy'].map((k) => {
+      const st = m.steps[k], who = k === 'auditor' ? 'Auditor' : 'Policy';
+      const run = st.filter((x) => x.status === 'running' || x.status === 'wait').pop();
+      if (run) return `${who}: ${run.label}…`;
+      return m.agent[k] && m.agent[k].done ? `${who}: done` : `${who}: starting…`;
+    });
+    return doing.join(' · ');
+  }
+  if (ds === 2) return `Waiting for your OK to call ${prov} billing.`;
+  if (ds === 3) {
+    const l = m.lines[m.lines.length - 1];
+    return l ? `${l.who === 'rep' ? 'Billing' : 'BillBack'}: “${l.text.length > 160 ? l.text.slice(0, 157).trimEnd() + '…' : l.text}”` : `Dialing ${prov} billing…`;
+  }
+  return a.text;
+}
+function renderNow(m, ds, draft, tab, a) {
+  const live = !!tab && !draft;
+  $('nowTrack').hidden = !live;
+  $('nowText').hidden = !live;
+  setText($('nowStep'), !live ? '' : m.done && !m.error ? 'Done' : `Step ${ds + 1} of 5 · ${ds === 3 && m.round > 1 ? 'Follow-up call' : STEP_NAMES[ds]}`);
+  $('nowDot').className = 'now-dot ' + (!live ? 'off' : m.error ? 'error' : m.done ? 'success' : a.cls === 'success' || a.live ? 'success live' : 'warn live');
+  if (live) setText($('nowText'), m.done && !m.error ? (m.followup ? `Case ${m.done.case_number || 'open'}. I’ll check back by ${new Date(m.followup.due + 'T12:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.` : outcomeText(m)) : nowText(m, ds, a));
+  const orig = m.bill ? m.bill.amount_due : null, now = correctedBalance(m);
+  $('nowMoney').hidden = !live || orig == null;
+  setText($('nowWas'), orig != null ? money(orig) : '');
+  setText($('nowOwe'), now != null && (m.review || ds > 1) ? money(now) : 'checking…');
+  $('nowOwe').classList.toggle('pending', !(now != null && (m.review || ds > 1)));
+  setText($('nowSave'), $('statOweSupport').textContent === 'Checking…' ? '' : $('statOweSupport').textContent);
+  [...$('nowTrack').children].forEach((li, i) => {
+    li.classList.toggle('done', !!m.done || i < ds);
+    li.classList.toggle('active', !m.done && i === ds);
+  });
 }
 
 // ---------- data ----------
@@ -840,7 +979,7 @@ setInterval(() => { state.now = Date.now() / 1000; const m = state.models[state.
 setInterval(async () => { if (state.active === 'replay') return; await loadTabs(); renderTabs(); }, 4000);
 
 // ---------- replay mode: case.html?replay=1[&scenario=freecare][&speed=1.5][&jump=call] ----------
-// Plays a recorded run with its original timing, entirely in the browser. Approvals are shown and then
+// Plays a recorded run entirely in the browser, paced so each step can be watched (&speed=0 for recorded timing). Approvals are shown and then
 // resolved by the recording itself, so the demo works with no network beyond loading the page.
 // "Jump to the call" (or &jump=call) applies everything before the call instantly and plays on from there.
 async function startReplay(params) {
@@ -855,39 +994,78 @@ async function startReplay(params) {
   document.body.classList.add('replay');
   const callIdx = events.findIndex((e) => e.kind === 'call_ready');
   const jumpBtn = $('jumpCall');
-  let timers = [], next = 0;
+  let next = 0;
   const show = (e, at) => { apply(model(id), { ...e, ts: at }); state.now = Date.now() / 1000; };
-  // play events[from..] from now, compressing long human pauses (approvals, the rep thinking)
-  function play(from) {
-    const start = Date.now() / 1000;
-    let clock = 0, prev = events[from].ts;
-    for (let i = from; i < events.length; i++) {
-      const e = events[i];
-      clock += Math.min(e.ts - prev, 4) / speed; prev = e.ts;
-      const at = clock;
-      timers.push(setTimeout(() => {
-        next = i + 1; show(e, start + at); render();
-        if (callIdx >= 0 && i >= callIdx) jumpBtn.hidden = true;
-      }, at * 1000));
+  // Watch pacing: each event waits at least long enough to be seen (a step's spinner, a finding, a
+  // transcript line you can read), and long human pauses (approvals, the rep thinking) are capped.
+  // The real recorded gaps are kept when they are already longer; "Real time" (speed 0) plays them as recorded.
+  const words = (t) => String(t || '').split(/\s+/).filter(Boolean).length;
+  function minGap(e, prev) {
+    switch (e.kind) {
+      case 'agent_finished': return e.agent === 'intake' ? 2.5 : 1.0;
+      case 'case_started': return 0.6;
+      case 'balance': return 1.2;
+      case 'agent_started': return 0.6;
+      case 'step': return e.status === 'running' ? 0.35 : 1.5;   // a running step spins for ~1.5s before it resolves
+      case 'evidence': case 'policy_quote': return 0.7;
+      case 'review_done': return 1.2;
+      case 'approval_requested': return 1.0;
+      case 'approval_resolved': return 3.0;                       // time to read what you are approving
+      case 'call_ready': return 1.2;
+      case 'transcript': return prev && prev.kind === 'transcript' ? Math.min(Math.max(1.4, words(prev.text) / 3.2), 6) : 1.6;
+      case 'call_ended': return 1.5;
+      case 'plan_proposed': return 1.5;
+      case 'tool_result': return 1.5;
+      case 'case_done': return 1.2;
+      default: return 0.3;
     }
   }
+  const sched = [0], rec = [0];  // virtual seconds at which events[i] fires: watch pacing / as recorded
+  for (let i = 1; i < events.length; i++) {
+    const gap = Math.max(0, events[i].ts - events[i - 1].ts);
+    sched[i] = sched[i - 1] + Math.max(Math.min(gap, 4), minGap(events[i], events[i - 1]));
+    rec[i] = rec[i - 1] + Math.min(gap, 4);
+  }
+  let rate = speed || 1, realtime = speed === 0, paused = false, vclock = 0, last = performance.now();
+  const at = (i) => (realtime ? rec : sched)[i];
+  function tick() {
+    const t = performance.now();
+    if (!paused) vclock += ((t - last) / 1000) * rate;
+    last = t;
+    let changed = false;
+    while (next < events.length && at(next) <= vclock) { show(events[next], Date.now() / 1000); next++; changed = true; }
+    if (changed) { render(); if (callIdx >= 0 && next > callIdx) jumpBtn.hidden = true; }
+    if (next < events.length) setTimeout(tick, 50);
+    else { $('nowPause').hidden = true; setText($('nowReplayNote'), 'Replay finished'); }
+  }
+  $('nowCtl').hidden = false;
+  if (speed !== 1) { const o = [...$('nowSpeed').options].find((x) => +x.value === speed); if (o) o.selected = true; }
+  if (realtime) setText($('nowReplayNote'), 'Replay · recorded timing');
+  $('nowSpeed').onchange = () => {
+    const v = +$('nowSpeed').value, was = at(Math.max(next - 1, 0));
+    realtime = v === 0; rate = realtime ? 1 : v;
+    vclock = Math.max(vclock - was, 0) + at(Math.max(next - 1, 0));  // keep our place in the new timeline
+    setText($('nowReplayNote'), realtime ? 'Replay · recorded timing' : 'Replay');
+  };
+  $('nowPause').onclick = () => {
+    paused = !paused;
+    $('nowPause').innerHTML = `<span class="material-symbols-rounded" aria-hidden="true">${paused ? 'play_arrow' : 'pause'}</span>`;
+    $('nowPause').setAttribute('aria-label', paused ? 'Resume' : 'Pause');
+  };
   function jumpToCall() {
     if (callIdx < 0 || next > callIdx) return;
-    timers.forEach(clearTimeout); timers = [];
-    const now = Date.now() / 1000;
-    for (let i = next; i < callIdx; i++) show(events[i], now - (events[callIdx].ts - events[i].ts));
-    next = callIdx; jumpBtn.hidden = true; render();
-    play(callIdx);
+    vclock = at(callIdx);  // the next tick applies everything up to and including the call
+    jumpBtn.hidden = true;
     setTimeout(() => {  // bring the call step (and its transcript) into view
       const row = [...document.querySelectorAll('[aria-expanded]')].find((x) => /Call billing/.test(x.textContent));
-      const bar = document.querySelector('.m3-top-app-bar');
-      if (row) scrollTo({ top: row.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 12, behavior: 'smooth' });
+      const bar = document.querySelector('.m3-top-app-bar'), now = $('nowCard');
+      if (row) scrollTo({ top: row.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 20, behavior: 'smooth' });
     }, 400);
   }
   jumpBtn.hidden = callIdx < 0;
   jumpBtn.onclick = jumpToCall;
-  play(0);
   render();
+  tick();
   if (params.get('jump') === 'call') jumpToCall();
 }
 

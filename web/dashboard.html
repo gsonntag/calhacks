@@ -35,6 +35,15 @@
     width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; text-align: left;
     background: none; border: 0; color: inherit; font: inherit; cursor: pointer; border-radius: 0;
   }
+  .case-head { padding: 14px 20px; gap: 0; }
+  .ch-top { align-items: center; }
+  .ch-saved { flex: none; display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+  .ch-saved b { font: 700 22px/28px var(--md-font); color: var(--st-money); letter-spacing: -.2px; }
+  .ch-saved span { font: 400 12px/16px var(--md-font); color: var(--md-on-surface-variant); }
+  .ch-saved.zero span { font-size: 14px; line-height: 20px; }
+  .ch-who .m3-status { vertical-align: middle; }
+  .sum { display: flex; flex-direction: column; gap: 8px; padding-top: 16px; }
+  .ch-meta { display: flex; align-items: center; gap: 8px; font: 400 14px/20px var(--md-font); }
   .case-head:focus-visible { outline-offset: -3px; border-radius: var(--md-shape-l); }
   .ch-top { display: flex; align-items: flex-start; gap: 12px; }
   .ch-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -110,7 +119,7 @@
   </div>
   <div class="stats" id="stats" hidden></div>
   <section class="m3-card attn" id="attention" aria-labelledby="attnTitle" hidden></section>
-  <h2 class="title-l section-title" id="casesTitle" hidden>All cases</h2>
+  <h2 class="title-l section-title" id="casesTitle" hidden>All cases <span class="body-m muted">· most saved first</span></h2>
   <div id="cases" aria-live="polite"></div>
 </main>
 
@@ -151,14 +160,23 @@ function needsYou(c) {
   return null;
 }
 
-/* collapsed row: hospital and patient, status, billed -> now, next action with its due date */
+const savedOf = (c) => Math.max(0, (c.original || 0) - (c.current_balance || 0)) + (c.refund || 0);
+
+/* collapsed row: hospital and patient on the left, money saved on the right; everything else is one click away */
 function headHTML(c) {
+  const saved = savedOf(c), flag = needsYou(c);
+  return `<span class="ch-top">
+      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)}${flag ? ` · <span class="m3-status ${flag[1]}">${esc(flag[0])}</span>` : ''}</span></span>
+      <span class="ch-saved ${saved ? '' : 'zero'}">${saved ? `<b>${money(saved)}</b><span>saved</span>` : '<span>Nothing saved yet</span>'}</span>
+      ${icon('expand_more', 'chev')}
+    </span>`;
+}
+
+/* first thing in the expanded card: status, billed -> now, and the next action */
+function sumHTML(c) {
   const n = c.next || {};
   const down = c.current_balance < c.original;
-  return `<span class="ch-top">
-      <span class="ch-who"><b>${esc(c.provider)}</b><span>${esc(c.patient)} · opened ${day(c.created)}</span></span>
-      <span class="ch-right">${statusChip(c)}${icon('expand_more', 'chev')}</span>
-    </span>
+  return `<div class="ch-meta">${statusChip(c)}<span class="muted">opened ${day(c.created)}</span></div>
     <span class="ch-money">${c.current_balance !== c.original
         ? `<span class="from">${money(c.original)} billed</span>${icon('arrow_forward', 'arrow')}<span class="now ${down ? 'down' : ''}">${money(c.current_balance)}</span>`
         : `<span class="now">${money(c.current_balance)}</span><span class="from">billed</span>`}
@@ -226,6 +244,7 @@ function ensureCard(c) {
   el.className = 'm3-card case card'; el.id = 'case-' + c.id;
   el.innerHTML = `<button type="button" class="case-head" aria-expanded="false" aria-controls="body-${c.id}"><span class="main"></span></button>
     <div class="case-body" id="body-${c.id}" hidden>
+      <div class="sum"></div>
       <div class="acts"></div>
       <div class="tl"></div>
       <div class="ask">
@@ -280,6 +299,8 @@ function render(list) {
   setHTML($('attention'), attentionHTML(list));
   const ids = new Set(list.map((c) => c.id));
   Object.keys(cards).forEach((id) => { if (!ids.has(id)) { cards[id].remove(); delete cards[id]; } });
+  // biggest savings first (stable, so equal savings keep the newest-first order)
+  list = [...list].sort((a, b) => savedOf(b) - savedOf(a));
   list.forEach((c, i) => {
     const fresh = !cards[c.id];
     const el = ensureCard(c);
@@ -289,6 +310,7 @@ function render(list) {
     // open what needs attention, unless the user has already toggled this case
     if (!el._touched && (fresh || needsYou(c))) setOpen(el, !!needsYou(c));
     setHTML(el.querySelector('.main'), headHTML(c));
+    setHTML(el.querySelector('.sum'), sumHTML(c));
     setHTML(el.querySelector('.acts'), actsHTML(c));
     setHTML(el.querySelector('.tl'), detailHTML(c));
     setHTML(el.querySelector('.clock'), clockHTML(c));
