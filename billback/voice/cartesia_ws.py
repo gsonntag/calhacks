@@ -42,12 +42,16 @@ def keyterm_params(terms: Iterable[str]) -> list[tuple[str, str]]:
 
 
 class STT:
-    def __init__(self, keyterms: Iterable[str] = (), **turn: float) -> None:
+    """Phone: pcm_mulaw 8 kHz straight from Twilio. Desk mode: pcm_s16le 16 kHz from the browser mic."""
+
+    def __init__(self, keyterms: Iterable[str] = (), encoding: str = "pcm_mulaw", sample_rate: int = 8000,
+                 **turn: float) -> None:
         self.keyterms, self.turn = list(keyterms), turn
+        self.encoding, self.sample_rate = encoding, sample_rate
         self.ws: ClientConnection | None = None
 
     def url(self) -> str:
-        q = [("model", config.CARTESIA_STT_MODEL), ("encoding", "pcm_mulaw"), ("sample_rate", "8000"),
+        q = [("model", config.CARTESIA_STT_MODEL), ("encoding", self.encoding), ("sample_rate", str(self.sample_rate)),
              ("cartesia_version", cartesia.VERSION), *((f"turn_{k}", str(v)) for k, v in self.turn.items()),
              *keyterm_params(self.keyterms)]
         return f"{WS}/stt/turns/websocket?{urlencode(q)}"
@@ -110,7 +114,13 @@ class TTS:
 
     def request(self, text: str, context_id: str) -> dict:
         return {"model_id": config.CARTESIA_TTS_MODEL, "transcript": pronounce.normalize(text, self.voice.language),
-                **self.voice.tts_fields(), "output_format": self.output_format, "context_id": context_id, "continue": False}
+                **self.voice.tts_fields(), "output_format": self.output_format, "context_id": context_id, "continue": False,
+                "add_timestamps": True}  # word timestamps: how much of a reply was heard before a barge-in (heard.py)
+
+    @property
+    def bytes_per_s(self) -> int:
+        f = self.output_format
+        return f["sample_rate"] * (2 if f["encoding"] == "pcm_s16le" else 1)
 
     async def stream(self, text: str, context_id: str) -> AsyncIterator[bytes]:
         """μ-law 8 kHz audio for `text`, chunk by chunk as Sonic generates it."""
@@ -130,7 +140,7 @@ class TTS:
         finally:
             self._queues.pop(context_id, None)
 
-    async def stream_many(self, texts: AsyncIterator[str], prefix: str) -> AsyncIterator[bytes]:
+    async def stream_many(self, texts: AsyncIterator[str], prefix: str, spoken=None) -> AsyncIterator[bytes]:
         """Audio for text that arrives piece by piece (sentences streamed from Claude), in order.
 
         Speech starts as soon as the first sentence is here. Each request gets its own context
@@ -139,7 +149,8 @@ class TTS:
         meanwhile. One generation at a time: the Cartesia plan allows 2 concurrent ones, and a context per
         request instead of continuations on one context means a slow gap between Claude's sentences can't
         expire the context (contexts expire 1 s after their last audio). cancel(prefix) stops it; the text
-        iterator is still drained (the call brain finishes its turn) but nothing more is sent."""
+        iterator is still drained (the call brain finishes its turn) but nothing more is sent.
+        `spoken` (heard.Spoken) records each request's text, audio length and word timestamps."""
         await self.ensure()
         self._cancelled.discard(prefix)
         pending: asyncio.Queue = asyncio.Queue()
@@ -177,6 +188,8 @@ class TTS:
                     n += 1
                     ctx, q, got = f"{prefix}_{n}", asyncio.Queue(), False
                     self._queues[ctx] = q
+                    if spoken is not None:
+                        spoken.begin(text)
                     try:
                         await self.ws.send(json.dumps(self.request(text, ctx)))
                         while True:
@@ -186,9 +199,15 @@ class TTS:
                                 if attempt == 0 and not got and "concurrency" in err.lower():
                                     break  # a just-cancelled generation can still count: retry once
                                 raise RuntimeError(f"Cartesia TTS: {err}")
+                            if msg.get("type") == "timestamps" and spoken is not None:
+                                wt = msg.get("word_timestamps") or {}
+                                spoken.timestamps(wt.get("words") or [], wt.get("end") or [])
                             if msg.get("type") == "chunk" and msg.get("data") and prefix not in self._cancelled:
                                 got = True
-                                yield base64.b64decode(msg["data"])
+                                audio = base64.b64decode(msg["data"])
+                                if spoken is not None:
+                                    spoken.audio(len(audio))
+                                yield audio
                             if msg.get("type") == "done" or msg.get("done"):
                                 break
                     finally:

@@ -1,4 +1,5 @@
 """Admin key on routes that place a call, spend credits or wipe state; judging mode (no sample policies)."""
+import json
 import httpx
 import pytest
 from fastapi.routing import APIRoute
@@ -111,3 +112,24 @@ async def test_judging_mode_never_uses_a_sample_policy(monkeypatch):
     monkeypatch.setattr(config, "REQUIRE_LIVE", False)  # default: the fixture still backs offline runs
     got = await policy.find_policy("judging-test", policy.report("judging-test"), hosp)
     assert got["origin"] == "offline_fixture" and got["found"]["tiers"]
+
+
+async def test_desk_interrupt_needs_the_key(monkeypatch):
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    async with _client() as c:
+        assert (await c.post("/api/calls/nope/interrupt", json={"played_s": 1.0})).status_code == 401
+
+
+def test_desk_listen_websocket_needs_the_key(monkeypatch):
+    """It streams the mic to Cartesia (credits): the key comes as ?key= since a browser can't set the header."""
+    from starlette.testclient import TestClient
+    from starlette.websockets import WebSocketDisconnect
+    monkeypatch.setattr(config, "ADMIN_TOKEN", TOKEN)
+    with TestClient(app_mod.app) as tc:
+        for url in ("/api/calls/nope/listen", "/api/calls/nope/listen?key=wrong"):
+            with pytest.raises(WebSocketDisconnect) as e:
+                with tc.websocket_connect(url) as ws:
+                    ws.receive_text()
+            assert e.value.code == 1008
+        with tc.websocket_connect(f"/api/calls/nope/listen?key={TOKEN}") as ws:  # let in: no such call
+            assert json.loads(ws.receive_text())["type"] == "unavailable"

@@ -14,6 +14,8 @@ from .. import config, finance, llm
 from ..events import bus
 from ..harness import ToolRegistry, Tool
 
+INTERRUPTED = "—[interrupted]"  # ends a remembered reply the rep talked over (voice/heard.py)
+
 SYSTEM = """You are BillBack, an AI assistant on a live phone call with a hospital billing representative,
 calling on behalf of a patient who authorized you. You speak out loud, so:
 - Say 1-2 short sentences per turn (under 30 words; this is spoken aloud) and make ONE request per turn, then stop
@@ -49,10 +51,15 @@ Rules:
   no costlier, thank them and ask them to note it on the account; the patient confirms it and sets up the
   payments. Never accept interest or a higher monthly amount. Without "proposed_payment_plan" in the brief, don't agree to any plan.
 - Refer to the patient by name or as "the patient"; don't guess their pronouns.
-- When the rep gives a case/reference number, call record_outcome. When the goals are done or the rep
+- When the rep gives a case/reference number, read it back first: say only "Let me read that back: <the
+  number exactly as you heard it>. Is that right?" Call record_outcome with case_number after the rep says
+  yes; if they correct it, read back the corrected one. When the goals are done or the rep
   ends it, call end_call and say a short goodbye. If the rep says goodbye or wants to end the call, never push
   another request: record what you have, thank them, say goodbye and call end_call.
 - When you use a tool, say your spoken sentence first, then call the tool; never include XML tags in what you say.
+- An automated phone menu ("press 1 for billing") is not a person: don't talk to it. Call press_keys with the
+  option for billing / patient accounts (or the operator), with no spoken text.
+- A line of yours ending in "—[interrupted]" was cut off: the rep only heard the part before it.
 """
 
 
@@ -150,6 +157,10 @@ def _case_number(said: str) -> str:
     return digits
 
 
+def _id_key(s) -> str:
+    return re.sub(r"[^A-Z0-9]", "", str(s or "").upper())
+
+
 def _last_call(brief: dict) -> dict:
     """Most recent entry of brief["previous_calls"] ({date, rep, case_number, promised, outcome}); {} on a first call."""
     prev = (brief.get("previous_calls") or [{}])[-1]
@@ -175,6 +186,10 @@ class CallSession:
         self.outcome: dict = {}
         self.ended = False
         self.last_say = ""
+        self.last_heard: str | None = None  # the part of the last reply the rep heard, if they cut it off
+        self._turn_base = 0                 # index in self.messages where the current/last turn starts
+        self._replying = False
+        self._cut: str | None = None
         self.reg = ToolRegistry(case_id, "caller")
         self.reg.add(Tool("record_outcome", "Record what the hospital agreed to and the case/reference number", {
             "type": "object", "properties": {
@@ -185,11 +200,49 @@ class CallSession:
             "required": ["next_step", "account_on_hold", "assistance_review_opened"]}, self._record, tier="act"))
         self.reg.add(Tool("end_call", "End the call after saying goodbye", {
             "type": "object", "properties": {"reason": {"type": "string"}}}, self._end, tier="act"))
+        self.reg.add(Tool("press_keys", "Press phone keypad keys to answer an automated phone menu", {
+            "type": "object", "properties": {"digits": {"type": "string", "description": "e.g. \"2\" or \"0\""}},
+            "required": ["digits"]}, self._press, tier="act"))
+        self.keys = ""  # keypad presses the phone transport hasn't sent yet (take_keys)
 
     async def _record(self, **kw) -> dict:
         self.outcome.update({k: v for k, v in kw.items() if v not in (None, "")})
+        note = None
+        if kw.get("case_number"):
+            # Read-back rule: a number is confirmed only if BillBack said it back in an earlier turn (so the rep
+            # has answered since) or we already had it. Otherwise it's kept, flagged, and the model is told to read it back.
+            ok = self._read_back(kw["case_number"])
+            self.outcome["case_number_confirmed"] = ok
+            if not ok:
+                note = ('Saved as unconfirmed. Read the case number back ("Let me read that back: ... Is that right?") '
+                        "and call record_outcome again once the rep confirms.")
         bus.emit(self.case_id, "call_outcome", "caller", outcome=self.outcome)
-        return {"ok": True}
+        return {"ok": True, **({"note": note} if note else {})}
+
+    async def _press(self, digits: str = "") -> dict:
+        keys = re.sub(r"[^0-9*#]", "", digits)
+        self.keys += keys
+        bus.emit(self.case_id, "call_keys", "caller", digits=keys)
+        return {"ok": bool(keys)}
+
+    def take_keys(self) -> str:
+        keys, self.keys = self.keys, ""
+        return keys
+
+    def _read_back(self, number: str) -> bool:
+        key = _id_key(number)
+        if not key:
+            return False
+        known = (self.brief.get("account_number"), self.brief.get("claim_number"), _last_call(self.brief).get("case_number"))
+        if any(k and _id_key(k) == key for k in known):
+            return True
+        for m in self.messages[:self._turn_base]:  # earlier turns only: the rep must have answered the read-back
+            if m["role"] == "assistant":
+                blocks = [None] if isinstance(m["content"], str) else m["content"]
+                said = " ".join(_text_of(m, b) for b in blocks if _is_text(b))
+                if key in _id_key(said.split(INTERRUPTED)[0]):
+                    return True
+        return False
 
     async def _end(self, reason: str = "") -> dict:
         self.ended = True
@@ -247,6 +300,7 @@ class CallSession:
         else:
             lines.append("Could you place the account on hold so it isn't sent to collections while this is corrected?")
         return lines + ["Thank you. Could I get a case or reference number for this?",
+                        f"Let me read that back: {_case_number(rep_said or '')}. Is that right?",
                         "Thanks so much for your help today. Goodbye."]
 
     async def turn(self, rep_said: str | None) -> str:
@@ -293,6 +347,16 @@ class CallSession:
         """Like turn(), but yields the reply as it's written, one sentence (with its trailing space) at a time.
         Tool calls run after the text that came with them has been yielded, so speech never waits on
         record_outcome. Consume it to the end: history, tools and transcript events finish with it."""
+        self._turn_base, self._replying, self._cut, self.last_heard = len(self.messages), True, None, None
+        try:
+            async for s in self._reply(rep_said, draft):
+                yield s
+        finally:
+            self._replying = False
+            if self._cut is not None:
+                self._apply_cut(self._cut)
+
+    async def _reply(self, rep_said: str | None, draft: dict | None):
         if rep_said:
             bus.emit(self.case_id, "transcript", "caller", speaker="rep", text=rep_said)
         if not llm.available():
@@ -305,6 +369,7 @@ class CallSession:
         before = list(self.messages)
         self.messages = draft["messages"] if draft else self._heard(rep_said)
         parts: list[str] = []
+        pressed = False  # answered a phone menu with keypad tones: no words needed this turn
         try:
             for i in range(4):  # allow tool calls, then a spoken reply
                 stream = draft["stream"] if draft and i == 0 else self._llm(self.messages)
@@ -328,6 +393,9 @@ class CallSession:
                 results = [{"type": "tool_result", "tool_use_id": c.id,
                             "content": json.dumps(await self.reg.call(c.name, c.input), default=str)} for c in calls]
                 self.messages.append({"role": "user", "content": results})
+                if any(c.name == "press_keys" for c in calls):
+                    pressed = True
+                    break  # the menu answers the tones, not us
                 if parts and (self.ended or all(c.name == "record_outcome" for c in calls)):
                     break  # already said something this turn: a second model call only repeats it
         except Exception as e:
@@ -336,14 +404,47 @@ class CallSession:
             if not parts:
                 parts = ["Sorry, could you say that again?"]
                 yield parts[0]
-        if not parts:
+        if not parts and not pressed:
             parts = ["Sorry, could you say that again?"]
             yield parts[0]
         say = " ".join(parts)
         if not self.ended and re.search(r"\b(goodbye|bye)\b", say, re.I):
             await self.reg.call("end_call", {"reason": "done"})  # model said goodbye but forgot end_call
-        bus.emit(self.case_id, "transcript", "caller", speaker="billback", text=say)
+        if say:
+            bus.emit(self.case_id, "transcript", "caller", speaker="billback", text=say)
         self.last_say = say
+
+    # Barge-in: the transport reports how much of the last reply was actually played (voice/heard.py).
+
+    def interrupted(self, heard: str) -> None:
+        """The rep talked over the reply and heard only `heard` (a word prefix of it). The history is cut to
+        that, ending in "—[interrupted]", so the next turn doesn't assume they heard the rest (tool calls
+        stay). Works while the reply is still being written (applied when it finishes) or after."""
+        if self._replying:
+            self._cut = heard
+        else:
+            self._apply_cut(heard)
+
+    def _apply_cut(self, heard: str) -> None:
+        self._cut = None
+        msgs = [m for m in self.messages[self._turn_base:] if m["role"] == "assistant"]
+        texts = [(m, b) for m in msgs for b in ([None] if isinstance(m["content"], str) else m["content"]) if _is_text(b)]
+        budget, total = len(heard.split()), sum(len(_text_of(m, b).split()) for m, b in texts)
+        if budget >= total:
+            return  # all of it was heard
+        self.last_heard = heard
+        for m, b in texts:
+            text = _text_of(m, b)
+            if budget >= len(text.split()):
+                budget -= len(text.split())
+                continue
+            words = list(re.finditer(r"\S+", text))
+            _set_text(m, b, text[:words[budget - 1].end()] + INTERRUPTED if budget else "")
+            budget = 0
+        for m in msgs:  # the API rejects an assistant message with no content
+            if not m["content"]:
+                m["content"] = [{"type": "text", "text": INTERRUPTED}]
+        bus.emit(self.case_id, "transcript_cut", "caller", heard=heard, said=self.last_say)
 
     def _scripted_follow_up(self) -> list[str]:
         b, prev = self.brief, _last_call(self.brief)
@@ -373,10 +474,11 @@ class CallSession:
                 await self.reg.call("record_outcome", {
                     **self._held(), "case_number": _last_call(self.brief).get("case_number"),
                     "next_step": "Corrected statement pending"})
-        elif rep_said and len(lines) >= 4 and step >= len(lines) - 2:  # replying to the hold ask or the case-number ask
+        elif rep_said and len(lines) >= 5 and step >= len(lines) - 3:  # replying to the hold ask, case-number ask or read-back
             fields = self._held()
-            if step == len(lines) - 1:
-                fields["case_number"] = _case_number(rep_said)
+            if step == len(lines) - 1:  # the rep confirmed the read-back, or corrected it ("no, it's FA-20931")
+                said_back = _case_number(str(self.messages[-1]["content"]).removeprefix("Let me read that back: "))
+                fields["case_number"] = _case_number(rep_said) if re.search(r"\d", rep_said) else said_back
             await self.reg.call("record_outcome", fields)
         say = lines[min(step, len(lines) - 1)]
         self.messages += [{"role": "user", "content": rep_said or ""}, {"role": "assistant", "content": say}]
@@ -386,6 +488,25 @@ class CallSession:
             await self.reg.call("end_call", {"reason": "done"})
         bus.emit(self.case_id, "transcript", "caller", speaker="billback", text=say)
         return say
+
+
+def _is_text(b) -> bool:
+    """A text block of an assistant message (None stands for a plain-string content)."""
+    return b is None or getattr(b, "type", None) == "text" or (isinstance(b, dict) and b.get("type") == "text")
+
+
+def _text_of(m: dict, b) -> str:
+    if b is None:
+        return m["content"]
+    return b.get("text", "") if isinstance(b, dict) else b.text
+
+
+def _set_text(m: dict, b, text: str) -> None:
+    """Replace one text block of an assistant message ("" drops it); SDK blocks are kept as they are."""
+    if b is None:
+        m["content"] = text
+        return
+    m["content"] = [({"type": "text", "text": text} if x is b else x) for x in m["content"] if x is not b or text]
 
 
 sessions: dict[str, CallSession] = {}

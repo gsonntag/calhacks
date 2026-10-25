@@ -7,6 +7,7 @@ headers, so anything that came through one is refused."""
 import hmac
 
 from fastapi import Depends, HTTPException, Request
+from starlette.requests import HTTPConnection
 
 from . import config
 
@@ -15,7 +16,7 @@ LOOPBACK = {"127.0.0.1", "::1", "localhost"}
 PROXY_HEADERS = ("x-forwarded-for", "forwarded", "x-real-ip", "cf-connecting-ip", "x-forwarded-host")
 
 
-def _local(request: Request) -> bool:
+def _local(request: HTTPConnection) -> bool:
     """Made on this machine, not relayed by a proxy or tunnel."""
     host = request.client.host if request.client else ""
     return host in LOOPBACK and not any(h in request.headers for h in PROXY_HEADERS)
@@ -25,6 +26,14 @@ def allowed(request: Request) -> bool:
     if config.ADMIN_TOKEN:
         return hmac.compare_digest(request.headers.get(HEADER, "").encode(), config.ADMIN_TOKEN.encode())
     return _local(request)
+
+
+def ws_allowed(ws: HTTPConnection) -> bool:
+    """A WebSocket can't carry the header from a browser, so the key may come as ?key= instead."""
+    if config.ADMIN_TOKEN:
+        key = ws.headers.get(HEADER) or ws.query_params.get("key", "")
+        return hmac.compare_digest(key.encode(), config.ADMIN_TOKEN.encode())
+    return _local(ws)
 
 
 def require_admin(request: Request) -> None:

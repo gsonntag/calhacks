@@ -295,7 +295,8 @@ class FakeTwilio:
         self.sent.append(msg)
         if msg["event"] == "mark" and self.echo_marks:
             self.inbox.put_nowait({"event": "mark", "streamSid": "MZ1", "mark": msg["mark"]})
-            self.say_next()
+            if "." not in msg["mark"]["name"]:  # "say-3" ends an utterance; "say-3.2" is a progress mark
+                self.say_next()
 
     async def close(self, code: int = 1000):
         self.closed = True
@@ -380,7 +381,7 @@ async def test_speaks_first_when_line_is_silent(fakes):
 
 REP_LINES = ["Patient Financial Services, this is Diane, how can I help you?", "Okay, let me pull that up.",
              "I see it.", "Okay.", "Yes, I've opened a financial assistance review and put the account on hold.",
-             "Your case number is 58213."]
+             "Your case number is 58213.", "Yes, that's right."]
 
 
 @pytest.fixture

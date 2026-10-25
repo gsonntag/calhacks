@@ -60,7 +60,7 @@ async def test_offline_end_to_end(client):
     rep_lines = ["Patient Financial Services, this is Diane, how can I help you?",
                  "Okay, let me pull that up.", "I see it.", "Okay.",
                  "Yes, I've opened a financial assistance review and put the account on hold.",
-                 "Your case number is 58213."]
+                 "Your case number is 58213.", "Yes, that's right."]
     for line in rep_lines:
         r = (await c.post(f"/api/calls/{ready['call_id']}/turn", json={"rep_said": line})).json()
         assert r["say"]

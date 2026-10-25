@@ -6,6 +6,8 @@ Twilio-facing (PUBLIC_BASE_URL must be the public https URL Twilio reaches):
   WS   /voice/twilio/stream   bidirectional Media Stream; accepted only with a live per-call token
 UI-facing:
   POST /api/calls/{id}/turn/stream  desk mode: BillBack's reply streamed as text + audio (NDJSON, voice/desk.py)
+  WS   /api/calls/{id}/listen       desk mode: browser mic -> Cartesia Ink, turn events back (voice/desk.py)
+  POST /api/calls/{id}/interrupt    desk mode: the rep talked over BillBack; cut its reply to what played
   GET  /api/voices            voice catalog (accents) for the per-case picker
   POST /api/voices/sample     speak a line in a voice, with or without the pronunciation normalizer (WAV)
   POST /api/voices/normalize  the spoken form of a line, to show what the normalizer changed
@@ -14,7 +16,7 @@ from fastapi import APIRouter, Request, Response, WebSocket
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from .. import config
+from .. import auth, config
 from ..auth import ADMIN
 from ..integrations import cartesia, twilio
 from . import calls, desk, pronounce, voices
@@ -87,3 +89,20 @@ class DeskTurn(BaseModel):
 @router.post("/api/calls/{call_id}/turn/stream", dependencies=ADMIN)
 async def desk_turn_stream(call_id: str, t: DeskTurn):
     return await desk.turn_stream(call_id, t.rep_said)
+
+
+class DeskInterrupt(BaseModel):
+    played_s: float | None = None
+
+
+@router.post("/api/calls/{call_id}/interrupt", dependencies=ADMIN)
+async def desk_interrupt(call_id: str, i: DeskInterrupt):
+    return await desk.interrupt(call_id, i.played_s)
+
+
+@router.websocket("/api/calls/{call_id}/listen")
+async def desk_listen(ws: WebSocket, call_id: str):
+    if not auth.ws_allowed(ws):  # it streams the mic to Cartesia, so it spends credits like the POST routes
+        await ws.close(1008)
+        return
+    await desk.listen(ws, call_id)

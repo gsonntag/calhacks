@@ -10,8 +10,10 @@
 <link rel="stylesheet" href="m3.css">
 <style>
   /* Desk-mode call: a teammate plays the hospital billing rep in the browser.
-     Backup for when the Cartesia phone call isn't available. Hold the mic button to talk (Chrome),
-     or type. BillBack's replies play through Cartesia TTS (or the browser voice if no key). */
+     Backup for when the Cartesia phone call isn't available. The mic streams to Cartesia Ink (hands-free,
+     Ink decides when the rep's turn ends; talking over BillBack interrupts it). Without Ink (no key, 402,
+     error) it falls back to holding the mic button with Chrome's speech recognition, or typing.
+     BillBack's replies play through Cartesia Sonic (or the browser voice if no key). */
   body { min-height: 100vh; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
   .m3-top-app-bar { flex: none; gap: 12px; border-bottom: 1px solid var(--md-outline-variant); }
   .who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -21,6 +23,7 @@
   #log { flex: 1; min-height: 0; overflow: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
   #log .m3-bubble { max-width: 85%; }
   #log .m3-bubble.me { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+  #log .unheard { opacity: .45; text-decoration: line-through; }
   #answer { margin: auto; height: 64px; padding: 0 36px; font-size: 18px; }
   #answer .material-symbols-rounded { font-size: 24px; }
   footer { flex: none; display: flex; align-items: center; gap: 8px; padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom));
@@ -37,7 +40,7 @@
   <span class="m3-brand-mark" aria-hidden="true"><span class="material-symbols-rounded">ecg_heart</span></span>
   <div class="who">
     <h1 class="title-m" id="hosp" style="margin:0">Hospital billing</h1>
-    <small class="body-s muted">Patient Financial Services · <span id="sub">Incoming call</span></small>
+    <small class="body-s muted">Patient Financial Services · <span id="sub">Incoming call</span> <span id="ears"></span></small>
   </div>
   <button class="m3-btn outlined" id="hang" type="button"><span class="material-symbols-rounded" aria-hidden="true">call_end</span>Hang up</button>
 </header>
@@ -54,14 +57,16 @@ const hospName = new URLSearchParams(location.search).get('hospital');
 if (hospName) document.getElementById('hosp').textContent = hospName;
 const $ = (x) => document.getElementById(x);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let busy = false, ended = false;
+let busy = false, ended = false, queued = null;
 function add(cls, text) { $('log').insertAdjacentHTML('beforeend', `<div class="m3-bubble ${cls === "me" ? "me" : "them"}">${esc(text)}</div>`); $('log').scrollTop = 1e9; return $('log').lastElementChild; }
-let audio = null;
+let audio = null, voiceTalking = false;
 async function speakOnce(text) {
+  voiceTalking = true;
   try {
     const r = await fetch('/api/tts', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text, call_id: callId})});
-    if (r.ok) { audio = new Audio(URL.createObjectURL(await r.blob())); await audio.play(); await new Promise((res) => { audio.onended = res; audio.onerror = res; }); return; }
+    if (r.ok) { audio = new Audio(URL.createObjectURL(await r.blob())); await audio.play(); await new Promise((res) => { audio.onended = res; audio.onerror = res; audio.onpause = res; }); return; }
   } catch (e) {}
+  if (!voiceTalking) return;  // interrupted while fetching
   await new Promise((res) => { const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.onend = res; u.onerror = res; speechSynthesis.speak(u); });
 }
 // Chrome sometimes never fires onend; never let a stuck voice lock the console.
@@ -70,12 +75,12 @@ function speak(text) {
   return Promise.race([speakOnce(text), new Promise((res) => setTimeout(() => {
     try { speechSynthesis.cancel(); if (audio) audio.pause(); } catch (e) {}
     res();
-  }, limit))]);
+  }, limit))]).finally(() => { voiceTalking = false; lastPlayEnd = performance.now(); });
 }
 // Streamed replies (POST .../turn/stream, NDJSON): text sentences as Claude writes them and Sonic audio
 // (pcm_s16le 24 kHz) as it's generated, scheduled back to back with Web Audio. Speech starts after the
 // first sentence instead of after the whole reply plus a whole WAV. Falls back to turn + /api/tts.
-let actx = null, nextAt = 0, sources = [], carry = null;
+let actx = null, nextAt = 0, sources = [], carry = null, sched = [], lastPlayEnd = 0;
 function audioCtx() {  // created/resumed inside a click or mic press (autoplay rules)
   try {
     if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
@@ -92,20 +97,51 @@ function playPcm(b64) {
   const buf = ctx.createBuffer(1, n, 24000), ch = buf.getChannelData(0);
   for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 32768) v -= 65536; ch[i] = v / 32768; }
   const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
-  nextAt = Math.max(nextAt, ctx.currentTime + 0.02); src.start(nextAt); nextAt += buf.duration;
+  nextAt = Math.max(nextAt, ctx.currentTime + 0.02); src.start(nextAt);
+  sched.push({at: nextAt, dur: buf.duration}); nextAt += buf.duration;
   sources.push(src); src.onended = () => { sources = sources.filter((x) => x !== src); };
   return true;
 }
+// Seconds of this reply's audio actually played so far (gaps between chunks don't count): the server
+// cuts BillBack's memory of the reply at the word reached (POST .../interrupt).
+function playedSeconds() { const now = actx ? actx.currentTime : 0; return sched.reduce((t, c) => t + Math.min(c.dur, Math.max(0, now - c.at)), 0); }
 function stopAudio() { for (const s of sources) { try { s.stop(); } catch (e) {} } sources = []; nextAt = 0; carry = null; }
+function playing() { return voiceTalking || sources.length > 0 || (actx && actx.currentTime < nextAt); }
 function playbackDone() {
-  return new Promise((res) => { const tick = () => { if (ended || !actx || actx.currentTime >= nextAt) res(); else setTimeout(tick, Math.max(30, (nextAt - actx.currentTime) * 1000)); }; tick(); });
+  return new Promise((res) => { const tick = () => { if (ended || !actx || actx.currentTime >= nextAt) { lastPlayEnd = performance.now(); res(); } else setTimeout(tick, Math.max(30, (nextAt - actx.currentTime) * 1000)); }; tick(); });
+}
+// The reply being shown: its text so far, and once interrupted, how much of it the rep heard.
+let cur = null;  // {bubble, text, heardLen, streamed, cut}
+function render() {
+  if (!cur || !cur.bubble) return;
+  if (cur.heardLen == null) cur.bubble.textContent = cur.text;
+  else cur.bubble.innerHTML = esc(cur.text.slice(0, cur.heardLen)) + (cur.text.length > cur.heardLen ? `<span class="unheard" title="Not heard: the rep interrupted">${esc(cur.text.slice(cur.heardLen))}</span>` : '');
+  $('log').scrollTop = 1e9;
+}
+// The rep talked over BillBack: stop the audio now; for a streamed Sonic reply, tell the server how much
+// played so it stops generating and remembers only the words the rep heard.
+async function interrupt() {
+  if (!cur || cur.cut || !playing()) return;
+  const played = playedSeconds(), measured = cur.streamed && sched.length > 0;
+  cur.cut = true;
+  stopAudio(); voiceTalking = false;
+  try { speechSynthesis.cancel(); if (audio) audio.pause(); } catch (e) {}
+  const mine = cur;
+  if (!measured) return;
+  try {
+    const r = await fetch(`/api/calls/${callId}/interrupt`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({played_s: played})});
+    const j = await r.json();
+    if (typeof j.heard === 'string' && mine === cur) { mine.heardLen = mine.text.startsWith(j.heard) ? j.heard.length : 0; render(); }
+  } catch (e) {}
 }
 // null = the server has no streaming endpoint (use the old path); throws if the stream breaks mid-turn.
 async function turnStream(repSaid) {
   const res = await fetch(`/api/calls/${callId}/turn/stream`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})});
   if (!res.ok || !res.body) return null;
   const reader = res.body.getReader(), dec = new TextDecoder();
-  let buf = '', bubble = null, played = false, final = null;
+  let buf = '', played = false, final = null;
+  cur = {bubble: null, text: '', heardLen: null, streamed: true, cut: false}; sched = [];
+  const me = cur;
   for (;;) {
     const {value, done} = await reader.read();
     if (done) break;
@@ -115,48 +151,150 @@ async function turnStream(repSaid) {
       const line = buf.slice(0, i); buf = buf.slice(i + 1);
       if (!line.trim()) continue;
       const ev = JSON.parse(line);
-      if (ev.type === 'text') { if (!bubble) bubble = add('bb', ''); bubble.textContent += ev.text; $('log').scrollTop = 1e9; }
-      else if (ev.type === 'audio' && !ended) { played = playPcm(ev.data) || played; }
+      if (ev.type === 'text') { if (!me.bubble) me.bubble = add('bb', ''); me.text += ev.text; render(); }
+      else if (ev.type === 'audio' && !ended && !me.cut) { played = playPcm(ev.data) || played; }
       else if (ev.type === 'done') final = ev;
     }
   }
   if (!final) throw new Error('stream cut');
-  if (final.say) { if (!bubble) bubble = add('bb', ''); bubble.textContent = final.say; }
-  if (played) await playbackDone(); else if (final.say && !ended) await speak(final.say);
+  if (final.say && !me.cut) { if (!me.bubble) me.bubble = add('bb', ''); me.text = final.say; render(); }
+  if (me.cut) return final;
+  if (played) await playbackDone(); else if (final.say && !ended) { me.streamed = false; await speak(final.say); }
   return final;
 }
 async function turn(repSaid) {
-  if (busy || ended) return; busy = true;
+  if (ended) return;
+  if (busy) { if (repSaid) queued = queued ? `${queued} ${repSaid}` : repSaid; return; }  // answered after this reply
+  busy = true;
   audioCtx();
   try {
     if (repSaid) add('me', repSaid);
     const streamed = await turnStream(repSaid);
-    if (streamed) { if (streamed.ended) { ended = true; $('sub').textContent = 'Call ended'; } return; }
+    if (streamed) { if (streamed.ended) { ended = true; $('sub').textContent = 'Call ended'; stopListening(); } return; }
     const res = await fetch(`/api/calls/${callId}/turn`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({rep_said: repSaid})});
     if (!res.ok) throw new Error('turn ' + res.status);
     const r = await res.json();
-    if (r.say) { add('bb', r.say); await speak(r.say); }
-    if (r.ended) { ended = true; $('sub').textContent = 'Call ended'; }
+    if (r.say) { cur = {bubble: add('bb', r.say), text: r.say, heardLen: null, streamed: false, cut: false}; await speak(r.say); }
+    if (r.ended) { ended = true; $('sub').textContent = 'Call ended'; stopListening(); }
   } catch (e) {
     add('bb', '(connection hiccup, try again)');
-  } finally { busy = false; }
+  } finally {
+    busy = false;
+    if (queued && !ended) { const q = queued; queued = null; setTimeout(() => turn(q), 0); }
+  }
 }
 $('hang').onclick = async () => {
-  ended = true; $('sub').textContent = 'Call ended'; stopAudio();
+  ended = true; $('sub').textContent = 'Call ended'; stopAudio(); stopListening();
   try { await fetch(`/api/calls/${callId}/hangup`, {method: 'POST'}); } catch (e) {}
 };
-$('answer').onclick = () => { $('answer').remove(); $('sub').textContent = 'On call with BillBack (automated assistant)'; turn('Patient Financial Services, this is Diane, how can I help you?'); };
-$('send').onclick = () => { const t = $('txt').value.trim(); if (t) { $('txt').value = ''; turn(t); } };
+$('answer').onclick = async () => {
+  $('answer').remove(); $('sub').textContent = 'On call with BillBack (automated assistant)';
+  audioCtx();
+  startInk();  // in the click: mic permission and the AudioContext need a user gesture
+  turn('Patient Financial Services, this is Diane, how can I help you?');
+};
+$('send').onclick = () => { const t = $('txt').value.trim(); if (t) { $('txt').value = ''; interrupt(); turn(t); } };
 $('txt').onkeydown = (e) => { if (e.key === 'Enter') $('send').click(); };
+
+// ---- Listening. First choice: the mic streamed to Cartesia Ink through our server (WS .../listen), hands-
+// free; Ink's turn events say when the rep is done. Talking over BillBack (real words, not "mm-hmm", and not
+// BillBack's own voice leaking from the speakers) interrupts it, like the phone path's barge-in.
+// Fallback when Ink isn't available (no key, HTTP 402, error): hold the mic button, Chrome's SpeechRecognition.
+const DEFAULT_PH = $('txt').placeholder;
+let ink = null, micLive = false;   // ink: {ws, stream, node}
+function ears(text) { $('ears').textContent = text ? `· ${text}` : ''; }
+function micUi() {
+  const handsFree = !!ink;
+  $('mic').title = handsFree ? (micLive ? 'Mute (Cartesia Ink is listening)' : 'Unmute') : 'Hold to talk';
+  $('mic').setAttribute('aria-label', $('mic').title);
+  $('mic').classList.toggle('on', handsFree && micLive);
+  $('mic').querySelector('span').textContent = handsFree && !micLive ? 'mic_off' : 'mic';
+}
+async function startInk() {
+  let ws = null;
+  try {
+    if (!navigator.mediaDevices || !window.AudioWorkletNode) throw new Error('no mic API');
+    const ctx = audioCtx(); if (!ctx) throw new Error('no audio');
+    let key = ''; try { key = localStorage.getItem('billback-admin-key') || ''; } catch (e) {}  // see auth.js
+    ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/api/calls/${callId}/listen${key ? '?key=' + encodeURIComponent(key) : ''}`);
+    ws.binaryType = 'arraybuffer';
+    const first = await new Promise((res) => {
+      ws.onmessage = (m) => res(JSON.parse(m.data));
+      ws.onerror = ws.onclose = () => res({type: 'unavailable', reason: 'connection failed'});
+    });
+    if (first.type !== 'ready') { try { ws.close(); } catch (e) {} throw new Error(first.reason || 'unavailable'); }
+    const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, channelCount: 1}});
+    const tap = 'class Tap extends AudioWorkletProcessor { process(i) { if (i[0] && i[0][0]) this.port.postMessage(i[0][0].slice(0)); return true; } } registerProcessor("tap", Tap);';
+    await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([tap], {type: 'application/javascript'})));
+    const src = ctx.createMediaStreamSource(stream), node = new AudioWorkletNode(ctx, 'tap'), mute = ctx.createGain();
+    mute.gain.value = 0; src.connect(node); node.connect(mute); mute.connect(ctx.destination);
+    // Float32 at the context rate -> pcm_s16le 16 kHz (box-filter downsample), sent in 100 ms frames.
+    const ratio = ctx.sampleRate / 16000, out = new Int16Array(1600);
+    let pos = 0, acc = 0, cnt = 0, frac = 0;
+    node.port.onmessage = (e) => {
+      if (!micLive || ws.readyState !== 1) return;
+      for (const v of e.data) {
+        acc += v; cnt++; frac += 1;
+        if (frac >= ratio) {
+          frac -= ratio;
+          const s = Math.max(-1, Math.min(1, acc / cnt)); out[pos++] = s < 0 ? s * 32768 : s * 32767; acc = 0; cnt = 0;
+          if (pos === out.length) { ws.send(out.slice().buffer); pos = 0; }
+        }
+      }
+    };
+    ws.onmessage = (m) => onInk(JSON.parse(m.data));
+    ws.onclose = () => { if (ink && !ended) inkFailed('connection closed'); };
+    ink = {ws, stream, node}; micLive = true; micUi(); ears('listening with Cartesia Ink');
+  } catch (e) {
+    if (ws) { ws.onclose = null; try { ws.close(); } catch (err) {} }
+    inkFailed(e.message || String(e));
+  }
+}
+function stopListening() {
+  if (ink) { const i = ink; ink = null; try { i.ws.close(); } catch (e) {} try { i.stream.getTracks().forEach((t) => t.stop()); i.node.port.onmessage = null; } catch (e) {} }
+  micLive = false; micUi();
+}
+function inkFailed(reason) {
+  stopListening();
+  if (ended) return;
+  ears(SR ? 'Ink unavailable, hold the mic to talk' : 'Ink unavailable, type to talk');
+  $('mic').title = `Hold to talk (browser speech recognition; ${reason})`;
+  if (!SR) $('mic').style.display = 'none';
+}
+function onInk(ev) {
+  if (ended) return;
+  if (ev.type === 'unavailable') return inkFailed(ev.reason || 'unavailable');
+  const talking = playing(), justStopped = performance.now() - lastPlayEnd < 700;
+  if (ev.type === 'partial') {
+    $('txt').placeholder = ev.text || DEFAULT_PH;
+    if (talking && ev.barge && !ev.echo) interrupt();
+  } else if (ev.type === 'end') {
+    $('txt').placeholder = DEFAULT_PH;
+    if ((talking || justStopped) && ev.echo) return;      // BillBack's own voice through the speakers
+    if (talking && !ev.barge) return;                      // "mm-hmm" while BillBack talks: listening, not a turn
+    if (talking) interrupt();
+    turn(ev.text);
+  }
+}
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, heard = '';
 if (SR) {
-  const rec = new SR(); rec.lang = 'en-US'; rec.interimResults = false; let heard = '';
+  rec = new SR(); rec.lang = 'en-US'; rec.interimResults = false;
   rec.onresult = (e) => { heard = [...e.results].map((r) => r[0].transcript).join(' '); };
-  rec.onend = () => { $('mic').classList.remove('on'); if (heard.trim()) turn(heard.trim()); heard = ''; };
-  const start = (e) => { e.preventDefault(); if (!busy && !ended) { $('mic').classList.add('on'); rec.start(); } };
-  $('mic').addEventListener('pointerdown', start);
-  $('mic').addEventListener('pointerup', () => rec.stop());
-} else { $('mic').style.display = 'none'; }
+  rec.onend = () => { if (!ink) $('mic').classList.remove('on'); if (heard.trim()) turn(heard.trim()); heard = ''; };
+}
+$('mic').addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  if (ended) return;
+  audioCtx();
+  if (ink) { micLive = !micLive; micUi(); return; }  // hands-free: the button mutes
+  if (!rec) return;
+  interrupt();  // pressing to talk over BillBack cuts it off
+  $('mic').classList.add('on');
+  try { rec.start(); } catch (err) {}
+});
+$('mic').addEventListener('pointerup', () => { if (!ink && rec) { try { rec.stop(); } catch (err) {} } });
+if (!SR && !(navigator.mediaDevices && window.AudioWorkletNode)) $('mic').style.display = 'none';
 </script>
 </body>
 </html>

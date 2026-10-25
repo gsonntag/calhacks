@@ -19,6 +19,10 @@ sentences) and `draft(said)` gets two speedups.
     (the rep kept talking) cancels it; on turn.end with the same words we use it, otherwise start over.
     A draft has no side effects until reply() uses it.
 Each turn logs one "latency" line (logger billback.latency) with turn.end -> first sentence / first audio.
+
+Barge-in also tells the brain what the rep actually heard (`brain.interrupted(text)`, heard.py): progress
+marks at each Sonic request boundary say how far Twilio has played. Recorded hold messages get no answer
+(is_hold); a brain that answers a phone menu with `take_keys()` gets its keys sent as DTMF tones.
 """
 import asyncio
 import base64
@@ -34,7 +38,9 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 from ..events import bus
+from . import audio
 from .cartesia_ws import STT, TTS
+from .heard import Spoken
 from .voices import Voice
 
 log = logging.getLogger("billback.latency")
@@ -62,6 +68,20 @@ class Socket(Protocol):
     async def receive_text(self) -> str: ...
     async def send_text(self, data: str) -> None: ...
     async def close(self, code: int = 1000) -> None: ...
+
+
+# Recorded hold messages: say nothing back (music mostly transcribes as nothing, or as a stray lyric word,
+# which should_barge_in / one-word turns already ignore). A menu ("press 2 for billing") goes to the brain,
+# which answers it with keypad tones (press_keys); a person ("this is Diane", "I", "how can I help") does too.
+_HOLD = re.compile(r"\b(?:please (?:continue to )?hold|your call is (?:very )?important|all (?:of )?our (?:representatives|"
+                   r"agents|staff)|(?:estimated|expected|current) (?:wait|hold) time|(?:remain|stay) on the line|thank you "
+                   r"for (?:holding|your patience|waiting)|calls? (?:are|is|may be) (?:being )?(?:monitored|recorded)|"
+                   r"next available (?:representative|agent)|in the order (?:it was|they were) received)\b", re.I)
+_PERSON_OR_MENU = re.compile(r"\b(?:press|para|dial|this is|my name|speaking|how (?:can|may) i help|i(?:'m|'ve|'ll)?)\b", re.I)
+
+
+def is_hold(text: str) -> bool:
+    return bool(_HOLD.search(text)) and not _PERSON_OR_MENU.search(text)
 
 
 def is_backchannel(text: str) -> bool:
@@ -129,6 +149,16 @@ class MediaSession:
         self._tasks: list[asyncio.Task] = []
         self._greeter: asyncio.Task | None = None
         self._closed = False
+        # What the current reply has played (heard.py): Sonic segments + timestamps, the first chunk's send
+        # time, the playback position of each progress mark ("say-3.2" at a segment boundary), the last one
+        # Twilio echoed as (position, when), and what the rep heard if they cut us off.
+        self._spoken: Spoken | None = None
+        self._play_t0: float | None = None
+        self._sent_s = 0.0
+        self._mark_pos: dict[str, float] = {}
+        self._echo: tuple[float, float] | None = None
+        self._heard: str | None = None
+        self._reply_brain: Brain | None = None  # whose reply is playing (told what was heard on barge-in)
 
     @property
     def speaking(self) -> bool:
@@ -147,7 +177,10 @@ class MediaSession:
                 if ev == "media" and self.leg and msg["media"].get("track", "inbound") == "inbound":
                     await self._audio(base64.b64decode(msg["media"]["payload"]))
                 elif ev == "mark":
-                    self.marks.discard((msg.get("mark") or {}).get("name", ""))
+                    name = (msg.get("mark") or {}).get("name", "")
+                    if name in self.marks and name in self._mark_pos:  # played up to here (not a post-clear echo)
+                        self._echo = (self._mark_pos[name], time.monotonic())
+                    self.marks.discard(name)
                 elif ev == "stop":
                     return
         finally:
@@ -221,6 +254,10 @@ class MediaSession:
                     self._drop_draft()
                 elif kind == "turn.end" and text:
                     self.heard = True
+                    if is_hold(text):
+                        log.info("hold message, staying quiet: %r", text)
+                        bus.emit(self.leg.case_id, "call_hold", "caller", text=text)
+                        continue
                     if self.speaking:
                         if not should_barge_in(text):
                             continue  # "mm-hmm" or a stray fragment while we talk: listening, not a turn
@@ -291,6 +328,7 @@ class MediaSession:
             said, draft = self._take_draft(said, brain, merged)
             t0 = time.monotonic()
             self._busy = True
+            self._reply_brain = brain
             first: list[float] = []
 
             async def sentences():
@@ -313,6 +351,9 @@ class MediaSession:
                 await self.speak_stream(sentences(), on_first_text=lambda: first and first[0])
             finally:
                 self._busy = False
+            keys = brain.take_keys() if hasattr(brain, "take_keys") else ""
+            if keys:
+                await self.send_keys(keys)
             self.leg.stats["turns"] += 1
             if first:
                 self.leg.stats["llm_ms"].append(round((first[0] - t0) * 1000))
@@ -326,17 +367,20 @@ class MediaSession:
     async def speak(self, text: str) -> None:
         async def one():
             yield text
+        self._reply_brain = None  # not a brain's reply: a barge-in has no history to cut
         await self.speak_stream(one())
 
-    async def _tts_audio(self, chunks, ctx: str):
+    async def _tts_audio(self, chunks, ctx: str, spoken: Spoken):
         if hasattr(self.tts, "stream_many"):
-            async for c in self.tts.stream_many(chunks, ctx):
+            async for c in self.tts.stream_many(chunks, ctx, spoken=spoken):
                 yield c
             return
         async for text in chunks:  # a TTS client without stream_many: one stream() per sentence
             if self._interrupted:
                 continue  # keep draining the brain, say nothing more
+            spoken.begin(text)
             async for c in self.tts.stream(text, ctx):
+                spoken.audio(len(c))
                 yield c
 
     async def speak_stream(self, chunks, on_first_text=None) -> None:
@@ -345,15 +389,24 @@ class MediaSession:
         self._n += 1
         ctx, mark = f"{self.stream_sid[-10:]}-{self._n}", f"say-{self._n}"
         self._ctx, self._interrupted = ctx, False
-        t0, first = time.monotonic(), True
+        spoken = self._spoken = Spoken(8000, self.leg.voice.language)  # μ-law 8 kHz: 8000 bytes a second
+        self._play_t0, self._sent_s, self._mark_pos, self._echo, self._heard = None, 0.0, {}, None, None
+        t0, first, segs = time.monotonic(), True, 0
         try:
-            async for chunk in self._tts_audio(chunks, ctx):
+            async for chunk in self._tts_audio(chunks, ctx, spoken):
                 if self._interrupted:
                     continue
+                if len(spoken.segments) > segs:  # a new Sonic request starts here: a mark tells us when it plays
+                    if segs:
+                        name = f"{mark}.{segs + 1}"
+                        self._mark_pos[name] = self._sent_s
+                        self.marks.add(name)
+                        await self._send({"event": "mark", "streamSid": self.stream_sid, "mark": {"name": name}})
+                    segs = len(spoken.segments)
                 if first:
                     first = False
                     self.streaming = True
-                    now = time.monotonic()
+                    now = self._play_t0 = time.monotonic()
                     t_text = on_first_text() if on_first_text else None
                     self.leg.stats["tts_first_ms"].append(round((now - (t_text or t0)) * 1000))
                     end, self._reply_to_end = self._reply_to_end, None
@@ -366,10 +419,12 @@ class MediaSession:
                                  f" eager_lead={tl['eager_lead_ms']}ms" if "eager_lead_ms" in tl else "",
                                  round((t_text - end) * 1000) if t_text else "?", ms)
                 self.leg.stats["audio_out_s"] += len(chunk) / 8000
+                self._sent_s += len(chunk) / 8000
                 await self._send({"event": "media", "streamSid": self.stream_sid,
                                   "media": {"payload": base64.b64encode(chunk).decode()}})
             if not self._interrupted and not first:
                 self.marks.add(mark)
+                self._mark_pos[mark] = self._sent_s
                 await self._send({"event": "mark", "streamSid": self.stream_sid, "mark": {"name": mark}})
         except Exception as e:
             bus.emit(self.leg.case_id, "warning", "caller", text=f"Text-to-speech failed: {e}")
@@ -379,16 +434,48 @@ class MediaSession:
         finally:
             self.streaming = False
 
+    async def send_keys(self, keys: str) -> None:
+        """Answer a phone menu: keypad tones (DTMF) generated as μ-law audio and sent like speech, then a mark."""
+        tones = audio.dtmf(keys)
+        if not tones:
+            return
+        self._n += 1
+        mark = f"keys-{self._n}"
+        self._spoken, self._play_t0 = None, None  # nothing here for a barge-in to cut
+        log.info("dtmf %s", keys)
+        for frame in audio.frames(tones):
+            await self._send({"event": "media", "streamSid": self.stream_sid,
+                              "media": {"payload": base64.b64encode(frame).decode()}})
+        self.leg.stats["audio_out_s"] += len(tones) / 8000
+        self.marks.add(mark)
+        await self._send({"event": "mark", "streamSid": self.stream_sid, "mark": {"name": mark}})
+
     async def barge_in(self) -> None:
         """The rep started talking over us: flush Twilio's playback buffer and stop generating."""
         if not self.speaking or self._interrupted:
             return
         log.debug("barge-in")
+        if self._spoken is not None:  # before "clear": Twilio then echoes every pending mark at once
+            self._heard = self._spoken.heard(self.played_s())
+            if hasattr(self._reply_brain, "interrupted"):  # remember only what the rep heard
+                with contextlib.suppress(Exception):
+                    self._reply_brain.interrupted(self._heard)
         self._interrupted = True
         self.marks.clear()
         self.leg.stats["barge_ins"] += 1
         await self._send({"event": "clear", "streamSid": self.stream_sid})
         await self.tts.cancel(self._ctx)
+
+    def played_s(self) -> float:
+        """Seconds of the current reply the rep has heard: from the last progress mark Twilio echoed (or the
+        first chunk sent) plus the time since, never past audio we sent or a mark not echoed yet. Leaning
+        low is deliberate: better to repeat a few words than to assume the rep heard them."""
+        if self._play_t0 is None:
+            return 0.0
+        now = time.monotonic()
+        pos, at = self._echo or (0.0, self._play_t0)
+        ahead = [p for n, p in self._mark_pos.items() if n in self.marks and p > pos]
+        return max(0.0, min(pos + now - at, self._sent_s, *ahead))
 
     async def wait_quiet(self, timeout: float = 30) -> None:
         """Until Twilio has played everything we sent (all marks echoed back)."""
