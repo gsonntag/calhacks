@@ -30,7 +30,25 @@ async def _signed_form(request: Request) -> dict | None:
     our public URL (the tunnel), not the local one uvicorn sees."""
     form = {k: str(v) for k, v in (await request.form()).items()}
     url = config.PUBLIC_BASE_URL.rstrip("/") + request.url.path + (f"?{request.url.query}" if request.url.query else "")
-    return form if twilio.valid_signature(url, form, request.headers.get("x-twilio-signature", "")) else None
+    got = request.headers.get("x-twilio-signature", "")
+    if twilio.valid_signature(url, form, got):
+        return form
+    _why_unsigned(request, url, form, got)
+    return None
+
+
+def _why_unsigned(request: Request, url: str, form: dict, got: str) -> None:
+    """Diagnostics only (no effect on the answer): which Twilio account sent a request that didn't verify, and
+    whether a variant of the URL or params would have matched our auth token."""
+    token = config.TWILIO_AUTH_TOKEN or ""
+    base = config.PUBLIC_BASE_URL.rstrip("/")
+    variants = {"as configured": (url, form), "no query": (base + request.url.path, form),
+                "http": (url.replace("https://", "http://", 1), form), "no params": (url, {}),
+                "local url": (str(request.url), form)}
+    hit = [k for k, (u, f) in variants.items() if got and token and twilio.signature(u, f, token) == got]
+    print(f"twilio signature mismatch on {request.url.path}: account {'ours' if form.get('AccountSid') == config.TWILIO_ACCOUNT_SID else repr(form.get('AccountSid', '')[-6:])}, "
+          f"header {'present' if got else 'missing'}, content-type {request.headers.get('content-type', '')!r}, "
+          f"keys {sorted(form)[:12]}, a variant matches: {hit or 'none'}", flush=True)
 
 
 @router.post("/voice/twilio/status")
