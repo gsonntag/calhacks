@@ -206,6 +206,16 @@ def _profiles_dir():
     return d
 
 
+def clear_local_profiles() -> int:
+    """Demo reset: forget the onboarding answers kept on this server (Tiger Data profiles stay)."""
+    d = events.DATA_DIR / "profiles"
+    n = 0
+    for f in d.glob("*.json") if d.exists() else []:
+        f.unlink()
+        n += 1
+    return n
+
+
 async def save_profile(answers: dict, assessment: dict, hospital: str | None) -> dict:
     """Keep what the patient told us for their next case. Tiger Data when it's on; otherwise (or if Tiger fails)
     data/profiles/<profile_id>.json, with the answers only (no name or DOB). saved: stored in Tiger Data."""

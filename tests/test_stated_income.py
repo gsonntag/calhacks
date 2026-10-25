@@ -183,3 +183,11 @@ def test_onboarding_checks_stated_income_against_the_bank():
     assert r["income_check"]["outcome"] == "below" and r["fpl_range"][0] == round(100 * 42_824 / finance.fpl(2), 1)
     r = onboarding.assess({"hospital_id": "a", "household_size": 2, "income": 25_000}, hospitals=hs)
     assert r["income_check"] is None and r["discount_pct"] == 100  # no bank to check against: what they said
+
+
+def test_reset_forgets_local_onboarding_profiles(tmp_path, monkeypatch):
+    from billback import events, onboarding
+    monkeypatch.setattr(events, "DATA_DIR", tmp_path)
+    (tmp_path / "profiles").mkdir()
+    (tmp_path / "profiles" / "abc.json").write_text("{}")
+    assert onboarding.clear_local_profiles() == 1 and not list((tmp_path / "profiles").glob("*.json"))

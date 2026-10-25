@@ -770,6 +770,7 @@ async def reset():
     _seen_webhooks.clear()
     bus.reset()
     events.delete_cases()  # audit logs stay as the audit trail
+    onboarding.clear_local_profiles()  # a saved profile would otherwise change every later demo case for that patient
     return {"ok": True}
 
 
