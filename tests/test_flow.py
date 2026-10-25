@@ -118,7 +118,7 @@ async def _offline_call(c, scenario: str) -> tuple[dict, list[str], dict]:
 
 
 async def test_offline_caller_says_only_the_plans_asks(client):
-    """Every line on the call is backed by an ask in the approved plan (docs/PLAN.md guardrails)."""
+    """Every line on the call is backed by an ask in the approved plan (code-enforced guardrails)."""
     # Rosa: 228% of the poverty line, not eligible at her hospital; the plan asks insurance and payment (never a plan)
     brief, said, outcome = await _offline_call(client, "default")
     assert "discount" not in brief["ask_kinds"] and "plan" not in brief["ask_kinds"]

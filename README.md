@@ -351,7 +351,7 @@ didn't compute.
 ## Tests
 `uv run pytest -q`: fully offline, no API keys. 521 tests pass on master (bf8ce8a). The scorecard runs
 against the fixture calls in `demo/outcomes/` (all won, partly won, all refused, promised later). Live checks that need paid
-credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
+credits are listed in each PR.
 
 ## Docs
 - [`docs/DEMO.md`](docs/DEMO.md): the 2-minute demo script and fallbacks.
@@ -359,11 +359,8 @@ credits are listed in each PR and in [`docs/PLAN.md`](docs/PLAN.md).
 - [`docs/voice.md`](docs/voice.md): the voice pipeline, latency, pronunciation, authorization.
 - [`docs/plan-format.md`](docs/plan-format.md): the plan's data format.
 - [`docs/legal-check.md`](docs/legal-check.md): legal claims checked against sources.
-- [`docs/devpost-submission.md`](docs/devpost-submission.md): the Devpost pack (requirements, prizes, text,
-  video plan, competitors).
-  [`docs/research/`](docs/research/): Cal Hacks rules, winning Devposts, competitors and market research.
-- [`docs/feasibility.md`](docs/feasibility.md), [`docs/competitors.md`](docs/competitors.md),
-  [`docs/judge-qa.md`](docs/judge-qa.md), [`docs/PLAN.md`](docs/PLAN.md).
+- [`docs/research/`](docs/research/): competitors and market research.
+- [`docs/feasibility.md`](docs/feasibility.md), [`docs/competitors.md`](docs/competitors.md).
 
 ## Layout
 ```

@@ -117,7 +117,7 @@ in the last 12 months (urgent care, imaging, pharmacy, physical therapy, the kid
 - [ ] Nessie has Raj: `uv run python scripts/seed_nessie.py raj` was run on this key (about 250 Nessie
       requests: once, not per rehearsal). If not, the case says "using sample bank data" and still runs.
 - [ ] One full rehearsal of Raj, including "Recheck now" and the call. Paid credits: one rehearsal, not
-      loops (`docs/PLAN.md`, "Rule: paid API credits").
+      loops.
 - [ ] Rep: headphones (or check echo handling on speakers), Chrome mic permission granted, the three lines
       and the case number on paper.
 - [ ] Tabs ready: the page with the Raj example. Once the case starts, the rep opens its Under the hood page.

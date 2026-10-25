@@ -34,7 +34,7 @@ master today and on the Ask Remy branches later. Exit codes:
 | 2 | Bad usage or bad question file |
 | 3 | Stopped on a quota error |
 
-## Run live (real Claude: needs Gavin's OK first)
+## Run live (real Claude: spends credits, needs your explicit OK first)
 
 ```
 .venv/bin/python scripts/eval_ask_remy.py --live --i-have-approval --max-requests 20 [--group red_team]
@@ -42,8 +42,7 @@ master today and on the Ask Remy branches later. Exit codes:
 
 - Live mode refuses to start without both `--live` and `--i-have-approval`.
 - It prints the request budget before it starts. The default is 20 requests and the hard cap is 60.
-- It stops at once on any 402, 429, quota or credits error and exits with code 3 (docs/PLAN.md, "Rule: paid
-  API credits").
+- It stops at once on any 402, 429, quota or credits error and exits with code 3.
 - Cases are always built with Claude off. Only the answers use credits.
 - Live mode also checks `must_include_any` and `must_include_all`. It skips `stub_only` items, because a real model can't be scripted
   to invent a number.

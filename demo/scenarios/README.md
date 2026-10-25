@@ -47,7 +47,7 @@ and the PDFs when reportlab is available. Runs offline with fixed seeds; re-runn
   merchants print under different names ("BERKELEY BOWL #212", "POS DEBIT …"), there's cash (ATM), Amazon,
   Venmo and a subscription, a few medical bills (spec `medical`), and payments to the hospital carry the health
   system's billing name ("SUTTER HEALTH PYMT", "ONLINE PMT"), never the hospital account number. Not seeded into
-  Nessie (`scripts/seed_nessie.py <name>` can; it's paid, see docs/PLAN.md). The app's offline bank
+  Nessie (`scripts/seed_nessie.py <name>` can; it's paid). The app's offline bank
   (`LocalMirror`) gives them ids `mirror-000…`, which `expected.json` uses.
 
 ## Reading expected.json

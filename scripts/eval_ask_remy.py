@@ -4,7 +4,7 @@ ASGITransport), on demo cases built offline.
 
   python scripts/eval_ask_remy.py                       # --offline (default): no Claude, no network
   python scripts/eval_ask_remy.py --group red_team -v   # one group, with every reason printed
-  python scripts/eval_ask_remy.py --live --i-have-approval --max-requests 20   # real Claude (needs Gavin's OK)
+  python scripts/eval_ask_remy.py --live --i-have-approval --max-requests 20   # real Claude (spends credits)
 
 Offline, each item runs one of two ways:
   * no model (llm unavailable): routing, refusals, sources, number grounding of the offline answers;
@@ -12,8 +12,7 @@ Offline, each item runs one of two ways:
     the exact request the app makes and answers with the item's stub_reply. That checks the call shape, the
     context sections, the last-8-turn memory and the number guard without a single network request.
 Live replaces the stub with the real client behind a counter: at most --max-requests (hard cap 60) Claude
-requests, and any 402 / 429 / quota / credits error stops the run at once (docs/PLAN.md "Rule: paid API
-credits"). Cases are always built with Claude off, so setup spends nothing.
+requests, and any 402 / 429 / quota / credits error stops the run at once. Cases are always built with Claude off, so setup spends nothing.
 
 An item whose endpoint or module doesn't exist yet is "skip (not built)", so this runs on master today and on
 the Ask Remy branches later. Exit code: 0 = no failures, 1 = a built feature failed, 2 = bad usage or question
@@ -775,7 +774,7 @@ def main(argv: list[str] | None = None) -> int:
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--offline", action="store_true", help="no Claude, no network (default)")
     mode.add_argument("--live", action="store_true", help="real Claude for answers (needs --i-have-approval)")
-    ap.add_argument("--i-have-approval", action="store_true", help="Gavin OK'd spending Claude credits on this run")
+    ap.add_argument("--i-have-approval", action="store_true", help="you approve spending Claude credits on this run")
     ap.add_argument("--max-requests", type=int, default=DEFAULT_LIVE_REQUESTS,
                     help=f"live: most Claude requests (default {DEFAULT_LIVE_REQUESTS}, hard cap {HARD_CAP})")
     ap.add_argument("--file", type=Path, default=QUESTIONS)
@@ -786,8 +785,7 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
 
     if a.live and not a.i_have_approval:
-        print("Refusing --live without --i-have-approval: live mode spends Claude credits and needs Gavin's OK "
-              "(docs/PLAN.md, 'Rule: paid API credits').", file=sys.stderr)
+        print("Refusing --live without --i-have-approval: live mode spends Claude credits and needs your explicit OK.", file=sys.stderr)
         return 2
     if a.i_have_approval and not a.live:
         print("--i-have-approval only applies with --live.", file=sys.stderr)

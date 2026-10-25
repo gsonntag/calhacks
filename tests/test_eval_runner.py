@@ -68,7 +68,7 @@ def test_grounding_includes_posted_prices_and_doc_sections(monkeypatch):
 
 def test_live_needs_explicit_approval_and_a_cap(capsys):
     assert ev.main(["--live"]) == 2
-    assert "needs Gavin's OK" in capsys.readouterr().err
+    assert "needs your explicit OK" in capsys.readouterr().err
     assert ev.main(["--live", "--i-have-approval", "--max-requests", str(ev.HARD_CAP + 1)]) == 2
     assert ev.main(["--i-have-approval"]) == 2
 

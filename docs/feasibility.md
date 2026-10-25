@@ -87,13 +87,8 @@ CMS requires hospitals to post machine-readable files of standard charges. The C
 
 | Claim | Where | Problem | Suggested fix |
 |---|---|---|---|
-| "California's bot-disclosure law requires that [the AI says it's automated]" | `docs/judge-qa.md` | SB 1001 is about online bots, not phone calls | "We disclose on every call as a best practice and for consent to record; AI-voice rules (FCC 2024) mainly protect consumers being called." |
-| "Remy would be a business associate under a BAA" | `docs/judge-qa.md` | We act for the patient, not for the hospital; probably not a business associate | "We act as the patient's authorized representative; we handle data under the patient's consent and plan for HIPAA-grade security." |
-| "Patients connect their bank read-only" | `docs/judge-qa.md` | True in principle through aggregators, but not what the demo does (Nessie) | Keep, but add "via Plaid/MX/Finicity; Nessie is the sandbox" |
 | Demo outcome | README, devpost, `web/pitch.html` | Numbers used to differ across materials | Aligned: $8,700 → $1,100 → $600 on a 6 × $100 interest-free plan, collections paused |
 | "Nonprofit hospitals must publish" plus "California requires discounts up to 400% FPL" | `web/pitch.html` | Basically correct; California law applies to licensed hospitals generally, 501(r) to nonprofits | Optional nuance |
-
-Also: `docs/judge-qa.md` says "Free for patients below the poverty-line thresholds"; that is a business choice, not a feasibility fact, so present it as a proposal.
 
 ## 7. Skeptical judge Q&A
 
