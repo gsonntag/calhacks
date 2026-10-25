@@ -87,7 +87,7 @@ CMS requires hospitals to post machine-readable files of standard charges. The C
 
 | Claim | Where | Problem | Suggested fix |
 |---|---|---|---|
-| Demo outcome | README, devpost, `web/pitch.html` | Numbers used to differ across materials | Aligned: $8,700 → $1,100 → $600 on a 6 × $100 interest-free plan, collections paused |
+| Demo outcome | README, `web/pitch.html` | Numbers used to differ across materials | Aligned: $8,700 → $1,100 → $600 on a 6 × $100 interest-free plan, collections paused |
 | "Nonprofit hospitals must publish" plus "California requires discounts up to 400% FPL" | `web/pitch.html` | Basically correct; California law applies to licensed hospitals generally, 501(r) to nonprofits | Optional nuance |
 
 ## 7. Skeptical judge Q&A

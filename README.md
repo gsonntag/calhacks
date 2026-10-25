@@ -12,7 +12,11 @@ income from bank deposits is 170% of the poverty line and the bill is over 10% o
 policy says the hospital writes off his share: **$0**. The same bill under each of the 12 hospital policies
 in our database: $0 at 7 of them, $5,600 at the other 5 (`/hospitals.html`, numbers below).
 
-Judges: the 2-minute demo script is [`docs/DEMO.md`](docs/DEMO.md).
+**Before you go live.** Live mode places real phone calls and spends paid API credits (Claude, Cartesia,
+Twilio, Bright Data, Nessie). Remy dials only the numbers in your `.env`: `REP_PHONE_NUMBER` plays hospital
+billing and `PATIENT_PHONE_NUMBER` the patient. It never dials a hospital's real number (a billing number
+read off a bill is only shown). Use only numbers you own or have consent to call, and start with
+`REMY_OFFLINE=1` (below). This is a hackathon prototype; read the [Disclaimer](#disclaimer).
 
 ## Quick setup
 
@@ -37,7 +41,7 @@ with no network, even with a full `.env` (every key is ignored). On top of the o
 | Feature | Online | No-wifi demo |
 |---|---|---|
 | Fonts and icons | Google Fonts | `web/fonts/` (copied by `scripts/vendor_fonts.py`) |
-| The call | a teammate plays billing on the rep console | billing ("Diane") is played automatically; watch it on the case page |
+| The call | a second person plays billing on the rep console | billing ("Diane") is played automatically; watch it on the case page |
 | Mic (Ask Remy) | Cartesia Ink or Chrome's speech service | a demo voice says the next sensible thing ("Call them for me", "Yes, go ahead", "Where do things stand?") |
 | Get started bank prefill | Nessie | the sample patients' bank histories in `demo/` (Rosa Martinez, Marcus Lee, ...) |
 | Income by month | Tiger Data | computed from the same transactions |
@@ -58,13 +62,13 @@ and profiles in `data/offline/`, so its reset never touches live data.
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `REP_PHONE_NUMBER`, `PUBLIC_BASE_URL` | Real phone calls (optional; see below). On a Twilio free trial, `TWILIO_FROM_NUMBER` must be the trial number Twilio assigned for your verified recipient, and the call can't stream audio (see Known limitations) |
 | `TIGER_DATABASE_URL` | Optional: Tiger Data (Timescale Postgres) for household profiles and bank history over time. Unset: onboarding answers are kept in a small local file per profile |
 | `PATIENT_PHONE_NUMBER`, `TWILIO_TWIML_APP_SID` | Optional: the patient's verbal authorization on a 3-way call |
-| `REMY_ADMIN_TOKEN` | Shared secret (16+ characters) for every action that places a call, spends API credits or changes data. Open any page once with `?key=<token>`; the browser keeps it and removes it from the address bar. Unset: those actions only work from `localhost` on the same machine, never through a tunnel |
-| `REMY_REQUIRE_LIVE=1` | Judging mode: the server refuses to start unless the Claude, Bright Data and Nessie keys and the admin token are set (format check only, no API calls), and the sample policies are never used |
+| `REMY_ADMIN_TOKEN` | Shared secret (16+ characters) for every action that places a call, spends API credits or changes data, and for viewing a case built from uploaded documents (the built-in sample cases are open). Open any page once with `?key=<token>`; the browser keeps it and removes it from the address bar. Unset: those actions only work from `localhost` on the same machine, never through a tunnel |
+| `REMY_REQUIRE_LIVE=1` | Strict live mode: the server refuses to start unless the Claude, Bright Data and Nessie keys and the admin token are set (format check only, no API calls), and the sample policies are never used |
 
 **Ports.** The app serves everything on one port (8000 above; any port works). Real phone calls need Twilio
 to reach `/voice/twilio/*` over HTTPS: `cloudflared tunnel --url http://localhost:8000`, then set
 `PUBLIC_BASE_URL` (details in [`docs/voice.md`](docs/voice.md)). Without Twilio, calls run in **desk mode**:
-a teammate plays billing on the rep console (`rep.html?call=<id>`; once the call starts, the case's **Under the
+a second person plays billing on the rep console (`rep.html?call=<id>`; once the call starts, the case's **Under the
 hood** page links it as "rep console"), and Remy listens through Cartesia Ink and answers out loud through
 Sonic.
 
@@ -136,7 +140,7 @@ uv run python scripts/build_price_tables.py [--fetch]        # rebuild policydb/
                                                  APPROVAL GATE ────┘ (before every call)
 ```
 
-- **Orchestration** (`remy/orchestrator.py`): a fixed pipeline on purpose, so it's predictable on stage.
+- **Orchestration** (`remy/orchestrator.py`): a fixed pipeline on purpose, so it's predictable.
 - **Harness** (`remy/harness.py`): every tool has a permission tier (`read` runs freely, `act` is
   announced, `consequential` waits for the patient), and every call waits on the approval gate ("Call now",
   "Call again", the phone approval page or a spoken yes). Every tool call, result and approval is an event
@@ -243,7 +247,7 @@ didn't compute.
   real CMS price files (`policydb/`), Nessie API
   records, Claude, Cartesia speech, the approval gate and the audit log.
 - **Simulated:** the patients, bills, insurance statements, insurer and bank histories are synthetic (PDFs are
-  watermarked SAMPLE). "Hospital billing" is a teammate on the rep console (or their phone with Twilio).
+  watermarked SAMPLE). "Hospital billing" is a second person on the rep console (or their phone with Twilio).
 - **Live mode builds the case only from the uploaded documents.** "Use a sample bill" sends the sample PDFs
   through the same reading; the sample case data only feeds the offline mode.
 - **Replay** (`case.html?replay=1`, `&scenario=freecare`, `&jump=call`) plays back a recorded live desk-mode
@@ -263,8 +267,8 @@ didn't compute.
   stream. Upgrading Twilio unlocks it.
   [Photon](https://photon.codes) (calls from an iMessage line over SIP/RTP) is a possible alternative. It
   needs a SIP and RTP client in the server, so it isn't built.
-- **Cartesia credits.** The first account ran out (HTTP 402 on 2026-10-25). A new key is configured, and its
-  balance is unknown. No real Twilio phone call has been recorded yet;
+- **Cartesia credits.** Live voice needs Cartesia credits; without them the voice paths below fall back as
+  described. No real Twilio phone call has been recorded yet;
   the phone path is tested against simulated Twilio and Cartesia sockets. Desk mode on Ink, barge-in with
   word timestamps, ID read-back and keypad tones were built and tested offline (fakes, plus a headless Chrome
   run of `rep.html`) and need one live check. The Cases-page mic's Ink batch STT was written while the account
@@ -329,8 +333,8 @@ didn't compute.
 - **No audio is recorded.** Calls are transcribed only; the app saves no call audio (the
   `scripts/sim_twilio_stream.py` test tool saves its own simulated audio to `data/sim/<case>/`).
 - **Claims are checked.** Every policy figure needs a verbatim quote found in the fetched document; every
-  finding shows its proof and source. The balance never drops before billing confirms it. Legal claims are
-  reviewed in [`docs/legal-check.md`](docs/legal-check.md).
+  finding shows its proof and source. The balance never drops before billing confirms it. Research notes on the legal
+  claims (not legal advice) are in [`docs/legal-check.md`](docs/legal-check.md).
 - **Accessibility.** The patient never fills in a form: drop the documents (PDF or photo) or chat. Remy
   makes the phone call, so a patient who can't spend an hour on hold, or isn't comfortable arguing on the
   phone, doesn't have to. Every step, finding and call line is also plain text on the case page.
@@ -349,7 +353,7 @@ didn't compute.
   (or the files above for one case).
 
 ## Tests
-`uv run pytest -q`: fully offline, no API keys. 521 tests pass on master (bf8ce8a). The scorecard runs
+`uv run pytest -q`: fully offline, no API keys (644 tests). The scorecard runs
 against the fixture calls in `demo/outcomes/` (all won, partly won, all refused, promised later). Live checks that need paid
 credits are listed in each PR.
 
@@ -358,7 +362,7 @@ credits are listed in each PR.
 - [`docs/brightdata.md`](docs/brightdata.md): the policy DB, crawl log, live crawl, price tables.
 - [`docs/voice.md`](docs/voice.md): the voice pipeline, latency, pronunciation, authorization.
 - [`docs/plan-format.md`](docs/plan-format.md): the plan's data format.
-- [`docs/legal-check.md`](docs/legal-check.md): legal claims checked against sources.
+- [`docs/legal-check.md`](docs/legal-check.md): research notes on the legal claims (not legal advice).
 - [`docs/research/`](docs/research/): competitors and market research.
 - [`docs/feasibility.md`](docs/feasibility.md), [`docs/competitors.md`](docs/competitors.md).
 
@@ -377,6 +381,17 @@ demo/      case.json, case_freecare.json (synthetic patients), sample PDFs, scen
 policydb/  policies.sqlite3, policies.json, raw/ (Bright Data crawl artifacts), prices/ (real price tables)
 scripts/   seed_nessie crawl_policies build_price_tables build_contacts make_scenario setup_cartesia sim_twilio_stream bench_desk make_demo_docs
 ```
+
+## Disclaimer
+- **A hackathon prototype**, not legal, medical, financial or tax advice. Eligibility estimates come from
+  hospitals' published policies, which can be misread, out of date or changed since they were fetched; the
+  hospital decides what you owe. Check anything that matters with the hospital or a qualified advisor.
+- **Calls and consent.** Remy opens every call by saying it's an automated assistant calling with the
+  patient's authorization and that the call is transcribed. California and some other states require every
+  party's consent to record a call, and other laws may apply where you are. Saying so is not a guarantee of
+  compliance: you are responsible for following the law wherever you place calls.
+- **Case access.** A case built from uploaded documents needs the admin key (`REMY_ADMIN_TOKEN`) to view; the
+  built-in sample cases are open to anyone who can reach the server.
 
 ## License
 MIT, see [`LICENSE`](LICENSE). The vendored fonts in `web/fonts/` keep their own licenses (OFL 1.1, Apache 2.0).

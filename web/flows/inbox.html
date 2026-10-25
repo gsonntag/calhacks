@@ -14,7 +14,7 @@
   .gbtn{display:inline-flex;align-items:center;gap:14px;min-height:68px;padding:0 30px;border:1px solid var(--border);border-radius:999px;background:#FFFFFF;
     font-size:18px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s var(--ease),box-shadow .2s}
   .gbtn:hover{transform:translateY(-2px);box-shadow:0 24px 50px -22px rgba(150,40,45,.4)}
-  .gbtn img{width:28px;height:21px}
+  .gbtn .material-symbols-rounded{font-size:28px}
   .alt{font-size:14px;color:var(--muted-2)}
   .alt a{font-weight:600}
   .consent{max-width:420px;width:100%;text-align:left;padding:24px}
@@ -62,7 +62,7 @@
   <section class="view on" id="v-start">
     <h1 class="title">Your bill is probably <span>already in your inbox.</span></h1>
     <p class="sub">Connect once. We'll find the hospital bill and the insurance statement ourselves.</p>
-    <button class="gbtn" id="connect" type="button"><img src="../gmail-icon.svg" alt="">Connect Gmail</button>
+    <button class="gbtn" id="connect" type="button"><span class="material-symbols-rounded" aria-hidden="true">mail</span>Connect Gmail</button>
     <p class="alt">Outlook, Yahoo, iCloud also work · <a href="drop-go.html">or upload files</a></p>
   </section>
 

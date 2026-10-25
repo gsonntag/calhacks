@@ -43,13 +43,13 @@ def classify(e: BrightDataError) -> str:
 
 
 def slim_serp(body: bytes) -> str:
-    """SERP JSON without the base64 favicons, which are most of its bytes."""
+    """SERP JSON without the base64 favicons (most of its bytes) or the request id (it names our account)."""
     data = json.loads(body)
     inner = json.loads(data["body"]) if isinstance(data.get("body"), str) else data
 
     def strip(o):
         if isinstance(o, dict):
-            return {k: strip(v) for k, v in o.items() if k not in ("icon", "image", "image_base64")}
+            return {k: strip(v) for k, v in o.items() if k not in ("icon", "image", "image_base64", "request_id")}
         return [strip(v) for v in o] if isinstance(o, list) else o
     return json.dumps(strip(inner), indent=1)
 

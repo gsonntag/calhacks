@@ -52,14 +52,14 @@ def _secret(name: str) -> str:
 CARTESIA_WEBHOOK_SECRET = _secret("CARTESIA_WEBHOOK_SECRET")
 CARTESIA_TOOL_TOKEN = _secret("CARTESIA_TOOL_TOKEN")
 CARTESIA_VOICE_ID = os.getenv("CARTESIA_VOICE_ID", "6ccbfb76-1fc6-48f7-b71d-91ac6298247b")
-REP_PHONE_NUMBER = os.getenv("REP_PHONE_NUMBER", "")  # teammate playing hospital billing, +1XXXXXXXXXX
+REP_PHONE_NUMBER = os.getenv("REP_PHONE_NUMBER", "")  # the person playing hospital billing, +1XXXXXXXXXX
 
 # Own voice pipeline (remy/voice): Twilio telephony + Cartesia streaming STT/TTS + Claude call brain.
 TWILIO_ACCOUNT_SID = _secret("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = _secret("TWILIO_AUTH_TOKEN")          # also validates X-Twilio-Signature on webhooks
 TWILIO_FROM_NUMBER = _secret("TWILIO_FROM_NUMBER")        # a Twilio number you own, +1XXXXXXXXXX
 TWILIO_TWIML_APP_SID = _secret("TWILIO_TWIML_APP_SID")    # optional: enables the 3-way conference handoff
-PATIENT_PHONE_NUMBER = _secret("PATIENT_PHONE_NUMBER")    # demo patient's phone (teammate), for verbal consent
+PATIENT_PHONE_NUMBER = _secret("PATIENT_PHONE_NUMBER")    # demo patient's phone, for verbal consent
 CARTESIA_STT_MODEL = os.getenv("CARTESIA_STT_MODEL", "ink-2")
 CARTESIA_STT_BATCH_MODEL = os.getenv("CARTESIA_STT_BATCH_MODEL", "ink-whisper")  # short recordings (Cases page mic)
 CARTESIA_TTS_MODEL = os.getenv("CARTESIA_TTS_MODEL", "sonic-3.6")

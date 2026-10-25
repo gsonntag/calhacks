@@ -89,7 +89,7 @@ The engine has four steps: (1) reconcile the bill against the payer's own record
 
 ---
 
-## 4. Limitations and mitigations (Devpost-ready)
+## 4. Limitations and mitigations
 
 | Limitation | Remy mitigation (has / could have) |
 |---|---|
