@@ -353,7 +353,7 @@ didn't compute.
   (or the files above for one case).
 
 ## Tests
-`uv run pytest -q`: fully offline, no API keys (644 tests). The scorecard runs
+`uv run pytest -q`: fully offline, no API keys. The scorecard runs
 against the fixture calls in `demo/outcomes/` (all won, partly won, all refused, promised later). Live checks that need paid
 credits are listed in each PR.
 
