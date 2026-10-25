@@ -18,7 +18,7 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
 
-from .. import billcheck, config, finance, llm, tiger
+from .. import billcheck, config, finance, llm, offline, tiger
 from ..events import bus
 from ..integrations import brightdata
 from ..policies import monitor, pipeline, registry
@@ -506,6 +506,8 @@ async def recheck_case(case: dict) -> dict:
     rechecked (or crawled again from Google if it has no tiers); a hospital not in the database is crawled.
     The result says whether the rules this case's plan uses still hold. It never changes the plan by itself:
     a changed policy is shown, and a new case applies it (the numbers come only from a full Review)."""
+    if config.OFFLINE and case.get("facts"):
+        return _offline_recheck(case)
     if not can_crawl():
         raise RecheckRefused("Live recheck needs Bright Data (API key, SERP and Unlocker zones) and Claude keys "
                              "on this server")
@@ -541,10 +543,33 @@ async def recheck_case(case: dict) -> dict:
     return out
 
 
+def _offline_recheck(case: dict) -> dict:
+    """No-wifi demo: "Recheck now" compares against the stored copy of the policy. Nothing is fetched."""
+    cid, hosp = case["id"], case["hospital"]
+    r = _Run(report(cid), f"re{len(case.get('policy_rechecks') or []) + 1}-")
+    bus.emit(cid, "agent_reopened", "policy", text=f"Rechecking {hosp['name']} ({offline.LABEL})")
+    r.step("recheck-start", "Recheck now", "running", f"Checking {hosp['name']} against the stored policy")
+    _, row = _lookup(store(), hosp["name"])
+    out = offline.recheck_result(row)
+    summary = (f"Still holds: version {out['version']} has the same rules this plan uses ({offline.LABEL}: "
+               "compared with the stored copy, nothing fetched)" if out["ok"]
+               else f"No stored policy for {hosp['name']} to compare ({offline.LABEL})")
+    r.step("recheck-start", "Recheck now", "ok" if out["ok"] else "flag", summary)
+    case.setdefault("policy_rechecks", []).append({**out, "at": datetime.now(timezone.utc).isoformat()})
+    before = next((e["summary"] for e in reversed(bus.history(cid))
+                   if e["kind"] == "agent_finished" and e["agent"] == "policy"), summary)
+    r.finish(before, summary)
+    return out
+
+
 async def _save_household(cid: str, case: dict, txns: list[dict], inc: dict, elig: dict, insured: bool) -> None:
     """Store the household and its bank history in Tiger Data and show its income month by month.
     Never blocks or fails the case: eligibility above is already decided from the same transactions."""
     if not tiger.enabled():
+        if config.OFFLINE and (months := offline.monthly_income(txns)):
+            bus.emit(cid, "evidence", "policy", label="Income by month",
+                     value=" · ".join(f"{m['month']} ${m['income']:,.0f}" for m in months),
+                     source=f"{len(txns)} bank transactions, counted here ({offline.LABEL}; Tiger Data when online)")
         return
     try:
         months = await tiger.save_household(case, txns, inc, elig, insured)

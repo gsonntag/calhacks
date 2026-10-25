@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Remy — Hospital policies</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="stylesheet" href="m3.css">
 <!--
   Hospital policy database (policydb/, built by real Bright Data crawls) and "same bill, different hospitals".
@@ -304,7 +302,7 @@ document.addEventListener('click', async (e) => {
     await loadHospitals();
     const st2 = $(`st-${id}`);
     st2.className = 'status ' + (r.changed ? 'flag' : 'ok');
-    st2.textContent = r.changed ? `Changed → v${r.version}: ${r.diff}` : `Unchanged (${r.requests} requests)`;
+    st2.textContent = r.changed ? `Changed → v${r.version}: ${r.diff}` : r.offline ? `Unchanged: compared with the stored copy (offline demo, nothing fetched)` : `Unchanged (${r.requests} requests)`;
     loadCompare(document.querySelector('.seg [aria-pressed="true"]').dataset.s).catch(showErr);
   } catch (err) { st.className = 'status flag'; st.textContent = err.message; btn.disabled = false; }
 });

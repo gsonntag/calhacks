@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Remy voices</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="stylesheet" href="m3.css">
 <style>
   /* Voice + pronunciation demo: pick the caller's voice (accent) and hear a billing line before/after
@@ -100,7 +98,13 @@ async function play(pronounce) {
   try {
     const r = await fetch('/api/voices/sample', {method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({text: $('text').value, voice_id: voice, pronounce})});
-    if (!r.ok) throw new Error(r.status === 404 ? 'Set CARTESIA_API_KEY to hear voices' : 'TTS failed (' + r.status + ')');
+    if (r.status === 404) {  // no Cartesia (offline demo): the browser's own voice reads the same normalized text
+      const said = pronounce ? $('spoken').textContent : $('text').value;
+      speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(said));
+      $('msg').textContent = 'Your browser’s voice (no Cartesia key, or offline): Sonic sounds different';
+      return;
+    }
+    if (!r.ok) throw new Error('TTS failed (' + r.status + ')');
     if (audio) audio.pause();
     audio = new Audio(URL.createObjectURL(await r.blob()));
     await audio.play();

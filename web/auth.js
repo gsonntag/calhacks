@@ -29,3 +29,19 @@
     return send(input, init, key);
   };
 })();
+
+// No-wifi demo (REMY_OFFLINE=1, remy/offline.py): a chip in the top bar on every page, so mocks are never taken
+// for live data.
+(() => {
+  const show = () => fetch('/api/mode').then((r) => r.json()).then((m) => {
+    const bar = document.querySelector('.m3-top-app-bar');
+    if (!m.offline || !bar || bar.querySelector('.offline-chip')) return;
+    const c = document.createElement('span');
+    c.className = 'm3-status warn offline-chip';
+    c.title = 'No network: sample data, scripted billing and demo voice. Nothing here is live.';
+    c.textContent = 'Offline demo';
+    c.style.marginLeft = 'auto';
+    bar.appendChild(c);
+  }).catch(() => {});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show); else show();
+})();

@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Remy — Case</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="stylesheet" href="m3.css">
 <link rel="stylesheet" href="rail.css">
 <!--
@@ -1871,7 +1869,7 @@ function showTalk(parts) {
   box.innerHTML = `${you || youLive ? `<p class="you">${youLive ? esc(youLive) + '…' : '“' + esc(you) + '”'}</p>` : ''}
     ${reply ? `<p class="bb">${sym('graphic_eq')}<span>${esc(reply)}</span></p>` : ''}
     <span class="meta">${pending ? '<span class="m3-status warn">Waiting for your yes</span>' : ''}${note ? `<span>${esc(note)}</span>` : ''}
-      ${by ? `<span>Heard by ${by === 'cartesia' ? 'Cartesia' : 'your browser'}</span>` : ''}
+      ${by ? `<span>${by === 'demo' ? 'Demo voice (offline): no speech service, so Remy picked what you’d likely say' : 'Heard by ' + (by === 'cartesia' ? 'Cartesia' : 'your browser')}</span>` : ''}
       <button type="button" class="m3-chip" data-talk-close>Close</button></span>`;
 }
 function stopSpeaking() {
