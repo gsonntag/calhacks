@@ -571,10 +571,7 @@ async def run_case(case: dict) -> None:
         if balance != [e["amount"] for e in bus.history(cid) if e["kind"] == "balance"][-1]:
             bus.emit(cid, "balance", amount=balance, expected=expected, confirmed=confirmed,
                      label="Confirmed by billing" if confirmed else "Billing still shows")
-        plan = await planner.run(case, bank, account_id, expected, pol["income"]["monthly"],
-                                 policy_cap_pct=(pol.get("plan_terms") or {}).get("max_pct_monthly_income"),
-                                 max_monthly=case["plan"]["prefs"].get("max_monthly"),
-                                 monthly_bills=pol["income"].get("bills_monthly"))
+        plan = {"plan": {"months": 0, "monthly": 0.0, "text": ""}, "created": None}  # payment plans are left off entirely
 
         c = plan.get("created") or {}
         plan_created = bool(c) and not c.get("blocked") and not c.get("error")
