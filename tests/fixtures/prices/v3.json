@@ -1,0 +1,36 @@
+{
+ "hospital_name": "JSON Test Hospital",
+ "last_updated_on": "2026-03-31",
+ "version": "3.0.0",
+ "location_name": ["JSON Test Hospital", "JSON Test Hospital Annex"],
+ "hospital_address": ["300 Pasteur Dr, Stanford, CA 94305"],
+ "license_information": {"license_number": "1", "state": "CA"},
+ "standard_charge_information": [
+  {
+   "description": "HC CT ABDOMEN PELVIS W CONTRAST",
+   "code_information": [{"code": "74177", "type": "CPT"}, {"code": "0350", "type": "RC"}],
+   "standard_charges": [
+    {"setting": "inpatient", "gross_charge": 9900, "discounted_cash": 4950, "minimum": 1000, "maximum": 5000,
+     "payers_information": [{"payer_name": "Aetna", "plan_name": "PPO", "standard_charge_dollar": 1000, "methodology": "fee schedule"}]},
+    {"setting": "outpatient", "gross_charge": 9200, "discounted_cash": 4600, "minimum": 900, "maximum": 4800,
+     "payers_information": [
+      {"payer_name": "Aetna", "plan_name": "PPO", "standard_charge_dollar": 900, "methodology": "fee schedule"},
+      {"payer_name": "UnitedHealthcare", "plan_name": "Choice Plus", "standard_charge_percentage": 52, "standard_charge_dollar": 4784, "methodology": "percent of total billed charges"},
+      {"payer_name": "Anthem Blue Cross", "plan_name": "Medicare Advantage", "standard_charge_dollar": 1200, "methodology": "fee schedule"},
+      {"payer_name": "Anthem Blue Cross", "plan_name": "PPO", "standard_charge_algorithm": "Lesser of charges or 60% of billed", "methodology": "other"}
+     ]}
+   ]
+  },
+  {
+   "description": "HC ONDANSETRON 1 MG INJ",
+   "code_information": [{"code": "J2405", "type": "HCPCS"}],
+   "drug_information": {"unit": 1, "type": "ME"},
+   "standard_charges": [{"setting": "both", "gross_charge": 30.5, "discounted_cash": 15.25}]
+  },
+  {
+   "description": "SOMETHING WE DO NOT TRACK",
+   "code_information": [{"code": "27447", "type": "CPT"}],
+   "standard_charges": [{"setting": "inpatient", "gross_charge": 100000}]
+  }
+ ]
+}

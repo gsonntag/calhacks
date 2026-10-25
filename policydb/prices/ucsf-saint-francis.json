@@ -1,0 +1,5088 @@
+{
+ "hospital_id": "ucsf-saint-francis",
+ "hospital_name": "Saint Francis Memorial Hospital",
+ "location_name": "Saint Francis Memorial Hospital",
+ "hospital_address": "900 Hyde St., San Francisco, CA 94109",
+ "last_updated_on": "2026-02-28",
+ "template_version": "3.0.0",
+ "layout": "json",
+ "source": {
+  "cms_hpt_url": "https://sfcommunityhospitals.ucsfhealth.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "UCSF Health Saint Francis Hospital",
+  "source_page_url": "https://sfcommunityhospitals.ucsfhealth.org/saint-francis/patients-and-visitors/for-patients/billing-and-payment/hospital-pricing-transparency",
+  "file_url": "https://app.box.com/index.php?rm=box_download_shared_file&shared_name=8wogrqzbbev45c7pup8v9298ul2ymlpr&file_id=f_1732346032300",
+  "via": "https",
+  "fetched_at": "2026-10-25T03:55:24+00:00",
+  "sha256": "cd39c33d3ae0b518b0e5294acdfdeb82ec521f7b7bf1332c4ce8be0b82241458",
+  "bytes": 100499087
+ },
+ "codes_requested": 67,
+ "codes_found": 63,
+ "missing_codes": [
+  "73030",
+  "73110",
+  "73610",
+  "73630"
+ ],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "ER LEVEL 1",
+   "setting": "outpatient",
+   "gross": 1438.0,
+   "discounted_cash": 1438.0,
+   "negotiated_min": 21.25,
+   "negotiated_max": 10131.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 129.29,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 905.94,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1332.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 977.84,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1092.88,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 1868.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 1078.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ER LEVEL 1",
+     "setting": "inpatient",
+     "gross": 1438.0
+    }
+   ]
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "ER LEVEL 2",
+   "setting": "outpatient",
+   "gross": 2301.0,
+   "discounted_cash": 2301.0,
+   "negotiated_min": 34.13,
+   "negotiated_max": 16087.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 232.54,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1449.63,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1598.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 1564.68,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1748.76,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 3105.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 1725.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ER LEVEL 2",
+     "setting": "inpatient",
+     "gross": 2301.0
+    }
+   ]
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "ER LEVEL 3",
+   "setting": "outpatient",
+   "gross": 3854.0,
+   "discounted_cash": 3854.0,
+   "negotiated_min": 62.44,
+   "negotiated_max": 24548.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 406.59,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2428.02,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3195.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 2620.72,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2929.04,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5576.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 2890.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ER LEVEL 3",
+     "setting": "inpatient",
+     "gross": 3854.0
+    }
+   ]
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "ER LEVEL 4",
+   "setting": "outpatient",
+   "gross": 5752.0,
+   "discounted_cash": 5752.0,
+   "negotiated_min": 95.69,
+   "negotiated_max": 24548.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 625.28,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3623.76,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 6386.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 3911.36,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 4371.52,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 9272.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 4314.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ER LEVEL 4",
+     "setting": "inpatient",
+     "gross": 5752.0
+    }
+   ]
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "ER LEVEL 5",
+   "setting": "outpatient",
+   "gross": 11963.0,
+   "discounted_cash": 11963.0,
+   "negotiated_min": 151.31,
+   "negotiated_max": 24548.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 900.29,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 7536.69,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 8303.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 8134.84,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 9091.88,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 15277.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 8972.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ER LEVEL 5",
+     "setting": "inpatient",
+     "gross": 11963.0
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "ER CRITICAL CARE 30-74MIN",
+   "setting": "outpatient",
+   "gross": 15375.0,
+   "discounted_cash": 15375.0,
+   "negotiated_min": 170.24,
+   "negotiated_max": 24548.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1237.31,
+   "payer_rates": 54,
+   "payer_dollar_rates": 54,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 9686.25,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 8303.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 10455.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 11685.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 1237.31,
+     "algorithm": "Lesser of $1237.31 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 11531.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ER CRITICAL CARE 30-74MIN",
+     "setting": "inpatient",
+     "gross": 15375.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "XR CHEST 1 VIEW",
+   "setting": "outpatient",
+   "gross": 820.0,
+   "discounted_cash": 820.0,
+   "negotiated_min": 17.65,
+   "negotiated_max": 820.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 129.29,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 75.01,
+     "algorithm": "Lesser of $75.01 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 528.9
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 172.27,
+     "algorithm": "Lesser of $172.27 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 426.73
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 129.29,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 682.45,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 129.29,
+     "algorithm": "Lesser of $129.29 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 615.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "XR CHEST 1 VIEW",
+     "setting": "inpatient",
+     "gross": 820.0
+    }
+   ]
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "XR CHEST 2 VIEWS",
+   "setting": "outpatient",
+   "gross": 1074.0,
+   "discounted_cash": 1074.0,
+   "negotiated_min": 27.47,
+   "negotiated_max": 1074.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 129.29,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 138.92,
+     "algorithm": "Lesser of $138.92 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 687.57
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 318.53,
+     "algorithm": "Lesser of $318.53 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 318.52
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 129.29,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 682.45,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 129.29,
+     "algorithm": "Lesser of $129.29 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 805.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "XR CHEST 2 VIEWS",
+     "setting": "inpatient",
+     "gross": 1074.0
+    }
+   ]
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "CT HEAD WO CON CT",
+   "setting": "outpatient",
+   "gross": 5710.0,
+   "discounted_cash": 5710.0,
+   "negotiated_min": 141.78,
+   "negotiated_max": 5710.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 156.15,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1182.32,
+     "algorithm": "Lesser of $1182.32 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 3682.95
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "algorithm": "Lesser of $3318.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 4125.48
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 4282.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT HEAD WO CON CT",
+     "setting": "inpatient",
+     "gross": 5710.0
+    }
+   ]
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "CT CERVIC SPINE WO CON CT",
+   "setting": "outpatient",
+   "gross": 5965.0,
+   "discounted_cash": 5965.0,
+   "negotiated_min": 156.15,
+   "negotiated_max": 5965.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 179.29,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1477.64,
+     "algorithm": "Lesser of $1477.64 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 3847.43
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 4473.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT CERVIC SPINE WO CON CT",
+     "setting": "inpatient",
+     "gross": 5965.0
+    }
+   ]
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "CT CHEST WO CON CT",
+   "setting": "outpatient",
+   "gross": 5975.0,
+   "discounted_cash": 5975.0,
+   "negotiated_min": 156.15,
+   "negotiated_max": 5975.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 182.63,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1477.64,
+     "algorithm": "Lesser of $1477.64 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 1510.74
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 4481.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT CHEST WO CON CT",
+     "setting": "inpatient",
+     "gross": 5975.0
+    }
+   ]
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "CT CHEST W CON CT",
+   "setting": "outpatient",
+   "gross": 7529.0,
+   "discounted_cash": 7529.0,
+   "negotiated_min": 225.32,
+   "negotiated_max": 7529.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 261.41,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1905.18,
+     "algorithm": "Lesser of $1905.18 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 261.41,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 261.41,
+     "algorithm": "Lesser of $261.41 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 5646.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT CHEST W CON CT",
+     "setting": "inpatient",
+     "gross": 7529.0
+    }
+   ]
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "CT ANGIO CHEST W CON CT",
+   "setting": "outpatient",
+   "gross": 8348.0,
+   "discounted_cash": 8348.0,
+   "negotiated_min": 261.41,
+   "negotiated_max": 8348.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 287.55,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2578.75,
+     "algorithm": "Lesser of $2578.75 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 5384.46
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 261.41,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 261.41,
+     "algorithm": "Lesser of $261.41 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 6261.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ANGIO CHEST W CON CT",
+     "setting": "inpatient",
+     "gross": 8348.0
+    }
+   ]
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "CT ABDOMEN PELV WO CON CT",
+   "setting": "outpatient",
+   "gross": 7164.0,
+   "discounted_cash": 7164.0,
+   "negotiated_min": 174.31,
+   "negotiated_max": 7164.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 354.95,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1003.5,
+     "algorithm": "Lesser of $1003.50 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 7701.3
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 354.95,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 354.95,
+     "algorithm": "Lesser of $354.95 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 5373.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ABDOMEN PELV WO CON CT",
+     "setting": "inpatient",
+     "gross": 7164.0
+    }
+   ]
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "CT ABDOMEN PELV W CON CT",
+   "setting": "outpatient",
+   "gross": 11940.0,
+   "discounted_cash": 11940.0,
+   "negotiated_min": 281.8,
+   "negotiated_max": 11940.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 524.42,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1915.52,
+     "algorithm": "Lesser of $1915.52 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 7701.3
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 524.42,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 524.42,
+     "algorithm": "Lesser of $524.42 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 8955.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ABDOMEN PELV W CON CT",
+     "setting": "inpatient",
+     "gross": 11940.0
+    }
+   ]
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "CT ABDOMEN PELVIS WWO CON",
+   "setting": "outpatient",
+   "gross": 13373.0,
+   "discounted_cash": 13373.0,
+   "negotiated_min": 319.24,
+   "negotiated_max": 13373.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 524.42,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2532.15,
+     "algorithm": "Lesser of $2532.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3176.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 524.42,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3318.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 524.42,
+     "algorithm": "Lesser of $524.42 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 10029.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CT ABDOMEN PELVIS WWO CON",
+     "setting": "inpatient",
+     "gross": 13373.0
+    }
+   ]
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "MR BRAIN WO CON",
+   "setting": "outpatient",
+   "gross": 7026.0,
+   "discounted_cash": 7026.0,
+   "negotiated_min": 266.22,
+   "negotiated_max": 7494.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 354.95,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2138.64,
+     "algorithm": "Lesser of $2138.64 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 5168.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 354.95,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 4935.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 354.95,
+     "algorithm": "Lesser of $354.95 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 5269.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "MR BRAIN WO CON",
+     "setting": "inpatient",
+     "gross": 7026.0
+    }
+   ]
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "MR L SPINE WO CON",
+   "setting": "outpatient",
+   "gross": 7115.0,
+   "discounted_cash": 7115.0,
+   "negotiated_min": 260.4,
+   "negotiated_max": 7494.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 354.95,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2138.64,
+     "algorithm": "Lesser of $2138.64 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 5168.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 354.95,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 4935.0,
+     "algorithm": "Lesser of $4935.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 354.95,
+     "algorithm": "Lesser of $354.95 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 5336.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "MR L SPINE WO CON",
+     "setting": "inpatient",
+     "gross": 7115.0
+    }
+   ]
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "XR LUMBAR SPINE 2 OR 3 VW",
+   "setting": "outpatient",
+   "gross": 1423.0,
+   "discounted_cash": 1423.0,
+   "negotiated_min": 42.41,
+   "negotiated_max": 1423.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 156.15,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 221.08,
+     "algorithm": "Lesser of $221.08 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 226.03
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 252.9,
+     "algorithm": "Lesser of $252.90 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 252.9
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 918.56,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 1067.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "XR LUMBAR SPINE 2 OR 3 VW",
+     "setting": "inpatient",
+     "gross": 1423.0
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "US ABD COMPLETE WO CON",
+   "setting": "outpatient",
+   "gross": 2054.0,
+   "discounted_cash": 2054.0,
+   "negotiated_min": 116.48,
+   "negotiated_max": 2054.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 156.15,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 731.48,
+     "algorithm": "Lesser of $731.48 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 747.86
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 745.74,
+     "algorithm": "Lesser of $745.74 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 918.56,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 1540.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "US ABD COMPLETE WO CON",
+     "setting": "inpatient",
+     "gross": 2054.0
+    }
+   ]
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "US ABDOMEN WO CON LTD",
+   "setting": "outpatient",
+   "gross": 1580.0,
+   "discounted_cash": 1580.0,
+   "negotiated_min": 85.04,
+   "negotiated_max": 1580.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 156.15,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 594.16,
+     "algorithm": "Lesser of $594.16 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 1035.23
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 536.97,
+     "algorithm": "Lesser of $536.97 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 536.97
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 918.56,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 1185.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "US ABDOMEN WO CON LTD",
+     "setting": "inpatient",
+     "gross": 1580.0
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "US PELVIS NON OB COMP",
+   "setting": "outpatient",
+   "gross": 2707.0,
+   "discounted_cash": 2707.0,
+   "negotiated_min": 94.71,
+   "negotiated_max": 2707.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 156.15,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 692.6,
+     "algorithm": "Lesser of $692.60 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 1746.02
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 578.89,
+     "algorithm": "Lesser of $578.89 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 578.88
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 156.15,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 918.56,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 156.15,
+     "algorithm": "Lesser of $156.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 2030.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "US PELVIS NON OB COMP",
+     "setting": "inpatient",
+     "gross": 2707.0
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "ECG 12 LEAD TRACING ONLY",
+   "setting": "outpatient",
+   "gross": 882.0,
+   "discounted_cash": 882.0,
+   "negotiated_min": 8.51,
+   "negotiated_max": 35410.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 87.22,
+   "payer_rates": 49,
+   "payer_dollar_rates": 49,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 87.22,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 207.97,
+     "algorithm": "Lesser of $207.97 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 207.96
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 87.22,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 661.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 87.22,
+     "algorithm": "Lesser of $87.22 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ECG 12 LEAD TRACING ONLY",
+     "setting": "inpatient",
+     "gross": 882.0
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "TTE W/DOPPLER COMPLETE",
+   "setting": "outpatient",
+   "gross": 5772.0,
+   "discounted_cash": 5772.0,
+   "negotiated_min": 239.76,
+   "negotiated_max": 35410.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 805.13,
+   "payer_rates": 49,
+   "payer_dollar_rates": 49,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 805.13,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2997.09,
+     "algorithm": "Lesser of $2997.09 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 2997.08
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 805.13,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5887.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 4329.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 805.13,
+     "algorithm": "Lesser of $805.13 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "TTE W/DOPPLER COMPLETE",
+     "setting": "inpatient",
+     "gross": 5772.0
+    }
+   ]
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "VENIPUNCTURE",
+   "setting": "outpatient",
+   "gross": 135.0,
+   "discounted_cash": 135.0,
+   "negotiated_min": 3.6,
+   "negotiated_max": 15255.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.09,
+   "payer_rates": 35,
+   "payer_dollar_rates": 35,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 9.09,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "BCBS - Anthem",
+     "plan": "Medicare|All Other Plans",
+     "dollar": 9.09,
+     "algorithm": "Lesser of $9.09 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 9.09
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 13255.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 13.88,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 9.09,
+     "algorithm": "Lesser of $9.09 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 101.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "VENIPUNCTURE",
+     "setting": "inpatient",
+     "gross": 135.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "BASIC METABOLIC PANEL",
+   "setting": "outpatient",
+   "gross": 168.0,
+   "discounted_cash": 168.0,
+   "negotiated_min": 8.46,
+   "negotiated_max": 168.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.43,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 57.01,
+     "algorithm": "Lesser of $57.01 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 103.2
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 111.62,
+     "algorithm": "Lesser of $111.62 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 111.62
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 84.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 39.13,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 8.46,
+     "algorithm": "Lesser of $8.46 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 126.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "BASIC METABOLIC PANEL",
+     "setting": "inpatient",
+     "gross": 1397.0
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "COMP METABOLIC PANEL",
+   "setting": "outpatient",
+   "gross": 237.0,
+   "discounted_cash": 237.0,
+   "negotiated_min": 10.56,
+   "negotiated_max": 237.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.18,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 71.18,
+     "algorithm": "Lesser of $71.18 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 145.77
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 139.59,
+     "algorithm": "Lesser of $139.59 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 139.59
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 118.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 48.81,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 10.56,
+     "algorithm": "Lesser of $10.56 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 177.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "COMP METABOLIC PANEL",
+     "setting": "inpatient",
+     "gross": 1397.0
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "LIPID PANEL",
+   "setting": "outpatient",
+   "gross": 503.0,
+   "discounted_cash": 503.0,
+   "negotiated_min": 13.39,
+   "negotiated_max": 503.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.55,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 90.27,
+     "algorithm": "Lesser of $90.27 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 92.29
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 176.62,
+     "algorithm": "Lesser of $176.62 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 176.62
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 251.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 61.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 13.39,
+     "algorithm": "Lesser of $13.39 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 377.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "RL-A-NMRLIPFIT 2013716B",
+     "setting": "outpatient",
+     "gross": 14.08
+    },
+    {
+     "description": "LIPID PANEL",
+     "setting": "inpatient",
+     "gross": 698.0
+    },
+    {
+     "description": "RL-A-NMRLIPFIT 2013716B",
+     "setting": "inpatient",
+     "gross": 14.08
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "CBC W/AUTO DIFF",
+   "setting": "outpatient",
+   "gross": 102.0,
+   "discounted_cash": 102.0,
+   "negotiated_min": 7.77,
+   "negotiated_max": 102.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.68,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 52.41,
+     "algorithm": "Lesser of $52.41 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 65.79
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 81.6,
+     "algorithm": "Lesser of $102.56 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 81.12
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 51.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 35.93,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 7.77,
+     "algorithm": "Lesser of $7.77 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 76.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CBC W/AUTO DIFF",
+     "setting": "inpatient",
+     "gross": 638.0
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "CBC AUTO W/O DIFF",
+   "setting": "outpatient",
+   "gross": 113.0,
+   "discounted_cash": 113.0,
+   "negotiated_min": 6.47,
+   "negotiated_max": 113.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.19,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 43.6,
+     "algorithm": "Lesser of $43.60 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 72.89
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 85.34,
+     "algorithm": "Lesser of $85.34 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 88.93
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 56.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 29.95,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 6.47,
+     "algorithm": "Lesser of $6.47 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 84.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CBC AUTO W/O DIFF",
+     "setting": "inpatient",
+     "gross": 269.0
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "PROTHROMBIN TIME",
+   "setting": "outpatient",
+   "gross": 281.0,
+   "discounted_cash": 281.0,
+   "negotiated_min": 4.29,
+   "negotiated_max": 281.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.01,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 26.49,
+     "algorithm": "Lesser of $26.49 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 181.25
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 51.95,
+     "algorithm": "Lesser of $51.95 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 51.94
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 140.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 19.85,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 4.29,
+     "algorithm": "Lesser of $4.29 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 210.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "RL-A-ANTI PHOS 3017157A",
+     "setting": "outpatient",
+     "gross": 7.0
+    },
+    {
+     "description": "RL-A-LUPUS RFLX 3017009A",
+     "setting": "outpatient",
+     "gross": 6.66
+    },
+    {
+     "description": "RL-A-PT INHIB 2003260",
+     "setting": "outpatient",
+     "gross": 13.46
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "PARTIAL THROMBO TIME",
+   "setting": "outpatient",
+   "gross": 139.0,
+   "discounted_cash": 139.0,
+   "negotiated_min": 6.01,
+   "negotiated_max": 139.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.66,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 40.47,
+     "algorithm": "Lesser of $40.47 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 94.17
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 79.21,
+     "algorithm": "Lesser of $79.21 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 79.2
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 69.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 27.82,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 6.01,
+     "algorithm": "Lesser of $6.01 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 104.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "RL-A-ANTI PHOS 3017157C",
+     "setting": "outpatient",
+     "gross": 7.0
+    },
+    {
+     "description": "RL-A-LUPUS RFLX 3017009C",
+     "setting": "outpatient",
+     "gross": 6.68
+    },
+    {
+     "description": "RL-A-PTT INHIB 2003266",
+     "setting": "outpatient",
+     "gross": 10.87
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "RL-A-CTNT 3001831",
+   "setting": "outpatient",
+   "gross": 30.34,
+   "discounted_cash": 30.34,
+   "negotiated_min": 11.86,
+   "negotiated_max": 57.7,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.47,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 30.34,
+     "algorithm": "Lesser of $66.33 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 335.4
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 24.28,
+     "algorithm": "Lesser of $251.66 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 409.24
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 15.17,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 57.7,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 12.47,
+     "algorithm": "Lesser of $12.47 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 22.76,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "TROPONIN QN",
+     "setting": "outpatient",
+     "gross": 507.0
+    },
+    {
+     "description": "TROPONIN QN NONL",
+     "setting": "outpatient",
+     "gross": 319.0
+    },
+    {
+     "description": "RL-A-CTNT 3001831",
+     "setting": "inpatient",
+     "gross": 30.34
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "LIPASE",
+   "setting": "outpatient",
+   "gross": 182.0,
+   "discounted_cash": 182.0,
+   "negotiated_min": 6.89,
+   "negotiated_max": 182.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.72,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 46.41,
+     "algorithm": "Lesser of $46.41 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 98.04
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 90.75,
+     "algorithm": "Lesser of $90.75 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 119.62
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 91.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 31.88,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 6.89,
+     "algorithm": "Lesser of $6.89 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 136.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "RL-A-LIP FL 20715",
+     "setting": "outpatient",
+     "gross": 7.95
+    },
+    {
+     "description": "LIPASE",
+     "setting": "inpatient",
+     "gross": 182.0
+    },
+    {
+     "description": "RL-A-LIP FL 20715",
+     "setting": "inpatient",
+     "gross": 7.95
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "B TYPE BNP",
+   "setting": "outpatient",
+   "gross": 560.0,
+   "discounted_cash": 560.0,
+   "negotiated_min": 30.15,
+   "negotiated_max": 560.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 39.26,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 228.74,
+     "algorithm": "Lesser of $228.74 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 361.2
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 447.82,
+     "algorithm": "Lesser of $447.82 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 445.36
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 280.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 181.55,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 39.26,
+     "algorithm": "Lesser of $39.26 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 420.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "RL-A-PRO BNP 50083",
+     "setting": "outpatient",
+     "gross": 35.0
+    },
+    {
+     "description": "B TYPE BNP",
+     "setting": "inpatient",
+     "gross": 560.0
+    },
+    {
+     "description": "RL-A-PRO BNP 50083",
+     "setting": "inpatient",
+     "gross": 35.0
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "CPK TOTAL",
+   "setting": "outpatient",
+   "gross": 148.0,
+   "discounted_cash": 148.0,
+   "negotiated_min": 6.51,
+   "negotiated_max": 148.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.31,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 43.92,
+     "algorithm": "Lesser of $43.92 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 44.91
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 86.49,
+     "algorithm": "Lesser of $86.49 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 86.49
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 74.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 30.1,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 6.51,
+     "algorithm": "Lesser of $6.51 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 111.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CPK TOTAL",
+     "setting": "inpatient",
+     "gross": 511.0
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "THYROID STIM HORMONE",
+   "setting": "outpatient",
+   "gross": 476.0,
+   "discounted_cash": 476.0,
+   "negotiated_min": 16.8,
+   "negotiated_max": 476.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 21.17,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 113.19,
+     "algorithm": "Lesser of $113.19 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 307.02
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 221.64,
+     "algorithm": "Lesser of $221.64 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 221.64
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 238.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 77.69,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 16.8,
+     "algorithm": "Lesser of $16.80 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 357.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "THYROID STIM HORMONE",
+     "setting": "inpatient",
+     "gross": 1013.0
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HEMOGLOBIN A1C",
+   "setting": "outpatient",
+   "gross": 245.0,
+   "discounted_cash": 245.0,
+   "negotiated_min": 9.71,
+   "negotiated_max": 245.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.25,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 65.44,
+     "algorithm": "Lesser of $65.44 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 66.9
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 128.05,
+     "algorithm": "Lesser of $128.05 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 128.04
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 122.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 44.89,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 9.71,
+     "algorithm": "Lesser of $9.71 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 183.75,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "HEMOGLOBIN A1C",
+     "setting": "inpatient",
+     "gross": 816.0
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "UA AUTO W MICRO",
+   "setting": "outpatient",
+   "gross": 167.0,
+   "discounted_cash": 167.0,
+   "negotiated_min": 3.17,
+   "negotiated_max": 167.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.97,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21.32,
+     "algorithm": "Lesser of $21.32 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 107.72
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 40.32,
+     "algorithm": "Lesser of $40.32 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 40.31
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 83.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 14.66,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 3.17,
+     "algorithm": "Lesser of $3.17 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 125.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "UA AUTO W MICRO",
+     "setting": "inpatient",
+     "gross": 555.0
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "UA AUTO WO MICRO",
+   "setting": "outpatient",
+   "gross": 104.0,
+   "discounted_cash": 104.0,
+   "negotiated_min": 2.25,
+   "negotiated_max": 104.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.81,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 15.13,
+     "algorithm": "Lesser of $15.13 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 67.08
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 29.66,
+     "algorithm": "Lesser of $29.66 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 29.65
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 52.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 10.39,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 2.25,
+     "algorithm": "Lesser of $2.25 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 78.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "UA AUTO WO MICRO",
+     "setting": "inpatient",
+     "gross": 400.0
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "PREG URINE VISUAL",
+   "setting": "outpatient",
+   "gross": 258.0,
+   "discounted_cash": 258.0,
+   "negotiated_min": 3.92,
+   "negotiated_max": 258.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.61,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 37.15,
+     "algorithm": "Lesser of $37.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 138.68
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 67.31,
+     "algorithm": "Lesser of $67.31 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 2733.08
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 129.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 39.84,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 8.61,
+     "algorithm": "Lesser of $8.61 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 193.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "PREG URINE VISUAL NONL",
+     "setting": "outpatient",
+     "gross": 366.0
+    },
+    {
+     "description": "PREG URINE VISUAL",
+     "setting": "inpatient",
+     "gross": 366.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "CULT UR W COLONY CNT",
+   "setting": "outpatient",
+   "gross": 172.0,
+   "discounted_cash": 172.0,
+   "negotiated_min": 7.91,
+   "negotiated_max": 172.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.1,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 54.39,
+     "algorithm": "Lesser of $54.39 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 110.94
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 104.96,
+     "algorithm": "Lesser of $104.96 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 104.96
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 86.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 37.35,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 8.07,
+     "algorithm": "Lesser of $8.07 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 129.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CULT UR W COLONY CNT",
+     "setting": "inpatient",
+     "gross": 781.0
+    }
+   ]
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "CULT BLOOD",
+   "setting": "outpatient",
+   "gross": 350.0,
+   "discounted_cash": 350.0,
+   "negotiated_min": 10.32,
+   "negotiated_max": 350.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.88,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 69.59,
+     "algorithm": "Lesser of $69.59 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 451.5
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 136.13,
+     "algorithm": "Lesser of $136.13 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 175.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 47.74,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 10.32,
+     "algorithm": "Lesser of $10.32 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 262.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "CULT BLOOD",
+     "setting": "inpatient",
+     "gross": 1165.0
+    }
+   ]
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "RL-A-COVID19NAA 3002638",
+   "setting": "outpatient",
+   "gross": 74.8,
+   "discounted_cash": 74.8,
+   "negotiated_min": 35.16,
+   "negotiated_max": 168.3,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 51.31,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 74.8,
+     "algorithm": "Lesser of $327.56 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 98.69
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 59.84,
+     "algorithm": "Lesser of $475.88 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 37.4,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 51.31,
+     "algorithm": "Lesser of $51.31 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 56.1,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 51.31,
+     "algorithm": "Lesser of $51.31 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "RL-LA-COVID19",
+     "setting": "outpatient",
+     "gross": 100.0
+    },
+    {
+     "description": "RL-UF-COVID19 87635",
+     "setting": "outpatient",
+     "gross": 200.0
+    },
+    {
+     "description": "SARS-COV-2 CVD-19 PRB TCH",
+     "setting": "outpatient",
+     "gross": 184.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "INF IV HYDRA INIT 31-60MN",
+   "setting": "outpatient",
+   "gross": 1048.0,
+   "discounted_cash": 1048.0,
+   "negotiated_min": 46.13,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 309.38,
+   "payer_rates": 54,
+   "payer_dollar_rates": 54,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 638.36,
+     "algorithm": "Lesser of $638.36 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 643.71
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 848.88,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 775.52,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 309.38,
+     "algorithm": "Lesser of $309.38 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 786.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "INF IV HYDRA INIT 31-60MN",
+     "setting": "outpatient",
+     "gross": 1048.0
+    },
+    {
+     "description": "INF IV HYDRA INIT 31-60MN",
+     "setting": "inpatient",
+     "gross": 1048.0
+    },
+    {
+     "description": "INF IV HYDRA INIT 31-60MN",
+     "setting": "inpatient",
+     "gross": 1048.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "INF IV HYDRAT EA ADD HR",
+   "setting": "outpatient",
+   "gross": 670.0,
+   "discounted_cash": 670.0,
+   "negotiated_min": 17.45,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 67.75,
+   "payer_rates": 54,
+   "payer_dollar_rates": 54,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 166.04,
+     "algorithm": "Lesser of $166.04 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 432.15
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 542.7,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 495.8,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 67.75,
+     "algorithm": "Lesser of $67.75 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 502.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "INF IV HYDRAT EA ADD HR",
+     "setting": "outpatient",
+     "gross": 704.0
+    },
+    {
+     "description": "INF IV HYDRAT EA ADD HR",
+     "setting": "inpatient",
+     "gross": 670.0
+    },
+    {
+     "description": "INF IV HYDRAT EA ADD HR",
+     "setting": "inpatient",
+     "gross": 704.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "INF TX/DX/PRO INIT 1ST HR",
+   "setting": "outpatient",
+   "gross": 1048.0,
+   "discounted_cash": 1048.0,
+   "negotiated_min": 71.83,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 309.38,
+   "payer_rates": 54,
+   "payer_dollar_rates": 54,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 796.23,
+     "algorithm": "Lesser of $796.23 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 643.71
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3880.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 775.52,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 309.38,
+     "algorithm": "Lesser of $309.38 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 786.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "INF TX/DX/PRO INIT 1ST HR",
+     "setting": "outpatient",
+     "gross": 1048.0
+    },
+    {
+     "description": "INF TX/DX/PRO INIT 1ST HR",
+     "setting": "inpatient",
+     "gross": 1048.0
+    },
+    {
+     "description": "INF TX/DX/PRO INIT 1ST HR",
+     "setting": "inpatient",
+     "gross": 1048.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "INF TX/DX/PRO EA ADD HR",
+   "setting": "outpatient",
+   "gross": 670.0,
+   "discounted_cash": 670.0,
+   "negotiated_min": 22.11,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 67.75,
+   "payer_rates": 54,
+   "payer_dollar_rates": 54,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 232.12,
+     "algorithm": "Lesser of $232.12 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 432.15
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 670.0,
+     "algorithm": "Lesser of $3880.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 495.8,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 67.75,
+     "algorithm": "Lesser of $67.75 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 502.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "INF TX/DX/PRO EA ADD HR",
+     "setting": "outpatient",
+     "gross": 670.0
+    },
+    {
+     "description": "INF TX/DX/PRO EA ADD HR",
+     "setting": "outpatient",
+     "gross": 670.0
+    },
+    {
+     "description": "INF TX/DX/PRO EA ADD HR",
+     "setting": "inpatient",
+     "gross": 670.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "INJ TX/DX/PROPH SUBQ/IM",
+   "setting": "outpatient",
+   "gross": 420.0,
+   "discounted_cash": 420.0,
+   "negotiated_min": 17.21,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 104.51,
+   "payer_rates": 54,
+   "payer_dollar_rates": 54,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 248.92,
+     "algorithm": "Lesser of $248.92 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 225.75
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3880.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 310.8,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 104.51,
+     "algorithm": "Lesser of $104.51 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 315.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "INJ TX/DX/PROPH SUBQ/IM",
+     "setting": "outpatient",
+     "gross": 420.0
+    },
+    {
+     "description": "INJ TX/DX/PROPH SUBQ/IM",
+     "setting": "outpatient",
+     "gross": 420.0
+    },
+    {
+     "description": "INJ TX/DX/PROPH SUBQ/IM",
+     "setting": "inpatient",
+     "gross": 420.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "INJ TX/DX/PRO IVPUSH INIT",
+   "setting": "outpatient",
+   "gross": 532.0,
+   "discounted_cash": 532.0,
+   "negotiated_min": 53.46,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 309.38,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 532.0,
+     "algorithm": "Lesser of $621.57 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 303.15
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 532.0,
+     "algorithm": "Lesser of $3880.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 309.38
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 393.68,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 399.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "INJ FOR MICROBUBBLE STUDY",
+     "setting": "outpatient",
+     "gross": 564.0
+    },
+    {
+     "description": "INJ TX/DX/PRO IVPUSH INIT",
+     "setting": "outpatient",
+     "gross": 564.0
+    },
+    {
+     "description": "INJ TX/DX/PRO IVPUSH INIT",
+     "setting": "outpatient",
+     "gross": 564.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "INJ TX/DX/PRO IV PUSH SEQ",
+   "setting": "outpatient",
+   "gross": 532.0,
+   "discounted_cash": 532.0,
+   "negotiated_min": 21.54,
+   "negotiated_max": 21649.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 67.75,
+   "payer_rates": 57,
+   "payer_dollar_rates": 57,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 251.91,
+     "algorithm": "Lesser of $251.91 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 285.74
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 532.0,
+     "algorithm": "Lesser of $3880.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 203.25
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 393.68,
+     "algorithm": "Lesser of $4705.00 or 74 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 399.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "INJ TX/DX/PRO IV PUSH SEQ",
+     "setting": "outpatient",
+     "gross": 532.0
+    },
+    {
+     "description": "INJ TX/DX/PRO IV PUSH SEQ",
+     "setting": "inpatient",
+     "gross": 532.0
+    },
+    {
+     "description": "INJ TX/DX/PRO IV PUSH SEQ",
+     "setting": "inpatient",
+     "gross": 532.0
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "ONDANSETRON 4MG/2ML SDV",
+   "setting": "outpatient",
+   "gross": 42.0,
+   "discounted_cash": 42.0,
+   "negotiated_min": 0.1,
+   "negotiated_max": 42.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 5.6,
+   "payer_rates": 31,
+   "payer_dollar_rates": 31,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 0.2,
+     "algorithm": "Lesser of $0.20 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 27.09
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 14.16,
+     "algorithm": "Lesser of $14.16 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 36.85
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 0.23,
+     "algorithm": "Lesser of $0.23 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 26.04,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 0.54,
+     "algorithm": "Lesser of $0.54 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 10.48
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 31.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 2.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 2 ML as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "ONDANSETRON 4MG/2ML SDV",
+     "setting": "inpatient",
+     "gross": 42.0,
+     "drug_unit": 2.0
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "KETOROL 15MG/1ML ADMJZTB",
+   "setting": "outpatient",
+   "gross": 42.0,
+   "discounted_cash": 42.0,
+   "negotiated_min": 0.39,
+   "negotiated_max": 42.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 0.98,
+   "payer_rates": 53,
+   "payer_dollar_rates": 53,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 0.98,
+     "algorithm": "Lesser of $0.98 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 27.09
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21.16,
+     "algorithm": "Lesser of $21.16 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 36.84
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 1.53,
+     "algorithm": "Lesser of $1.53 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 26.04,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 3.58,
+     "algorithm": "Lesser of $3.58 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 42.0
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 31.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ketorolac (Toradol) injection, per 15 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "KETOROL 15MG/1ML ADMJZTB",
+     "setting": "inpatient",
+     "gross": 42.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "DEXAM PH PF 10MG/1ML INJ",
+   "setting": "outpatient",
+   "gross": 42.0,
+   "discounted_cash": 42.0,
+   "negotiated_min": 0.15,
+   "negotiated_max": 42.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4.55,
+   "payer_rates": 31,
+   "payer_dollar_rates": 31,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 0.24,
+     "algorithm": "Lesser of $0.24 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 27.09
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 3.26,
+     "algorithm": "Lesser of $3.26 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 26.04
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 0.26,
+     "algorithm": "Lesser of $0.26 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 26.04,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 0.61,
+     "algorithm": "Lesser of $0.61 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 42.0
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 31.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Dexamethasone injection, per 1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "DEXAM PH PF 10MG/1ML INJ",
+     "setting": "inpatient",
+     "gross": 42.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "MORPHIN 100MG/NS 100MLPMX",
+   "setting": "outpatient",
+   "gross": 130.0,
+   "discounted_cash": 130.0,
+   "negotiated_min": 1.63,
+   "negotiated_max": 130.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.16,
+   "payer_rates": 31,
+   "payer_dollar_rates": 31,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 9.42,
+     "algorithm": "Lesser of $9.42 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 27.09
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1.63,
+     "algorithm": "Lesser of $1.63 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 3.06,
+     "algorithm": "Lesser of $3.06 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 80.6,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 7.16,
+     "algorithm": "Lesser of $7.16 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 97.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 100.0,
+   "drug_unit_type": "ML",
+   "notes": [
+    "Drug priced per 100 ML as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "MORPHINE 10MG/ML 1ML INJ",
+     "setting": "outpatient",
+     "gross": 42.0
+    },
+    {
+     "description": "MORPHINE 15MG/ML 20ML INJ",
+     "setting": "outpatient",
+     "gross": 48.0
+    },
+    {
+     "description": "MORPHINE 1MG/ML 30ML PCA",
+     "setting": "outpatient",
+     "gross": 160.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "FENTAN 1000MCG/NS100MLPMX",
+   "setting": "outpatient",
+   "gross": 164.0,
+   "discounted_cash": 164.0,
+   "negotiated_min": 0.72,
+   "negotiated_max": 164.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.27,
+   "payer_rates": 31,
+   "payer_dollar_rates": 31,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1.96,
+     "algorithm": "Lesser of $1.96 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 5.15
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 2.44,
+     "algorithm": "Lesser of $2.44 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 2.44
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 2.68,
+     "algorithm": "Lesser of $2.68 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 101.68,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 6.27,
+     "algorithm": "Lesser of $6.27 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 10.48
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 123.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Fentanyl injection, per 0.1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "FENTAN 2.5MG/NS 250ML PMX",
+     "setting": "outpatient",
+     "gross": 143.0
+    },
+    {
+     "description": "FENTANYL 1MG/20ML INJ",
+     "setting": "outpatient",
+     "gross": 42.0,
+     "drug_unit": 20.0
+    },
+    {
+     "description": "FENTAN 1000MCG/NS100MLPMX",
+     "setting": "inpatient",
+     "gross": 164.0
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "CEFTRIAXONE 1GM PWD INJ",
+   "setting": "outpatient",
+   "gross": 226.0,
+   "discounted_cash": 226.0,
+   "negotiated_min": 0.56,
+   "negotiated_max": 226.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.09,
+   "payer_rates": 31,
+   "payer_dollar_rates": 31,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 1.0,
+     "algorithm": "Lesser of $1.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 44.51
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 34.5,
+     "algorithm": "Lesser of $34.50 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 1.15,
+     "algorithm": "Lesser of $1.15 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 140.12,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 2.69,
+     "algorithm": "Lesser of $2.69 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 169.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ceftriaxone injection, per 250 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "CEFTRIAXONE 250MG PWD INJ",
+     "setting": "outpatient",
+     "gross": 81.0,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "CEFTRIAXONE 250MG PWD INJ",
+     "setting": "outpatient",
+     "gross": 42.0
+    },
+    {
+     "description": "CEFTRIAXONE 2GM PWD SDV",
+     "setting": "outpatient",
+     "gross": 80.0,
+     "drug_unit": 100.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "NACL 0.9% 1000ML INJ",
+   "setting": "outpatient",
+   "gross": 78.0,
+   "discounted_cash": 78.0,
+   "negotiated_min": 2.47,
+   "negotiated_max": 78.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.6,
+   "payer_rates": 31,
+   "payer_dollar_rates": 31,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 5.44,
+     "algorithm": "Lesser of $5.44 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 51.6
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 23.27,
+     "algorithm": "Lesser of $23.27 or 88 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "median": 125.92
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 6.6,
+     "algorithm": "Lesser of $6.60 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 48.36,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 15.45,
+     "algorithm": "Lesser of $15.45 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 58.5,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Normal saline infusion, 1000 cc).",
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "NACL 0.9% 1000ML INJ",
+     "setting": "outpatient",
+     "gross": 80.0
+    },
+    {
+     "description": "NACL 0.9% 1000ML INJ",
+     "setting": "inpatient",
+     "gross": 78.0
+    },
+    {
+     "description": "NACL 0.9% 1000ML INJ",
+     "setting": "inpatient",
+     "gross": 80.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "RPR S/N/AX/GEN/TRNK 2.5CM/<",
+   "setting": "outpatient",
+   "negotiated_min": 80.31,
+   "negotiated_max": 11233.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 291.78,
+   "payer_rates": 52,
+   "payer_dollar_rates": 44,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 291.78,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 7747.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 1657.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "percentage": 75.0,
+     "methodology": "percent of total billed charges",
+     "median": 1598.25
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 291.78,
+     "algorithm": "Lesser of $291.78 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "line_items": 1
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "I AND D ABSCESS SIMPLE",
+   "setting": "outpatient",
+   "gross": 923.0,
+   "discounted_cash": 923.0,
+   "negotiated_min": 48.7,
+   "negotiated_max": 11233.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 291.78,
+   "payer_rates": 52,
+   "payer_dollar_rates": 52,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 291.78,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 7747.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 1657.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 692.25,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 291.78,
+     "algorithm": "Lesser of $291.78 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "I AND D ABSCESS SIMPLE",
+     "setting": "inpatient",
+     "gross": 923.0
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "APPLY SPLINT SHRT ARM STC",
+   "setting": "outpatient",
+   "gross": 160.0,
+   "discounted_cash": 160.0,
+   "negotiated_min": 60.67,
+   "negotiated_max": 7436.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 160.0,
+   "payer_rates": 52,
+   "payer_dollar_rates": 52,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 160.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 5128.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 1657.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 120.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 160.0,
+     "algorithm": "Lesser of $189.28 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "APPLY SPLINT SHRT ARM STC",
+     "setting": "inpatient",
+     "gross": 160.0
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "BLAND AERO TX INIT EA DAY",
+   "setting": "outpatient",
+   "gross": 588.0,
+   "discounted_cash": 588.0,
+   "negotiated_min": 16.38,
+   "negotiated_max": 36780.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 298.66,
+   "payer_rates": 51,
+   "payer_dollar_rates": 51,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 298.66,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 190.21,
+     "algorithm": "Lesser of $190.21 or 80 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield CA",
+     "plan": "Commercial|ACO Trio",
+     "dollar": 325.0,
+     "algorithm": "Lesser of $325.00 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 21649.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Canopy Health",
+     "dollar": 298.66,
+     "algorithm": "Lesser of $298.66 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 441.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "INH TX INIT W VENT/DAY",
+     "setting": "outpatient",
+     "gross": 664.0
+    },
+    {
+     "description": "INH TX INITIAL EA DAY",
+     "setting": "outpatient",
+     "gross": 1164.0
+    },
+    {
+     "description": "BLAND AERO TX INIT EA DAY",
+     "setting": "inpatient",
+     "gross": 588.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "INSERT CATH BLADDER SMPL",
+   "setting": "outpatient",
+   "gross": 312.0,
+   "discounted_cash": 312.0,
+   "negotiated_min": 80.8,
+   "negotiated_max": 7436.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 189.28,
+   "payer_rates": 49,
+   "payer_dollar_rates": 49,
+   "payers": [
+    {
+     "family": "Aetna (Medicare plan)",
+     "payer": "Aetna",
+     "plan": "Medicare|All Plans",
+     "dollar": 189.28,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "BCBS - Anthem",
+     "plan": "Commercial|All Other Plans",
+     "dollar": 5128.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California (Medicare plan)",
+     "payer": "Blue Shield CA",
+     "plan": "Medicare|All Plans",
+     "dollar": 189.28,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Health Net",
+     "plan": "Commercial|Blue Gold",
+     "dollar": 5041.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser",
+     "plan": "Commercial|All Plans",
+     "dollar": 234.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "Jade Medical Group",
+     "plan": "Commercial|All Plans",
+     "dollar": 189.28,
+     "algorithm": "Lesser of $189.28 or 100 Percent of Billed Charges",
+     "methodology": "fee schedule",
+     "notes": "No services performed during 12-month lookback period."
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "INSERT CATH BLADDER SMPL",
+     "setting": "inpatient",
+     "gross": 312.0
+    }
+   ]
+  }
+ }
+}

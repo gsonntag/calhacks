@@ -1,0 +1,5205 @@
+{
+ "hospital_id": "chinese-hospital",
+ "hospital_name": "CHINESE HOSPITAL ASSOCIATION",
+ "location_name": "CHINESE HOSPITAL ASSOCIATION",
+ "hospital_address": "845 Jackson St San Francisco CA 94133",
+ "last_updated_on": "2026-07-22",
+ "template_version": "3.0.0",
+ "layout": "csv-tall",
+ "source": {
+  "cms_hpt_url": "https://www.chinesehospital-sf.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "CHINESE HOSPITAL",
+  "source_page_url": "https://protect-us.mimecast.com/s/1lZ5CL9Vl8t056Auqfikw?domain=apps.para-hcfs.com",
+  "file_url": "https://apps.para-hcfs.com/PTT/FinalLinks/Reports.aspx?dbName=dbCHSANFRANCISCOCA&type=CDMWithoutLabel&fileType=CSV",
+  "via": "brightdata-unlocker",
+  "fetched_at": "2026-10-25T03:56:03+00:00",
+  "sha256": "fd6cd2c19435b591f84a26f1eb01278a64ec25515c9eb611f3f50ede4012e244",
+  "bytes": 46277233
+ },
+ "codes_requested": 67,
+ "codes_found": 66,
+ "missing_codes": [
+  "J7030"
+ ],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "Emergency department visit for problem that may not require health care professional",
+   "setting": "both",
+   "gross": 558.0,
+   "discounted_cash": 558.0,
+   "negotiated_min": 21.77,
+   "negotiated_max": 1004.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 128.61,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 279.0,
+     "methodology": "percent of total billed charges",
+     "median": 279.0
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 170.78,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 202.55,
+     "methodology": "percent of total billed charges",
+     "median": 202.55
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 306.9,
+     "methodology": "percent of total billed charges",
+     "median": 306.9
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 295.74,
+     "methodology": "percent of total billed charges",
+     "median": 295.74
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 21.77,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "Emergency department visit with straightforward medical decision making",
+   "setting": "both",
+   "gross": 766.0,
+   "discounted_cash": 766.0,
+   "negotiated_min": 34.97,
+   "negotiated_max": 1378.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 234.18,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 383.0,
+     "methodology": "percent of total billed charges",
+     "median": 383.0
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 310.97,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 278.06,
+     "methodology": "percent of total billed charges",
+     "median": 287.25
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 421.3,
+     "methodology": "percent of total billed charges",
+     "median": 421.3
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 405.98,
+     "methodology": "percent of total billed charges",
+     "median": 405.98
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 766.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 221.974*1 ) Term Line 31 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "Emergency department visit with low level of medical decision making",
+   "setting": "both",
+   "gross": 1433.0,
+   "discounted_cash": 1433.0,
+   "negotiated_min": 63.97,
+   "negotiated_max": 2579.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 416.34,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 716.5,
+     "methodology": "percent of total billed charges",
+     "median": 597.87
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 552.87,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 520.18,
+     "methodology": "percent of total billed charges",
+     "median": 399.645
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 788.15,
+     "methodology": "percent of total billed charges",
+     "median": 750.75
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 759.49,
+     "methodology": "percent of total billed charges",
+     "median": 759.49
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 1433.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 394.635*1 ) Term Line 31 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "Emergency department visit with moderate level of medical decision making",
+   "setting": "both",
+   "gross": 2252.0,
+   "discounted_cash": 2252.0,
+   "negotiated_min": 98.04,
+   "negotiated_max": 4053.6,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 636.4,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1126.0,
+     "methodology": "percent of total billed charges",
+     "median": 746.305
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 845.1,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 817.48,
+     "methodology": "percent of total billed charges",
+     "median": 625.28
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 1238.6,
+     "methodology": "percent of total billed charges",
+     "median": 1238.6
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 1193.56,
+     "methodology": "percent of total billed charges",
+     "median": 1193.56
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 2252.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: One or more instances of the item or service in the 15 months prior to posting the file."
+   ],
+   "line_items": 1
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "Emergency department visit with high level of medical decision making",
+   "setting": "both",
+   "gross": 3228.0,
+   "discounted_cash": 3228.0,
+   "negotiated_min": 155.03,
+   "negotiated_max": 5810.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 908.29,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1614.0,
+     "methodology": "percent of total billed charges",
+     "median": 2650.92
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 1206.15,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 1171.76,
+     "methodology": "percent of total billed charges",
+     "median": 180.06
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 1775.4,
+     "methodology": "percent of total billed charges",
+     "median": 1775.4
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 1710.84,
+     "methodology": "percent of total billed charges",
+     "median": 1710.84
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 3228.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 860.941*1 ) Term Line 31 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "HCPCS",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "Critical care, first 30-74 minutes",
+   "setting": "both",
+   "gross": 4471.0,
+   "discounted_cash": 4471.0,
+   "negotiated_min": 174.42,
+   "negotiated_max": 8047.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1259.84,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 2235.5,
+     "methodology": "percent of total billed charges",
+     "median": 2235.5
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 1672.99,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 1622.97,
+     "methodology": "percent of total billed charges",
+     "median": 1622.97
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 2459.05,
+     "methodology": "percent of total billed charges",
+     "median": 2459.05
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 2369.63,
+     "methodology": "percent of total billed charges",
+     "median": 2369.63
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 174.42,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the both-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Critical care, first 30-74 minutes",
+     "setting": "both",
+     "gross": 4432.0
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "X-ray of chest, 1 view",
+   "setting": "outpatient",
+   "gross": 624.0,
+   "discounted_cash": 624.0,
+   "negotiated_min": 25.35,
+   "negotiated_max": 1123.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 126.44,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 68.62,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 176.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 343.2,
+     "methodology": "percent of total billed charges",
+     "median": 177.5
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 330.72,
+     "methodology": "percent of total billed charges",
+     "median": 330.72
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 25.35,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "X-ray of chest, 1 view",
+     "setting": "outpatient",
+     "gross": 624.0
+    }
+   ]
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "X-ray of chest, 2 views",
+   "setting": "outpatient",
+   "gross": 624.0,
+   "discounted_cash": 624.0,
+   "negotiated_min": 39.42,
+   "negotiated_max": 1123.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 127.07,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 127.08,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 176.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 343.2,
+     "methodology": "percent of total billed charges",
+     "median": 343.2
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 330.72,
+     "methodology": "percent of total billed charges",
+     "median": 330.72
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 39.42,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "CT scan head or brain without contrast",
+   "setting": "outpatient",
+   "gross": 2734.0,
+   "discounted_cash": 2734.0,
+   "negotiated_min": 151.14,
+   "negotiated_max": 4921.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 222.25,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1081.57,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 1503.7,
+     "methodology": "percent of total billed charges",
+     "median": 1503.7
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 1449.02,
+     "methodology": "percent of total billed charges",
+     "median": 1449.02
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 2734.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "CT scan of upper spine without contrast",
+   "setting": "outpatient",
+   "gross": 2734.0,
+   "discounted_cash": 2734.0,
+   "negotiated_min": 151.14,
+   "negotiated_max": 4921.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 305.72,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1351.73,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 1503.7,
+     "methodology": "percent of total billed charges",
+     "median": 1503.7
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 1449.02,
+     "methodology": "percent of total billed charges",
+     "median": 1449.02
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 2734.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: APC - Medicare Packaging Rules [HCPCS] ( 2734.00*1 ) Term Line 25 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "CT scan of chest without contrast",
+   "setting": "outpatient",
+   "gross": 674.0,
+   "discounted_cash": 674.0,
+   "negotiated_min": 151.14,
+   "negotiated_max": 1351.73,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 298.71,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1351.73,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 370.7,
+     "methodology": "percent of total billed charges",
+     "median": 370.7
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 357.22,
+     "methodology": "percent of total billed charges",
+     "median": 357.22
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 674.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 151.138*1 ) Term Line 16 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT scan of chest without contrast",
+     "setting": "outpatient",
+     "gross": 2734.0
+    },
+    {
+     "description": "CT scan of chest without contrast",
+     "setting": "outpatient",
+     "gross": 2734.0
+    }
+   ]
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "CT scan of chest with contrast",
+   "setting": "outpatient",
+   "gross": 1208.0,
+   "discounted_cash": 1208.0,
+   "negotiated_min": 253.57,
+   "negotiated_max": 2174.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 380.98,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1742.83,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 355.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 664.4,
+     "methodology": "percent of total billed charges",
+     "median": 664.4
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 640.24,
+     "methodology": "percent of total billed charges",
+     "median": 640.24
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 1208.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT scan of chest with contrast",
+     "setting": "outpatient",
+     "gross": 3611.0
+    },
+    {
+     "description": "CT scan of chest with contrast",
+     "setting": "outpatient",
+     "gross": 3611.0
+    }
+   ]
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "CT scan of blood vessels of chest with contrast",
+   "setting": "outpatient",
+   "gross": 13044.0,
+   "discounted_cash": 13044.0,
+   "negotiated_min": 253.57,
+   "negotiated_max": 23479.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 497.4,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 2359.01,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 355.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 3000.0,
+     "methodology": "percent of total billed charges",
+     "median": 3000.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 5086.0,
+     "methodology": "percent of total billed charges",
+     "median": 5086.0
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 13044.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 253.572*1 ) Term Line 16 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "CT scan of blood vessels of chest with contrast",
+     "setting": "outpatient",
+     "gross": 4348.0
+    },
+    {
+     "description": "CT scan of blood vessels of chest with contrast",
+     "setting": "outpatient",
+     "gross": 4348.0
+    },
+    {
+     "description": "CT scan of blood vessels of chest with contrast",
+     "setting": "outpatient",
+     "gross": 4348.0
+    }
+   ]
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "CT scan of abdomen and pelvis without contrast",
+   "setting": "outpatient",
+   "gross": 5465.0,
+   "discounted_cash": 5465.0,
+   "negotiated_min": 256.82,
+   "negotiated_max": 9837.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 369.49,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 917.99,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 483.24,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 3000.0,
+     "methodology": "percent of total billed charges",
+     "median": 3000.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 2896.45,
+     "methodology": "percent of total billed charges",
+     "median": 2896.45
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 5465.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT scan of abdomen and pelvis without contrast",
+     "setting": "outpatient",
+     "gross": 5465.0
+    },
+    {
+     "description": "CT scan of abdomen and pelvis without contrast",
+     "setting": "outpatient",
+     "gross": 5465.0
+    }
+   ]
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "CT scan of abdomen and pelvis with contrast",
+   "setting": "outpatient",
+   "gross": 7223.0,
+   "discounted_cash": 7223.0,
+   "negotiated_min": 260.9,
+   "negotiated_max": 13001.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 554.79,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1752.29,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 706.58,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 3000.0,
+     "methodology": "percent of total billed charges",
+     "median": 3000.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 3828.19,
+     "methodology": "percent of total billed charges",
+     "median": 3828.19
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 7223.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Medicare Packaging Rules [HCPCS] ( 7223.00*1 ) Term Line 25 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "CT scan of abdomen and pelvis with contrast",
+     "setting": "outpatient",
+     "gross": 7223.0
+    },
+    {
+     "description": "CT scan of abdomen and pelvis with contrast",
+     "setting": "outpatient",
+     "gross": 7223.0
+    },
+    {
+     "description": "CT scan of abdomen and pelvis with contrast",
+     "setting": "outpatient",
+     "gross": 7223.0
+    }
+   ]
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "CT scan of abdomen and pelvis before and after contrast",
+   "setting": "outpatient",
+   "gross": 8063.0,
+   "discounted_cash": 8063.0,
+   "negotiated_min": 260.9,
+   "negotiated_max": 14513.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 613.61,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 2316.38,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 706.58,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 3000.0,
+     "methodology": "percent of total billed charges",
+     "median": 3000.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 4273.39,
+     "methodology": "percent of total billed charges",
+     "median": 4273.39
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 8063.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "CT scan of abdomen and pelvis before and after contrast",
+     "setting": "outpatient",
+     "gross": 8063.0
+    },
+    {
+     "description": "CT scan of abdomen and pelvis before and after contrast",
+     "setting": "outpatient",
+     "gross": 8063.0
+    },
+    {
+     "description": "CT scan of abdomen and pelvis before and after contrast",
+     "setting": "outpatient",
+     "gross": 8063.0
+    }
+   ]
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "MRI scan of brain without contrast",
+   "setting": "outpatient",
+   "gross": 5209.0,
+   "discounted_cash": 5209.0,
+   "negotiated_min": 260.9,
+   "negotiated_max": 9376.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 562.01,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1956.4,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 483.24,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 2864.95,
+     "methodology": "percent of total billed charges",
+     "median": 2864.95
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 2760.77,
+     "methodology": "percent of total billed charges",
+     "median": 2760.77
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "HP OF SAN MATEO MEDI-CAL",
+     "plan": "HP OF SAN MATEO MEDI-CAL",
+     "dollar": 540.06,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "MRI scan of lower spinal canal without contrast",
+   "setting": "outpatient",
+   "gross": 5209.0,
+   "discounted_cash": 5209.0,
+   "negotiated_min": 260.9,
+   "negotiated_max": 9376.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 501.01,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1956.4,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 483.24,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 2864.95,
+     "methodology": "percent of total billed charges",
+     "median": 2864.95
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 2760.77,
+     "methodology": "percent of total billed charges",
+     "median": 2760.77
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 5209.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "X-ray of lower and sacral spine, 2-3 views",
+   "setting": "outpatient",
+   "gross": 674.0,
+   "discounted_cash": 674.0,
+   "negotiated_min": 43.45,
+   "negotiated_max": 1213.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 159.45,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 202.24,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 370.7,
+     "methodology": "percent of total billed charges",
+     "median": 370.7
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 357.22,
+     "methodology": "percent of total billed charges",
+     "median": 357.22
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 43.45,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "X-ray of shoulder, minimum of 2 views",
+   "setting": "outpatient",
+   "gross": 1248.0,
+   "discounted_cash": 1248.0,
+   "negotiated_min": 37.09,
+   "negotiated_max": 2246.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 132.73,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 145.36,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 176.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 686.4,
+     "methodology": "percent of total billed charges",
+     "median": 686.4
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 661.44,
+     "methodology": "percent of total billed charges",
+     "median": 661.44
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "HP OF SAN MATEO MEDI-CAL",
+     "plan": "HP OF SAN MATEO MEDI-CAL",
+     "dollar": 45.63,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "X-ray of shoulder, minimum of 2 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    },
+    {
+     "description": "X-ray of shoulder, minimum of 2 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    }
+   ]
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "X-ray of wrist, minimum of 3 views",
+   "setting": "outpatient",
+   "gross": 1248.0,
+   "discounted_cash": 1248.0,
+   "negotiated_min": 36.06,
+   "negotiated_max": 2246.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 132.73,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 192.78,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 176.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 686.4,
+     "methodology": "percent of total billed charges",
+     "median": 686.4
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 661.44,
+     "methodology": "percent of total billed charges",
+     "median": 661.44
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "BLUE SHIELD MEDI-CAL",
+     "plan": "BLUE SHIELD MEDI-CAL",
+     "dollar": 48.68,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "X-ray of wrist, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    },
+    {
+     "description": "X-ray of wrist, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    }
+   ]
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "X-ray of ankle, minimum of 3 views",
+   "setting": "outpatient",
+   "gross": 1248.0,
+   "discounted_cash": 1248.0,
+   "negotiated_min": 36.06,
+   "negotiated_max": 2246.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 132.73,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 166.67,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 176.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 686.4,
+     "methodology": "percent of total billed charges",
+     "median": 686.4
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 661.44,
+     "methodology": "percent of total billed charges",
+     "median": 661.44
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MEDI-CAL OP ONLY",
+     "plan": "ASIAN MEDICAL GROUP MEDI-CAL OP ONLY",
+     "dollar": 50.49,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "X-ray of ankle, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 1248.0
+    },
+    {
+     "description": "X-ray of ankle, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    },
+    {
+     "description": "X-ray of ankle, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    }
+   ]
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "X-ray of foot, minimum of 3 views",
+   "setting": "outpatient",
+   "gross": 1248.0,
+   "discounted_cash": 1248.0,
+   "negotiated_min": 34.74,
+   "negotiated_max": 2246.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 132.73,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 161.94,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 176.25,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 686.4,
+     "methodology": "percent of total billed charges",
+     "median": 326.87
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 661.44,
+     "methodology": "percent of total billed charges",
+     "median": 661.44
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 34.74,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "X-ray of foot, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    },
+    {
+     "description": "X-ray of foot, minimum of 3 views",
+     "setting": "outpatient",
+     "gross": 624.0
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "Complete ultrasound scan of abdomen",
+   "setting": "outpatient",
+   "gross": 2319.0,
+   "discounted_cash": 2319.0,
+   "negotiated_min": 119.34,
+   "negotiated_max": 4174.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 166.67,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 669.15,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 1275.45,
+     "methodology": "percent of total billed charges",
+     "median": 644.605
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 1229.07,
+     "methodology": "percent of total billed charges",
+     "median": 1229.07
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 2319.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 151.138*1 ) Term Line 16 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "Limited ultrasound scan of abdomen",
+   "setting": "outpatient",
+   "gross": 1313.0,
+   "discounted_cash": 1313.0,
+   "negotiated_min": 87.13,
+   "negotiated_max": 2363.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 161.54,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 543.53,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 639.43,
+     "methodology": "percent of total billed charges",
+     "median": 639.43
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 722.15,
+     "methodology": "percent of total billed charges",
+     "median": 722.15
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 695.89,
+     "methodology": "percent of total billed charges",
+     "median": 695.89
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 87.13,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Limited ultrasound scan of abdomen",
+     "setting": "outpatient",
+     "gross": 1659.0
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "HCPCS",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "Complete ultrasound scan of pelvis",
+   "setting": "outpatient",
+   "gross": 1313.0,
+   "discounted_cash": 1313.0,
+   "negotiated_min": 97.04,
+   "negotiated_max": 2363.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 166.25,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 633.58,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 211.74,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 722.15,
+     "methodology": "percent of total billed charges",
+     "median": 722.15
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 695.89,
+     "methodology": "percent of total billed charges",
+     "median": 695.89
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 97.04,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Complete ultrasound scan of pelvis",
+     "setting": "outpatient",
+     "gross": 1313.0
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "Routine electrocardiogram (ECG) using at least 12 leads with tracing",
+   "setting": "outpatient",
+   "gross": 234.0,
+   "discounted_cash": 234.0,
+   "negotiated_min": 23.52,
+   "negotiated_max": 421.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 89.97,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 133.61,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 200.45
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 119.48,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 128.7,
+     "methodology": "percent of total billed charges",
+     "median": 17.34
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 124.02,
+     "methodology": "percent of total billed charges",
+     "median": 124.02
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 23.52,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 85.2833*1 ) Term Line 16 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Routine electrocardiogram (ECG) using at least 12 leads with tracing",
+     "setting": "outpatient",
+     "gross": 469.0
+    },
+    {
+     "description": "Routine electrocardiogram (ECG) using at least 12 leads with tracing",
+     "setting": "outpatient",
+     "gross": 469.0
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "HCPCS",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "Ultrasound of heart with color-depicted blood flow, rate, direction and valve function",
+   "setting": "outpatient",
+   "gross": 2980.0,
+   "discounted_cash": 2980.0,
+   "negotiated_min": 260.9,
+   "negotiated_max": 5364.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 793.88,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 1701.58,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 1490.0
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 1106.67,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 1639.0,
+     "methodology": "percent of total billed charges",
+     "median": 1639.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 1579.4,
+     "methodology": "percent of total billed charges",
+     "median": 1579.4
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 2980.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Ultrasound of heart with color-depicted blood flow, rate, direction and valve function",
+     "setting": "outpatient",
+     "gross": 2980.0
+    }
+   ]
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "Insertion of needle into vein for collection of blood sample",
+   "setting": "outpatient",
+   "gross": 41.0,
+   "discounted_cash": 41.0,
+   "negotiated_min": 9.34,
+   "negotiated_max": 5942.76,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 38.95,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 22.39,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 15.25
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 16.74,
+     "percentage": 40.82,
+     "methodology": "percent of total billed charges",
+     "median": 16.41
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 5942.76,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 22.55,
+     "methodology": "percent of total billed charges",
+     "median": 17.6
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 21.73,
+     "methodology": "percent of total billed charges",
+     "median": 21.73
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 41.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: One or more instances of the item or service in the 15 months prior to posting the file."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Insertion of needle into vein for collection of blood sample",
+     "setting": "outpatient",
+     "gross": 26.0
+    },
+    {
+     "description": "Insertion of needle into vein for collection of blood sample",
+     "setting": "outpatient",
+     "gross": 32.0
+    },
+    {
+     "description": "Insertion of needle into vein for collection of blood sample",
+     "setting": "outpatient",
+     "gross": 32.0
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "Blood test, basic group of blood chemicals (Calcium, total)",
+   "setting": "outpatient",
+   "gross": 132.0,
+   "discounted_cash": 132.0,
+   "negotiated_min": 8.46,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 13.0,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 43.58,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 11.17,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 72.6,
+     "methodology": "percent of total billed charges",
+     "median": 72.6
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 69.96,
+     "methodology": "percent of total billed charges",
+     "median": 69.96
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 132.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Fee Schedule – % Lab Medicare Term Line 58 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Blood test, basic group of blood chemicals (Calcium, total)",
+     "setting": "outpatient",
+     "gross": 132.0
+    },
+    {
+     "description": "Blood test, basic group of blood chemicals (Calcium, total)",
+     "setting": "outpatient",
+     "gross": 121.0
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "Blood test, comprehensive group of blood chemicals",
+   "setting": "outpatient",
+   "gross": 379.0,
+   "discounted_cash": 379.0,
+   "negotiated_min": 10.56,
+   "negotiated_max": 682.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.64,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 54.41,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 40.02,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 208.45,
+     "methodology": "percent of total billed charges",
+     "median": 176.23
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 200.87,
+     "methodology": "percent of total billed charges",
+     "median": 200.87
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 379.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Blood test, comprehensive group of blood chemicals",
+     "setting": "outpatient",
+     "gross": 50.0
+    },
+    {
+     "description": "Blood test, comprehensive group of blood chemicals",
+     "setting": "outpatient",
+     "gross": 35.0
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "Blood test, lipids (cholesterol and triglycerides)",
+   "setting": "outpatient",
+   "gross": 240.0,
+   "discounted_cash": 240.0,
+   "negotiated_min": 13.39,
+   "negotiated_max": 432.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 21.12,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 69.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 32.14,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 132.0,
+     "methodology": "percent of total billed charges",
+     "median": 101.75
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 127.2,
+     "methodology": "percent of total billed charges",
+     "median": 127.2
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 15.36,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "Blood test, lipids (cholesterol and triglycerides)",
+     "setting": "outpatient",
+     "gross": 14.0
+    },
+    {
+     "description": "Blood test, lipids (cholesterol and triglycerides)",
+     "setting": "outpatient",
+     "gross": 63.0
+    },
+    {
+     "description": "Blood test, lipids (cholesterol and triglycerides)",
+     "setting": "outpatient",
+     "gross": 115.0
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "Complete blood cell count (red cells, white blood cell, platelets), automated test and automated differential white blood cell count",
+   "setting": "outpatient",
+   "gross": 214.0,
+   "discounted_cash": 214.0,
+   "negotiated_min": 7.77,
+   "negotiated_max": 385.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.25,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 40.06,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 16.63,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 117.7,
+     "methodology": "percent of total billed charges",
+     "median": 82.905
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 113.42,
+     "methodology": "percent of total billed charges",
+     "median": 113.42
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "HP OF SAN MATEO MEDI-CAL",
+     "plan": "HP OF SAN MATEO MEDI-CAL",
+     "dollar": 10.96,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Complete blood cell count (red cells, white blood cell, platelets), automated test and automated differential white blood cell count",
+     "setting": "outpatient",
+     "gross": 37.0
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "Complete blood cell count (red cells, white blood cell, platelets), automated test",
+   "setting": "outpatient",
+   "gross": 214.0,
+   "discounted_cash": 214.0,
+   "negotiated_min": 6.47,
+   "negotiated_max": 385.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.2,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 33.33,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 13.85,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 117.7,
+     "methodology": "percent of total billed charges",
+     "median": 117.7
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 113.42,
+     "methodology": "percent of total billed charges",
+     "median": 113.42
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 7.42,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Complete blood cell count (red cells, white blood cell, platelets), automated test",
+     "setting": "outpatient",
+     "gross": 214.0
+    },
+    {
+     "description": "Complete blood cell count (red cells, white blood cell, platelets), automated test",
+     "setting": "outpatient",
+     "gross": 32.0
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "Blood test, clotting time",
+   "setting": "outpatient",
+   "gross": 31.0,
+   "discounted_cash": 31.0,
+   "negotiated_min": 1.33,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.59,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 20.25,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 1.33,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 17.05,
+     "methodology": "percent of total billed charges",
+     "median": 129.25
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 16.43,
+     "methodology": "percent of total billed charges",
+     "median": 16.43
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 31.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Blood test, clotting time",
+     "setting": "outpatient",
+     "gross": 51.0
+    },
+    {
+     "description": "Blood test, clotting time",
+     "setting": "outpatient",
+     "gross": 235.0
+    },
+    {
+     "description": "Blood test, clotting time",
+     "setting": "outpatient",
+     "gross": 31.0
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "Coagulation assessment blood test, plasma or whole blood",
+   "setting": "outpatient",
+   "gross": 259.0,
+   "discounted_cash": 259.0,
+   "negotiated_min": 6.01,
+   "negotiated_max": 466.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.46,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 30.94,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 15.57,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 142.45,
+     "methodology": "percent of total billed charges",
+     "median": 142.45
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 137.27,
+     "methodology": "percent of total billed charges",
+     "median": 137.27
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MEDI-CAL OP ONLY",
+     "plan": "ASIAN MEDICAL GROUP MEDI-CAL OP ONLY",
+     "dollar": 9.64,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Coagulation assessment blood test, plasma or whole blood",
+     "setting": "outpatient",
+     "gross": 115.0
+    },
+    {
+     "description": "Coagulation assessment blood test, plasma or whole blood",
+     "setting": "outpatient",
+     "gross": 31.0
+    },
+    {
+     "description": "Coagulation assessment blood test, plasma or whole blood",
+     "setting": "outpatient",
+     "gross": 72.0
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "Troponin (protein) analysis, quantitative",
+   "setting": "outpatient",
+   "gross": 778.0,
+   "discounted_cash": 778.0,
+   "negotiated_min": 12.15,
+   "negotiated_max": 1400.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.7,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 50.7,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 97.02,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 427.9,
+     "methodology": "percent of total billed charges",
+     "median": 427.9
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 412.34,
+     "methodology": "percent of total billed charges",
+     "median": 412.34
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 778.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Fee Schedule – % Lab Medicare Term Line 58 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Troponin (protein) analysis, quantitative",
+     "setting": "outpatient",
+     "gross": 324.0
+    },
+    {
+     "description": "Troponin (protein) analysis, quantitative",
+     "setting": "outpatient",
+     "gross": 60.0
+    },
+    {
+     "description": "Troponin (protein) analysis, quantitative",
+     "setting": "outpatient",
+     "gross": 324.0
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "Lipase (fat enzyme) level",
+   "setting": "outpatient",
+   "gross": 262.0,
+   "discounted_cash": 262.0,
+   "negotiated_min": 6.89,
+   "negotiated_max": 471.6,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.87,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 35.48,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 18.05,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 144.1,
+     "methodology": "percent of total billed charges",
+     "median": 144.1
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 138.86,
+     "methodology": "percent of total billed charges",
+     "median": 138.86
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 262.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Fee Schedule – % Lab Medicare Term Line 58 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Lipase (fat enzyme) level",
+     "setting": "outpatient",
+     "gross": 45.0
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "Natriuretic peptide (heart and blood vessel protein) level",
+   "setting": "outpatient",
+   "gross": 209.0,
+   "discounted_cash": 209.0,
+   "negotiated_min": 39.26,
+   "negotiated_max": 376.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 59.47,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 174.85,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 82.05,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 114.95,
+     "methodology": "percent of total billed charges",
+     "median": 114.95
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 110.77,
+     "methodology": "percent of total billed charges",
+     "median": 110.77
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 43.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Natriuretic peptide (heart and blood vessel protein) level",
+     "setting": "outpatient",
+     "gross": 133.0
+    },
+    {
+     "description": "Natriuretic peptide (heart and blood vessel protein) level",
+     "setting": "outpatient",
+     "gross": 588.0
+    },
+    {
+     "description": "Natriuretic peptide (heart and blood vessel protein) level",
+     "setting": "outpatient",
+     "gross": 291.0
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "Creatine kinase (cardiac enzyme) level, total",
+   "setting": "outpatient",
+   "gross": 41.0,
+   "discounted_cash": 41.0,
+   "negotiated_min": 2.67,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 10.0,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 33.57,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 2.67,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 22.55,
+     "methodology": "percent of total billed charges",
+     "median": 22.55
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 21.73,
+     "methodology": "percent of total billed charges",
+     "median": 21.73
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 7.46,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Creatine kinase (cardiac enzyme) level, total",
+     "setting": "outpatient",
+     "gross": 250.0
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "Blood test, thyroid stimulating hormone (TSH)",
+   "setting": "outpatient",
+   "gross": 91.0,
+   "discounted_cash": 91.0,
+   "negotiated_min": 15.29,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 25.84,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 86.52,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 15.29,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 50.05,
+     "methodology": "percent of total billed charges",
+     "median": 150.695
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 48.23,
+     "methodology": "percent of total billed charges",
+     "median": 48.23
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 19.28,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "Blood test, thyroid stimulating hormone (TSH)",
+     "setting": "outpatient",
+     "gross": 89.0
+    },
+    {
+     "description": "Blood test, thyroid stimulating hormone (TSH)",
+     "setting": "outpatient",
+     "gross": 86.0
+    },
+    {
+     "description": "Blood test, thyroid stimulating hormone (TSH)",
+     "setting": "outpatient",
+     "gross": 340.0
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "Hemoglobin A1C level",
+   "setting": "outpatient",
+   "gross": 45.0,
+   "discounted_cash": 45.0,
+   "negotiated_min": 4.37,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 14.91,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 50.02,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 4.37,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 24.75,
+     "methodology": "percent of total billed charges",
+     "median": 46.655
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 23.85,
+     "methodology": "percent of total billed charges",
+     "median": 23.85
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "HP OF SAN MATEO MEDI-CAL",
+     "plan": "HP OF SAN MATEO MEDI-CAL",
+     "dollar": 13.69,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Fee Schedule – % Lab Medicare Term Line 58 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Hemoglobin A1C level",
+     "setting": "outpatient",
+     "gross": 116.0
+    },
+    {
+     "description": "Hemoglobin A1C level",
+     "setting": "outpatient",
+     "gross": 122.0
+    },
+    {
+     "description": "Hemoglobin A1C level",
+     "setting": "outpatient",
+     "gross": 129.0
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "Manual urinalysis test with examination using microscope, automated",
+   "setting": "outpatient",
+   "gross": 39.0,
+   "discounted_cash": 39.0,
+   "negotiated_min": 1.24,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4.87,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 16.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 1.24,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 21.45,
+     "methodology": "percent of total billed charges",
+     "median": 86.325
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 20.67,
+     "methodology": "percent of total billed charges",
+     "median": 20.67
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 3.63,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Manual urinalysis test with examination using microscope, automated",
+     "setting": "outpatient",
+     "gross": 183.0
+    },
+    {
+     "description": "Manual urinalysis test with examination using microscope, automated",
+     "setting": "outpatient",
+     "gross": 39.0
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "Automated urinalysis test",
+   "setting": "outpatient",
+   "gross": 110.0,
+   "discounted_cash": 110.0,
+   "negotiated_min": 2.25,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3.46,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 11.57,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 2.48,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 60.5,
+     "methodology": "percent of total billed charges",
+     "median": 52.44
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 58.3,
+     "methodology": "percent of total billed charges",
+     "median": 58.3
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 110.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "Automated urinalysis test",
+     "setting": "outpatient",
+     "gross": 31.0
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "Urine pregnancy test",
+   "setting": "outpatient",
+   "gross": 125.0,
+   "discounted_cash": 125.0,
+   "negotiated_min": 4.02,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.09,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 28.4,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 10.76,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 68.75,
+     "methodology": "percent of total billed charges",
+     "median": 3.92
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 66.25,
+     "methodology": "percent of total billed charges",
+     "median": 66.25
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 125.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Urine pregnancy test",
+     "setting": "outpatient",
+     "gross": 125.0
+    },
+    {
+     "description": "Urine pregnancy test",
+     "setting": "outpatient",
+     "gross": 75.0
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "Bacterial colony count, urine",
+   "setting": "outpatient",
+   "gross": 28.0,
+   "discounted_cash": 28.0,
+   "negotiated_min": 2.26,
+   "negotiated_max": 260.9,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.4,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 41.58,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 2.26,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 15.4,
+     "methodology": "percent of total billed charges",
+     "median": 15.4
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 14.84,
+     "methodology": "percent of total billed charges",
+     "median": 14.84
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 9.25,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Bacterial colony count, urine",
+     "setting": "outpatient",
+     "gross": 227.0
+    },
+    {
+     "description": "Bacterial colony count, urine",
+     "setting": "outpatient",
+     "gross": 157.0
+    },
+    {
+     "description": "Bacterial colony count, urine",
+     "setting": "outpatient",
+     "gross": 84.0
+    }
+   ]
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "Bacterial blood culture",
+   "setting": "outpatient",
+   "gross": 315.0,
+   "discounted_cash": 315.0,
+   "negotiated_min": 10.32,
+   "negotiated_max": 567.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 16.27,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 53.19,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 32.51,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 173.25,
+     "methodology": "percent of total billed charges",
+     "median": 173.25
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 166.95,
+     "methodology": "percent of total billed charges",
+     "median": 166.95
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "BLUE SHIELD MEDI-CAL",
+     "plan": "BLUE SHIELD MEDI-CAL",
+     "dollar": 15.98,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "HCPCS",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "Amplifed DNA or RNA probe detection of severe acute respiratory syndrome coronavirus 2 (Covid-19) antigen",
+   "setting": "outpatient",
+   "gross": 441.0,
+   "discounted_cash": 441.0,
+   "negotiated_min": 51.31,
+   "negotiated_max": 793.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 101.2,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 250.39,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 226.28,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 260.9,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 242.55,
+     "methodology": "percent of total billed charges",
+     "median": 242.55
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 233.73,
+     "methodology": "percent of total billed charges",
+     "median": 233.73
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 441.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Fee Schedule – % Lab Medicare Term Line 58 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "Amplifed DNA or RNA probe detection of severe acute respiratory syndrome coronavirus 2 (Covid-19) antigen",
+     "setting": "outpatient",
+     "gross": 522.0
+    },
+    {
+     "description": "Amplifed DNA or RNA probe detection of severe acute respiratory syndrome coronavirus 2 (Covid-19) antigen",
+     "setting": "outpatient",
+     "gross": 522.0
+    },
+    {
+     "description": "Amplifed DNA or RNA probe detection of severe acute respiratory syndrome coronavirus 2 (Covid-19) antigen",
+     "setting": "outpatient",
+     "gross": 270.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "Infusion into a vein for hydration, 31-60 minutes",
+   "setting": "outpatient",
+   "gross": 1121.0,
+   "discounted_cash": 1121.0,
+   "negotiated_min": 73.58,
+   "negotiated_max": 2017.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 324.41,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 640.09,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 467.74
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 430.8,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 593.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 616.55,
+     "methodology": "percent of total billed charges",
+     "median": 616.55
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 594.13,
+     "methodology": "percent of total billed charges",
+     "median": 594.13
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 1121.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 307.498*1 ) Term Line 16 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Infusion into a vein for hydration, 31-60 minutes",
+     "setting": "both",
+     "gross": 1121.0
+    },
+    {
+     "description": "Infusion into a vein for hydration, 31-60 minutes",
+     "setting": "both",
+     "gross": 822.0
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "Infusion into a vein for hydration, each additional hour",
+   "setting": "outpatient",
+   "gross": 339.0,
+   "discounted_cash": 339.0,
+   "negotiated_min": 20.94,
+   "negotiated_max": 610.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 71.41,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 193.57,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 67.75
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 94.83,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 593.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 186.45,
+     "methodology": "percent of total billed charges",
+     "median": 186.45
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 179.67,
+     "methodology": "percent of total billed charges",
+     "median": 179.67
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 20.94,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: One or more instances of the item or service in the 15 months prior to posting the file."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Infusion into a vein for hydration, each additional hour",
+     "setting": "both",
+     "gross": 339.0
+    },
+    {
+     "description": "Infusion into a vein for hydration, each additional hour",
+     "setting": "both",
+     "gross": 255.0
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "Infusion into a vein for therapy, prevention, or diagnosis, 1 hour or less",
+   "setting": "outpatient",
+   "gross": 1121.0,
+   "discounted_cash": 1121.0,
+   "negotiated_min": 89.79,
+   "negotiated_max": 2017.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 324.41,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 640.09,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 640.09
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 430.8,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 593.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 616.55,
+     "methodology": "percent of total billed charges",
+     "median": 616.55
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 594.13,
+     "methodology": "percent of total billed charges",
+     "median": 594.13
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 89.79,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Infusion into a vein for therapy, prevention, or diagnosis, 1 hour or less",
+     "setting": "both",
+     "gross": 1121.0
+    },
+    {
+     "description": "Infusion into a vein for therapy, prevention, or diagnosis, 1 hour or less",
+     "setting": "both",
+     "gross": 822.0
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "Infusion into a vein for therapy, prevention, or diagnosis, each additional hour",
+   "setting": "outpatient",
+   "gross": 560.0,
+   "discounted_cash": 560.0,
+   "negotiated_min": 27.64,
+   "negotiated_max": 1008.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 71.41,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 319.76,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 319.76
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 94.83,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 593.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 308.0,
+     "methodology": "percent of total billed charges",
+     "median": 308.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 296.8,
+     "methodology": "percent of total billed charges",
+     "median": 296.8
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 27.64,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Infusion into a vein for therapy, prevention, or diagnosis, each additional hour",
+     "setting": "both",
+     "gross": 560.0
+    },
+    {
+     "description": "Infusion into a vein for therapy, prevention, or diagnosis, each additional hour",
+     "setting": "both",
+     "gross": 255.0
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "Injection of drug or substance under skin or into muscle",
+   "setting": "outpatient",
+   "gross": 938.0,
+   "discounted_cash": 938.0,
+   "negotiated_min": 26.9,
+   "negotiated_max": 1688.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 109.81,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 535.6,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 535.6
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 145.83,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 456.81,
+     "methodology": "percent of total billed charges",
+     "median": 103.58
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 515.9,
+     "methodology": "percent of total billed charges",
+     "median": 515.9
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 497.14,
+     "methodology": "percent of total billed charges",
+     "median": 497.14
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 26.9,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Injection of drug or substance under skin or into muscle",
+     "setting": "both",
+     "gross": 936.0
+    },
+    {
+     "description": "Injection of drug or substance under skin or into muscle",
+     "setting": "both",
+     "gross": 331.0
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "Injection of drug or substance into vein",
+   "setting": "outpatient",
+   "gross": 1121.0,
+   "discounted_cash": 1121.0,
+   "negotiated_min": 71.46,
+   "negotiated_max": 2017.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 324.41,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 640.09,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 618.76
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 430.8,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 545.93,
+     "methodology": "percent of total billed charges",
+     "median": 306.0
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 616.55,
+     "methodology": "percent of total billed charges",
+     "median": 616.55
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 594.13,
+     "methodology": "percent of total billed charges",
+     "median": 594.13
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 1121.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Medicare Packaging Rules [HCPCS] ( 1121.00*1 ) Term Line 25 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Injection of drug or substance into vein",
+     "setting": "both",
+     "gross": 1121.0
+    },
+    {
+     "description": "Injection of drug or substance into vein",
+     "setting": "both",
+     "gross": 822.0
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "HCPCS",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "Injection of additional new drug or substance into vein",
+   "setting": "outpatient",
+   "gross": 356.0,
+   "discounted_cash": 356.0,
+   "negotiated_min": 30.54,
+   "negotiated_max": 640.8,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 71.41,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 203.28,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 67.75
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 94.83,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 173.37,
+     "methodology": "percent of total billed charges",
+     "median": 79.24
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 195.8,
+     "methodology": "percent of total billed charges",
+     "median": 195.8
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 188.68,
+     "methodology": "percent of total billed charges",
+     "median": 188.68
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 30.54,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: One or more instances of the item or service in the 15 months prior to posting the file."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "Injection of additional new drug or substance into vein",
+     "setting": "both",
+     "gross": 227.0
+    },
+    {
+     "description": "Injection of additional new drug or substance into vein",
+     "setting": "both",
+     "gross": 255.0
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "INJECTION, ONDANSETRON HYDROCHLORIDE, PER 1 MG",
+   "setting": "outpatient",
+   "gross": 44.63,
+   "discounted_cash": 44.63,
+   "negotiated_min": 21.74,
+   "negotiated_max": 80.34,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 44.63,
+   "payer_rates": 19,
+   "payer_dollar_rates": 19,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 25.48,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 22.5
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 72.06,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 21.74,
+     "methodology": "percent of total billed charges",
+     "median": 21.74
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 24.55,
+     "methodology": "percent of total billed charges",
+     "median": 24.55
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 23.65,
+     "methodology": "percent of total billed charges",
+     "median": 23.65
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 44.63,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 4.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 4 ME as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: One or more instances of the item or service in the 15 months prior to posting the file."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "INJECTION, ONDANSETRON HYDROCHLORIDE, PER 1 MG",
+     "setting": "outpatient",
+     "gross": 45.0,
+     "drug_unit": 4.0
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "INJECTION, KETOROLAC TROMETHAMINE, PER 15 MG",
+   "setting": "outpatient",
+   "gross": 73.0,
+   "discounted_cash": 73.0,
+   "negotiated_min": 0.4,
+   "negotiated_max": 131.4,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 9.57,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 41.68,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 22.5
+    },
+    {
+     "family": "Anthem Blue Cross (Medicare plan)",
+     "payer": "ANTHEM MCR ADV",
+     "plan": "ANTHEM MCR ADV",
+     "dollar": 0.41,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 35.55,
+     "methodology": "percent of total billed charges",
+     "median": 8.59
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 40.15,
+     "methodology": "percent of total billed charges",
+     "median": 11.7
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 38.69,
+     "methodology": "percent of total billed charges",
+     "median": 38.69
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 73.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ketorolac (Toradol) injection, per 15 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Medicare Packaging Rules [HCPCS] ( 73.00*1 ) Term Line 25 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "INJECTION, KETOROLAC TROMETHAMINE, PER 15 MG",
+     "setting": "outpatient",
+     "gross": 43.57,
+     "drug_unit": 15.0
+    },
+    {
+     "description": "INJECTION, KETOROLAC TROMETHAMINE, PER 15 MG",
+     "setting": "outpatient",
+     "gross": 44.0,
+     "drug_unit": 30.0
+    },
+    {
+     "description": "INJECTION, KETOROLAC TROMETHAMINE, PER 15 MG",
+     "setting": "outpatient",
+     "gross": 43.5,
+     "drug_unit": 15.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "INJECTION, DEXAMETHASONE SODIUM PHOSPHATE, 1 MG",
+   "setting": "outpatient",
+   "gross": 29.0,
+   "discounted_cash": 29.0,
+   "negotiated_min": 14.12,
+   "negotiated_max": 52.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 29.0,
+   "payer_rates": 19,
+   "payer_dollar_rates": 19,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 16.56,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 16.56
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 46.82,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 14.12,
+     "methodology": "percent of total billed charges",
+     "median": 14.12
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 15.95,
+     "methodology": "percent of total billed charges",
+     "median": 15.95
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 15.37,
+     "methodology": "percent of total billed charges",
+     "median": 15.37
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 29.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Dexamethasone injection, per 1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "INJECTION, DEXAMETHASONE SODIUM PHOSPHATE, 1 MG",
+     "setting": "outpatient",
+     "gross": 9.87,
+     "drug_unit": 4.0
+    },
+    {
+     "description": "INJECTION, DEXAMETHASONE SODIUM PHOSPHATE, 1 MG",
+     "setting": "outpatient",
+     "gross": 65.25,
+     "drug_unit": 20.0
+    },
+    {
+     "description": "INJECTION, DEXAMETHASONE SODIUM PHOSPHATE, 1 MG",
+     "setting": "outpatient",
+     "gross": 45.0,
+     "drug_unit": 10.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "INJECTION, MORPHINE SULFATE, UP TO 10 MG",
+   "setting": "outpatient",
+   "gross": 1.22,
+   "discounted_cash": 1.22,
+   "negotiated_min": 0.6,
+   "negotiated_max": 2.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1.22,
+   "payer_rates": 19,
+   "payer_dollar_rates": 19,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 0.7,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 0.7
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 1.98,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 0.6,
+     "methodology": "percent of total billed charges",
+     "median": 0.6
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 0.67,
+     "methodology": "percent of total billed charges",
+     "median": 0.67
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 0.65,
+     "methodology": "percent of total billed charges",
+     "median": 0.65
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 1.22,
+     "methodology": "fee schedule"
+    }
+   ],
+   "drug_unit": 10.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 10 ME as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "INJECTION, MORPHINE SULFATE, UP TO 10 MG",
+     "setting": "outpatient",
+     "gross": 23.33,
+     "drug_unit": 20.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "INJECTION, FENTANYL CITRATE, 0.1 MG",
+   "setting": "outpatient",
+   "gross": 29.39,
+   "discounted_cash": 29.39,
+   "negotiated_min": 14.31,
+   "negotiated_max": 52.89,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 29.39,
+   "payer_rates": 19,
+   "payer_dollar_rates": 19,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 16.78,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 92.2
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 47.45,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 14.31,
+     "methodology": "percent of total billed charges",
+     "median": 14.31
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 16.16,
+     "methodology": "percent of total billed charges",
+     "median": 26.57
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 15.57,
+     "methodology": "percent of total billed charges",
+     "median": 15.57
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 29.39,
+     "methodology": "other"
+    }
+   ],
+   "drug_unit": 0.1,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 0.1 ME as listed; compare billed units with the HCPCS unit (Fentanyl injection, per 0.1 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: One or more instances of the item or service in the 15 months prior to posting the file."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "INJECTION, FENTANYL CITRATE, 0.1 MG",
+     "setting": "outpatient",
+     "gross": 31.45,
+     "drug_unit": 0.1
+    },
+    {
+     "description": "INJECTION, FENTANYL CITRATE, 0.1 MG",
+     "setting": "outpatient",
+     "gross": 36.78,
+     "drug_unit": 0.25
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "INJECTION, CEFTRIAXONE SODIUM, PER 250 MG",
+   "setting": "outpatient",
+   "gross": 15.0,
+   "discounted_cash": 15.0,
+   "negotiated_min": 6.12,
+   "negotiated_max": 27.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 15.0,
+   "payer_rates": 18,
+   "payer_dollar_rates": 18,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 8.57,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 8.57
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 6.12,
+     "percentage": 40.82,
+     "methodology": "percent of total billed charges",
+     "median": 6.12
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 7.31,
+     "methodology": "percent of total billed charges",
+     "median": 9.37
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 8.25,
+     "methodology": "percent of total billed charges",
+     "median": 8.25
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 7.95,
+     "methodology": "percent of total billed charges",
+     "median": 7.95
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 15.0,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Ceftriaxone injection, per 250 mg).",
+    "Discounted cash price equals the gross charge in this file.",
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "INJECTION, CEFTRIAXONE SODIUM, PER 250 MG",
+     "setting": "outpatient",
+     "gross": 24.91
+    },
+    {
+     "description": "INJECTION, CEFTRIAXONE SODIUM, PER 250 MG",
+     "setting": "outpatient",
+     "gross": 28.43
+    },
+    {
+     "description": "INJECTION, CEFTRIAXONE SODIUM, PER 250 MG",
+     "setting": "outpatient",
+     "gross": 88.7,
+     "drug_unit": 500.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "Simple repair of surface wound of scalp, neck, underarms, trunk, arms, or legs, 2.5 cm or less",
+   "setting": "both",
+   "gross": 740.0,
+   "discounted_cash": 740.0,
+   "negotiated_min": 100.39,
+   "negotiated_max": 2356.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 306.0,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 2356.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 406.35,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 742.85,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 407.0,
+     "methodology": "percent of total billed charges",
+     "median": 407.0
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 392.2,
+     "methodology": "percent of total billed charges",
+     "median": 392.2
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 100.39,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "Simple or single drainage of skin abscess",
+   "setting": "both",
+   "gross": 997.0,
+   "discounted_cash": 997.0,
+   "negotiated_min": 60.88,
+   "negotiated_max": 2356.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 306.0,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 2356.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 406.35,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 742.85,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 548.35,
+     "methodology": "percent of total billed charges",
+     "median": 548.35
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 528.41,
+     "methodology": "percent of total billed charges",
+     "median": 528.41
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "plan": "ASIAN MEDICAL GROUP MCARE OP ONLY-ALL OTHER PLANS",
+     "dollar": 997.0,
+     "methodology": "other"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "Application of nonmoveable forearm to hand splint",
+   "setting": "both",
+   "gross": 505.0,
+   "discounted_cash": 505.0,
+   "negotiated_min": 52.87,
+   "negotiated_max": 909.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 202.93,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 252.5,
+     "methodology": "percent of total billed charges",
+     "median": 252.5
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 269.47,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 742.85,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 277.75,
+     "methodology": "percent of total billed charges",
+     "median": 277.75
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 267.65,
+     "methodology": "percent of total billed charges",
+     "median": 267.65
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "HP OF SAN MATEO MEDI-CAL",
+     "plan": "HP OF SAN MATEO MEDI-CAL",
+     "dollar": 65.03,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: Medicare OPPS Percent [HCPCS] ( 192.344*1 ) Term Line 31 | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "Inhalation treatment for airway obstruction or sputum production",
+   "setting": "outpatient",
+   "gross": 1149.0,
+   "discounted_cash": 1149.0,
+   "negotiated_min": 16.78,
+   "negotiated_max": 2068.2,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 318.15,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 656.08,
+     "percentage": 57.1,
+     "methodology": "percent of total billed charges",
+     "median": 20.14
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 443.5,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 96.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 631.95,
+     "methodology": "percent of total billed charges",
+     "median": 631.95
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 608.97,
+     "methodology": "percent of total billed charges",
+     "median": 608.97
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "HP OF SAN MATEO MEDI-CAL",
+     "plan": "HP OF SAN MATEO MEDI-CAL",
+     "dollar": 20.64,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "13 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line.",
+    "File note: APC - Weight * Conv Factor [HCPCS] | There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 13,
+   "variants": [
+    {
+     "description": "Inhalation treatment for airway obstruction or sputum production",
+     "setting": "outpatient",
+     "gross": 1149.0
+    },
+    {
+     "description": "Inhalation treatment for airway obstruction or sputum production",
+     "setting": "outpatient",
+     "gross": 1149.0
+    },
+    {
+     "description": "Inhalation treatment for airway obstruction or sputum production",
+     "setting": "outpatient",
+     "gross": 1149.0
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "HCPCS",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "Simple insertion of temporary bladder tube",
+   "setting": "both",
+   "gross": 505.0,
+   "discounted_cash": 505.0,
+   "negotiated_min": 99.46,
+   "negotiated_max": 5942.76,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 202.93,
+   "payer_rates": 24,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "AETNA - ALL OTHER PLANS",
+     "plan": "AETNA - ALL OTHER PLANS",
+     "dollar": 2356.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "plan": "ANTHEM BLUE CROSS - ALL OTHER PLANS",
+     "dollar": 269.47,
+     "methodology": "other"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "BLUE SHIELD - ALL OTHER PLANS",
+     "plan": "BLUE SHIELD - ALL OTHER PLANS",
+     "dollar": 5942.76,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Cigna",
+     "payer": "CIGNA-ALL PLANS",
+     "plan": "CIGNA-ALL PLANS",
+     "dollar": 277.75,
+     "methodology": "percent of total billed charges",
+     "median": 277.75
+    },
+    {
+     "family": "Health Net",
+     "payer": "HEALTH NET-ALL PLANS",
+     "plan": "HEALTH NET-ALL PLANS",
+     "dollar": 267.65,
+     "methodology": "percent of total billed charges",
+     "median": 267.65
+    },
+    {
+     "family": "Medi-Cal",
+     "payer": "ANTHEM MEDI-CAL",
+     "plan": "ANTHEM MEDI-CAL",
+     "dollar": 99.46,
+     "methodology": "fee schedule"
+    }
+   ],
+   "notes": [
+    "Discounted cash price equals the gross charge in this file.",
+    "File note: There were zero instances of the item or service in the 15 months prior to posting the file"
+   ],
+   "line_items": 1
+  }
+ }
+}

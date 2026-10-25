@@ -1,0 +1,5847 @@
+{
+ "hospital_id": "marinhealth",
+ "hospital_name": "MarinHealth Medical Center",
+ "location_name": "MarinHealth Medical Center|MarinHealth Medical Center",
+ "hospital_address": "250 Bon Air Rd,Greenbrae,CA,94904",
+ "last_updated_on": "3/26/2026",
+ "template_version": "3.0.0",
+ "layout": "csv-wide",
+ "source": {
+  "cms_hpt_url": "https://www.mymarinhealth.org/cms-hpt.txt",
+  "cms_hpt_via": "brightdata-unlocker",
+  "hpt_location_name": "MarinHealth Medical Center",
+  "source_page_url": "https://www.cdmpricing.com/cc145ba21e574ef7da4a1ed8325d54f9",
+  "file_url": "https://apim.services.craneware.com/api-pricing-transparency/api/public/cc145ba21e574ef7da4a1ed8325d54f9/charges/mrf",
+  "via": "https",
+  "fetched_at": "2026-10-25T04:05:47+00:00",
+  "sha256": "1fbaa01a7f6ea2aaad2cd79ad655b5254c5e671462179ab8f6743f3a2ac80990",
+  "bytes": 127355707
+ },
+ "codes_requested": 67,
+ "codes_found": 67,
+ "missing_codes": [],
+ "prices": {
+  "99281": {
+   "code": "99281",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 1 (minimal)",
+   "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF MILD SEVERITY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 877.0,
+   "discounted_cash": 526.2,
+   "negotiated_min": 119.01,
+   "negotiated_max": 3326.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 784.28,
+   "payer_rates": 42,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 900.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 3326.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 812.96,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 1640.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 309.43,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "EMR DPT VST MAYX REQ PHY/QHP",
+     "setting": "outpatient",
+     "gross": 931.81
+    },
+    {
+     "description": "EMR DPT VST MAYX REQ PHY/QHP",
+     "setting": "outpatient",
+     "gross": 2021.42
+    },
+    {
+     "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF MILD SEVERITY",
+     "setting": "outpatient",
+     "gross": 877.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99282": {
+   "code": "99282",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 2 (low)",
+   "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF MILD TO MODERATE SEVERITY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1802.0,
+   "discounted_cash": 1081.2,
+   "negotiated_min": 216.72,
+   "negotiated_max": 3326.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1246.14,
+   "payer_rates": 42,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 900.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 3326.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1480.41,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 3007.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 563.47,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "EMERGENCY DEPT VISIT SF MDM",
+     "setting": "outpatient",
+     "gross": 1914.63
+    },
+    {
+     "description": "EMERGENCY DEPT VISIT SF MDM",
+     "setting": "outpatient",
+     "gross": 3952.74
+    },
+    {
+     "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF MILD TO MODERATE SEVERITY",
+     "setting": "outpatient",
+     "gross": 1802.0,
+     "modifiers": "25_27"
+    }
+   ]
+  },
+  "99283": {
+   "code": "99283",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 3 (moderate)",
+   "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF MODERATE SEVERITY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 3357.0,
+   "discounted_cash": 2014.2,
+   "negotiated_min": 385.29,
+   "negotiated_max": 9293.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 2820.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 721.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2631.92,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 9293.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 1001.75,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "EMERGENCY DEPT VISIT LOW MDM",
+     "setting": "outpatient",
+     "gross": 3558.42
+    },
+    {
+     "description": "EMERGENCY DEPT VISIT LOW MDM",
+     "setting": "outpatient",
+     "gross": 4968.22
+    },
+    {
+     "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF MODERATE SEVERITY",
+     "setting": "outpatient",
+     "gross": 3357.0,
+     "modifiers": "25_27"
+    }
+   ]
+  },
+  "99284": {
+   "code": "99284",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 4 (high-moderate)",
+   "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF HIGH SEVERITY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5627.0,
+   "discounted_cash": 3376.2,
+   "negotiated_min": 588.94,
+   "negotiated_max": 9293.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3493.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 7165.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 721.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 4023.05,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 9293.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 1531.24,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "EMERGENCY DEPT VISIT MOD MDM",
+     "setting": "outpatient",
+     "gross": 11211.62
+    },
+    {
+     "description": "EMERGENCY DEPT VISIT MOD MDM",
+     "setting": "outpatient",
+     "gross": 5964.62
+    },
+    {
+     "description": "EMERGENCY DEPARTMENT VISIT FOR PROBLEM OF HIGH SEVERITY",
+     "setting": "outpatient",
+     "gross": 5627.0,
+     "modifiers": "25_27"
+    }
+   ]
+  },
+  "99285": {
+   "code": "99285",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "ED visit, level 5 (high)",
+   "description": "EMERGENCY DEPARTMENT VISIT FOR LIFE THREATENING OR FUNCTIONING SEVERITY",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8738.0,
+   "discounted_cash": 5242.8,
+   "negotiated_min": 721.0,
+   "negotiated_max": 9293.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4833.22,
+   "payer_rates": 42,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 8105.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 721.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 5741.87,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 9293.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 2185.46,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "EMERGENCY DEPT VISIT HI MDM",
+     "setting": "outpatient",
+     "gross": 9284.13
+    },
+    {
+     "description": "EMERGENCY DEPT VISIT HI MDM",
+     "setting": "outpatient",
+     "gross": 12771.94
+    },
+    {
+     "description": "EMERGENCY DEPARTMENT VISIT FOR LIFE THREATENING OR FUNCTIONING SEVERITY",
+     "setting": "outpatient",
+     "gross": 8738.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "99291": {
+   "code": "99291",
+   "code_type": "CPT",
+   "category": "ed",
+   "common_name": "Critical care, first 30-74 minutes",
+   "description": "CRITICAL CARE; FIRST 30-74 MINUTES",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 15321.0,
+   "discounted_cash": 9192.6,
+   "negotiated_min": 721.0,
+   "negotiated_max": 7964.19,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 4079.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 21,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 721.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 7964.19,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 8590.49,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 3031.31,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "CRITICAL CARE; FIRST 30-74 MINUTES",
+     "setting": "outpatient",
+     "gross": 27804.0
+    },
+    {
+     "description": "CRITICAL CARE FIRST HOUR",
+     "setting": "outpatient",
+     "gross": 16240.26
+    },
+    {
+     "description": "CRITICAL CARE; FIRST 30-74 MINUTES",
+     "setting": "outpatient",
+     "gross": 15321.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "71045": {
+   "code": "71045",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 1 view",
+   "description": "X-RAY OF CHEST; 1 VIEW",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 673.0,
+   "discounted_cash": 403.8,
+   "negotiated_min": 19.4,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.55,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 76.38,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 19.4,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 839.12,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 381.32,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 319.38,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "X-RAY EXAM CHEST 1 VIEW",
+     "setting": "outpatient",
+     "gross": 715.06
+    },
+    {
+     "description": "X-RAY OF CHEST; 1 VIEW",
+     "setting": "outpatient",
+     "gross": 673.0,
+     "modifiers": "76_XU"
+    },
+    {
+     "description": "X-RAY OF CHEST; 1 VIEW",
+     "setting": "outpatient",
+     "gross": 673.0,
+     "modifiers": "91"
+    }
+   ]
+  },
+  "71046": {
+   "code": "71046",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Chest X-ray, 2 views",
+   "description": "X-RAY OF CHEST; 2 VIEWS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 836.0,
+   "discounted_cash": 501.6,
+   "negotiated_min": 35.87,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.55,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 141.44,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 35.87,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 839.12,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 381.32,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 319.38,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "X-RAY EXAM CHEST 2 VIEWS",
+     "setting": "outpatient",
+     "gross": 886.16
+    },
+    {
+     "description": "X-RAY OF CHEST; 2 VIEWS",
+     "setting": "outpatient",
+     "gross": 836.0,
+     "modifiers": "TC"
+    },
+    {
+     "description": "X-RAY OF CHEST; 2 VIEWS",
+     "setting": "outpatient",
+     "gross": 836.0,
+     "modifiers": "PO"
+    }
+   ]
+  },
+  "70450": {
+   "code": "70450",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT head/brain without contrast",
+   "description": "CT SCAN HEAD OR BRAIN WITHOUT CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6630.0,
+   "discounted_cash": 3978.0,
+   "negotiated_min": 147.56,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 848.47,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1203.8,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 199.1,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "CT HEAD/BRAIN W/O DYE",
+     "setting": "outpatient",
+     "gross": 7027.8
+    },
+    {
+     "description": "CT SCAN HEAD OR BRAIN WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 6630.0,
+     "modifiers": "GZ"
+    },
+    {
+     "description": "CT SCAN HEAD OR BRAIN WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 6630.0,
+     "modifiers": "ET"
+    }
+   ]
+  },
+  "72125": {
+   "code": "72125",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT cervical spine without contrast",
+   "description": "CT SCAN OF UPPER SPINE WITHOUT CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 7130.0,
+   "discounted_cash": 4278.0,
+   "negotiated_min": 147.56,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 848.47,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1504.49,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 249.15,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT SCAN OF UPPER SPINE WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 7130.0,
+     "modifiers": "GZ"
+    },
+    {
+     "description": "CT SCAN OF UPPER SPINE WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 7130.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "71250": {
+   "code": "71250",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest without contrast",
+   "description": "CT SCAN OF CHEST WITHOUT CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 5579.0,
+   "discounted_cash": 3347.4,
+   "negotiated_min": 147.56,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 848.47,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1504.49,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 249.15,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "CT THORAX DX C-",
+     "setting": "outpatient",
+     "gross": 5913.74
+    },
+    {
+     "description": "CT SCAN OF CHEST WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 5579.0,
+     "modifiers": "TC"
+    },
+    {
+     "description": "CT SCAN OF CHEST WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 5579.0,
+     "modifiers": "XU"
+    }
+   ]
+  },
+  "71260": {
+   "code": "71260",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT chest with contrast",
+   "description": "CT SCAN OF CHEST WITH CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6829.0,
+   "discounted_cash": 4097.4,
+   "negotiated_min": 247.57,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1423.53,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1939.8,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 297.98,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1691.15,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 643.68,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT SCAN OF CHEST WITH CONTRAST",
+     "setting": "outpatient",
+     "gross": 6829.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "CT SCAN OF CHEST WITH CONTRAST",
+     "setting": "outpatient",
+     "gross": 6829.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "71275": {
+   "code": "71275",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT angiography, chest (e.g. pulmonary embolism)",
+   "description": "CT SCAN OF BLOOD VESSELS OF CHEST WITH CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 9377.0,
+   "discounted_cash": 5626.2,
+   "negotiated_min": 247.57,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1423.53,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 2625.61,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 379.48,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1691.15,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 643.68,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT SCAN OF BLOOD VESSELS OF CHEST WITH CONTRAST",
+     "setting": "outpatient",
+     "gross": 9377.0,
+     "modifiers": "XU"
+    },
+    {
+     "description": "CT SCAN OF BLOOD VESSELS OF CHEST WITH CONTRAST",
+     "setting": "outpatient",
+     "gross": 9377.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "74176": {
+   "code": "74176",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without contrast",
+   "description": "CT SCAN OF ABDOMEN AND PELVIS WITHOUT CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8874.0,
+   "discounted_cash": 5324.4,
+   "negotiated_min": 161.7,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1768.05,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1021.74,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 161.7,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2300.48,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 875.6,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8874.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8874.0,
+     "modifiers": "TC_XU"
+    },
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8874.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "74177": {
+   "code": "74177",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis with contrast",
+   "description": "CT SCAN OF ABDOMEN AND PELVIS WITH CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 9147.0,
+   "discounted_cash": 5488.2,
+   "negotiated_min": 308.55,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2334.5,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1950.32,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 308.55,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 3363.72,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 1280.29,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "5 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 5,
+   "variants": [
+    {
+     "description": "CT ABD & PELVIS W/CONTRAST",
+     "setting": "outpatient",
+     "gross": 9695.82
+    },
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS WITH CONTRAST",
+     "setting": "outpatient",
+     "gross": 9147.0,
+     "modifiers": "XU"
+    },
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS WITH CONTRAST",
+     "setting": "outpatient",
+     "gross": 9147.0,
+     "modifiers": "PO"
+    }
+   ]
+  },
+  "74178": {
+   "code": "74178",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "CT abdomen and pelvis without then with contrast",
+   "description": "CT SCAN OF ABDOMEN AND PELVIS BEFORE AND AFTER CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 10098.0,
+   "discounted_cash": 6058.8,
+   "negotiated_min": 407.93,
+   "negotiated_max": 5614.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2458.58,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 2578.16,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 407.93,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 3363.72,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 5614.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 1280.29,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS BEFORE AND AFTER CONTRAST",
+     "setting": "outpatient",
+     "gross": 10098.0,
+     "modifiers": "ET"
+    },
+    {
+     "description": "CT SCAN OF ABDOMEN AND PELVIS BEFORE AND AFTER CONTRAST",
+     "setting": "outpatient",
+     "gross": 10098.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "70551": {
+   "code": "70551",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI brain without contrast",
+   "description": "MRI SCAN OF BRAIN WITHOUT CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8267.0,
+   "discounted_cash": 4960.2,
+   "negotiated_min": 336.77,
+   "negotiated_max": 4593.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1936.43,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 2177.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 470.42,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2300.48,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 4593.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 875.6,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "MRI SCAN OF BRAIN WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8267.0,
+     "modifiers": "TC"
+    },
+    {
+     "description": "MRI SCAN OF BRAIN WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8267.0,
+     "modifiers": "XU"
+    }
+   ]
+  },
+  "72148": {
+   "code": "72148",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "MRI lumbar spine without contrast",
+   "description": "MRI SCAN OF LOWER SPINAL CANAL WITHOUT CONTRAST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 8168.0,
+   "discounted_cash": 4900.8,
+   "negotiated_min": 336.77,
+   "negotiated_max": 4593.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1936.43,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 2177.5,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 521.55,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2300.48,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 4593.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 875.6,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "MRI SCAN OF LOWER SPINAL CANAL WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8168.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "MRI SCAN OF LOWER SPINAL CANAL WITHOUT CONTRAST",
+     "setting": "outpatient",
+     "gross": 8168.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "72100": {
+   "code": "72100",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray lumbar spine, 2-3 views",
+   "description": "X-RAY OF LOWER AND SACRAL SPINE; 2-3 VIEWS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1231.0,
+   "discounted_cash": 738.6,
+   "negotiated_min": 28.48,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 184.45,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 225.1,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 28.48,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 535.5,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "X-RAY EXAM L-S SPINE 2/3 VWS",
+     "setting": "outpatient",
+     "gross": 1304.86
+    },
+    {
+     "description": "X-RAY OF LOWER AND SACRAL SPINE; 2-3 VIEWS",
+     "setting": "outpatient",
+     "gross": 1231.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "X-RAY OF LOWER AND SACRAL SPINE; 2-3 VIEWS",
+     "setting": "outpatient",
+     "gross": 1231.0,
+     "modifiers": "PO_XU"
+    }
+   ]
+  },
+  "73030": {
+   "code": "73030",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray shoulder, 2+ views",
+   "description": "X-RAY OF SHOULDER; MINIMUM OF 2 VIEWS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1129.0,
+   "discounted_cash": 677.4,
+   "negotiated_min": 24.24,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.55,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 161.78,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 24.24,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 839.12,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 381.32,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 319.38,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "14 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 14,
+   "variants": [
+    {
+     "description": "X-RAY EXAM OF SHOULDER",
+     "setting": "outpatient",
+     "gross": 1196.74
+    },
+    {
+     "description": "X-RAY OF SHOULDER; MINIMUM OF 2 VIEWS",
+     "setting": "outpatient",
+     "gross": 2258.0,
+     "modifiers": "50"
+    },
+    {
+     "description": "X-RAY OF SHOULDER; MINIMUM OF 2 VIEWS",
+     "setting": "outpatient",
+     "gross": 2258.0,
+     "modifiers": "50_PO"
+    }
+   ]
+  },
+  "73110": {
+   "code": "73110",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray wrist, 3+ views",
+   "description": "X-RAY EXAM OF WRIST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1192.5,
+   "discounted_cash": 715.5,
+   "negotiated_min": 22.54,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.55,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 214.56,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 22.54,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 839.12,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 381.32,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 319.38,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "11 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 11,
+   "variants": [
+    {
+     "description": "X-RAY OF WRIST; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2250.0,
+     "modifiers": "50"
+    },
+    {
+     "description": "X-RAY OF WRIST; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2250.0,
+     "modifiers": "50_PO"
+    },
+    {
+     "description": "X-RAY OF WRIST; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2250.0,
+     "modifiers": "50_TC"
+    }
+   ]
+  },
+  "73610": {
+   "code": "73610",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray ankle, 3+ views",
+   "description": "X-RAY EXAM OF ANKLE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1123.6,
+   "discounted_cash": 674.16,
+   "negotiated_min": 22.54,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.55,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 185.51,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 22.54,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 839.12,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 381.32,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 319.38,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "11 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 11,
+   "variants": [
+    {
+     "description": "X-RAY OF ANKLE; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2120.0,
+     "modifiers": "50"
+    },
+    {
+     "description": "X-RAY OF ANKLE; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2120.0,
+     "modifiers": "50_PO"
+    },
+    {
+     "description": "X-RAY OF ANKLE; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2120.0,
+     "modifiers": "50_TC"
+    }
+   ]
+  },
+  "73630": {
+   "code": "73630",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "X-ray foot, 3+ views",
+   "description": "X-RAY EXAM OF FOOT",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1075.9,
+   "discounted_cash": 645.54,
+   "negotiated_min": 22.54,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 153.55,
+   "payer_rates": 41,
+   "payer_dollar_rates": 25,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 180.24,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 22.54,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 839.12,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 381.32,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 319.38,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "11 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 11,
+   "variants": [
+    {
+     "description": "X-RAY OF FOOT; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2030.0,
+     "modifiers": "50"
+    },
+    {
+     "description": "X-RAY OF FOOT; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2030.0,
+     "modifiers": "50_PO"
+    },
+    {
+     "description": "X-RAY OF FOOT; MINIMUM OF 3 VIEWS",
+     "setting": "outpatient",
+     "gross": 2030.0,
+     "modifiers": "50_TC"
+    }
+   ]
+  },
+  "76700": {
+   "code": "76700",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, complete",
+   "description": "COMPLETE ULTRASOUND SCAN OF ABDOMEN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2427.0,
+   "discounted_cash": 1456.2,
+   "negotiated_min": 83.98,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 700.91,
+   "payer_rates": 41,
+   "payer_dollar_rates": 23,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 744.77,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 83.98,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 535.5,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "US EXAM ABDOM COMPLETE",
+     "setting": "outpatient",
+     "gross": 2572.62
+    },
+    {
+     "description": "COMPLETE ULTRASOUND SCAN OF ABDOMEN",
+     "setting": "outpatient",
+     "gross": 2427.0,
+     "modifiers": "TC_XU"
+    },
+    {
+     "description": "COMPLETE ULTRASOUND SCAN OF ABDOMEN",
+     "setting": "outpatient",
+     "gross": 2427.0,
+     "modifiers": "59"
+    }
+   ]
+  },
+  "76705": {
+   "code": "76705",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound abdomen, limited (e.g. gallbladder)",
+   "description": "LIMITED ULTRASOUND SCAN OF ABDOMEN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1995.0,
+   "discounted_cash": 1197.0,
+   "negotiated_min": 60.47,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 604.96,
+   "payer_rates": 41,
+   "payer_dollar_rates": 23,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 604.96,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 60.47,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 535.5,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "LIMITED ULTRASOUND SCAN OF ABDOMEN",
+     "setting": "outpatient",
+     "gross": 1995.0,
+     "modifiers": "XU"
+    },
+    {
+     "description": "LIMITED ULTRASOUND SCAN OF ABDOMEN",
+     "setting": "outpatient",
+     "gross": 1995.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "LIMITED ULTRASOUND SCAN OF ABDOMEN",
+     "setting": "outpatient",
+     "gross": 1995.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "76856": {
+   "code": "76856",
+   "code_type": "CPT",
+   "category": "imaging",
+   "common_name": "Ultrasound pelvis, complete",
+   "description": "COMPLETE ULTRASOUND SCAN OF PELVIS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2041.0,
+   "discounted_cash": 1224.6,
+   "negotiated_min": 65.19,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 700.91,
+   "payer_rates": 41,
+   "payer_dollar_rates": 23,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 705.18,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 65.19,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1007.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 535.5,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 383.66,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "11 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 11,
+   "variants": [
+    {
+     "description": "US EXAM PELVIC COMPLETE",
+     "setting": "outpatient",
+     "gross": 2163.46
+    },
+    {
+     "description": "COMPLETE ULTRASOUND SCAN OF PELVIS",
+     "setting": "outpatient",
+     "gross": 2041.0,
+     "modifiers": "59_PO"
+    },
+    {
+     "description": "COMPLETE ULTRASOUND SCAN OF PELVIS",
+     "setting": "outpatient",
+     "gross": 2041.0,
+     "modifiers": "TC_XU"
+    }
+   ]
+  },
+  "93005": {
+   "code": "93005",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "ECG tracing (12-lead), technical",
+   "description": "ELECTROCARDIOGRAM TRACING",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 771.68,
+   "discounted_cash": 463.01,
+   "negotiated_min": 23.42,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 395.49,
+   "payer_rates": 41,
+   "payer_dollar_rates": 21,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "median": 102.6
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 23.42,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 568.75,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 420.42,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 216.48,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "13 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 13,
+   "variants": [
+    {
+     "description": "ROUTINE ELECTROCARDIOGRAM (ECG) USING AT LEAST 12 LEADS WITH TRACING",
+     "setting": "outpatient",
+     "gross": 1456.0
+    },
+    {
+     "description": "ROUTINE ELECTROCARDIOGRAM (ECG) USING AT LEAST 12 LEADS WITH TRACING",
+     "setting": "outpatient",
+     "gross": 728.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "ROUTINE ELECTROCARDIOGRAM (ECG) USING AT LEAST 12 LEADS WITH TRACING",
+     "setting": "outpatient",
+     "gross": 728.0,
+     "modifiers": "76_XU"
+    }
+   ]
+  },
+  "93306": {
+   "code": "93306",
+   "code_type": "CPT",
+   "category": "cardiac",
+   "common_name": "Echocardiogram, complete with Doppler",
+   "description": "ULTRASOUND OF HEART WITH COLOR-DEPICTED BLOOD FLOW; RATE; DIRECTION AND VALVE FUNCTION",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6309.0,
+   "discounted_cash": 3785.4,
+   "negotiated_min": 337.51,
+   "negotiated_max": 29560.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3663.34,
+   "payer_rates": 42,
+   "payer_dollar_rates": 23,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 337.51,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 5268.27,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 29560.0,
+     "methodology": "case rate",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 2005.2,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "11 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 11,
+   "variants": [
+    {
+     "description": "TTE W/DOPPLER COMPLETE",
+     "setting": "outpatient",
+     "gross": 8073.0
+    },
+    {
+     "description": "TTE W/DOPPLER COMPLETE",
+     "setting": "outpatient",
+     "gross": 6687.54
+    },
+    {
+     "description": "ULTRASOUND OF HEART WITH COLOR-DEPICTED BLOOD FLOW; RATE; DIRECTION AND VALVE FUNCTION",
+     "setting": "outpatient",
+     "gross": 6309.0,
+     "modifiers": "PO"
+    }
+   ]
+  },
+  "36415": {
+   "code": "36415",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood draw (venipuncture)",
+   "description": "INSERTION OF NEEDLE INTO VEIN FOR COLLECTION OF BLOOD SAMPLE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 79.0,
+   "discounted_cash": 47.4,
+   "negotiated_min": 3.16,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 11.68,
+   "payer_rates": 41,
+   "payer_dollar_rates": 28,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna Hill Physicians",
+     "plan": "Commercial",
+     "dollar": 11.68,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 125.00"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 3.16,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 63.8,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 9.12,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 24.28,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "COLL VENOUS BLD VENIPUNCTURE",
+     "setting": "outpatient",
+     "gross": 83.74
+    },
+    {
+     "description": "INSERTION OF NEEDLE INTO VEIN FOR COLLECTION OF BLOOD SAMPLE",
+     "setting": "outpatient",
+     "gross": 79.0,
+     "modifiers": "ET"
+    },
+    {
+     "description": "INSERTION OF NEEDLE INTO VEIN FOR COLLECTION OF BLOOD SAMPLE",
+     "setting": "outpatient",
+     "gross": 79.0,
+     "modifiers": "PO"
+    }
+   ]
+  },
+  "80048": {
+   "code": "80048",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Basic metabolic panel",
+   "description": "BLOOD TEST; BASIC GROUP OF BLOOD CHEMICALS (CALCIUM; TOTAL)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 472.0,
+   "discounted_cash": 283.2,
+   "negotiated_min": 8.46,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 17.86,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 17.86,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 12.57,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 57.79,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 25.69,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 22.0,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "METABOLIC PANEL TOTAL CA",
+     "setting": "outpatient",
+     "gross": 500.32
+    },
+    {
+     "description": "BLOOD TEST; BASIC GROUP OF BLOOD CHEMICALS (CALCIUM; TOTAL)",
+     "setting": "outpatient",
+     "gross": 472.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "BLOOD TEST; BASIC GROUP OF BLOOD CHEMICALS (CALCIUM; TOTAL)",
+     "setting": "outpatient",
+     "gross": 944.0,
+     "modifiers": "91"
+    }
+   ]
+  },
+  "80053": {
+   "code": "80053",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Comprehensive metabolic panel",
+   "description": "BLOOD TEST; COMPREHENSIVE GROUP OF BLOOD CHEMICALS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 530.0,
+   "discounted_cash": 318.0,
+   "negotiated_min": 10.56,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 22.3,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 22.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 15.72,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 72.14,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 32.04,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 27.46,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "COMPREHEN METABOLIC PANEL",
+     "setting": "outpatient",
+     "gross": 561.8
+    },
+    {
+     "description": "BLOOD TEST; COMPREHENSIVE GROUP OF BLOOD CHEMICALS",
+     "setting": "outpatient",
+     "gross": 530.0,
+     "modifiers": "ET"
+    },
+    {
+     "description": "BLOOD TEST; COMPREHENSIVE GROUP OF BLOOD CHEMICALS",
+     "setting": "outpatient",
+     "gross": 530.0,
+     "modifiers": "91"
+    }
+   ]
+  },
+  "80061": {
+   "code": "80061",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipid panel",
+   "description": "BLOOD TEST; LIPIDS (CHOLESTEROL AND TRIGLYCERIDES)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 516.0,
+   "discounted_cash": 309.6,
+   "negotiated_min": 13.39,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 28.28,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 28.28,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 19.89,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 91.47,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 40.62,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 34.81,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "LIPID PANEL",
+     "setting": "outpatient",
+     "gross": 546.96
+    },
+    {
+     "description": "BLOOD TEST; LIPIDS (CHOLESTEROL AND TRIGLYCERIDES)",
+     "setting": "outpatient",
+     "gross": 66.18,
+     "modifiers": "91"
+    },
+    {
+     "description": "BLOOD TEST; LIPIDS (CHOLESTEROL AND TRIGLYCERIDES)",
+     "setting": "outpatient",
+     "gross": 516.0,
+     "modifiers": "91"
+    }
+   ]
+  },
+  "85025": {
+   "code": "85025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count with differential",
+   "description": "COMPLETE CBC W/AUTO DIFF WBC",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 417.64,
+   "discounted_cash": 250.58,
+   "negotiated_min": 7.77,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 21.37,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 16.42,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 11.55,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 53.08,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 23.57,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 20.2,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "9 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "COMPLETE CBC W/AUTO DIFF WBC",
+     "setting": "outpatient",
+     "gross": 1.06
+    },
+    {
+     "description": "COMPLETE BLOOD CELL COUNT (RED CELLS; WHITE BLOOD CELL; PLATELETS); AUTOMATED TEST AND AUTOMATED DIFFERENTIAL WHITE BLOOD CELL COUNT",
+     "setting": "outpatient",
+     "gross": 395.0
+    },
+    {
+     "description": "COMPLETE BLOOD CELL COUNT (RED CELLS; WHITE BLOOD CELL; PLATELETS); AUTOMATED TEST AND AUTOMATED DIFFERENTIAL WHITE BLOOD CELL COUNT",
+     "setting": "outpatient",
+     "gross": 394.0,
+     "modifiers": "91"
+    }
+   ]
+  },
+  "85027": {
+   "code": "85027",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Complete blood count, automated",
+   "description": "COMPLETE BLOOD CELL COUNT (RED CELLS; WHITE BLOOD CELL; PLATELETS); AUTOMATED TEST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 144.0,
+   "discounted_cash": 86.4,
+   "negotiated_min": 6.47,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 17.79,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 13.66,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 9.61,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 44.2,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 19.65,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 16.82,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "COMPLETE CBC AUTOMATED",
+     "setting": "outpatient",
+     "gross": 153.0
+    },
+    {
+     "description": "COMPLETE BLOOD CELL COUNT (RED CELLS; WHITE BLOOD CELL; PLATELETS); AUTOMATED TEST",
+     "setting": "outpatient",
+     "gross": 144.0,
+     "modifiers": "GA"
+    },
+    {
+     "description": "COMPLETE BLOOD CELL COUNT (RED CELLS; WHITE BLOOD CELL; PLATELETS); AUTOMATED TEST",
+     "setting": "outpatient",
+     "gross": 144.0,
+     "modifiers": "PO"
+    }
+   ]
+  },
+  "85610": {
+   "code": "85610",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Prothrombin time (PT/INR)",
+   "description": "BLOOD TEST; CLOTTING TIME",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 53.0,
+   "discounted_cash": 31.8,
+   "negotiated_min": 4.29,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.3,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 8.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 5.85,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 29.3,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 13.04,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 11.15,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "13 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 13,
+   "variants": [
+    {
+     "description": "PROTHROMBIN TIME",
+     "setting": "outpatient",
+     "gross": 80.0
+    },
+    {
+     "description": "BLOOD TEST; CLOTTING TIME",
+     "setting": "outpatient",
+     "gross": 210.0
+    },
+    {
+     "description": "PROTHROMBIN TIME",
+     "setting": "outpatient",
+     "gross": 218.4
+    }
+   ]
+  },
+  "85730": {
+   "code": "85730",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Partial thromboplastin time (PTT)",
+   "description": "COAGULATION ASSESSMENT BLOOD TEST; PLASMA OR WHOLE BLOOD",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6.1,
+   "discounted_cash": 3.66,
+   "negotiated_min": 6.01,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 7.51,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 6.1,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 6.1,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 41.05,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 6.1,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 15.63,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "24 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 24,
+   "variants": [
+    {
+     "description": "THROMBOPLASTIN TIME PARTIAL",
+     "setting": "outpatient",
+     "gross": 4.7
+    },
+    {
+     "description": "THROMBOPLASTIN TIME PARTIAL",
+     "setting": "outpatient",
+     "gross": 48.0
+    },
+    {
+     "description": "THROMBOPLASTIN TIME PARTIAL",
+     "setting": "outpatient",
+     "gross": 115.0
+    }
+   ]
+  },
+  "84484": {
+   "code": "84484",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Troponin, quantitative",
+   "description": "ASSAY OF TROPONIN QUANT",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 633.88,
+   "discounted_cash": 380.33,
+   "negotiated_min": 12.47,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 28.34,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 20.78,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 28.34,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 85.18,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 37.88,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 32.42,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "ASSAY OF TROPONIN QUANT",
+     "setting": "outpatient",
+     "gross": 420.2
+    },
+    {
+     "description": "TROPONIN (PROTEIN) ANALYSIS; QUANTITATIVE",
+     "setting": "outpatient",
+     "gross": 1794.0
+    },
+    {
+     "description": "TROPONIN (PROTEIN) ANALYSIS; QUANTITATIVE",
+     "setting": "outpatient",
+     "gross": 598.0,
+     "modifiers": "81"
+    }
+   ]
+  },
+  "83690": {
+   "code": "83690",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Lipase",
+   "description": "ASSAY OF LIPASE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6.3,
+   "discounted_cash": 3.78,
+   "negotiated_min": 6.3,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.61,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 6.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 6.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 47.07,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 6.3,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 17.91,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "9 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "LIPASE (FAT ENZYME) LEVEL",
+     "setting": "outpatient",
+     "gross": 281.0
+    },
+    {
+     "description": "ASSAY OF LIPASE",
+     "setting": "outpatient",
+     "gross": 297.86
+    },
+    {
+     "description": "LIPASE (FAT ENZYME) LEVEL",
+     "setting": "outpatient",
+     "gross": 6.3,
+     "modifiers": "90"
+    }
+   ]
+  },
+  "83880": {
+   "code": "83880",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "BNP (natriuretic peptide)",
+   "description": "ASSAY OF NATRIURETIC PEPTIDE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 129.0,
+   "discounted_cash": 77.4,
+   "negotiated_min": 39.26,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 71.66,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 71.66,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 50.43,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 268.19,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 119.18,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 102.08,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "15 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 15,
+   "variants": [
+    {
+     "description": "NATRIURETIC PEPTIDE (HEART AND BLOOD VESSEL PROTEIN) LEVEL",
+     "setting": "outpatient",
+     "gross": 593.0
+    },
+    {
+     "description": "ASSAY OF NATRIURETIC PEPTIDE",
+     "setting": "outpatient",
+     "gross": 604.01
+    },
+    {
+     "description": "ASSAY OF NATRIURETIC PEPTIDE",
+     "setting": "outpatient",
+     "gross": 630.06
+    }
+   ]
+  },
+  "82550": {
+   "code": "82550",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Creatine kinase (CK)",
+   "description": "ASSAY OF CK (CPK)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 4.89,
+   "discounted_cash": 2.93,
+   "negotiated_min": 4.89,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.14,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 4.89,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 4.89,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 44.47,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 4.89,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 16.93,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "CREATINE KINASE (CARDIAC ENZYME) LEVEL; TOTAL",
+     "setting": "outpatient",
+     "gross": 336.0
+    },
+    {
+     "description": "ASSAY OF CK (CPK)",
+     "setting": "outpatient",
+     "gross": 356.16
+    },
+    {
+     "description": "CREATINE KINASE (CARDIAC ENZYME) LEVEL; TOTAL",
+     "setting": "outpatient",
+     "gross": 4.89,
+     "modifiers": "90"
+    }
+   ]
+  },
+  "84443": {
+   "code": "84443",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "TSH",
+   "description": "BLOOD TEST; THYROID STIMULATING HORMONE (TSH)",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 469.0,
+   "discounted_cash": 281.4,
+   "negotiated_min": 16.8,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 35.46,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 35.46,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 24.96,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 114.76,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 51.01,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 43.68,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "13 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 13,
+   "variants": [
+    {
+     "description": "ASSAY THYROID STIM HORMONE",
+     "setting": "outpatient",
+     "gross": 497.14
+    },
+    {
+     "description": "BLOOD TEST; THYROID STIMULATING HORMONE (TSH)",
+     "setting": "outpatient",
+     "gross": 42.31,
+     "modifiers": "90"
+    },
+    {
+     "description": "BLOOD TEST; THYROID STIMULATING HORMONE (TSH)",
+     "setting": "outpatient",
+     "gross": 469.0,
+     "modifiers": "ET"
+    }
+   ]
+  },
+  "83036": {
+   "code": "83036",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Hemoglobin A1c",
+   "description": "HEMOGLOBIN GLYCOSYLATED A1C",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 6.3,
+   "discounted_cash": 3.78,
+   "negotiated_min": 6.3,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 12.14,
+   "payer_rates": 41,
+   "payer_dollar_rates": 29,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 6.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 6.3,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 66.33,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 6.3,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 25.25,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "17 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 17,
+   "variants": [
+    {
+     "description": "HEMOGLOBIN A1C LEVEL",
+     "setting": "outpatient",
+     "gross": 286.0
+    },
+    {
+     "description": "HEMOGLOBIN A1C LEVEL",
+     "setting": "outpatient",
+     "gross": 130.0
+    },
+    {
+     "description": "HEMOGLOBIN GLYCOSYLATED A1C",
+     "setting": "outpatient",
+     "gross": 303.16
+    }
+   ]
+  },
+  "81001": {
+   "code": "81001",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated with microscopy",
+   "description": "MANUAL URINALYSIS TEST WITH EXAMINATION USING MICROSCOPE; AUTOMATED",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 208.0,
+   "discounted_cash": 124.8,
+   "negotiated_min": 3.17,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 8.72,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 6.68,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 4.54,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 21.65,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 9.62,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 8.24,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "9 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 9,
+   "variants": [
+    {
+     "description": "URINALYSIS AUTO W/SCOPE",
+     "setting": "outpatient",
+     "gross": 220.48
+    },
+    {
+     "description": "MANUAL URINALYSIS TEST WITH EXAMINATION USING MICROSCOPE; AUTOMATED",
+     "setting": "outpatient",
+     "gross": 208.0,
+     "modifiers": "91"
+    },
+    {
+     "description": "MANUAL URINALYSIS TEST WITH EXAMINATION USING MICROSCOPE; AUTOMATED",
+     "setting": "outpatient",
+     "gross": 208.0,
+     "modifiers": "ET"
+    }
+   ]
+  },
+  "81003": {
+   "code": "81003",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urinalysis, automated without microscopy",
+   "description": "AUTOMATED URINALYSIS TEST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 130.0,
+   "discounted_cash": 78.0,
+   "negotiated_min": 2.25,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 6.19,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 4.74,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 3.34,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 15.37,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 6.81,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 5.85,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "URINALYSIS AUTO W/O SCOPE",
+     "setting": "outpatient",
+     "gross": 135.2
+    },
+    {
+     "description": "AUTOMATED URINALYSIS TEST",
+     "setting": "outpatient",
+     "gross": 130.0,
+     "modifiers": "TC"
+    }
+   ]
+  },
+  "81025": {
+   "code": "81025",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine pregnancy test",
+   "description": "URINE PREGNANCY TEST",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 154.0,
+   "discounted_cash": 92.4,
+   "negotiated_min": 7.58,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 23.68,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 11.64,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 7.58,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 58.81,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 26.14,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 22.39,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "2 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 2,
+   "variants": [
+    {
+     "description": "URINE PREGNANCY TEST",
+     "setting": "outpatient",
+     "gross": 163.63
+    }
+   ]
+  },
+  "87086": {
+   "code": "87086",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Urine culture, colony count",
+   "description": "BACTERIAL COLONY COUNT; URINE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 349.0,
+   "discounted_cash": 209.4,
+   "negotiated_min": 8.07,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 22.19,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 17.04,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 11.82,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 55.13,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 24.51,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 20.98,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "12 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 12,
+   "variants": [
+    {
+     "description": "URINE CULTURE/COLONY COUNT",
+     "setting": "outpatient",
+     "gross": 1.1
+    },
+    {
+     "description": "URINE CULTURE/COLONY COUNT",
+     "setting": "outpatient",
+     "gross": 362.96
+    },
+    {
+     "description": "URINE CULTURE/COLONY COUNT",
+     "setting": "outpatient",
+     "gross": 369.94
+    }
+   ]
+  },
+  "87040": {
+   "code": "87040",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "Blood culture",
+   "description": "BACTERIAL BLOOD CULTURE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 589.0,
+   "discounted_cash": 353.4,
+   "negotiated_min": 10.32,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 28.38,
+   "payer_rates": 41,
+   "payer_dollar_rates": 27,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 21.8,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 15.33,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 70.5,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "dollar": 31.33,
+     "methodology": "fee schedule",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 26.83,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "BLOOD CULTURE FOR BACTERIA",
+     "setting": "outpatient",
+     "gross": 624.34
+    },
+    {
+     "description": "BACTERIAL BLOOD CULTURE",
+     "setting": "outpatient",
+     "gross": 589.0,
+     "modifiers": "XU"
+    },
+    {
+     "description": "BACTERIAL BLOOD CULTURE",
+     "setting": "outpatient",
+     "gross": 1178.0,
+     "modifiers": "91"
+    }
+   ]
+  },
+  "87635": {
+   "code": "87635",
+   "code_type": "CPT",
+   "category": "lab",
+   "common_name": "COVID-19 PCR",
+   "description": "SARS-COV-2 COVID-19 AMP PRB",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1.11,
+   "discounted_cash": 0.67,
+   "negotiated_min": 1.11,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 66.7,
+   "payer_rates": 41,
+   "payer_dollar_rates": 26,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 1.11,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 1.11,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 350.5,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 161.0,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 133.41,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "SARS-COV-2 COVID-19 AMP PRB",
+     "setting": "outpatient",
+     "gross": 141.0
+    },
+    {
+     "description": "SARS-COV-2 COVID-19 AMP PRB",
+     "setting": "outpatient",
+     "gross": 101.0
+    },
+    {
+     "description": "SARS-COV-2 COVID-19 AMP PRB",
+     "setting": "outpatient",
+     "gross": 55.0
+    }
+   ]
+  },
+  "96360": {
+   "code": "96360",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, first hour",
+   "description": "INFUSION INTO A VEIN FOR HYDRATION; 31-60 MINUTES",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1552.0,
+   "discounted_cash": 931.2,
+   "negotiated_min": 300.22,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1109.98,
+   "payer_rates": 42,
+   "payer_dollar_rates": 22,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 66.03,
+     "methodology": "percent of total billed charges",
+     "notes": "NTE Dollar Amount + Fixed Amount 44643.00 + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2050.8,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 780.57,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "4 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 4,
+   "variants": [
+    {
+     "description": "HYDRATION IV INFUSION INIT",
+     "setting": "outpatient",
+     "gross": 1645.12
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR HYDRATION; 31-60 MINUTES",
+     "setting": "outpatient",
+     "gross": 1552.0,
+     "modifiers": "PO"
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR HYDRATION; 31-60 MINUTES",
+     "setting": "outpatient",
+     "gross": 1552.0,
+     "modifiers": "XU"
+    }
+   ]
+  },
+  "96361": {
+   "code": "96361",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV hydration, each additional hour",
+   "description": "INFUSION INTO A VEIN FOR HYDRATION; EACH ADDITIONAL HOUR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 859.0,
+   "discounted_cash": 515.4,
+   "negotiated_min": 66.09,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 242.88,
+   "payer_rates": 42,
+   "payer_dollar_rates": 22,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 66.03,
+     "methodology": "percent of total billed charges",
+     "notes": "NTE Dollar Amount + Fixed Amount 44643.00 + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 451.46,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 171.83,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "HYDRATE IV INFUSION ADD-ON",
+     "setting": "outpatient",
+     "gross": 910.54
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR HYDRATION; EACH ADDITIONAL HOUR",
+     "setting": "outpatient",
+     "gross": 2577.0
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR HYDRATION; EACH ADDITIONAL HOUR",
+     "setting": "outpatient",
+     "gross": 859.0,
+     "modifiers": "XU"
+    }
+   ]
+  },
+  "96365": {
+   "code": "96365",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), first hour",
+   "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; 1 HOUR OR LESS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2391.0,
+   "discounted_cash": 1434.6,
+   "negotiated_min": 300.22,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1726.27,
+   "payer_rates": 42,
+   "payer_dollar_rates": 18,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "median": 665.4
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2050.8,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 1340.63,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 780.57,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; 1 HOUR OR LESS",
+     "setting": "outpatient",
+     "gross": 2391.0,
+     "modifiers": "ET"
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; 1 HOUR OR LESS",
+     "setting": "outpatient",
+     "gross": 2391.0,
+     "modifiers": "XU"
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; 1 HOUR OR LESS",
+     "setting": "outpatient",
+     "gross": 2391.0,
+     "modifiers": "25"
+    }
+   ]
+  },
+  "96366": {
+   "code": "96366",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV infusion (drug), each additional hour",
+   "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; EACH ADDITIONAL HOUR",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1534.0,
+   "discounted_cash": 920.4,
+   "negotiated_min": 66.09,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 380.02,
+   "payer_rates": 42,
+   "payer_dollar_rates": 18,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "median": 590.18
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 451.46,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 171.83,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; EACH ADDITIONAL HOUR",
+     "setting": "outpatient",
+     "gross": 3068.0
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; EACH ADDITIONAL HOUR",
+     "setting": "outpatient",
+     "gross": 1534.0,
+     "modifiers": "ET"
+    },
+    {
+     "description": "INFUSION INTO A VEIN FOR THERAPY; PREVENTION; OR DIAGNOSIS; EACH ADDITIONAL HOUR",
+     "setting": "outpatient",
+     "gross": 6136.0,
+     "modifiers": "ET"
+    }
+   ]
+  },
+  "96372": {
+   "code": "96372",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "Injection under skin or into muscle",
+   "description": "INJECTION OF DRUG OR SUBSTANCE UNDER SKIN OR INTO MUSCLE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 820.0,
+   "discounted_cash": 492.0,
+   "negotiated_min": 101.62,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 584.32,
+   "payer_rates": 42,
+   "payer_dollar_rates": 18,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "median": 210.45
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 694.17,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 229.89,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 264.21,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "8 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "THER/PROPH/DIAG INJ SC/IM",
+     "setting": "outpatient",
+     "gross": 434.6
+    },
+    {
+     "description": "INJECTION OF DRUG OR SUBSTANCE UNDER SKIN OR INTO MUSCLE",
+     "setting": "outpatient",
+     "gross": 1230.0
+    },
+    {
+     "description": "INJECTION OF DRUG OR SUBSTANCE UNDER SKIN OR INTO MUSCLE",
+     "setting": "outpatient",
+     "gross": 410.0,
+     "modifiers": "ET"
+    }
+   ]
+  },
+  "96374": {
+   "code": "96374",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, single or first drug",
+   "description": "INJECTION OF DRUG OR SUBSTANCE INTO VEIN",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 667.0,
+   "discounted_cash": 400.2,
+   "negotiated_min": 300.22,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1726.26,
+   "payer_rates": 42,
+   "payer_dollar_rates": 18,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "median": 519.83
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 2050.8,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 196.74,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 780.57,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "6 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 6,
+   "variants": [
+    {
+     "description": "THER/PROPH/DIAG INJ IV PUSH",
+     "setting": "outpatient",
+     "gross": 707.02
+    },
+    {
+     "description": "INJECTION OF DRUG OR SUBSTANCE INTO VEIN",
+     "setting": "outpatient",
+     "gross": 667.0,
+     "modifiers": "25"
+    },
+    {
+     "description": "INJECTION OF DRUG OR SUBSTANCE INTO VEIN",
+     "setting": "outpatient",
+     "gross": 667.0,
+     "modifiers": "25_XU"
+    }
+   ]
+  },
+  "96375": {
+   "code": "96375",
+   "code_type": "CPT",
+   "category": "infusion",
+   "common_name": "IV push, each additional drug",
+   "description": "TX/PRO/DX INJ NEW DRUG ADDON",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 557.56,
+   "discounted_cash": 334.54,
+   "negotiated_min": 66.09,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 380.02,
+   "payer_rates": 42,
+   "payer_dollar_rates": 18,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 451.46,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 310.29,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 171.83,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "INJECTION OF ADDITIONAL NEW DRUG OR SUBSTANCE INTO VEIN",
+     "setting": "outpatient",
+     "gross": 1578.0
+    },
+    {
+     "description": "INJECTION OF ADDITIONAL NEW DRUG OR SUBSTANCE INTO VEIN",
+     "setting": "outpatient",
+     "gross": 526.0,
+     "modifiers": "ET"
+    },
+    {
+     "description": "INJECTION OF ADDITIONAL NEW DRUG OR SUBSTANCE INTO VEIN",
+     "setting": "outpatient",
+     "gross": 526.0,
+     "modifiers": "XS"
+    }
+   ]
+  },
+  "J2405": {
+   "code": "J2405",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ondansetron (Zofran) injection, per 1 mg",
+   "description": "Ondansetron",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 86.38,
+   "discounted_cash": 51.83,
+   "negotiated_min": 2330.0,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 1 ME as listed; compare billed units with the HCPCS unit (Ondansetron (Zofran) injection, per 1 mg).",
+    "27 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 27,
+   "variants": [
+    {
+     "description": "Ondansetron",
+     "setting": "outpatient",
+     "gross": 87.85,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "PremierPro Rx Ondansetron",
+     "setting": "outpatient",
+     "gross": 86.38,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "Ondansetron",
+     "setting": "outpatient",
+     "gross": 108.58,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J1885": {
+   "code": "J1885",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ketorolac (Toradol) injection, per 15 mg",
+   "description": "Ketorolac Tromethamine",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 89.44,
+   "discounted_cash": 53.66,
+   "negotiated_min": 0.46,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2.64,
+   "payer_rates": 42,
+   "payer_dollar_rates": 16,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 3.14,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 1.2,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "drug_unit": 15.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 15 ME as listed; compare billed units with the HCPCS unit (Ketorolac (Toradol) injection, per 15 mg).",
+    "51 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 51,
+   "variants": [
+    {
+     "description": "PremierPro Rx Ketorolac Tromethamine",
+     "setting": "outpatient",
+     "gross": 87.1,
+     "drug_unit": 15.0
+    },
+    {
+     "description": "Ketorolac Tromethamine",
+     "setting": "outpatient",
+     "gross": 88.72,
+     "drug_unit": 15.0
+    },
+    {
+     "description": "Ketorolac Tromethamine",
+     "setting": "outpatient",
+     "gross": 88.72,
+     "drug_unit": 15.0
+    }
+   ]
+  },
+  "J1100": {
+   "code": "J1100",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Dexamethasone injection, per 1 mg",
+   "description": "dexAMETHasone Sodium Phosphate",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 131.47,
+   "discounted_cash": 78.88,
+   "negotiated_min": 2330.0,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    }
+   ],
+   "drug_unit": 1.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 1 ME as listed; compare billed units with the HCPCS unit (Dexamethasone injection, per 1 mg).",
+    "30 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 30,
+   "variants": [
+    {
+     "description": "dexAMETHasone Sodium Phosphate",
+     "setting": "outpatient",
+     "gross": 93.64,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "dexAMETHasone Sodium Phosphate",
+     "setting": "outpatient",
+     "gross": 105.73,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "dexAMETHasone Sodium Phosphate",
+     "setting": "outpatient",
+     "gross": 105.73,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J2270": {
+   "code": "J2270",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Morphine injection, up to 10 mg",
+   "description": "Morphine Sulfate",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 137.65,
+   "discounted_cash": 82.59,
+   "negotiated_min": 2330.0,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    }
+   ],
+   "drug_unit": 10.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 10 ME as listed; compare billed units with the HCPCS unit (Morphine injection, up to 10 mg).",
+    "34 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 34,
+   "variants": [
+    {
+     "description": "Morphine Sulfate",
+     "setting": "outpatient",
+     "gross": 137.65,
+     "drug_unit": 10.0
+    },
+    {
+     "description": "Morphine Sulfate",
+     "setting": "outpatient",
+     "gross": 135.84,
+     "drug_unit": 1.0
+    },
+    {
+     "description": "Morphine Sulfate",
+     "setting": "outpatient",
+     "gross": 142.96,
+     "drug_unit": 1.0
+    }
+   ]
+  },
+  "J3010": {
+   "code": "J3010",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Fentanyl injection, per 0.1 mg",
+   "description": "fentaNYL Citrate",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 205.0,
+   "discounted_cash": 123.0,
+   "negotiated_min": 2330.0,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    }
+   ],
+   "drug_unit": 0.1,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 0.1 ME as listed; compare billed units with the HCPCS unit (Fentanyl injection, per 0.1 mg).",
+    "35 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 35,
+   "variants": [
+    {
+     "description": "fentaNYL Citrate",
+     "setting": "outpatient",
+     "gross": 136.38,
+     "drug_unit": 0.1
+    },
+    {
+     "description": "fentaNYL Citrate",
+     "setting": "outpatient",
+     "gross": 475.0,
+     "drug_unit": 0.1
+    },
+    {
+     "description": "fentaNYL Citrate",
+     "setting": "outpatient",
+     "gross": 275.0,
+     "drug_unit": 0.1
+    }
+   ]
+  },
+  "J0696": {
+   "code": "J0696",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Ceftriaxone injection, per 250 mg",
+   "description": "cefTRIAXone",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 259.0,
+   "discounted_cash": 155.4,
+   "negotiated_min": 2330.0,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    }
+   ],
+   "drug_unit": 250.0,
+   "drug_unit_type": "ME",
+   "notes": [
+    "Drug priced per 250 ME as listed; compare billed units with the HCPCS unit (Ceftriaxone injection, per 250 mg).",
+    "31 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 31,
+   "variants": [
+    {
+     "description": "cefTRIAXone",
+     "setting": "outpatient",
+     "gross": 256.75,
+     "drug_unit": 250.0
+    },
+    {
+     "description": "cefTRIAXone",
+     "setting": "outpatient",
+     "gross": 256.0,
+     "drug_unit": 250.0
+    },
+    {
+     "description": "cefTRIAXone",
+     "setting": "outpatient",
+     "gross": 258.22,
+     "drug_unit": 250.0
+    }
+   ]
+  },
+  "J7030": {
+   "code": "J7030",
+   "code_type": "HCPCS",
+   "category": "drug",
+   "common_name": "Normal saline infusion, 1000 cc",
+   "description": "NORMAL SALINE SOLUTION INFUS",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 215.0,
+   "discounted_cash": 129.0,
+   "negotiated_min": 2330.0,
+   "negotiated_max": 2330.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 2330.0,
+   "payer_rates": 42,
+   "payer_dollar_rates": 1,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "percentage": 50.0,
+     "methodology": "percent of total billed charges",
+     "median": 4.94
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "percentage": 46.59,
+     "methodology": "percent of total billed charges",
+     "notes": "No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 683.10% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "median": 117.21,
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS.",
+     "methodology": "other",
+     "notes": "Payer contract is 260.00% of Medicare but standard charge is packaged, not separately payable under Medicare OPPS. + No services performed during 15-month look…"
+    }
+   ],
+   "notes": [
+    "Drug: no unit of measure in the file for this line; billed units are ambiguous (HCPCS unit: Normal saline infusion, 1000 cc).",
+    "59 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 59,
+   "variants": [
+    {
+     "description": "Sodium Chloride",
+     "setting": "outpatient",
+     "gross": 215.0,
+     "drug_unit": 1000.0
+    },
+    {
+     "description": "Sodium Chloride",
+     "setting": "outpatient",
+     "gross": 212.0,
+     "drug_unit": 1000.0
+    },
+    {
+     "description": "Sodium Chloride",
+     "setting": "outpatient",
+     "gross": 208.1,
+     "drug_unit": 1000.0
+    }
+   ]
+  },
+  "12001": {
+   "code": "12001",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Simple wound repair, up to 2.5 cm",
+   "description": "RPR S/N/AX/GEN/TRNK 2.5CM/<",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1314.4,
+   "discounted_cash": 788.64,
+   "negotiated_min": 283.19,
+   "negotiated_max": 8430.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1486.74,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 8430.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 4195.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1934.47,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna Hill Physicians",
+     "plan": "Commercial",
+     "dollar": 353.99,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 125.00 + Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbur…"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 736.29,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "10 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 10,
+   "variants": [
+    {
+     "description": "SIMPLE REPAIR OF SURFACE WOUND OF SCALP; NECK; UNDERARMS; TRUNK; ARMS; OR LEGS; 2.5 CM OR LESS",
+     "setting": "outpatient",
+     "gross": 1240.0
+    },
+    {
+     "description": "SIMPLE REPAIR OF SURFACE WOUND OF SCALP; NECK; UNDERARMS; TRUNK; ARMS; OR LEGS; 2.5 CM OR LESS",
+     "setting": "outpatient",
+     "gross": 1240.0,
+     "modifiers": "LT"
+    },
+    {
+     "description": "SIMPLE REPAIR OF SURFACE WOUND OF SCALP; NECK; UNDERARMS; TRUNK; ARMS; OR LEGS; 2.5 CM OR LESS",
+     "setting": "outpatient",
+     "gross": 1240.0,
+     "modifiers": "LT_UA"
+    }
+   ]
+  },
+  "10060": {
+   "code": "10060",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Incision and drainage of abscess, simple",
+   "description": "I&D ABSCESS SIMPLE/SINGLE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 2176.18,
+   "discounted_cash": 1305.71,
+   "negotiated_min": 283.19,
+   "negotiated_max": 8430.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1486.74,
+   "payer_rates": 41,
+   "payer_dollar_rates": 24,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 8430.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 4195.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1934.47,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna Hill Physicians",
+     "plan": "Commercial",
+     "dollar": 353.99,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 125.00 + Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbur…"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 736.29,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "7 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 7,
+   "variants": [
+    {
+     "description": "SIMPLE OR SINGLE DRAINAGE OF SKIN ABSCESS",
+     "setting": "outpatient",
+     "gross": 2053.0
+    },
+    {
+     "description": "SIMPLE OR SINGLE DRAINAGE OF SKIN ABSCESS",
+     "setting": "outpatient",
+     "gross": 32331.0
+    },
+    {
+     "description": "SIMPLE OR SINGLE DRAINAGE OF SKIN ABSCESS",
+     "setting": "outpatient",
+     "gross": 2053.0,
+     "modifiers": "LT_UA"
+    }
+   ]
+  },
+  "29125": {
+   "code": "29125",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Short arm splint, static",
+   "description": "APPLY FOREARM SPLINT",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1237.0,
+   "discounted_cash": 742.2,
+   "negotiated_min": 187.79,
+   "negotiated_max": 5304.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 488.25,
+   "payer_rates": 41,
+   "payer_dollar_rates": 23,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna Hill Physicians",
+     "plan": "Commercial",
+     "dollar": 234.74,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 125.00"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 4195.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1282.79,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna Hill Physicians",
+     "plan": "Commercial",
+     "dollar": 234.74,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 125.00 + Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbur…"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 488.25,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "14 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 14,
+   "variants": [
+    {
+     "description": "APPLICATION OF NONMOVEABLE FOREARM TO HAND SPLINT",
+     "setting": "outpatient",
+     "gross": 980.0
+    },
+    {
+     "description": "APPLY FOREARM SPLINT",
+     "setting": "outpatient",
+     "gross": 1038.8
+    },
+    {
+     "description": "APPLICATION OF NONMOVEABLE FOREARM TO HAND SPLINT",
+     "setting": "outpatient",
+     "gross": 980.0,
+     "modifiers": "LT_UA"
+    }
+   ]
+  },
+  "94640": {
+   "code": "94640",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Nebulizer (inhaled) treatment",
+   "description": "INHALATION TREATMENT FOR AIRWAY OBSTRUCTION OR SPUTUM PRODUCTION",
+   "setting": "inpatient",
+   "billing_class": "facility",
+   "gross": 1309.0,
+   "discounted_cash": 785.4,
+   "negotiated_min": 3070.0,
+   "negotiated_max": 3070.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 3070.0,
+   "payer_rates": 33,
+   "payer_dollar_rates": 2,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 3070.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "algorithm": "Stoploss First Dollar + Reimbursement Rate 43.73 + Basic Per Diem + Fixed Rate 10296.00 + Fixed Amount 503064.00",
+     "methodology": "other",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "algorithm": "Service item reimbursed under IPPS via MS-DRG; separate payment not applicable",
+     "methodology": "other",
+     "notes": "Service item reimbursed under IPPS via MS-DRG; separate payment not applicable + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "United Healthcare EPO",
+     "plan": "Commercial",
+     "algorithm": "Stoploss First Dollar + Reimbursement Rate 42.30 + Basic Per Diem + Fixed Rate 1579.00 + Fixed Amount 501780.00",
+     "methodology": "other",
+     "notes": "Stoploss First Dollar + Reimbursement Rate 42.30 + Basic Per Diem + Fixed Rate 1579.00 + Fixed Amount 501780.00 + No services performed during 15-month lookbac…"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "algorithm": "Service item reimbursed under IPPS via MS-DRG; separate payment not applicable",
+     "methodology": "other",
+     "notes": "Service item reimbursed under IPPS via MS-DRG; separate payment not applicable + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "Kaiser",
+     "payer": "Kaiser Foundation Hospitals",
+     "plan": "Commercial",
+     "percentage": 68.0,
+     "methodology": "percent of total billed charges",
+     "median": 837.76
+    }
+   ],
+   "notes": [
+    "8 line items carry this code (settings, modifiers, package sizes); showing the inpatient-setting line."
+   ],
+   "line_items": 8,
+   "variants": [
+    {
+     "description": "AIRWAY INHALATION TREATMENT",
+     "setting": "inpatient",
+     "gross": 1391.78
+    },
+    {
+     "description": "AIRWAY INHALATION TREATMENT",
+     "setting": "inpatient",
+     "gross": 1344.2
+    },
+    {
+     "description": "AIRWAY INHALATION TREATMENT",
+     "setting": "inpatient",
+     "gross": 998.98
+    }
+   ]
+  },
+  "51702": {
+   "code": "51702",
+   "code_type": "CPT",
+   "category": "procedure",
+   "common_name": "Urinary catheter insertion, simple",
+   "description": "SIMPLE INSERTION OF TEMPORARY BLADDER TUBE",
+   "setting": "outpatient",
+   "billing_class": "facility",
+   "gross": 1348.0,
+   "discounted_cash": 808.8,
+   "negotiated_min": 187.79,
+   "negotiated_max": 8430.0,
+   "min_max_source": "file (standard_charge min/max)",
+   "negotiated_median_of_payers": 1183.08,
+   "payer_rates": 42,
+   "payer_dollar_rates": 23,
+   "payers": [
+    {
+     "family": "Aetna",
+     "payer": "Aetna",
+     "plan": "Commercial",
+     "dollar": 8430.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Anthem Blue Cross",
+     "payer": "Anthem Blue Connection",
+     "plan": "Commercial",
+     "dollar": 4195.0,
+     "methodology": "fee schedule"
+    },
+    {
+     "family": "Blue Shield of California",
+     "payer": "Blue Shield ACO",
+     "plan": "Commercial",
+     "dollar": 1282.79,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 683.10"
+    },
+    {
+     "family": "Cigna",
+     "payer": "Cigna",
+     "plan": "Commercial",
+     "percentage": 56.21,
+     "methodology": "percent of total billed charges",
+     "notes": "Lesser of + Percentage of total billed charges + Reimbursement Rate 100.00 + Calculated Reimbursement + No services performed during 15-month lookback period"
+    },
+    {
+     "family": "UnitedHealthcare",
+     "payer": "Optum",
+     "plan": "Commercial",
+     "dollar": 2330.0,
+     "methodology": "case rate"
+    },
+    {
+     "family": "Health Net",
+     "payer": "Healthnet Enhancedcare",
+     "plan": "Commercial",
+     "dollar": 488.25,
+     "methodology": "other",
+     "notes": "Percent of Medicare Reimbursement + Reimbursement Rate 260.00"
+    }
+   ],
+   "notes": [
+    "3 line items carry this code (settings, modifiers, package sizes); showing the outpatient-setting line."
+   ],
+   "line_items": 3,
+   "variants": [
+    {
+     "description": "SIMPLE INSERTION OF TEMPORARY BLADDER TUBE",
+     "setting": "outpatient",
+     "gross": 1348.0,
+     "modifiers": "XU"
+    },
+    {
+     "description": "SIMPLE INSERTION OF TEMPORARY BLADDER TUBE",
+     "setting": "outpatient",
+     "gross": 1348.0,
+     "modifiers": "UA"
+    }
+   ]
+  }
+ }
+}

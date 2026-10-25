@@ -1,0 +1,786 @@
+[page 1]
+ 
+ 
+Billing and Collections Policy for Sutter Hospitals Policy 
+EFFECTIVE DATE 
+The effective date of this Billing and Collections Policy for Sutter Hospitals is 
+January 1, 2025.  
+PURPOSE 
+The purpose of this policy is to establish procedures for hospital billing and collection 
+processes. 
+POLICY 
+It is our policy to bill patients and applicable Third-Party Payers accurately, timely, 
+and consistently with applicable laws and regulations, including without limitation 
+California Health and Safety Code section 127400 et seq., 22 California Code of 
+Regulations section 96051 et seq., and regulations issued by the United States 
+Department of the Treasury under section 501(r) of the Internal Revenue Code. 
+SCOPE 
+This policy applies to Sutter Health and any legal entity for which Sutter Health or its 
+affiliate is the sole member or directly or indirectly controls greater than 50% of the 
+voting power or equity interest and does not have a third-party manager (herein 
+referred to as Sutter). This policy applies to any billing or Collection Agency working 
+on behalf of a hospital. 
+DEFINITIONS 
+Billed Charges means the undiscounted amounts that a hospital customarily bills 
+for items and services. 
+Collection Agency means any entity engaged by a hospital to pursue or collect 
+payment from Patients. 
+Extraordinary Collection Action means any of the following: 
+• Any action to obtain payment from a Patient that requires a legal or judicial 
+process, including without limitation, the filing of a lawsuit; 
+• Selling a Patient’s debt to the hospital to another party, including without 
+limitation, to a Collection Agency; 
+
+
+[page 2]
+2 
+ 
+• Reporting adverse information about a Patient to a consumer credit reporting 
+agency or credit bureau; 
+• Seizing a bank account; 
+• Causing an arrest in connection with collection of a debt; 
+• Wage garnishment; 
+• Lien on a residence or any other personal or real property; 
+• Foreclosure on real or personal property; 
+• Delay or denial of medically necessary care based on the existence of an 
+outstanding balance for prior service(s); or 
+• Obtaining an order for examination. 
+Extraordinary Collection Actions do not include the assertion of, or collection under, 
+a lien asserted under Civil Code sections 3040 or 3045. Further, filing a claim in a 
+bankruptcy proceeding is not an Extraordinary Collection Action. 
+Federal Health Care Program means any plan or program providing health care 
+benefits, whether directly through insurance or otherwise, that is funded directly, in 
+whole or in part by the U.S. government. Federal Health Care Programs include, but 
+are not limited to, traditional fee-for-service Medicare and Medi-Cal, Medicare 
+Advantage plans, TRICARE, Veterans’ Administration and Indian Health Service 
+programs. 
+Financial Assistance refers to Full Charity Care and High Medical Cost Charity 
+Care, as those terms are defined in the Sutter Policy on Financial Assistance for 
+Sutter Hospitals (Charity Care). 
+Guarantor means a person who has legal financial responsibility for the Patient’s 
+health care services.   
+Insured Patient means a Patient who has a third-party source of payment for a 
+portion of their medical expenses. 
+Patient means an individual who received medical services at a Sutter hospital.  All 
+references to a Patient in this Policy shall be deemed to include the Guarantor. 
+Patient Responsibility means the amount that an Insured Patient is responsible to 
+pay out-of-pocket after the Patient’s Third-Party Payer has determined the amount 
+of the Patient’s benefits. 
+
+[page 3]
+3 
+ 
+Payer is a commercial or government sponsored third party that is financially 
+responsible to pay for some portion of a Patient’s medical care services. 
+Self-Pay Patient means a Patient who has benefits for items/services under a group 
+health plan, group or individual health insurance coverage offered by a health 
+insurance issuer, or a health benefits plan, but does not seek to have a claim 
+submitted to their plan, issuer, or carrier for the item or service. 
+Third-Party Payer means a non-government third-party payer that provides 
+coverage for health care services to a Patient. 
+Uninsured Patient means a Patient who has no third-party source of payment for 
+any portion of their medical expenses, including without limitation, commercial or 
+other insurance, government sponsored health care benefit programs, or third-party 
+liability, and includes a Patient whose benefits under all potential sources of 
+payment have been exhausted prior to an admission. 
+PROCEDURES 
+A. Billing Third-Party Payers 
+1. Obtaining Coverage Information. Hospitals shall make reasonable 
+efforts to obtain information from Patients about whether private or public 
+health insurance may fully or partially cover the services rendered by the 
+hospital to the Patient. However, Hospitals shall not require a patient to 
+apply for any private or public health insurance or sponsorship, including 
+any Federal Health Care Program or State payer, to be screened for or 
+provided Financial Assistance.  
+2. Billing Third-Party Payers. Hospitals shall diligently pursue all amounts 
+due from Third-Party Payers, including but not limited to, contracted and 
+non-contracted Payers, other insurance companies, liability and auto 
+insurers, and government program Payers that may be financially 
+responsible for a Patient’s care. Sutter will bill all applicable Third-Party 
+Payers based on information provided by or verified by the Patient or their 
+representative in a timely manner. 
+3. Dispute Resolution with Third Party Payers. Before initiating litigation or 
+arbitration against a Third-Party Payer, hospitals should consult and 
+comply with the Policy on Initiating Litigation or Arbitration Involving Third 
+Party Payers. 
+B. Billing Patients. Each hospital’s individual responsible for finance, or 
+designee, shall grant to Sutter Shared Services (S3) the authority to pursue 
+collections from Patients. 
+
+[page 4]
+4 
+ 
+1. Billing Insured Patients. Hospitals shall promptly bill Insured Patients for 
+the Patient Responsibility amount as computed by the explanation of 
+benefits and directed by the Third-Party Payer. 
+2. Billing Uninsured Patients. When an Uninsured Patient has not been 
+approved to receive Financial Assistance, hospitals shall promptly bill 
+Uninsured Patients for items and services provided by the hospital, using 
+hospital’s Billed Charges less the standard uninsured discount or rural 
+uninsured discount, as follows: 
+a. Standard Uninsured Discount is a 40% reduction of Billed Charges 
+for inpatient services and 20% reduction of Billed Charges for 
+outpatient services. 
+b. Rural Uninsured Discount is a 20% reduction of Billed Charges for 
+inpatient and outpatient Services at rural hospitals (e.g., Sutter 
+Lakeside Hospital and Center for Health, Sutter Coast Hospital, and 
+Sutter Amador Hospital). 
+c. The Uninsured Patient discount does not apply to patients who 
+qualify for Financial Assistance or receive services that are already 
+discounted (i.e., package discounts for cosmetic services). Case 
+rate and package rate pricing should not result in an expected 
+payment that is less than what the hospital would expect had the 
+Uninsured Patient discount been applied to Billed Charges for the 
+services. 
+3. Financial Assistance Information. All bills to Patients shall include the 
+Notice of Rights (see Attachment B), which includes a summary of 
+Financial Assistance that is available to eligible Patients. 
+4. Itemized Statement. All Patients may request an itemized statement for 
+their account at any time. 
+5. Disputes. Any Patient may dispute an item or charge on their bill. Patients 
+may initiate a dispute in writing or over the phone with a customer service 
+representative. If a Patient requests documentation regarding the bill, staff 
+members will use reasonable efforts to provide the requested 
+documentation within ten (10) calendar days. Hospitals will hold the 
+account for at least thirty (30) calendar days after the Patient initiates the 
+dispute before engaging in further collection activities. 
+C. Good Faith Estimates (GFE) 
+1. Notice of Right to Request GFE. Uninsured and Self-Pay Patients must 
+be advised both orally and in writing that they have the right to request a 
+
+[page 5]
+5 
+ 
+GFE before they schedule an item or service, and if not requested, a GFE 
+of expected charges must be provided upon scheduling. 
+2. Content of GFE. The GFE must reflect the expected charges, including 
+any expected discounts or other relevant adjustments that the provider or 
+facility expects to apply to an Uninsured or Self-Pay Patient’s actual Billed 
+Charges. 
+3. Delivery of GFE. Pursuant to the Uninsured or Self-Pay Patient’s 
+requested method of delivery, the GFE must be provided either on paper 
+or electronically (for example, electronic transmission of the GFE through 
+provider’s patient portal or electronic mail). If provided electronically, it 
+must be provided in a manner that allows the GFE to be saved and 
+printed. 
+4. Timing of Delivery of GFE 
+a. If an Uninsured or Self-Pay Patient requests the GFE prior to 
+scheduling a service, the GFE must be provided no later than three 
+(3) business days after the request. 
+b. If a service is scheduled at least three (3) days, but less than ten 
+(10) days in advance, the GFE must be provided no later than one 
+(1) business day after the date of scheduling. 
+c. If a service is scheduled at least ten (10) days in advance, the GFE 
+must be provided no later than three (3) business days after the 
+date of scheduling. 
+D. Uninsured/Self-Pay Dispute Resolution Process 
+1. An Uninsured or Self-Pay Patient has the right to initiate the patient-
+provider dispute resolution process if the actual Billed Charges are at least 
+$400 more than the total amount of expected charges listed in the GFE. 
+2. Within one hundred twenty (120) calendar days of receiving the initial bill 
+containing charges at least $400 more than the GFE, an Uninsured or 
+Self-Pay Patient may initiate the patient-provider dispute resolution 
+process by submitting a notification on the Federal Independent Dispute 
+Resolution portal (https://www.cms.gov/medical-bill-rights/help/dispute-a-
+bill)  or on paper to the Secretary of HHS. 
+E. Collection Practices 
+1. General Collection Practices. Hospitals may employ reasonable 
+collection efforts to obtain payment from Patients. General collection 
+
+[page 6]
+6 
+ 
+activities may include issuing Patient statements and making phone calls. 
+Hospitals must develop procedures to confirm that Patient questions and 
+complaints about bills are researched and corrected where appropriate, 
+with timely follow up with the Patient. 
+2. Prohibition on Extraordinary Collection Action. Hospitals and 
+Collection Agencies shall not employ an Extraordinary Collection Action to 
+attempt to collect from a Patient. 
+3. No Collection during Financial Assistance Application Process. 
+Hospital and Collection Agencies shall not pursue collection from a Patient 
+who has submitted an application for Financial Assistance and shall return 
+any amount received from the Patient before or during the time the 
+Patient’s application is pending. 
+4. No Collection during Uninsured/Self-Pay Dispute Resolution Process. 
+Hospital may not move a bill into collection, or threaten to do so, if an 
+Uninsured or Self-Pay Patient has initiated the CMS-sponsored patient-
+provider dispute resolution process, which allows an Uninsured or Self-
+Pay Patient to challenge a bill when the total Billed Charge is at least $400 
+more than the total amount of expected charges listed in the GFE. If a bill 
+was previously moved into collection, and the Uninsured or Self-Pay 
+Patient initiates the CMS-sponsored patient-provider dispute resolution 
+process, Hospital and any Collection Agency must cease collection efforts 
+until the conclusion of the dispute resolution process. 
+5. Prohibition on Use of Information from Financial Assistance 
+Application. Hospitals and Collection Agencies may not use in collection 
+activities any information obtained from a Patient during the application 
+process for Financial Assistance. Nothing in this section prohibits the use 
+of information obtained by hospital or Collection Agency independently of 
+the eligibility process for Financial Assistance. 
+6. Copayment Waivers 
+a. Federal and State Health Care Program. A federal or state health 
+care program Patient’s co-pay, coinsurance or deductible amounts 
+may be discounted or waived only if all three (3) of the following 
+requirements are met: 
+i. The waiver / discount was not advertised or otherwise solicited; 
+ii. The waiver / discount is not routinely offered; and, 
+iii. The waiver / discount is made after determining, in good faith, 
+that the individual is in financial need. 
+
+[page 7]
+7 
+ 
+b. Facilities shall evaluate each Patient’s financial need based on the 
+guidelines found in the applicable Sutter policies on financial 
+assistance and charity care (see Medical Foundation Charity Care 
+and Low Income Uninsured Policy and the Policy on Financial 
+Assistance for Sutter Hospitals (Charity Care)). Any waiver or 
+reduction of a federal or state health care program beneficiary’s co-
+pay, coinsurance or deductible obligation that does not comply with 
+the above standards is prohibited. 
+7. Payment Plans: 
+a. Eligible Patients. Hospitals and any Collection Agency acting on 
+their behalf shall offer Uninsured Patients and any Patient who 
+qualifies for Financial Assistance the option to enter into an 
+agreement to pay their Patient Responsibility (for Insured Patients) 
+and any other amounts due over time. Hospitals may also enter 
+payment plans for Insured Patients who indicate an inability to pay a 
+Patient Responsibility amount in a single installment. 
+b. Terms of Payment Plans. All payment plans shall be interest-free. 
+Patients shall have the opportunity to negotiate the terms of the 
+payment plan, taking into consideration the Patient’s family income 
+and essential living expenses. If a hospital and Patient are unable to 
+agree on the terms of the payment plan, the hospital shall extend a 
+payment plan option under which the Patient may make a monthly 
+payment of not more than ten percent (10%) of the Patient’s 
+monthly family income after excluding essential living expenses. 
+“Essential living expenses” means expenses for any of the following: 
+rent or house payment and maintenance, food and household 
+supplies, utilities and telephone, clothing, medical and dental 
+payments, insurance, school or child care, child or spousal support, 
+transportation and auto expenses, including insurance, gas, and 
+repairs, installment payments, laundry and cleaning, and other 
+extraordinary expenses. 
+F. Declaring Payment Plan Inoperative. An extended payment plan may be 
+declared no longer operative after the Patient’s failure to make all consecutive 
+payments due during a ninety (90) calendar day period, starting with the first 
+day that the Patient misses a payment. Before declaring the extended 
+payment plan no longer operative, the hospital or Collection Agency shall 
+make a reasonable attempt to contact the Patient by phone and to give notice 
+in writing at least sixty (60) calendar days after the first missed payment that 
+the extended payment plan may become inoperative and that the Patient has 
+the opportunity to renegotiate the extended payment plan. Prior to the 
+extended payment plan being declared inoperative, the hospital or Collection 
+
+[page 8]
+8 
+Agency shall attempt to renegotiate the terms of the defaulted extended 
+payment plan, if requested by the Patient. The Patient shall be given at least 
+thirty (30) calendar days, starting from the date the written notice of the 
+missed payment was sent, to make a payment before the extended payment 
+plan is declared inoperative. For purposes of this section, the notice and 
+phone call to the Patient may be made to the last known phone number and 
+address of the Patient. After a payment plan is declared inoperative, the 
+hospital or Collection Agency may commence collection activities in a manner 
+consistent with this policy. If a payment plan is declared inoperative, and the 
+patient has qualified for Financial Assistance, Hospital or Collection Agency 
+shall limit the amount it seeks from the patient to the amount the patient was 
+responsible to pay after any discounts. 
+G. Collection Agencies. Hospitals may refer Patient accounts to a Collection
+Agency, subject to the following conditions:
+1. Before sending a Patient account to a Collection Agency, the Hospital
+shall send a Patient the notice set forth in Attachment A (Notice of
+Assignment to Collection Agency).
+2. The Collection Agency must have a written agreement with the hospital.
+3. Hospital’s written agreement with the Collection Agency must provide that
+the Collection Agency’s performance of its functions shall adhere to
+Sutter’s mission, vision, core values, the terms of the Policy on Financial
+Assistance for Sutter Hospitals (Charity Care), this policy, the Hospital Fair
+Pricing Act, Health and Safety Code section 127400 through 127446, and
+the California Consumer Credit Reporting Agencies Act, .
+4. The Collection Agency must agree that it will not engage in any
+Extraordinary Collection Actions to collect a Patient debt.
+5. Hospital must maintain ownership of the debt (i.e., the debt is not “sold” to
+the Collection Agency).
+6. The Collection Agency must have processes in place to identify Patients
+who may qualify for Financial Assistance, communicate the availability and
+details of the Policy on Financial Assistance for Sutter Hospitals (Charity
+Care) to these patients, and refer patients who are seeking Financial
+Assistance back to the hospital’s Patient Financial Services at 855-398-
+1633 or at sutterhealth.org. The Collection Agency shall not seek any
+payment from a Patient who has submitted an application for Financial
+Assistance and shall return any amount received from the Patient before
+or during the time the Patient’s application is pending.
+
+[page 9]
+9 
+ 
+7. All Third-Party Payers must have been properly billed, payment from a 
+Third-Party Payer must no longer be pending, and the remaining debt 
+must be the financial responsibility of the Patient. A Collection Agency 
+shall not bill a Patient for any amount that a Third-Party Payer is obligated 
+to pay. 
+8. The Collection Agency must send every Patient a copy of the Notice of 
+Rights (see Attachment B). 
+9. At least one hundred-twenty (120) calendar days must have passed since 
+the hospital sent the initial bill to the Patient on the account. 
+10. The Patient is not negotiating a payment plan or making regular partial 
+payments of a reasonable amount. 
+H. Third-Party Liability. Nothing in this policy precludes hospital affiliates or 
+outside collection agencies from pursuing third-party liability in a manner 
+consistent with the Hospital Third Party Lien Policy. 
+1. Retention of Collection Records. Hospitals will maintain all records 
+relating to money owed to the Hospital by a Patient or the Patient’s 
+guarantor for five (5) years, including, but not limited to, all of the following:  
+a. Documents related to litigation filed by the Hospital;  
+b. Contracts and significant records by which Hospital assigns or sells 
+medical debt to a third party;  
+c. A list, updated at least annually, of every person, including the 
+person’s name and contact information, that meets at least one of 
+the following criteria:  
+i. The person is a debt collector to whom the Hospital sold or 
+assigned a debt that Patient owed to the Hospital; and 
+ii. The person is retained by Hospital to pursue litigation for debts 
+owed by Patients.  
+REFERENCES 
+26 Code of Federal Regulations 1.501(r)-1 through 1.501(r)-7 
+California Consumer Credit Reporting Agencies Act  
+California Health and Safety Code sections 124700 through 127446 
+22 California Code of Regulations sections 96051 through 96051.37 
+
+[page 10]
+10 
+ 
+Federal Independent Dispute Resolution Portal 
+Hospital Third Party Lien Policy 
+Internal Revenue Code section 501 (r) 
+Medical Foundation Charity Care and Low Income Uninsured Policy 
+Policy on Financial Assistance for Sutter Hospitals (Charity Care) 
+Policy for Initiation of Litigation or Arbitration Involving Third Party Payers 
+ATTACHMENTS 
+Attachment A: Notice of Assignment to Collection Agency 
+Attachment B: Notice of Rights  
+  
+
+[page 11]
+11 
+ 
+Attachment  A 
+ 
+Notice of Assignment to Collection Agency 
+Patient Name:   
+Date(s) of Services:  
+Patient Account Number:   
+Date of Initial Bill:  1  
+Collection Agency:   
+Amount Due:   
+Date Patient Received Financial Assistance Application (if applicable) __ 
+Date of Completion for Application for Financial Assistance (if applicable)   
+Date of Determination of Eligibility for Financial Assistance (if applicable):   
+Health Coverage and Coverage Type (or N/A if patient is uninsured):   
+Thank you for choosing Sutter Health. As of the date of this Notice of Assignment to 
+Collection Agency, Sutter Health has not received payment of the amount due that is 
+set forth above. This Notice of Assignment to Collection Agency is to notify you that 
+the patient account identified above is being assignment to a collection agency. The 
+collection agency is identified above. The collection agency may attempt to contact 
+you in writing or by telephone concerning the amount that remains outstanding. 
+Itemized Bill. You can obtain an itemized bill regarding the amount owed. Please 
+contact Patient Financial Services at 855-398-1633 if you would like to receive an 
+itemized bill. 
+Financial Assistance. Sutter Health is committed to providing financial assistance 
+to qualified low income patients, and to patients who have insurance that requires 
+the patient to pay a significant portion of their care. The following is a summary of 
+the eligibility requirements for Financial Assistance and the application process for 
+patient who wish to seek Financial Assistance.  
+ 
+If you received hospital services in the Emergency Department at Sutter Lakeside 
+Hospital or a Sutter Health-affiliated Rural Health Clinic, the following category of 
+patients are eligible for Financial Assistance: 
+ 
+1 The Initial Bill included a Notice of Rights that provided details about Sutter 
+Health’s Financial Assistance policy. 
+
+[page 12]
+12 
+•
+level are eligible for Financial Assistance.
+If you received hospital services at any other Sutter Health-affiliated hospital, the 
+following categories of patients are eligible for Financial Assistance:   
+•
+have a family income at or below 400% of the federal poverty level.
+•
+12 months) that exceed 10% of the patient’s family income.
+•
+the federal poverty level.
+Sutter Health’s application for Financial Assistance is included with this 
+Notice of Assignment to Collection Agency. 
+Hospital Bill Complaint Program. The Hospital Bill Complaint Program is a state 
+program, which reviews hospital decisions about whether you qualify for help paying 
+your hospital bill. If you believe you were wrongly denied financial assistance, you 
+may file a complaint with the Hospital Bill Complaint Program. Go to 
+HospitalBillComplaintProgram.hcai.ca.gov for more information and to file a 
+complaint. 
+Contact Information: Patient Financial Services is available to answer questions 
+you may have about your hospital bill or would like to apply for Financial Assistance 
+or government program. The telephone number is 855-398-1633. Our telephone 
+hours are 8:00 A.M. to 5:00 P.M., Monday through Friday. 
+ATTENTION: If you need help in your language, please call 855-398-1633 or visit 
+the Patient Financial Services office. Our telephone hours are 8:00 A.M. to 5:00 
+also available. These services are free.
+ :ملحوظة  إذا احتجت إلى مُساعدة بلُغتك، يُرجى الاتصال بهاتف رقم1633-398-855   أو تفضَّل بزيارة مكتب خدمات
+مالمرضى المالية بالمُستشفى.  نتلقى المكالمات الهاتفيّة من الثامنة صباحًا حتى الخامسة مساءً من يو   الاثنين إلى يوم
+  الجُمعة.  كذلك نوفِّّر دعم وخدمات للأشخاص ذوي الإعاقات، على سبيل المثال، مُستندات مطبوعة بحروف بارزة
+  (برايل) أو بحروف كبيرة، أو مُستندات صوتيّة أو غيرها من الصيغ الإلكترونيّة الميسّرة.  مع العلم بأن هذه الخدمات
+(مجّانيّة.Arabic )  
+Multi-language Interpreter Services
+Patients who have a family income at or below 400% of the federal poverty 
+Patients who have no third-party source of payment, such as an insurance 
+company or government program, for any portion of their medical expenses and 
+Patients who are covered by insurance but have (i) family income at or below 
+400% of the federal poverty level; and (ii) medical expenses for themselves or 
+their family (incurred at the hospital affiliate or paid to other providers in the past 
+Patients who are covered by insurance but exhaust their benefits either before or 
+during their stay at the hospital, and have a family income at or below 400% of 
+P.M., Monday through Friday. Aids and services for people with disabilities, like 
+documents in braille, large print, audio, and other accessible electronic formats are 
+
+[page 13]
+13 
+ 
+ՈՒՇԱԴՐՈՒԹՅՈՒՆ. Եթե ձեր լեզվով օգնության կարիք ունեք, խնդրում ենք 
+զանգահարել 855-398-1633 հեռախոսահամարով կամ այցելել հիվանդանոցում 
+գտնվող Հիվանդների ֆինանսական ծառայությունների գրասենյակ: Մեր 
+հեռախոսային ժամերն են՝ 8:00 A.M.-ից մինչև 5:00 P.M., երկուշաբթիից ուրբաթ: 
+Հասանելի են նաև օժանդակ միջոցներ և ծառայություններ հաշմանդամություն 
+ունեցող անձանց համար, օրինակ՝ փաստաթղթեր բրայլով, խոշոր 
+տպագրությամբ, (Armenian)  
+កំណត់ចំណំ៖ ប្រសិនបរើបោកអ្ នកប្រូវការជំន ួយជាភាសាររស់បោកអ្ នក ស ូ មបៅ
+ទូរសព្ទបៅបេខ 855-398-1633  ឬមកកាន់ការ ិ យាេ័យបសវាកមមហិរញ្ ញ វរ ថ ុសប្ារ់អ្ នកជំងឺ
+បៅមន ទីរបព្ទយ។ បា ៉ោ ងទទួេទូរសព្ទររស់បយើងគឺចារ់ព្ីបា ៉ោ ង 8:00 ប្ព្ឹកដេ់បា ៉ោ ង 5:00 ោ ា ច 
+ចារ់ព្ីថ្ងាចន ទដេ់ថ្ងាសុប្ក។ ជំន ួយ និងបសវាកមមសប្ារ់អ្ នកដដេានព្ិការភាព្ 
+គឺានដូចជាអ្កសរសា ទ រ ឯកសារប ោះព្ុមពធំៗ សំបេង បហើយទប្មង់បអ្េិចប្រូនិកដដេ
+អាចច ូ េបប្រើ នបសសងបទៀរក៏ានសដេ់ជូនសងដដរ។ បសវាកមមទំងបនោះគឺមិនគិរថ្ងៃបទ។ 
+(Cambodian/Khmer)  
+請注意：如果您需要語言方面的協助，請致電855-398-1633或前往醫院的病人財務服
+務辦公室。我們接聽電話的時間是星期一至五上午8:00至下午5:00。我們還為殘障人
+士提供輔助和服務，例如盲文、大字體、音訊和其他無障礙電子格式的文件。這些服
+務都是免費的。(Chinese Traditional)  
+ توجه: اگر نياز به کمک به زبان خود داريد، لطفاً با شماره855-398-1633   تماس بگيريد يا به دفتر خدمات مالی
+ بيماران ( Patient Financial Services )  در بيمارستان تماس بگيريد. ساعات تماس تلفنی ما8:00    صبح تا
+5:00  بعد از ظهر، روزهای دوشنبه تا جمعه است. کمک ها و خدمات برای افراد دارای معلوليت نيز در دسترس 
+ است ازجمله اسناد به خط بريل، چاپ درشت، صوتی و ساير فرمت های الکترونيکی. اين خدمات رايگان 
+(هستند.Farsi  )  
+ध्यान दें: यदि आपको अपनी भाषा में सहायता की आवश्यकता है, तो क ृ पया 855-398-1633 पर 
+कॉल करें या दिदकत्सालय में रोगी दवत्तीय सेवा कायाालय में जाए ँ । हमारा ि ू रभाष समय सोमवार से 
+शुक्रवार, प्रातः  8:00 बजे से सायंकाल 5:00 बजे तक है। दवकलांगता वाले लोगों के दलए सहायता और 
+सेवाए ँ, जैसे दक ब्रेल, बडे दप्रंट, ऑदियो और अन्य अदभगम्य इलेक्ट् र ॉदनक प्रारूप में प्रलेख भी उपलब्ध 
+हैं। ये सेवाए ँ दनः शुल्क हैं। (Hindi)  
+LUS QHIA TSEEM CEEB: Yog tias koj xav tau kev pab ua koj hom lus, thov hu rau 
+855-398-1633 los sis mus ntsib lub chaw hauj lwm Muab Kev Pab Cuam Fab Nyiaj 
+Txiag Rau Tus Neeg Mob ntawm lub tsev kho mob. Peb lub sij hawm txais xov tooj 
+yog 8:00 teev sawv ntxov. mus txog 5:00 teev yuav tsaus ntuj, Hnub Monday txog 
+Hnub Friday. Tsis tas li ntawd, kuj tseem muaj cov kev pab thiab cov kev pab cuam 
+rau cov neeg xiam oob qhab, xws li cov ntaub ntawv ua cov ntawv su, cov ntawv 
+luam loj, suab, thiab lwm hom ntaub ntawv es lev thos niv. Cov kev pab cuam no 
+pub dawb xwb. (Hmong)  
+
+[page 14]
+14 
+ 
+ご注意： ご自身の言語でのサポートが必要な場合は、855-398-1633 までお電話い
+ただくか、病院の患者向けフィナンシャルサービスオフィスへお越しください。電
+話の受付時間は、月曜から金曜の午前8時～午後5時です  視覚障害者向けのサポー
+トやサービス、例えば点字、大きな活字の印刷物、音声、その他の電子形式の文書
+もご用意しております。これらのサービスは無料でご利用いただけます 
+(Japanese)  
+주의: 귀하가 사용하시는 언어로 도움이 필요하시면 전화(855-398-1633)를 하시거나 
+병원의 환자 재정부서를 방문하십시오. 저희의 전화 통화 가능 시간(월요일 – 
+금요일)은 오전 8시부터 오후 5시까지입니다. 장애인을 위한 보조 기구 및 
+서비스(점자 문서, 큰 활자, 오디오, 그리고 기타 접근 가능한 전자 형식 등)를 
+이용하실 수 있습니다. 이 서비스들은 무료입니다. (Korean)  
+ध्यान दें: यदि आपको अपनी भाषा में सहायता की आवश्यकता है, तो क ृ पया 855-398-1633 पर 
+कॉल करें या दिदकत्सालय में रोगी दवत्तीय सेवा कायाालय में जाए ँ । हमारा ि ू रभाष समय सोमवार से 
+शुक्रवार, प्रातः  8:00 बजे से सायंकाल 5:00 बजे तक है। दवकलांगता वाले लोगों के दलए सहायता और 
+सेवाए ँ, जैसे दक ब्रेल, बडे दप्रंट, ऑदियो और अन्य अदभगम्य इलेक्ट् र ॉदनक प्रारूप में प्रलेख भी उपलब्ध 
+हैं। ये सेवाए ँ दनः शुल्क हैं। (Punjabi)  
+ВНИМАНИЕ! Если вам нужна помощь на вашем языке, пожалуйста, позвоните 
+по телефону 855-398-1633 или посетите отдел финансового обслуживания 
+пациентов в больнице.  Мы работаем по телефону с 8:00 пополуночи до 5:00 
+пополудни, с понедельника по пятницу.  Также доступны вспомогательные 
+средства и услуги для людей с ограниченными возможностями, например, 
+документы шрифтом Брайля либо крупным шрифтом, в аудио- и иных 
+электронных форматах, обеспечивающих доступную среду.  Эти услуги 
+предоставляются бесплатно! (Russian)  
+ATENCIÓN: Si necesita ayuda en su idioma, llame al 8553981633 o visite la oficina 
+de Servicios Financieros para Pacientes en el hospital. Nuestro horario de atención 
+telefónica es de lunes a viernes, de 8:00 a. m. a 5:00 p. m. También están 
+disponibles ayudas y servicios para personas con discapacidades, como 
+documentos en braille, letra grande, audio y otros formatos electrónicos accesibles. 
+Estos servicios son gratis. (Spanish)  
+PAUNAWA: Kung kailangan mo ng tulong sa iyong wika, pakitawagan ang 855-
+398-1633 o bisitahin ang opisina ng Patient Financial Services ng ospital. Ang oras 
+ng pagsagot namin sa telepono ay mula 8:00 A.M. hanggang 5:00 P.M., Lunes 
+hanggang Biyernes. Available din ang mga tulong at serbisyo para sa mga taong 
+may kapansanan, tulad ng mga dokumento na nasa braille, malalaking print, audio, 
+
+[page 15]
+15 
+ 
+at iba pang electronic format na maaaring ma-access. Ang mga serbisyong ito ay 
+libre. (Tagalog)  
+โปรดทราบ: หากคุณต้องการความช่วยเหลือในภาษาของคุณ โปรดติดต่อ 855-398-1633 
+หรือติดต่อส านักบริการทางการเงินส าหรับผู้ป ่ วยที่โรงพยาบาล 
+คุณสามารถติดต่อทางโทรศัพท ์ ได้ ตั้งแต่วันจันทร ์ ถึงวันศุกร ์ ระหว่างเวลา 8.00 น. ถึง 17.00 
+น.นอกจากนี้ยังมีบริการและความช่วยเหลือส าหรับผู้พิการ เช่น เอกสารในอักษรเบรลล ์ 
+ตัวอักษรขนาดใหญ่ บันทึกเสียง และเอกสารที่เข้าถึงได้รูปแบบอิเล็กทรอนิกส ์ อื่น ๆ 
+ซึ่งจะจัดหาให ้โดยไม่คิดค่าใช ้ จ่าย  (Thai)  
+ LƯU Ý: Nếu quý vị cần được trợ giúp bằng ngôn ngữ của mình, vui lòng gọi tới số 
+855-398-1633 hoặc đến văn phòng Dịch Vụ Tài Chính dành cho Bệnh Nhân tại 
+bệnh viện. Giờ nhận điện thoại của chúng tôi là từ 8 giờ sáng đến 5 giờ chiều, từ 
+Thứ Hai đến Thứ Sáu. Cũng có các hỗ trợ và dịch vụ dành cho người khuyết tật 
+như tài liệu bằng chữ nổi, chữ in lớn, dạng âm thanh và các định dạng điện tử dễ 
+tiếp cận khác. Những dịch vụ này đều miễn phí. (Vietnamese)   
+
+[page 16]
+16 
+ 
+Attachment B 
+ 
+Notice of Rights 
+Thank you for selecting Sutter Health for your recent services. Enclosed please find 
+a statement of the charges for your hospital visit. Payment is due immediately. 
+You may be entitled to discounts if you meet certain financial qualifications, 
+discussed below. 
+Please be aware that this is the bill for hospital services only. There may be 
+additional charges for services that will be provided by physicians during your stay in 
+the hospital, such as bills from physicians, and any anesthesiologists, pathologists, 
+radiologists, ambulance services, or other medical professionals who are not 
+employees of the hospital. You may receive a separate bill for their services. 
+Summary of Your Rights: State and federal law require debt collectors to treat you 
+fairly and prohibit debt collectors from making false statements or threats of 
+violence, using obscene or profane language, or making improper communications 
+with third parties, including your employer. Except under unusual circumstances, 
+debt collectors may not contact you before 8:00 a.m. or after 9:00 p.m. In general, a 
+debt collector may not give information about your debt to another person, other 
+than your attorney or spouse. A debt collector may contact another person to 
+confirm your location or to enforce a judgment. For more information about debt 
+collection activities, you may contact the Federal Trade Commission by telephone at 
+1-877-FTC-HELP (382-4357) or online at www.ftc.gov. 
+Nonprofit credit counseling services, as well as consumer assistance from local legal 
+services offices, may be available in your area. Please contact Patient Financial 
+Services office at 855-398-1633 for a referral. 
+Sutter Health has agreements with external collection agencies to collect payments 
+from patients. Collection Agencies are required to comply with the hospital’s policies. 
+Collection Agencies are also required to recognize and adhere to any payments 
+plans agreed upon by the hospital and the patient. 
+No Reporting to Consumer Credit Reporting Agency.  A holder of this medical 
+debt contract is prohibited by Section 1785.27 of the Civil Code from furnishing any 
+information related to this debt to a consumer credit reporting agency.  In addition to 
+any other penalties allowed by law, if a person knowingly violates this section by 
+furnishing information regarding this debt to a consumer credit reporting agency, the 
+debt shall be void and unenforceable. 
+Financial Assistance (Charity Care): Sutter Health is committed to providing 
+financial assistance to qualified low-income patients, and to patients who have 
+insurance that requires the patient to pay a significant portion of their care. The 
+
+[page 17]
+17 
+ 
+following is a summary of the eligibility requirements for Financial Assistance and 
+the application process for a patient who wishes to seek Financial Assistance. 
+If you received hospital services in the Emergency Department at Sutter Lakeside 
+Hospital or a Sutter Health-affiliated Rural Health Clinic, the following category of 
+patients are eligible for Financial Assistance: 
+• Patients who have a family income at or below 400% of the federal poverty level 
+are eligible for Financial Assistance. 
+If you received hospital services at any other Sutter Health-affiliated hospital, the 
+following categories of patients are eligible for Financial Assistance:   
+• Patients who have no third-party source of payment, such as an insurance 
+company or government program, for any portion of their medical expenses and 
+have a family income at or below 400% of the federal poverty level. 
+• Patients who are covered by insurance but have (i) family income at or below 
+400% of the federal poverty level; and (ii) medical expenses for themselves or 
+their family (incurred at the hospital affiliate or paid to other providers in the past 
+12 months) that exceed 10% of the patient’s family income. 
+• Patients who are covered by insurance but exhaust their benefits either before or 
+during their stay at the hospital and have a family income at or below 400% of 
+the federal poverty level. 
+You may apply for Financial Assistance using the application form that is available 
+from Patient Financial Services, which is located at located within the Patient 
+Access/Registration Departments at the Hospital, or by calling Patient Financial 
+Services at 855-398-1633, or on the Sutter Health or Hospital website 
+(www.sutterhealth.org). You may also submit an application by speaking with a 
+representative from Patient Financial Services, who will assist you with completing 
+the application. During the application process you will be asked to provide 
+information regarding the number of people in your family, your monthly income, and 
+other information that will assist the Hospital with determining your eligibility for 
+Financial Assistance. You may be asked to provide a pay stub or tax records to 
+assist Sutter with verifying your income. 
+After you submit the application, the Hospital will review the information and notify 
+you in writing regarding your eligibility. If you have any questions during the 
+application process, you may contact the Patient Financial Services office at (855) 
+398-1633. 
+If you disagree with the Hospital’s decision, you may submit a dispute to the Patient 
+Financial Services office. 
+Copies of this Hospital’s Financial Assistance Policy, the Plain Language Summary 
+and Application, as well as government program applications are available in 
+
+[page 18]
+18 
+ 
+multiple languages in person at our Patient Registration or Patient Financial 
+Services offices, as well as at sutterhealth.org and available by mail. We can also 
+send you a copy of the Financial Assistance Policy free of charge if you contact our 
+Patient Financial Services office at 855-398-1633. 
+In accordance with Internal Revenue Code Section 1.501(r)-5, Sutter Health adopts 
+the prospective Medicare method for amounts generally billed; however, patients 
+who are eligible for financial assistance are not financially responsible for more than 
+the amounts generally billed because eligible patients do not pay any amount. 
+Pending applications: If an application has been submitted for another health 
+coverage program at the same time that you submit an application for charity care, 
+neither application shall preclude eligibility for the other program. 
+Health Insurance/Government Program Coverage/Financial Assistance: If you 
+have health insurance coverage, Medicare, Medi-Cal/Medicaid, California Children’s 
+Services, or any other source of payment for this bill, please contact Patient 
+Financial Services at 855-398-1633. If appropriate, Patient Financial Services will bill 
+those entities for your care. 
+If you do not have health insurance or coverage through a government program like 
+Medi- Cal/Medicaid or Medicare, you may be eligible for government program 
+assistance. Medi-Cal’s presumptive eligibility program provides qualified individuals 
+immediate access to temporary, no-cost Medi-Cal while applying for permanent 
+Medi-Cal coverage or other health coverage.  Patient Financial Services can provide 
+you with application forms and assist you with the application process.   
+If you have received an award of Financial Assistance from the Hospital that you 
+believe covers the services that are the subject of this bill, please contact Patient 
+Financial Services at 855-398-1633. 
+California Health Benefit Exchange: You may be eligible for health care coverage 
+under Covered California. Contact Patient Financial Services for more detail and 
+assistance to see if you quality for health care coverage through Covered California. 
+Hospital Bill Complaint Program: The Hospital Bill Complaint Program is a state 
+program, which reviews Hospital decisions about whether you qualify for help paying 
+your hospital bill. If you believe you were wrongly denied financial assistance, you 
+may file a complaint with the Hospital Bill Complaint Program. Go to 
+HospitalBillComplaintProgram.hcai.ca.gov for more information and to file a 
+complaint. 
+Help Paying Your Bill. There are free consumer advocacy organizations that will 
+help you understand the billing and payment process. You may call the Health 
+Consumer Alliance at 888-804-3536 or go to https://healthconsumer.org for more 
+information. Please contact Patient Financial Services for further information. 
+
+[page 19]
+19 
+ 
+Price Transparency. Healthcare cost transparency is important to help consumers 
+make informed decisions about their care. Sutter Health post a list of standard 
+charges for more than 300 services provided in Sutter hospitals. Please visit the 
+following website for more information: 
+https://myhealthonline.sutterhealth.org/mho/GuestEstimates. 
+Contact Information: Patient Financial Services is available to answer questions 
+you may have about your Hospital bill or to assist with applying for Financial 
+Assistance or a government program. The telephone number is 855-398-1633. Our 
+telephone hours are 8:00 A.M. to 5:00 P.M., Monday through Friday. 
+ATTENTION: If you need help in your language, please call 855-398-1633 or visit 
+the Patient Financial Services office at the hospital. Our telephone hours are 8:00 
+A.M. to 5:00 P.M., Monday through Friday. Aids and services for people with 
+disabilities, like documents in braille, large print, audio, and other accessible 
+electronic formats are also available. These services are free.  
+ :ملحوظة  إذا احتجت إلى مُساعدة بلُغتك، يُرجى الاتصال بهاتف رقم1633-398-855   أو تفضَّل بزيارة مكتب خدمات
+  المرضى المالية بالمُستشفى.  نتلقى المكالمات الهاتفيّة من الثامنة صباحًا حتى الخامسة مساءً من يوم الاثنين إلى يوم
+  الجُمعة.  كذلك نوفِّّر دعم وخدمات للأشخاص ذوي الإعاقات، على سبيل المثال، مُستندات مطبوعة بحروف بارزة
+  (برايل) أو بحروف كبيرة، أو مُستندات صوتيّة أو غيرها من الصيغ الإلكترونيّة الميسّرة.  مع العلم بأن هذه الخدمات
+(مجّانيّة.Arabic )  
+ՈՒՇԱԴՐՈՒԹՅՈՒՆ. Եթե ձեր լեզվով օգնության կարիք ունեք, խնդրում ենք 
+զանգահարել 855-398-1633 հեռախոսահամարով կամ այցելել հիվանդանոցում 
+գտնվող Հիվանդների ֆինանսական ծառայությունների գրասենյակ: Մեր 
+հեռախոսային ժամերն են՝ 8:00 A.M.-ից մինչև 5:00 P.M., երկուշաբթիից ուրբաթ: 
+Հասանելի են նաև օժանդակ միջոցներ և ծառայություններ հաշմանդամություն 
+ունեցող անձանց համար, օրինակ՝ փաստաթղթեր բրայլով, խոշոր 
+տպագրությամբ, (Armenian)   
+កំណត់ចំណំ៖ ប្រសិនបរើបោកអ្ នកប្រូវការជំន ួយជាភាសាររស់បោកអ្ នក ស ូ មបៅ
+ទូរសព្ទបៅបេខ 855-398-1633  ឬមកកាន់ការ ិ យាេ័យបសវាកមមហិរញ្ ញ វរ ថ ុសប្ារ់អ្ នកជំងឺ
+បៅមន ទីរបព្ទយ។ បា ៉ោ ងទទួេទូរសព្ទររស់បយើងគឺចារ់ព្ីបា ៉ោ ង 8:00 ប្ព្ឹកដេ់បា ៉ោ ង 5:00 ោ ា ច 
+ចារ់ព្ីថ្ងាចន ទដេ់ថ្ងាសុប្ក។ ជំន ួយ និងបសវាកមមសប្ារ់អ្ នកដដេានព្ិការភាព្ 
+គឺានដូចជាអ្កសរសា ទ រ ឯកសារប ោះព្ុមពធំៗ សំបេង បហើយទប្មង់បអ្េិចប្រូនិកដដេ
+អាចច ូ េបប្រើ នបសសងបទៀរក៏ានសដេ់ជូនសងដដរ។ បសវាកមមទំងបនោះគឺមិនគិរថ្ងៃបទ។ 
+(Cambodian/Khmer)  
+請注意：如果您需要語言方面的協助，請致電855-398-1633或前往醫院的病人財務服
+務辦公室。我們接聽電話的時間是星期一至五上午8:00至下午5:00。我們還為殘障人
+士提供輔助和服務，例如盲文、大字體、音訊和其他無障礙電子格式的文件。這些服
+務都是免費的。(Chinese Traditional)  
+Multi-language Interpreter Services
+
+[page 20]
+20 
+ 
+ توجه: اگر نياز به کمک به زبان خود داريد، لطفاً با شماره855-398-1633   تماس بگيريد يا به دفتر خدمات مالی
+ بيماران ( Patient Financial Services )  در بيمارستان تماس بگيريد. ساعات تماس تلفنی ما8:00    صبح تا
+5:00  بعد از ظهر، روزهای دوشنبه تا جمعه است. کمک  ها و خدمات برای افراد دارای معلوليت نيز در دسترس
+ است ازجمله اسناد به خط بريل، چاپ درشت، صوتی و ساير فرمت  های الکترونيکی. اين خدمات رايگان
+(هستند.Farsi  )  
+ध्यान दें: यदि आपको अपनी भाषा में सहायता की आवश्यकता है, तो क ृ पया 855-398-1633 पर 
+कॉल करें या दिदकत्सालय में रोगी दवत्तीय सेवा कायाालय में जाए ँ । हमारा ि ू रभाष समय सोमवार से 
+शुक्रवार, प्रातः  8:00 बजे से सायंकाल 5:00 बजे तक है। दवकलांगता वाले लोगों के दलए सहायता और 
+सेवाए ँ, जैसे दक ब्रेल, बडे दप्रंट, ऑदियो और अन्य अदभगम्य इलेक्ट् र ॉदनक प्रारूप में प्रलेख भी उपलब्ध 
+हैं। ये सेवाए ँ दनः शुल्क हैं। (Hindi)  
+LUS QHIA TSEEM CEEB: Yog tias koj xav tau kev pab ua koj hom lus, thov hu rau 
+855-398-1633 los sis mus ntsib lub chaw hauj lwm Muab Kev Pab Cuam Fab Nyiaj 
+Txiag Rau Tus Neeg Mob ntawm lub tsev kho mob. Peb lub sij hawm txais xov tooj 
+yog 8:00 teev sawv ntxov. mus txog 5:00 teev yuav tsaus ntuj, Hnub Monday txog 
+Hnub Friday. Tsis tas li ntawd, kuj tseem muaj cov kev pab thiab cov kev pab cuam 
+rau cov neeg xiam oob qhab, xws li cov ntaub ntawv ua cov ntawv su, cov ntawv 
+luam loj, suab, thiab lwm hom ntaub ntawv es lev thos niv. Cov kev pab cuam no 
+pub dawb xwb. (Hmong)  
+ご注意： ご自身の言語でのサポートが必要な場合は、855-398-1633 までお電話い
+ただくか、病院の患者向けフィナンシャルサービスオフィスへお越しください。電
+話の受付時間は、月曜から金曜の午前8時～午後5時です  視覚障害者向けのサポー
+トやサービス、例えば点字、大きな活字の印刷物、音声、その他の電子形式の文書
+もご用意しております。これらのサービスは無料でご利用いただけます 
+(Japanese)  
+주의: 귀하가 사용하시는 언어로 도움이 필요하시면 전화(855-398-1633)를 하시거나 
+병원의 환자 재정부서를 방문하십시오. 저희의 전화 통화 가능 시간(월요일 – 
+금요일)은 오전 8시부터 오후 5시까지입니다. 장애인을 위한 보조 기구 및 
+서비스(점자 문서, 큰 활자, 오디오, 그리고 기타 접근 가능한 전자 형식 등)를 
+이용하실 수 있습니다. 이 서비스들은 무료입니다. (Korean)  
+ध्यान दें: यदि आपको अपनी भाषा में सहायता की आवश्यकता है, तो क ृ पया 855-398-1633 पर 
+कॉल करें या दिदकत्सालय में रोगी दवत्तीय सेवा कायाालय में जाए ँ । हमारा ि ू रभाष समय सोमवार से 
+शुक्रवार, प्रातः  8:00 बजे से सायंकाल 5:00 बजे तक है। दवकलांगता वाले लोगों के दलए सहायता और 
+सेवाए ँ, जैसे दक ब्रेल, बडे दप्रंट, ऑदियो और अन्य अदभगम्य इलेक्ट् र ॉदनक प्रारूप में प्रलेख भी उपलब्ध 
+हैं। ये सेवाए ँ दनः शुल्क हैं। (Punjabi)  
+
+[page 21]
+21 
+ 
+ВНИМАНИЕ! Если вам нужна помощь на вашем языке, пожалуйста, позвоните 
+по телефону 855-398-1633 или посетите отдел финансового обслуживания 
+пациентов в больнице.  Мы работаем по телефону с 8:00 пополуночи до 5:00 
+пополудни, с понедельника по пятницу.  Также доступны вспомогательные 
+средства и услуги для людей с ограниченными возможностями, например, 
+документы шрифтом Брайля либо крупным шрифтом, в аудио- и иных 
+электронных форматах, обеспечивающих доступную среду.  Эти услуги 
+предоставляются бесплатно! (Russian)  
+ATENCIÓN: Si necesita ayuda en su idioma, llame al 8553981633 o visite la oficina 
+de Servicios Financieros para Pacientes en el hospital. Nuestro horario de atención 
+telefónica es de lunes a viernes, de 8:00 a. m. a 5:00 p. m. También están 
+disponibles ayudas y servicios para personas con discapacidades, como 
+documentos en braille, letra grande, audio y otros formatos electrónicos accesibles. 
+Estos servicios son gratis. (Spanish)  
+PAUNAWA: Kung kailangan mo ng tulong sa iyong wika, pakitawagan ang 855-
+398-1633 o bisitahin ang opisina ng Patient Financial Services ng ospital. Ang oras 
+ng pagsagot namin sa telepono ay mula 8:00 A.M. hanggang 5:00 P.M., Lunes 
+hanggang Biyernes. Available din ang mga tulong at serbisyo para sa mga taong 
+may kapansanan, tulad ng mga dokumento na nasa braille, malalaking print, audio, 
+at iba pang electronic format na maaaring ma-access. Ang mga serbisyong ito ay 
+libre. (Tagalog)  
+โปรดทราบ: หากคุณต้องการความช่วยเหลือในภาษาของคุณ โปรดติดต่อ 855-398-1633 
+หรือติดต่อส านักบริการทางการเงินส าหรับผู้ป ่ วยที่โรงพยาบาล 
+คุณสามารถติดต่อทางโทรศัพท ์ ได้ ตั้งแต่วันจันทร ์ ถึงวันศุกร ์ ระหว่างเวลา 8.00 น. ถึง 17.00 
+น.นอกจากนี้ยังมีบริการและความช่วยเหลือส าหรับผู้พิการ เช่น เอกสารในอักษรเบรลล ์ 
+ตัวอักษรขนาดใหญ่ บันทึกเสียง และเอกสารที่เข้าถึงได้รูปแบบอิเล็กทรอนิกส ์ อื่น ๆ 
+ซึ่งจะจัดหาให ้โดยไม่คิดค่าใช ้ จ่าย  (Thai)  
+LƯU Ý: Nếu quý vị cần được trợ giúp bằng ngôn ngữ của mình, vui lòng gọi tới số 
+855-398-1633 hoặc đến văn phòng Dịch Vụ Tài Chính dành cho Bệnh Nhân tại 
+bệnh viện. Giờ nhận điện thoại của chúng tôi là từ 8 giờ sáng đến 5 giờ chiều, từ 
+Thứ Hai đến Thứ Sáu. Cũng có các hỗ trợ và dịch vụ dành cho người khuyết tật 
+như tài liệu bằng chữ nổi, chữ in lớn, dạng âm thanh và các định dạng điện tử dễ 
+tiếp cận khác. Những dịch vụ này đều miễn phí. (Vietnamese)  
